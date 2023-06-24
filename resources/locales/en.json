@@ -1,0 +1,17 @@
+{
+    "hello" : "hello",
+    "bye" : "bye",
+    "home": "home",
+    "workshop": "workshop",
+    "calendar": "calendar",
+    "Registration successful": "Registration successful",
+    "We encountered an error, please try again": "We encountered an error, please try again",
+    "You're signed in !": "You're signed in !",
+    "Signed out !": "Signed out !",
+    "An email has been sent, check your inbox": "An email has been sent, check your inbox",
+    "Close": "Close",
+    "Cancel": "Cancel",
+    "Submit": "Submit",
+    "Save": "Save",
+    "These credentials do not match our records.": "These credentials do not match our records"
+}

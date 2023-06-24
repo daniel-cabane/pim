@@ -1,0 +1,17 @@
+{
+    "hello": "bonjour",
+    "bye": "aurevoir",
+    "home": "Maison",
+    "workshop": "atelier",
+    "calendar" : "calendrier",
+    "Registration successful": "Inscription validée",
+    "We encountered an error, please try again": "Une erreur s'est produite, merci de réessayer",
+    "You're signed in !": "Vous êtes connecté(e) !",
+    "Signed out !": "Déconnexion achevée",
+    "An email has been sent, check your inbox": "Un email vous a été envoyé.",
+    "Close": "Fermer",
+    "Cancel": "Annuler",
+    "Submit": "Envoyer",
+    "Save": "Sauvegarder",
+    "These credentials do not match our records.": "Ces identifiants ne sont pas valides"
+}
