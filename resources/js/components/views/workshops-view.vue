@@ -1,5 +1,5 @@
 <template>
     <v-container>
-        Workshops
+        {{ $t('workshops') }}
     </v-container>
 </template>

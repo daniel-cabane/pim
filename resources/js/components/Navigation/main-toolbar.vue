@@ -6,15 +6,15 @@
                 <v-tabs centered stacked>
                     <v-tab value="tab-1" to="/">
                         <v-icon>mdi-home</v-icon>
-                        {{ t('home') }}
+                        {{ $t('home') }}
                     </v-tab>
                     <v-tab value="tab-2" to="/workshops">
                         <v-icon>mdi-shape-plus</v-icon>
-                        {{ t('workshop') }}
+                        {{ $t('workshops') }}
                     </v-tab>
                     <v-tab value="tab-3" to="/calendar">
                           <v-icon>mdi-calendar</v-icon>
-                          {{ t('calendar') }}
+                          {{ $t('calendar') }}
                       </v-tab>
                 </v-tabs>
             </div>
@@ -37,14 +37,9 @@
           </v-app-bar>
 </template>
 <script setup>
-  import { defineProps } from 'vue';
-  import { useI18n } from 'vue-i18n';
   import { useAuthStore } from '@/stores/useAuthStore';
   import { storeToRefs } from 'pinia';
-  import { useTheme } from 'vuetify';
-  
-  const { t } = useI18n();
-  
+  // import { useTheme } from 'vuetify';  
   
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
@@ -54,13 +49,14 @@
   if(props.user){
     defineUser(props.user);
   }
+  console.log(user.value);
 
-  const theme = useTheme()
-  theme.global.name.value = 'light';
-  const browserTheme = localStorage.getItem('theme');
-  if (browserTheme) {
-    theme.global.name.value = browserTheme;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    theme.global.name.value = 'dark';
-  }
+  // const theme = useTheme()
+  // theme.global.name.value = 'light';
+  // const browserTheme = localStorage.getItem('theme');
+  // if (browserTheme) {
+  //   theme.global.name.value = browserTheme;
+  // } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  //   theme.global.name.value = 'dark';
+  // }
 </script>

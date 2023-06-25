@@ -11,16 +11,60 @@ import { createPinia } from 'pinia';
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
-import { createVuetify } from 'vuetify';
+import { createVuetify, useTheme } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-import { themes } from './themes';
+
+const customLight = {
+    dark: false,
+    colors: {
+        background: '#FAFAFA',
+        surface: '#F3F3F3',
+        primary: '#003d7d',
+        'primary-darken-1': '#012953',
+        secondary: '#919195',
+        'secondary-darken-1': '#646469',
+        error: '#e31b23',
+        info: '#007dc3',
+        success: '#acc37e',
+        warning: '#fbaf5c',
+    }
+}
+const customDark = {
+    dark: true,
+    colors: {
+        background: '#18191A',
+        surface: '#797b7c',
+        primary: '#003d7d',
+        'primary-darken-1': '#012953',
+        secondary: '#919195',
+        'secondary-darken-1': '#646469',
+        error: '#e31b23',
+        info: '#007dc3',
+        success: '#acc37e',
+        warning: '#fbaf5c',
+    }
+}
+
+let defaultTheme = 'customLight';
+const browserTheme = localStorage.getItem('theme');
+if (browserTheme) {
+    defaultTheme = browserTheme;
+} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    theme.global.name.value = 'customDark';
+}
 
 const vuetify = createVuetify({
     components,
     directives,
-    themes
+    theme: {
+        defaultTheme,
+        themes: {
+            customLight, customDark
+        },
+    },
 });
+
 
 // i18n
 import { createI18n } from 'vue-i18n';
@@ -33,7 +77,7 @@ import fr from '../locales/fr.json';
 
 
 const i18n = createI18n({
-    locale: 'en',
+    locale: localStorage.getItem('locale') ? localStorage.getItem('locale') : 'en',
     messages: { en, fr }
 });
 

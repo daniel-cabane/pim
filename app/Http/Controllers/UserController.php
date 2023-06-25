@@ -13,6 +13,8 @@ class UserController extends Controller
    */
   public function info()
   {
-    return response()->json(['user' => auth()->user()]);
+    $user = auth()->user();
+    $user->roles = $user->getRoleNames();
+    return response()->json(['user' => $user]);
   }
 }

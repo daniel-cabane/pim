@@ -33,12 +33,12 @@
 
     const { locale } = useI18n();
 
-    let languageSwitch = ref(false);
-    const browserLocale = localStorage.getItem('locale');
-    if (browserLocale) {
-        locale.value = browserLocale;
-        languageSwitch.value = browserLocale == 'fr';
-    }
+    let languageSwitch = ref(locale == 'fr');
+    // const browserLocale = localStorage.getItem('locale');
+    // if (browserLocale) {
+    //     locale.value = browserLocale;
+    //     languageSwitch.value = browserLocale == 'fr';
+    // }
     const setLocale = () => {
         let newLocal = languageSwitch.value ? 'fr' : 'en';
         locale.value = newLocal;
@@ -46,9 +46,9 @@
     }
 
     const theme = useTheme();
-    let themeSwitch = ref(theme.global.name.value == 'dark');
+    let themeSwitch = ref(theme.global.name.value == 'customDark');
     const setTheme = () => {
-        theme.global.name.value = themeSwitch.value ? 'dark' : 'light';
-        localStorage.setItem('theme', themeSwitch.value ? 'dark' : 'light');
+        theme.global.name.value = themeSwitch.value ? 'customDark' : 'customLight';
+        localStorage.setItem('theme', themeSwitch.value ? 'customDark' : 'customLight');
     }
 </script>

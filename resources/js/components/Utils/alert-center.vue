@@ -2,13 +2,12 @@
     <TransitionGroup name="slide-fade">
         <v-alert
             :type="alert.type"
-            :text="t(alert.text)"
+            :text="$t(alert.text)"
             min-width="75vw"
             max-width="75vw"
             style="cursor:pointer;"
             class="mb-1"
             density="compact"
-            closable
             v-for="alert in alerts"
             :key="alert.id"
             @mouseenter="hold(alert.id)"
@@ -19,13 +18,10 @@
 <script setup>
     import { useAlertStore } from '@/stores/useAlertStore';
     import { storeToRefs } from 'pinia';
-    import { useI18n } from 'vue-i18n';
     
     const alertStore = useAlertStore();
     const { alerts } = storeToRefs(alertStore);
     const { hold, release } = alertStore;
-
-    const { t } = useI18n();
 </script>
 
 <style scoped>
