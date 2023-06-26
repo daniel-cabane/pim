@@ -1,6 +1,4 @@
 {
-    "hello" : "hello",
-    "bye" : "bye",
     "home": "home",
     "workshops": "workshops",
     "calendar": "calendar",
@@ -28,5 +26,20 @@
     "Password updated": "Password updated",
     "Remember me": "Remember me",
     "The email field is required.": "The email field is required",
-    "The password field is required.": "The password field is required"
+    "The password field is required.": "The password field is required",
+    "My posts": "My posts",
+    "New post": "New post",
+    "The title must at least 8 characters long": "The title must at least 8 characters long",
+    "The description must at least 20 characters long": "The description must at least 20 characters long",
+    "Title": "Title",
+    "Description": "Description",
+    "You cannot view this post": "You cannot view this post",
+    "Save draft": "Save Draft",
+    "Publish": "Publish",
+    "Preview": "Preview",
+    "Post updated": "Post updated",
+    "Quit": "Quit",
+    "Stay": "Stay",
+    "Are you sure ?": "Are you sure ?",
+    "If you quit now all unsaved changes will be lost": "If you quit now all unsaved changes will be lost"
 }

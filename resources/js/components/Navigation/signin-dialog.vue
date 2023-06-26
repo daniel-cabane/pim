@@ -1,7 +1,8 @@
 <template>
   <v-dialog v-model="dialog" width="380" @keydown.enter="submit">
     <template v-slot:activator="{ props }">
-      <v-btn variant="outlined" append-icon="mdi-account" v-bind="props">
+      <v-btn variant="outlined" icon="mdi-account" class="d-md-none" v-bind="props" v-if="isWindowXs"/>
+      <v-btn variant="outlined" append-icon="mdi-account" v-bind="props" v-else>
           {{ $t("Sign in") }} / {{ $t("Register") }}
       </v-btn>
     </template>
@@ -102,9 +103,10 @@
   </v-dialog>
 </template>
 <script setup>
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, computed } from 'vue';
   import { useAuthStore } from '@/stores/useAuthStore';
   import { storeToRefs } from 'pinia';
+  import { useDisplay } from 'vuetify';
 
   const authStore = useAuthStore();
   const { login, register, resetPassword } = authStore;
@@ -142,4 +144,7 @@
     tab.value = 1;
     formReset();
   }
+
+  const { name } = useDisplay();
+  const isWindowXs = computed(() => name.value == 'xs');
 </script>

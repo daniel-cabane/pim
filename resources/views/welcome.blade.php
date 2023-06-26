@@ -35,7 +35,7 @@
             <v-app>
                 <v-container fluid pa-0>
                     <main-toolbar :user="{{ json_encode(Auth::user()) }}"></main-toolbar>
-                    <v-progress-linear color="grey-lighten-1" indeterminate class='ma-0' style='position:fixed;top:64px;z-index:10' v-if="false"></v-progress-linear>
+                    <loading-indicator style='position:fixed;top:64px;z-index:10'></loading-indicator>
                     <v-main>
                         <router-view></router-view>
                         <!-- <router-view v-slot="{ Component }">

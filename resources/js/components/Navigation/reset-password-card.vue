@@ -34,7 +34,6 @@
     const alertStore = useAlertStore();
 
     const props = defineProps({token: String, email: String});
-    console.log(props.token, props.email);
 
     let form = reactive({ email: props.email, token: props.token, password: '', password_confirmation: '' });
 

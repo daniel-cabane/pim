@@ -54,6 +54,7 @@ export const useAuthStore = defineStore({
         async fetchUser(){
             try {
                 const res = await axios.get('/api/userinfo');
+                console.log(res.data.user);
                 return res.data.user;
             } catch (err) {
                 this.addAlert({ text: err.response.data.message, type: 'error' });

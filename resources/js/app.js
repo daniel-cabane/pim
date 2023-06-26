@@ -51,7 +51,7 @@ const browserTheme = localStorage.getItem('theme');
 if (browserTheme) {
     defaultTheme = browserTheme;
 } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    theme.global.name.value = 'customDark';
+    defaultTheme = 'customDark';
 }
 
 const vuetify = createVuetify({

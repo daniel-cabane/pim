@@ -19,7 +19,15 @@ Route::get('/', function () {
 
 Route::get('/{name}', function(){
   return view('welcome');
-})->where(['name' => 'home|workshops|calendar']);//->middleware('auth');
+})->where(['name' => 'home|workshops|calendar|myPosts']);
+
+Route::get('/posts/{slug}', function () {
+    return view('welcome');
+});
+
+Route::get('/posts/{slug}/edit', function () {
+    return view('welcome');
+});
 
 Route::get('/auth/reset-password', function () {
     return view('password-reset');

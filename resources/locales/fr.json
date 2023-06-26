@@ -1,7 +1,5 @@
 {
-    "hello": "bonjour",
-    "bye": "aurevoir",
-    "home": "Maison",
+    "home": "Accueil",
     "workshops": "ateliers",
     "calendar" : "calendrier",
     "Registration successful": "Inscription validée",
@@ -28,5 +26,20 @@
     "Password updated": "Mot de passe mis à jour",
     "Remember me": "Se souvenir de moi",
     "The email field is required.": "Merci de saisir un email valide",
-    "The password field is required.": "Merci de saisir un mot de passe"
+    "The password field is required.": "Merci de saisir un mot de passe",
+    "My posts": "Mes articles",
+    "New post": "Nouvel article",
+    "The title must at least 8 characters long": "Longueur minimale du titre : 8 charactères",
+    "The description must at least 20 characters long": "Longueur minimale de la description : 20 charactères",
+    "Title": "Titre",
+    "Description": "Description",
+    "You cannot view this post": "Vous ne pouvez pas accéder à cet article",
+    "Save draft": "Enregistrer",
+    "Publish": "Publier",
+    "Preview": "Aperçu",
+    "Post updated": "Article mis à jour",
+    "Quit": "Quitter",
+    "Stay": "Rester",
+    "Are you sure ?": "Etes-vous sûr ?",
+    "If you quit now all unsaved changes will be lost": "Si vous quittez maintenant, toutes les modifications non enregistrées seront perdues"
 }
