@@ -58,10 +58,11 @@
     </v-app-bar>
 </template>
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useAuthStore } from '@/stores/useAuthStore';
   import { storeToRefs } from 'pinia';
   import { useDisplay } from 'vuetify';
+  import { useRoute } from 'vue-router';
 
   let navigationTab = ref('tab-1');
   
@@ -76,4 +77,22 @@
 
   const { name } = useDisplay();
   const isWindowXs = computed(() => name.value == 'xs');
+
+  const route = useRoute();
+  watch(() => route.name, (newVal, oldVal) => {
+    switch(newVal){
+      case 'Home':
+        navigationTab.value = 'tab-1';
+      break;
+      case 'Workshops':
+        navigationTab.value = 'tab-2';
+      break;
+      case 'Calendar':
+        navigationTab.value = 'tab-3';
+      break;
+      default:
+        navigationTab.value = null;
+      break;
+    }
+  })
 </script>

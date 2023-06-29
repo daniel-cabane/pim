@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { useAlertStore } from '@/stores/useAlertStore';
 import { useLoadingStore } from '@/stores/useLoadingStore';
 
@@ -23,7 +22,6 @@ export const usePostStore = defineStore({
             addProcess('getPosts');
             try {
                 const res = await axios.get('/api/posts');
-                console.log(res.data);
                 this.posts = res.data.posts;
             } catch (err) {
                 this.addAlert({ text: err.response.data.message, type: 'error' });
@@ -54,17 +52,29 @@ export const usePostStore = defineStore({
             }
             removeProcess('getPosts');
         },
-        async updatePost() {
+        async updatePost(publish) {
             this.loading = true;
             try {
-                const res = await axios.patch(`/api/posts/${this.post.slug}`, this.post)
-                console.log(res.data);
-                this.addAlert({text: 'Post updated', type: 'success'});
+                const res = await axios.patch(`/api/posts/${this.post.slug}`, {publish, ...this.post})
+                this.post = res.data;
+                const text = publish ? 'Post published' : 'Post updated';
+                this.addAlert({text, type: 'success'});
             } catch (err) {
                 this.addAlert({ text: err.response.data.message, type: 'error' });
             }
             this.loading = false;
 
+        },
+        async deletePost(slug) {
+            this.loading = true;
+            try {
+                const res = await axios.delete(`/api/posts/${slug}`);
+                return res;
+            } catch (err) {
+                console.log(err);
+                this.addAlert({ text: err.response.data.message, type: 'error' });
+            }
+            this.loading = false;
         }
     }
 });

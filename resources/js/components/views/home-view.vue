@@ -1,16 +1,16 @@
 <template>
-    <v-container>
-        <div>
-            {{ $t('home') }}
+    <v-container style="display:flex;">
+        <div style="flex:1">
+            <div class="text-h5 font-weight-thin text-grey mb-3 text-center">
+                {{ $t("The Pole's Blog") }}
+            </div>
+            <post-card v-for="post in posts" :key="post.id" :post="post"/>
         </div>
-        <!-- <Editor
-          api-key="no-api-key"
-          :init="{
-              plugins: 'lists link image table code help wordcount'
-          }"
-        /> -->
-        <div>Posts !</div>
-        <div v-for="post in posts" :key="post.id">{{ post.title }}</div>
+        <div style="width:350px" class="d-none d-sm-flex pl-4">
+            <div style="width:100%;" class="text-h5 font-weight-thin text-grey mb-3 text-center">
+                {{ $t('Upcoming') }}
+            </div>
+        </div>
     </v-container>
 </template>
 <script setup>
@@ -21,12 +21,5 @@
     const { getPosts } = postStore;
     const { posts } = storeToRefs(postStore);
 
-    getPosts();
-    // import Editor from '@tinymce/tinymce-vue'
-    // import { storeToRefs } from 'pinia';
-    // import { useAuthStore } from '@/stores/useAuthStore';
-
-    // const authStore = useAuthStore();
-    // const { user } = storeToRefs(authStore);
-        
+    getPosts();        
 </script>

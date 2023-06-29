@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,7 @@ Route::get('/posts/{slug}/edit', function () {
 Route::get('/auth/reset-password', function () {
     return view('password-reset');
 })->name('password.reset');
+
+Route::get('/auth/google', [UserController::class, 'googleSigninRedirect']);
+Route::get('/auth/google/callback', [UserController::class, 'googleSigninCallback']);
+

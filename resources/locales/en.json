@@ -35,11 +35,19 @@
     "Description": "Description",
     "You cannot view this post": "You cannot view this post",
     "Save draft": "Save Draft",
-    "Publish": "Publish",
+    "Publish post": "Publish post",
+    "Unpublish post": "Unpublish post",
+    "Delete post": "Delete post",
     "Preview": "Preview",
     "Post updated": "Post updated",
+    "Post published": "Post published",
     "Quit": "Quit",
     "Stay": "Stay",
     "Are you sure ?": "Are you sure ?",
-    "If you quit now all unsaved changes will be lost": "If you quit now all unsaved changes will be lost"
+    "If you quit now all unsaved changes will be lost": "If you quit now all unsaved changes will be lost",
+    "Edit post": "Edit post",
+    "You cannot access this page": "You cannot access this page",
+    "The Pole's Blog": "The Pole's Blog",
+    "Upcoming": "Upcoming",
+    "Delete Post": "Delete Post"
 }

@@ -35,11 +35,19 @@
     "Description": "Description",
     "You cannot view this post": "Vous ne pouvez pas accéder à cet article",
     "Save draft": "Enregistrer",
-    "Publish": "Publier",
+    "Publish post": "Publier l'article",
+    "Unpublish post": "Retirer l'article",
+    "Delete post": "Détruire l'article",
     "Preview": "Aperçu",
     "Post updated": "Article mis à jour",
+    "Post published": "Article publié",
     "Quit": "Quitter",
     "Stay": "Rester",
     "Are you sure ?": "Etes-vous sûr ?",
-    "If you quit now all unsaved changes will be lost": "Si vous quittez maintenant, toutes les modifications non enregistrées seront perdues"
+    "If you quit now all unsaved changes will be lost": "Si vous quittez maintenant, toutes les modifications non enregistrées seront perdues",
+    "Edit post": "Modifier",
+    "You cannot access this page": "Vous ne pouvez pas accéder à cette page",
+    "The Pole's Blog": "Le blog du pôle",
+    "Upcoming": "Prochainement",
+    "Delete Post": "Détruire l'article"
 }

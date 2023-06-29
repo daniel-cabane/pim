@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PostController extends Controller
 {
@@ -14,8 +15,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = [];
-        foreach(Post::where('published_at', '!=', null)->orderBy('published_at', 'desc')->get() as $post){
-            $posts[] = $post->shortFormat();
+        foreach(Post::whereNotNull('published_at')->orderBy('published_at', 'desc')->get() as $post){
+            $posts[] = $post->format();
         }
         return response()->json(['posts' => $posts]);
     }
@@ -28,7 +29,7 @@ class PostController extends Controller
         $user = auth()->user();
         $posts = [];
         foreach($user->posts()->where('author_id', $user->id)->get() as $post){
-            $posts[] = $post->shortFormat();
+            $posts[] = $post->format();
         }
         return response()->json(['posts' => $posts]);
     }
@@ -57,7 +58,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         if($post->published_at != null || auth()->user()->can('view', $post)){
-            return response()->json(['post' => $post]);
+            return response()->json(['post' => $post->format()]);
         }
         
         return response()->json(['message' => 'You cannot view this post', 403]);
@@ -71,16 +72,24 @@ class PostController extends Controller
         $attrs = $request->validate([
             'title' => 'required|min:8|max:50',
             'description' => 'required|min:20|max:255',
-            'post' => 'required'
+            'post' => 'required',
+            'publish' => 'required|min:4|max:15'
         ]);
 
-        $post->update([
+        $newData = [
             'title' => $attrs['title'],
             'description' => $attrs['description'],
-            'post' => $attrs['post']
-        ]);
+            'post' => $attrs['post'],
+        ];
+        if ($attrs['publish'] == 'publish'){
+            $newData['published_at'] = Carbon::now();
+        } else if ($attrs['publish'] == 'publish'){
+            $newData['published_at'] = null;
+        }
 
-        return response()->json('OK');
+        $post->update($newData);
+
+        return response()->json($post->format());
     }
 
     /**

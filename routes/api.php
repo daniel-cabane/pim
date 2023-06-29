@@ -45,3 +45,7 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Post']], fun
 Route::group(['middleware'=>['auth:sanctum', 'can:update,post']], function(){
     Route::patch('/posts/{post}', [PostController::class, 'update']);
 });
+
+Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+});

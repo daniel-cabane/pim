@@ -1,7 +1,7 @@
 <template>
-    <v-card width="100%" class="pa-3">
-        <post-header :post="post"/>
-    </v-card>
+    <v-container>
+        <post-display :post="post" :editing="false"/>
+    </v-container>
 </template>
 <script setup>
     import { usePostStore } from '@/stores/usePostStore';

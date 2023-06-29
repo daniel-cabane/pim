@@ -7,6 +7,9 @@
       </v-btn>
     </template>
     <v-card class="pa-4">
+      <!-- <div class="mb-4 text-center">
+        <v-img max-width='90%' min-width='90%' style="margin-left:5%;cursor:pointer;" src="/images/google signin.png" @click="googleSignin"/>
+      </div> -->
       <v-tabs v-model="tab" color="primary" align-tabs="center">
         <v-tab :value="1">Sign in</v-tab>
         <v-tab :value="2">Register</v-tab>
@@ -147,4 +150,8 @@
 
   const { name } = useDisplay();
   const isWindowXs = computed(() => name.value == 'xs');
+
+  const googleSignin = () => {
+    axios.get('/auth/google');
+  }
 </script>

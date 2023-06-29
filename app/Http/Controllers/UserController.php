@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Model\User;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -19,5 +24,30 @@ class UserController extends Controller
     // $user->isAdmin = $user->hasRole('admin');
     
     return response()->json(['user' => auth()->user()]);
+  }
+
+  public function googleSigninRedirect()
+  {
+    return Socialite::driver('google')->redirect();
+  }
+
+  public function googleSigninCallback()
+  {
+    $google_user = Socialite::driver('google')->user();
+    $user = User::where('email', $google_user->getEmail())->first();
+
+    if(!$user){
+      $user = User::create([
+        'name' => $google_user->getName(),
+        'email' => $google_user->getEmail(),
+        'google_id' => $google_user->getId(),
+        'email_verified_at' => Carbon::now(),
+        'password' => Hash::make(Str::password())
+      ]);
+    }
+
+    Auth::login($user);
+
+    return redirect()->intended('/');
   }
 }
