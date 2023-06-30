@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,11 @@ use App\Http\Controllers\PostController;
 Route::get('/posts', [PostController::class, 'index']);
 
 Route::get('/posts/{post}', [PostController::class, 'show']); // Gate in controller
+
+Route::group(['middleware'=>['role:admin']], function(){
+    Route::get('/admin/fetchUsers/{string}', [AdminController::class, 'fetchUsers']);
+    Route::post('/admin/users/{user}/updateRoles', [AdminController::class, 'updateUserRoles']);
+});
 
 // Route::group(['middleware'=>['can:view,App\Models\Post']], function(){
 //     Route::get('/posts/{slug}', [PostController::class, 'show']);

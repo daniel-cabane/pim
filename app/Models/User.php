@@ -18,11 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'password', 'google_id', 'email_verified_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -49,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsAttribute()
     {
         return [
+            'student' => $this->hasRole('student'),
             'teacher' => $this->hasRole('teacher'),
             'hod' => $this->hasRole('hod'),
             'admin' => $this->hasRole('admin')

@@ -11,6 +11,12 @@
             <v-divider/>
             <theme-and-language-picker/>
             <v-divider/>
+            <v-list-item @click="goToDashboard" v-if="user.is.admin">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-security"></v-icon>
+                    </template>
+                    <v-list-item-title>Admin</v-list-item-title>
+                </v-list-item>
             <v-list-item @click="logout">
                 <template v-slot:prepend>
                     <v-icon icon="mdi-logout"></v-icon>
@@ -25,6 +31,7 @@
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
     import { useDisplay } from 'vuetify';
+    import { useRouter } from 'vue-router';
 
     const authStore = useAuthStore();
     const { logout } = authStore;
@@ -32,4 +39,9 @@
 
     const { name } = useDisplay();
     const isWindowXs = computed(() => name.value == 'xs');
+
+    const router = useRouter();
+    const goToDashboard = () => {
+        router.push('/admin');
+    }
 </script>

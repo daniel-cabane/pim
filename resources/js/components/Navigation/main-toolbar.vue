@@ -10,7 +10,7 @@
                 <v-icon size="x-large">mdi-home</v-icon>
             </v-tab>
             <v-tab value="tab-2" to="/workshops">
-                <v-icon size="x-large">mdi-shape-plus</v-icon>
+                <v-icon size="x-large">mdi-puzzle</v-icon>
             </v-tab>
             <v-tab value="tab-3" to="/calendar">
                   <v-icon size="x-large">mdi-calendar</v-icon>
@@ -22,7 +22,7 @@
                 {{ $t('home') }}
             </v-tab>
             <v-tab value="tab-2" to="/workshops">
-                <v-icon>mdi-shape-plus</v-icon>
+                <v-icon>mdi-puzzle</v-icon>
                 {{ $t('workshops') }}
             </v-tab>
             <v-tab value="tab-3" to="/calendar">
@@ -39,7 +39,8 @@
             <template v-slot:activator="{ props }">
                 <v-btn dark variant="elevated" icon="mdi-menu" v-bind="props"/>
               </template>
-              <action-menu-home/>
+              <action-menu-home v-if="route.name == 'Home'"/>
+              <action-menu-workshops v-if="route.name == 'Workshops'"/>
           </v-menu>
           <profile-menu/>
         </div>

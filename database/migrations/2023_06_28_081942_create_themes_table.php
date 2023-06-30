@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
+            $table->string('title_en', 255);
+            $table->string('title_fr', 255);
             $table->timestamps();
         });
     }

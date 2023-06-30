@@ -29,10 +29,6 @@
     </v-card>
 </template>
 <script setup>
-    import { useAlertStore } from '@/stores/useAlertStore';
-
-    const alertStore = useAlertStore();
-
     const props = defineProps({token: String, email: String});
 
     let form = reactive({ email: props.email, token: props.token, password: '', password_confirmation: '' });

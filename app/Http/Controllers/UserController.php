@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Model\User;
+use App\Models\User;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -28,11 +29,13 @@ class UserController extends Controller
 
   public function googleSigninRedirect()
   {
+    logger('redirect');
     return Socialite::driver('google')->redirect();
   }
 
   public function googleSigninCallback()
   {
+    logger('callback');
     $google_user = Socialite::driver('google')->user();
     $user = User::where('email', $google_user->getEmail())->first();
 

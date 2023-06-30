@@ -5,8 +5,14 @@ import Calendar from "./components/views/calendar-view.vue";
 import myPosts from "./components/views/myPosts-view.vue";
 import editPost from "./components/views/editPosts-view.vue";
 import singlePost from "./components/views/singlePost-view.vue";
+import Admin from "./components/views/admin-view.vue";
 
 const routes = [
+    {
+        path: "/admin",
+        name: "Admin",
+        component: Admin
+    },
     {
         path: "/",
         name: "Home",

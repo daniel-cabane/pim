@@ -65,6 +65,7 @@ export const useAuthStore = defineStore({
             if(res.status == 204){
                 this.user = null;
                 this.addAlert({ text: 'Signed out !', type: 'info' });
+                window.location.replace('/');
             }
         },
         async resetPassword(form){
