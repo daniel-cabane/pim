@@ -1,27 +1,25 @@
 <template>
     <TransitionGroup name="slide-fade">
         <v-alert
-            :type="alert.type"
-            :text="$t(alert.text)"
+            :type="notification.type"
+            :text="$t(notification.text)"
             min-width="75vw"
             max-width="75vw"
             style="cursor:pointer;"
             class="mb-1"
             density="compact"
-            v-for="alert in alerts"
-            :key="alert.id"
-            @mouseenter="hold(alert.id)"
-            @mouseleave="release(alert.id)"
+            v-for="notification in notifications"
+            :key="notification.id"
+            @mouseenter="hold(notification.id)"
+            @mouseleave="release(notification.id)"
+            @click="removeNotification(notification.id)"
         />
     </TransitionGroup >
 </template>
 <script setup>
-    import { useAlertStore } from '@/stores/useAlertStore';
-    import { storeToRefs } from 'pinia';
+    import useNotifications from '@/composables/useNotifications';
     
-    const alertStore = useAlertStore();
-    const { alerts } = storeToRefs(alertStore);
-    const { hold, release } = alertStore;
+    const { notifications, removeNotification, hold, release } = useNotifications();
 </script>
 
 <style scoped>

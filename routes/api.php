@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\WorkshopController;
 use App\Http\Controllers\AdminController;
 
 /*
@@ -19,8 +20,10 @@ use App\Http\Controllers\AdminController;
 
 
 Route::get('/posts', [PostController::class, 'index']);
-
 Route::get('/posts/{post}', [PostController::class, 'show']); // Gate in controller
+
+Route::get('/workshops', [WorkshopController::class, 'index']);
+Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
 
 Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/fetchUsers/{string}', [AdminController::class, 'fetchUsers']);
@@ -54,4 +57,8 @@ Route::group(['middleware'=>['auth:sanctum', 'can:update,post']], function(){
 
 Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){
     Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+});
+
+Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Workshop']], function(){
+    Route::post('/workshops', [WorkshopController::class, 'store']);
 });

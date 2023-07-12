@@ -4,14 +4,19 @@
     </v-container>
 </template>
 <script setup>
+    // import { ref, onMounted } from 'vue';
+    import { useRoute } from 'vue-router';
     import { usePostStore } from '@/stores/usePostStore';
     import { storeToRefs } from 'pinia';
-    import { useRoute } from 'vue-router';
 
     const route = useRoute();
     const postStore = usePostStore();
-    const { getFullPost } = postStore;
-    const { post } = storeToRefs(postStore);
+    const { getPost } = postStore;
+    const { post } = storeToRefs(postStore)
 
-    getFullPost(route.params.slug);
+    getPost(route.params.slug);
+
+    // onMounted(async () => {
+    //     await getPost(route.params.slug);
+    // })
 </script>

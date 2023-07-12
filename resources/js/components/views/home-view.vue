@@ -6,7 +6,7 @@
             </div>
             <post-card v-for="post in posts" :key="post.id" :post="post"/>
         </div>
-        <div style="width:350px" class="d-none d-sm-flex pl-4">
+        <div style="width:350px" class="d-none d-md-flex pl-4">
             <div style="width:100%;" class="text-h5 font-weight-thin text-grey mb-3 text-center">
                 {{ $t('Upcoming') }}
             </div>
@@ -21,5 +21,5 @@
     const { getPosts } = postStore;
     const { posts } = storeToRefs(postStore);
 
-    getPosts();        
+    getPosts();
 </script>

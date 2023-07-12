@@ -35,13 +35,7 @@
 
       <template v-slot:append>
         <div style="white-space:nowrap;display:flex;align-items:center;" v-if="user">
-          <v-menu v-if="user.is.teacher">
-            <template v-slot:activator="{ props }">
-                <v-btn dark variant="elevated" icon="mdi-menu" v-bind="props"/>
-              </template>
-              <action-menu-home v-if="route.name == 'Home'"/>
-              <action-menu-workshops v-if="route.name == 'Workshops'"/>
-          </v-menu>
+          <action-menu-teacher v-if="user.is.teacher"/>
           <profile-menu/>
         </div>
         <div style="white-space:nowrap;display:flex;align-items:center;" v-else>

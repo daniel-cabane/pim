@@ -3,8 +3,10 @@ import Home from "./components/views/home-view.vue";
 import Workshops from "./components/views/workshops-view.vue";
 import Calendar from "./components/views/calendar-view.vue";
 import myPosts from "./components/views/myPosts-view.vue";
-import editPost from "./components/views/editPosts-view.vue";
+import editPost from "./components/views/editPost-view.vue";
 import singlePost from "./components/views/singlePost-view.vue";
+import myWorkshops from "./components/views/myWorkshops-view.vue";
+import editWorkshop from "./components/views/editWorkshop-view.vue";
 import Admin from "./components/views/admin-view.vue";
 
 const routes = [
@@ -35,13 +37,23 @@ const routes = [
     },
     {
         path: "/posts/:slug/edit",
-        name: "Edit Posts",
+        name: "Edit Post",
         component: editPost,
     },
     {
         path: "/posts/:slug",
         name: "See Post",
         component: singlePost,
+    },
+    {
+        path: "/myWorkshops",
+        name: "My Workshops",
+        component: myWorkshops,
+    },
+    {
+        path: "/workshops/:id/edit",
+        name: "Edit Workshop",
+        component: editWorkshop,
     },
 ];
 

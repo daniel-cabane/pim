@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use App\Models\Theme;
+use Carbon\Carbon;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -15,7 +17,7 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-                // create roles and assign created permissions
+        // create roles and assign created permissions
         $role = Role::create(['name' => 'student']);
         $role = Role::create(['name' => 'teacher']);
         $role = Role::create(['name' => 'hod']);
@@ -29,5 +31,18 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
         $rootUser->assignRole('admin');
         $rootUser->assignRole('teacher');
+
+        // Themes seeder
+        $themes = [
+            ['title_en' => 'mathematics', 'title_fr' => 'mathématiques'],
+            ['title_en' => 'computer science', 'title_fr' => 'informatique'],
+            ['title_en' => 'creativity', 'title_fr' => 'créativité'],
+            ['title_en' => 'culture', 'title_fr' => 'culture'],
+            ['title_en' => 'games', 'title_fr' => 'jeux'],
+            ['title_en' => 'strategy', 'title_fr' => 'stratégie'],
+        ];
+        foreach($themes as $theme) {
+            Theme::create($theme);
+        }
     }
 }

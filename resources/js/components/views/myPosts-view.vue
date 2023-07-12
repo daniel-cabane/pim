@@ -1,6 +1,5 @@
 <template>
     <v-container>
-        <div>Posts !</div>
         <post-card v-for="post in myPosts" :key="post.id" :post="post"/>
     </v-container>
 </template>

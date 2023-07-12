@@ -20,13 +20,21 @@ Route::get('/', function () {
 
 Route::get('/{name}', function(){
   return view('welcome');
-})->where(['name' => 'home|workshops|calendar|myPosts|admin']);
+})->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops']);
 
 Route::get('/posts/{slug}', function () {
     return view('welcome');
 });
 
 Route::get('/posts/{slug}/edit', function () {
+    return view('welcome');
+});
+
+Route::get('/workshops/{id}', function () {
+    return view('welcome');
+});
+
+Route::get('/workshops/{id}/edit', function () {
     return view('welcome');
 });
 

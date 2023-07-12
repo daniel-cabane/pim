@@ -45,7 +45,7 @@
                         </router-view> -->
                     </v-main>
                     <div style="position:fixed;top:75px;left:12.5vw">
-                        <alert-center></alert-center>
+                        <notification-center></notification-center>
                     </div>
                 </v-container>
             </v-app>

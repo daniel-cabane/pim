@@ -1,80 +1,41 @@
 import { defineStore } from 'pinia';
-import { useAlertStore } from '@/stores/useAlertStore';
-import { useLoadingStore } from '@/stores/useLoadingStore';
+import useAPI from '@/composables/useAPI';
+
+const { get, post, patch, del } = useAPI();
 
 export const usePostStore = defineStore({
     id: 'post',
     state: () => ({
         posts: [],
         myPosts: [],
-        post: {},
-        loading: false
+        post: {}
     }),
     actions: {
-        addAlert(alert) {
-            const alertStore = useAlertStore();
-            const { addAlert } = alertStore;
-            addAlert(alert);
+        async createPost(newPost){
+            const res = await post('/api/posts', newPost);
+            return res.post;
         },
         async getPosts(){
-            const loadingStore = useLoadingStore();
-            const { addProcess, removeProcess } = loadingStore;
-            addProcess('getPosts');
-            try {
-                const res = await axios.get('/api/posts');
-                this.posts = res.data.posts;
-            } catch (err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
-            }
-            removeProcess('getPosts');
+            const res = await get('/api/posts', true);
+            this.posts = res.posts;
         },
         async getMyPosts() {
-            const loadingStore = useLoadingStore();
-            const { addProcess, removeProcess } = loadingStore;
-            addProcess('getPosts');
-            try {
-                const res = await axios.get('/api/myPosts');
-                this.myPosts = res.data.posts;
-            } catch (err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
-            }
-            removeProcess('getPosts');
+            const res = await get('/api/myPosts', true);
+            this.myPosts = res.posts;
         },
-        async getFullPost(slug) {
-            const loadingStore = useLoadingStore();
-            const { addProcess, removeProcess } = loadingStore;
-            addProcess('getPosts');
-            try {
-                const res = await axios.get(`/api/posts/${slug}`);
-                this.post = res.data.post;
-            } catch (err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
-            }
-            removeProcess('getPosts');
+        async getPost(slug) {
+            const res = await get(`/api/posts/${slug}`, true);
+            this.post = res.post;
+            return res.post;
         },
-        async updatePost(publish) {
-            this.loading = true;
-            try {
-                const res = await axios.patch(`/api/posts/${this.post.slug}`, {publish, ...this.post})
-                this.post = res.data;
-                const text = publish ? 'Post published' : 'Post updated';
-                this.addAlert({text, type: 'success'});
-            } catch (err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
-            }
-            this.loading = false;
-
+        async updatePost(post, publish) {
+            const res = await patch(`/api/posts/${post.slug}`, {publish, ...post}, false);
+            this.post = res.post;
+            return res.post;
         },
         async deletePost(slug) {
-            this.loading = true;
-            try {
-                const res = await axios.delete(`/api/posts/${slug}`);
-                return res;
-            } catch (err) {
-                console.log(err);
-                this.addAlert({ text: err.response.data.message, type: 'error' });
-            }
-            this.loading = false;
+            const res = await del(`/api/posts/${slug}`, true);
+            return res;
         }
     }
 });

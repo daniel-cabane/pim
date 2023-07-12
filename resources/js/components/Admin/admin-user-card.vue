@@ -13,10 +13,10 @@
 </template>
 <script setup>
     import { ref, computed } from 'vue';
-    import { useAlertStore } from '@/stores/useAlertStore';
+    import useAPI from '@/composables/useAPI';
 
-    const alertStore = useAlertStore();
-    const { addAlert } = alertStore;
+    const { post } = useAPI();
+
     const props = defineProps({ user: Object });
 
     const teacher = ref(props.user.is.teacher);
@@ -29,9 +29,9 @@
     let loading = ref(false);
     const submit = async () => {
         loading.value = true;
-        const res = await axios.post(`/api/admin/users/${props.user.id}/updateRoles`, {teacher: teacher.value, hod: hod.value});
+        const res = await post(`/api/admin/users/${props.user.id}/updateRoles`, {teacher: teacher.value, hod: hod.value});
         console.log(res.data);
-        addAlert({text: 'User updated', type: 'success'});
+        addNotification({text: 'User updated', type: 'success'});
         loading.value = false;
     }
 </script>

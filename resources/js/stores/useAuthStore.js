@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
-import { useAlertStore } from '@/stores/useAlertStore';
+import useNotifications from '@/composables/useNotifications';
+
+const { addNotification } = useNotifications();
 
 export const useAuthStore = defineStore({
     id: 'user',
@@ -8,11 +10,6 @@ export const useAuthStore = defineStore({
         loading: false
     }),
     actions: {
-        addAlert(alert){
-            const alertStore = useAlertStore();
-            const { addAlert } = alertStore;
-            addAlert(alert);
-        },
         defineUser(user){
             this.user = typeof user == 'object' ? user : JSON.parse(user);
         },
@@ -23,14 +20,14 @@ export const useAuthStore = defineStore({
                 const res = await axios.post('/register', form);
                 if (res.status == 201) {
                     this.user = await this.fetchUser();
-                    this.addAlert({ text: 'Registration successful', type: 'success' });
+                    addNotification({ text: 'Registration successful', type: 'success' });
                     this.loading = false;
                 } else {
-                    this.addAlert({text: 'We encountered an error, please try again', type: 'error'});
+                    addNotification({text: 'We encountered an error, please try again', type: 'error'});
                     this.loading = false;
                 }
             } catch(err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
+                addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
         },
@@ -41,13 +38,14 @@ export const useAuthStore = defineStore({
                 if (res.status == 200) {
                     this.user = await this.fetchUser();
                     this.loading = false;
-                    this.addAlert({ text: "You're signed in !", type: 'success' });
+                    addNotification({ text: "You're signed in !", type: 'success' });
+                    window.location.reload();
                 } else {
-                    this.addAlert({ text: 'We encountered an error, please try again', type: 'error' });
+                    addNotification({ text: 'We encountered an error, please try again', type: 'error' });
                     this.loading = false;
                 }
             } catch(err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
+                addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
         },
@@ -56,7 +54,7 @@ export const useAuthStore = defineStore({
                 const res = await axios.get('/api/userinfo');
                 return res.data.user;
             } catch (err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
+                addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
         },
@@ -64,7 +62,7 @@ export const useAuthStore = defineStore({
             let res = await axios.post('logout');
             if(res.status == 204){
                 this.user = null;
-                this.addAlert({ text: 'Signed out !', type: 'info' });
+                addNotification({ text: 'Signed out !', type: 'info' });
                 window.location.replace('/');
             }
         },
@@ -73,14 +71,14 @@ export const useAuthStore = defineStore({
             try {
                 const res = await axios.post('/forgot-password', form);
                 if(res.status == 200){
-                    this.addAlert({ text: 'An email has been sent, check your inbox', type: 'info' });
+                    addNotification({ text: 'An email has been sent, check your inbox', type: 'info' });
                     this.loading = false;
                 } else {
-                    this.addAlert({ text: 'We encountered an error, please try again', type: 'error' });
+                    addNotification({ text: 'We encountered an error, please try again', type: 'error' });
                     this.loading = false;
                 }
             } catch (err) {
-                this.addAlert({ text: err.response.data.message, type: 'error' });
+                addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
         }

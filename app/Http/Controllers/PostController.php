@@ -18,7 +18,9 @@ class PostController extends Controller
         foreach(Post::whereNotNull('published_at')->orderBy('published_at', 'desc')->get() as $post){
             $posts[] = $post->format();
         }
-        return response()->json(['posts' => $posts]);
+        return response()->json([
+            'posts' => $posts
+        ]);
     }
 
     /**
@@ -31,7 +33,9 @@ class PostController extends Controller
         foreach($user->posts()->where('author_id', $user->id)->get() as $post){
             $posts[] = $post->format();
         }
-        return response()->json(['posts' => $posts]);
+        return response()->json([
+            'posts' => $posts
+        ]);
     }
 
     /**
@@ -40,16 +44,23 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $attrs = $request->validate([
-            'title' => 'required|min:8|max:50',
-            'description' => 'required|min:20|max:255',
+            'title' => 'required|min:5|max:50',
+            'description' => 'required|min:10|max:255',
         ]);
 
-        return response()->json(Post::create([
+        $post = Post::create([
             'title' => $attrs['title'],
             'description' => $attrs['description'],
             'slug' => Str::slug($attrs['title']),
             'author_id' => auth()->id()
-        ]));
+        ]);
+        return response()->json([
+            'post' => $post->format(),
+            'message' => [
+                'text' => 'Post created',
+                'type' => 'success'
+            ]
+        ]);
     }
 
     /**
@@ -58,7 +69,9 @@ class PostController extends Controller
     public function show(Post $post)
     {
         if($post->published_at != null || auth()->user()->can('view', $post)){
-            return response()->json(['post' => $post->format()]);
+            return response()->json([
+                'post' => $post->format()
+            ]);
         }
         
         return response()->json(['message' => 'You cannot view this post', 403]);
@@ -78,18 +91,28 @@ class PostController extends Controller
 
         $newData = [
             'title' => $attrs['title'],
+            'slug' => Str::slug($attrs['title']),
             'description' => $attrs['description'],
             'post' => $attrs['post'],
         ];
+        $messageText = "Post updated";
         if ($attrs['publish'] == 'publish'){
             $newData['published_at'] = Carbon::now();
-        } else if ($attrs['publish'] == 'publish'){
+            $messageText = "Post published";
+        } else if ($attrs['publish'] == 'unpublish'){
             $newData['published_at'] = null;
+            $messageText = "Post unpublished";
         }
 
         $post->update($newData);
 
-        return response()->json($post->format());
+        return response()->json([
+            'post' => $post->format(),
+            'message' => [
+                'text' => $messageText,
+                'type' => 'success'
+            ]
+        ]);
     }
 
     /**
@@ -97,6 +120,12 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        return response()->json($post->delete());
+        return response()->json([
+            'post' => $post->delete(),
+            'message' => [
+                'text' => 'Post deleted',
+                'type' => 'info'
+            ]
+        ]);
     }
 }

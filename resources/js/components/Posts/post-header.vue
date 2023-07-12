@@ -14,10 +14,10 @@
         </v-chip>
         <div class="text-right" v-else>
             <div class="text-caption">
-                Published on {{ post.published_at_formated }}
+                {{ $t('Published on') }} {{ post.published_at_formated }}
             </div>
             <div class="text-caption font-italic" v-if="post.edited">
-                Edited on {{ post.updated_at_formated }}
+                {{ $t('Edited on') }} {{ post.updated_at_formated }}
             </div>
         </div>
     </div>
