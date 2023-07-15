@@ -17,9 +17,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->json('details');
             $table->unsignedBigInteger('organiser_id');
-            $table->timestamp('start_date')->nullable();
-            $table->string('status', 255)->default('draft');
-            $table->boolean('accepting_students')->default(1);
+            $table->date('start_date')->nullable();
+            $table->string('status', 255)->default('Draft');
+            $table->boolean('accepting_students')->default(0);
             $table->timestamps();
 
             $table->foreign('organiser_id')->references('id')->on('users')->onDelete('cascade');

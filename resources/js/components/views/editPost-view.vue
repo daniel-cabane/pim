@@ -60,7 +60,7 @@
     const route = useRoute();
     const router = useRouter();
     const postStore = usePostStore();
-    const { getPost, updatePost } = postStore;
+    const { getPost } = postStore;
     const { post } = storeToRefs(postStore);
 
     getPost(route.params.slug);
@@ -68,8 +68,5 @@
     const quitConfirmed = () => {
         quitDialog.value = false;
         router.go(-1);
-    }
-    const preview = () => {
-        previewDialog.value = true;
     }
 </script>

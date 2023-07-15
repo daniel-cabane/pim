@@ -68,13 +68,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        if($post->published_at != null || auth()->user()->can('view', $post)){
-            return response()->json([
-                'post' => $post->format()
-            ]);
-        }
-        
-        return response()->json(['message' => 'You cannot view this post', 403]);
+        return response()->json([
+            'post' => $post->format()
+        ]);
     }
 
     /**

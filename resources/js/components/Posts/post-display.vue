@@ -7,7 +7,7 @@
         <div class="d-flex align-center mt-4">
             <back-btn/>
             <v-spacer/>
-            <post-edit-menu :post="post" :editing="false"/>
+            <post-edit-menu :post="post" :editing="false" v-if="post.editable"/>
         </div>
     </v-card>
 </template>

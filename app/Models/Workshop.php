@@ -32,8 +32,11 @@ class Workshop extends Model
           'id' => $this->organiser_id,
           'name' => $this->organiser->name
         ],
+        'themes' => $this->themes()->pluck('themes.id'),
         'start_date' => $this->start_date,
-        'accepting_students' => $this->accepting_students
+        'status' => $this->status,
+        'accepting_students' => $this->accepting_students == 1 && $this->status == 'confirmed',
+        'editable' => auth()->check() && auth()->user()->can('update', $this),
       ];
     }
 }

@@ -1,7 +1,7 @@
 <template>
-    <v-menu>
+    <v-menu close-on-content-click>
         <template v-slot:activator="{ props }">
-            <v-btn dark variant="elevated" icon="mdi-school" v-bind="props"/>
+            <v-btn dark  icon="mdi-school" v-bind="props"/>
         </template>
         <v-list>
         <v-list-item @click="gotoMyPosts">
@@ -65,7 +65,7 @@
                 <v-card-text>
                     <v-text-field
                         :rules="[rules.required, rules.minLengthTitle]"
-                        v-model="title"
+                        v-model="workshopTitle"
                         :label="$t('Title')" 
                         variant="outlined"
                         validate-on="blur"
@@ -81,8 +81,8 @@
                 </v-card-text>
                 <div class="d-flex pa-2">
                     <v-spacer/>
-                    <v-btn variant="text" class="mr-2" min-width="150" :disabled="workshopLoading" color="error" @click="newWorkshopDialog = false">{{ $t('Close') }}</v-btn>
-                    <v-btn color="primary" min-width="150" :loading="workshopLoading" @click="submitCreateWorkshop">{{ $t('Submit') }}</v-btn>
+                    <v-btn variant="text" class="mr-2" min-width="150" :disabled="newWorkshopLoading" color="error" @click="newWorkshopDialog = false">{{ $t('Close') }}</v-btn>
+                    <v-btn color="primary" min-width="150" :loading="newWorkshopLoading" @click="submitCreateWorkshop">{{ $t('Submit') }}</v-btn>
                 </div>
             </v-card>
         </v-dialog>
@@ -96,6 +96,7 @@
     import { usePostStore } from '@/stores/usePostStore';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { storeToRefs } from 'pinia';
+    import { useI18n } from 'vue-i18n';
 
     const postStore = usePostStore();
     const { createPost } = postStore;
@@ -129,17 +130,28 @@
 
     const workshopStore = useWorkshopStore();
     const { createWorkshop, getThemes } = workshopStore;
-    const { loading: workshopLoading, themesLoading, themes } = storeToRefs(workshopStore);
+    const { themes } = storeToRefs(workshopStore);
 
     getThemes();
-    const availableThemes = computed(() => themes.value.map(t => t.title_en));
+    const { locale } = useI18n();
+    const availableThemes = computed(() => themes.value.map(theme => {
+        return {
+            title: locale == 'en' ? theme.title_en : theme.title_fr,
+            value: theme.id
+        }
+    }));
 
     let newWorkshopDialog = ref(false);
-    let title = ref('');
+    let workshopTitle = ref('');
     let workshopThemes = ref([]);
-    
+    let newWorkshopLoading = ref(false);
     const submitCreateWorkshop = async () => {
-        const workshop = await createWorkshop({title: title.value, themes: workshopThemes.value});
+        newWorkshopLoading.value = true;
+        const workshop = await createWorkshop({title: workshopTitle.value, themes: workshopThemes.value});
+        workshopTitle.value = '';
+        workshopThemes.value = [];
+        newWorkshopDialog.value = false;
+        newWorkshopLoading.value = false;
         router.push(`/workshops/${workshop.id}/edit`);
     }
 

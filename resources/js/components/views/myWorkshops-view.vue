@@ -1,7 +1,12 @@
 <template>
     <v-container>
-        <div>Workshops !</div>
-        <div v-for="workshop in myWorkshops" :key="workshop.id">{{ workshop.title }}</div>
+        <workshop-card 
+            class="mb-2"
+            hover
+            v-for="workshop in myWorkshops.upcoming" 
+            :workshop="workshop"
+            :key="workshop.id" 
+        />
     </v-container>
 </template>
 <script setup>

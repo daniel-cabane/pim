@@ -19,31 +19,45 @@ use App\Http\Controllers\AdminController;
 */
 
 
-Route::get('/posts', [PostController::class, 'index']);
-Route::get('/posts/{post}', [PostController::class, 'show']); // Gate in controller
-
-Route::get('/workshops', [WorkshopController::class, 'index']);
-Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
+/*
+*
+*   ADMIN
+* 
+*/
 
 Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/fetchUsers/{string}', [AdminController::class, 'fetchUsers']);
     Route::post('/admin/users/{user}/updateRoles', [AdminController::class, 'updateUserRoles']);
 });
 
-// Route::group(['middleware'=>['can:view,App\Models\Post']], function(){
-//     Route::get('/posts/{slug}', [PostController::class, 'show']);
-// });
+Route::group(['middleware'=>['auth:sanctum']], function(){
+    Route::get('/userinfo', [UserController::class, 'info']);
+});
 
-Route::group(['middleware'=>['can:view,App\Models\Post']], function(){
-    Route::get('/posts/{slug}', [PostController::class, 'show']);
+/*
+*
+*   GUESTS
+* 
+*/
+
+Route::get('/posts', [PostController::class, 'index']);
+
+Route::get('/workshops', [WorkshopController::class, 'index']);
+Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
+
+
+/*
+*
+*   POSTS
+* 
+*/
+
+Route::group(['middleware'=>['can:view,post']], function(){
+    Route::get('/posts/{post}', [PostController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});
-
-Route::group(['middleware'=>['auth:sanctum']], function(){
-    Route::get('/userinfo', [UserController::class, 'info']);
 });
 
 Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Post']], function(){
@@ -59,6 +73,21 @@ Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){
     Route::delete('/posts/{post}', [PostController::class, 'destroy']);
 });
 
+/*
+*
+*   WORKSHOPS
+* 
+*/
+
 Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Workshop']], function(){
     Route::post('/workshops', [WorkshopController::class, 'store']);
+    Route::get('/myWorkshops', [WorkshopController::class, 'myWorkshops']);
+});
+
+Route::group(['middleware'=>['can:view,workshop']], function(){
+    Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
+});
+
+Route::group(['middleware'=>['can:update,workshop']], function(){
+    Route::patch('/workshops/{workshop}', [WorkshopController::class, 'update']);
 });

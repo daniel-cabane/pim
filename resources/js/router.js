@@ -7,6 +7,7 @@ import editPost from "./components/views/editPost-view.vue";
 import singlePost from "./components/views/singlePost-view.vue";
 import myWorkshops from "./components/views/myWorkshops-view.vue";
 import editWorkshop from "./components/views/editWorkshop-view.vue";
+import singleWorkshop from "./components/views/singleWorkshop-view.vue";
 import Admin from "./components/views/admin-view.vue";
 
 const routes = [
@@ -19,11 +20,6 @@ const routes = [
         path: "/",
         name: "Home",
         component: Home,
-    },
-    {
-        path: "/workshops",
-        name: "Workshops",
-        component: Workshops,
     },
     {
         path: "/calendar",
@@ -46,9 +42,19 @@ const routes = [
         component: singlePost,
     },
     {
+        path: "/workshops",
+        name: "Workshops",
+        component: Workshops,
+    },
+    {
         path: "/myWorkshops",
         name: "My Workshops",
         component: myWorkshops,
+    },
+    {
+        path: "/workshops/:id",
+        name: "See Workshop",
+        component: singleWorkshop,
     },
     {
         path: "/workshops/:id/edit",
