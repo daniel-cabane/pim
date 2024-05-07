@@ -19,9 +19,9 @@ class WorkshopPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Workshop $workshop): bool
+    public function view(?User $user, Workshop $workshop): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('hod') || $workshop->organiser_id == $user->id || $workshop->status == 'confirmed';
+        return $workshop->status == 'confirmed' || $user?->hasRole('admin') || $user?->hasRole('hod') || $workshop->organiser_id == $user?->id;
     }
 
     /**

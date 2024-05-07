@@ -86,7 +86,13 @@
                         >
                             {{ $t('Schedule') }}
                         </span>
-                        <v-btn color="secondary" size="small" @click="addSession">{{ $t('Add session') }}</v-btn>
+                        <v-btn 
+                            color="secondary" 
+                            size="small" 
+                            @click="addSession"
+                        >
+                            {{ $t('Add session') }}
+                        </v-btn>
                     </div>
                     <div 
                         class="d-block d-sm-flex align-center" 
@@ -137,7 +143,6 @@
                     </div>
                     <div class="d-block d-sm-flex align-center" style="gap:5px;">
                         <v-text-field 
-                        :rules="[rules.required]"
                             :label="$t('Start date')"
                             variant="outlined" 
                             validate-on="blur"
@@ -148,7 +153,7 @@
                         <v-select 
                             variant="outlined" 
                             :label="$t('Status')" 
-                            :items="['Draft', 'Submitted']"
+                            :items="statusOptions"
                             v-model="workshop.status"
                             style="flex:1"
                         />
@@ -162,12 +167,22 @@
     import { ref } from 'vue';
     import Editor from '@tinymce/tinymce-vue';
     import { useTheme } from 'vuetify';
+    import { useAuthStore } from '@/stores/useAuthStore';
+    import { useI18n } from 'vue-i18n';
 
     const theme = useTheme();
 
     const props = defineProps({ workshop: Object, availableThemes: Array });
 
     let tab = ref('t-d');
+
+    const { t } = useI18n();
+    const statusOptions = [{value: 'draft', title: t('Draft')}, {value: 'submitted', title : t('Submitted')}];
+    const authStore = useAuthStore();
+    const { user } = authStore;
+    if(user.is.admin){
+        statusOptions.push({value: 'confirmed', title: t('Confirmed')});
+    }
 
     const rules = {
         required: value => !!value || 'Required.',

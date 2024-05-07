@@ -16,7 +16,7 @@
         <v-tab :value="1">Sign in</v-tab>
         <v-tab :value="2">Register</v-tab>
       </v-tabs>
-      <v-window v-model="tab" class="pt-4">
+      <v-window v-model="tab" style="min-height:318px;max-height:318px" class="pt-4">
         <v-window-item :value="1" :key="1">
           <v-form v-model="validSignin">
             <div>
@@ -112,6 +112,8 @@
   import { useAuthStore } from '@/stores/useAuthStore';
   import { storeToRefs } from 'pinia';
   import { useDisplay } from 'vuetify';
+  import { useI18n } from 'vue-i18n';
+  const { t } = useI18n();
 
   const authStore = useAuthStore();
   const { login, register, resetPassword } = authStore;
@@ -120,15 +122,15 @@
   let dialog = ref(false);
   let tab = ref(1);
 
-  let rules = {
-    required: value => !!value || 'Required.',
+  const rules = {
+    required: value => !!value || t('Required'),
     email: value => {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return pattern.test(value) || 'Invalid e-mail.'
+      return pattern.test(value) || t('Invalid e-mail')
     },
-    minLength: value => value.length >= 8 || 'The password must at least 8 characters long',
-    matchPassword: value => value == form.password || 'Does not match the password'
-  };
+    minLength: value => value.length >= 8 || t('The password must be at least 8 characters long'),
+    matchPassword: value => value == form.password || t('Does not match the password provided'
+)  };
   let validSignin = ref(false);
   let validRegister = ref(false);
   let form = reactive({email: '', password: '', password_confirmation: '', remember: 0});

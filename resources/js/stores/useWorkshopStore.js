@@ -45,7 +45,6 @@ export const useWorkshopStore = defineStore({
             this.isReady = false;
             const res = await get(`/api/myWorkshops`);
             this.myWorkshops = res.workshops;
-            console.log(res.workshops);
             this.isReady = true;
         }
     }

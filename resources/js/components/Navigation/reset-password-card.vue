@@ -30,21 +30,23 @@
 </template>
 <script setup>
     const props = defineProps({token: String, email: String});
+    import { useI18n } from 'vue-i18n';
+    const { t } = useI18n();
 
     let form = reactive({ email: props.email, token: props.token, password: '', password_confirmation: '' });
 
     let rules = {
-        required: value => !!value || $t('Required'),
-        minLength: value => value.length >= 8 || $t('The password must at least 8 characters long'),
-        matchPassword: value => value == form.password || $t('Does not match the password')
+        required: value => !!value || t('Required'),
+        minLength: value => value.length >= 8 || t('The password must at least 8 characters long'),
+        matchPassword: value => value == form.password || t('Does not match the password')
     };
 
     const submit = async () => {
         let res = await axios.post('/reset-password', form);
         if(res.status == 200){
-            addAlert({text: $t('password updated'), type: 'success'});
+            addAlert({text: t('password updated'), type: 'success'});
         } else {
-            addAlert({ text: $t('We encountered an error, please try again'), type: 'error' });
+            addAlert({ text: t('We encountered an error, please try again'), type: 'error' });
         }
     }
 </script>

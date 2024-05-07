@@ -12,10 +12,10 @@ class WorkshopController extends Controller
     public function index ()
     {
         $workshops = [];
-        foreach(Workshop::where('status', 'confirmed')->where('start_date', '<=', Carbon::today())->get() as $workshop){
+        foreach(Workshop::where('status', 'confirmed')->where('start_date', '>=', Carbon::today())->get() as $workshop){
             $workshops[] = $workshop->format();
         }
-        return response()->json($workshops);
+        return response()->json(['workshops' => $workshops]);
     }
 
     public function myWorkshops ()

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->json('details');
             $table->unsignedBigInteger('organiser_id');
             $table->date('start_date')->nullable();
-            $table->string('status', 255)->default('Draft');
+            $table->string('status', 255)->default('draft');
             $table->boolean('accepting_students')->default(0);
             $table->timestamps();
 
