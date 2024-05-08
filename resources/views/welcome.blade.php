@@ -4,12 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>PIM</title>
+        <!-- <title>PIM</title> -->
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- <title>{{ config('app.name', 'PIM') }}</title> -->
+        <title>{{ config('app.name', 'PIM') }}</title>
+        <link rel="shortcut icon" href="{{ asset('images/pimfavicon.ico') }}">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- <style>
