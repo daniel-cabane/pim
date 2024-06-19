@@ -99,5 +99,14 @@
     "Name": "Name",
     "Current password": "Current password",
     "New password": "New password",
-    "Confirm new password": "Confirm new password"
+    "Confirm new password": "Confirm new password",
+    "Poster": "Poster",
+    "The description field must be at least 20 characters.": "The description field must be at least 20 characters.",
+    "Past and current": "Past and current",
+    "English": "English",
+    "French": "French",
+    "Both": "Both",
+    "Bilingual": "Bilingual",
+    "Pick a poster": "Pick a poster",
+    "Languages": "Languages"
 }

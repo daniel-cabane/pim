@@ -10,13 +10,15 @@ export const useWorkshopStore = defineStore({
         myWorkshops: [],
         themes: [],
         workshop: {},
-        isReady: false
+        isReady: false,
+        imageLoading: false
     }),
     actions: {
         async getThemes() {
             this.themes = await get('/api/workshops/themes');
         },
         async createWorkshop(newWorkshop) {
+            console.log(newWorkshop);
             this.isReady = false;
             const res = await post('/api/workshops', newWorkshop, false);
             this.workshop = res.workshop;
@@ -46,6 +48,15 @@ export const useWorkshopStore = defineStore({
             const res = await get(`/api/myWorkshops`);
             this.myWorkshops = res.workshops;
             this.isReady = true;
+        },
+        async updateImage(data) {
+            this.imageLoading = true;
+            let formData = new FormData()
+            formData.append('poster', data.file);
+            const res = await post(`/api/workshops/${this.workshop.id}/poster/${data.language}`, formData);
+            this.workshop = res.workshop;
+            this.imageLoading = false;
+            return res.workshop;
         }
     }
 });

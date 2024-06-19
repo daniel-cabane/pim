@@ -2,7 +2,7 @@
     <v-container>
         <v-card>
             <div v-if="isReady">
-                <workshop-edit-form :workshop="workshop" :availableThemes="availableThemes"/>
+                <workshop-edit-form :workshop="workshop" :availableThemes="availableThemes" @image-updated="updateImage" :imageLoading="imageLoading"/>
             </div>
             <div class="d-flex justify-space-between align-center px-4 py-2">
                 <v-dialog v-model="quitDialog" width="350">
@@ -18,7 +18,7 @@
                         </div>
                     </v-card>
                 </v-dialog>
-                <v-btn color="primary" :loading="loading" append-icon="mdi-content-save" @click="save">
+                <v-btn color="success" :loading="loading" append-icon="mdi-content-save" @click="save">
                     {{ $t('Save') }}
                 </v-btn>
             </div>
@@ -36,8 +36,8 @@
     let loading = ref(false);
 
     const workshopStore = useWorkshopStore();
-    const { getWorkshop, updateWorkshop, getThemes } = workshopStore;
-    const { workshop, isReady, themes } = storeToRefs(workshopStore);
+    const { getWorkshop, updateWorkshop, getThemes, updateImage } = workshopStore;
+    const { workshop, isReady, themes, imageLoading } = storeToRefs(workshopStore);
 
     const route = useRoute();
     getWorkshop(route.params.id);

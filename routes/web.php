@@ -14,8 +14,6 @@ use App\Http\Controllers\UserController;
 |
 */
 
-logger('routes/web.php 17');
-
 Route::get('/', function () {
     return view('welcome');
 });

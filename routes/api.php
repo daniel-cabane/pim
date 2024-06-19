@@ -90,4 +90,5 @@ Route::group(['middleware'=>['can:view,workshop']], function(){
 
 Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::patch('/workshops/{workshop}', [WorkshopController::class, 'update']);
+    Route::post('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'poster']);
 });

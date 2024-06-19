@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+
 use Illuminate\Http\Request;
 use App\Models\Workshop;
 use App\Models\Theme;
@@ -44,20 +47,28 @@ class WorkshopController extends Controller
     public function store(Request $request)
     {
         $attrs = $request->validate([
-            'title' => 'required|min:4|max:100',
+            'title_fr' => 'sometimes|max:100',
+            'title_en' => 'sometimes|max:100',
             'themes' => 'sometimes|Array',
+            'language' => ['required', Rule::in(['fr', 'en', 'both'])]
         ]);
 
+        if($attrs['language'] != 'fr' && $attrs['title_en'] == '' || $attrs['language'] != 'en' && $attrs['title_fr'] == ''){
+            return response()->json(['message' => 'A title is required'], 422);
+        }
+
         $workshop = Workshop::create([
-            'title' => $attrs['title'],
+            'title_fr' => $attrs['title_fr'],
+            'title_en' => $attrs['title_en'],
+            'description' => json_encode(['fr' => '', 'en' => '']),
             'details' => json_encode([
                 'nbSessions' => 6,
-                'location' => 'Salle π (314 BPR)',
+                'roomNb' => 'π (314 BPR)',
                 'campus' => 'BPR',
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],
-                'language' => 'français',
+                'language' => $attrs['language'],
                 'maxStudents' => 15
             ]),
             'organiser_id' => auth()->id()
@@ -78,7 +89,7 @@ class WorkshopController extends Controller
 
     public function show(Workshop $workshop)
     {
-        return response()->json(['workshop' => $workshop->format()]);
+        return response()->json(['workshop' => $workshop->format(), 'teachers' => auth()->user()->teachers]);
     }
 
     public function update(Workshop $workshop, Request $request)
@@ -108,6 +119,33 @@ class WorkshopController extends Controller
             'workshop' => $workshop->format(),
             'message' => [
                 'text' => 'Workshop updated',
+                'type' => 'success'
+            ]
+        ]);
+    }
+
+    public function poster(Workshop $workshop,String $language, Request $request)
+    {
+        logger($language);
+        $posterFile = $request->validate([
+            'poster' => 'required|file|image|max:2048|dimensions:max_width=1920,max_height=1080'
+        ])['poster'];
+
+        $fileName = pathinfo($posterFile->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $posterFile->getClientOriginalExtension();
+        Storage::disk('public')->putFileAs('/images/workshops', $posterFile, $fileName);
+ 
+        $posterLanguage = $language == 'fr' ? 'poster_fr' : 'poster_en';
+        $details = json_decode($workshop->details);
+        $details->{$posterLanguage} = "/images/workshops/$fileName";
+        $workshop->update([
+            'details' => json_encode($details),
+        ]);
+
+
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                'text' => 'Poster saved',
                 'type' => 'success'
             ]
         ]);

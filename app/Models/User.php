@@ -61,4 +61,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
       return $this->hasMany(Workshop::class, 'organiser_id');
     }
+
+    public function getTeachersAttribute()
+    {
+        if($this->hasRole('hod') || $this->hasRole('admin')){
+            return User::whereHas("roles", function($q){ $q->where("name", "teacher"); })->get();
+        }
+
+        return null;
+    }
 }

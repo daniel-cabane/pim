@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('author_id');
-            $table->string('title', 255);
+            $table->string('title_fr', 255);
+            $table->string('title_en', 255);
             $table->string('slug', 255)->unique();
-            $table->text('description');
-            $table->text('post')->nullable();
+            $table->json('descriptions');
+            $table->text('post_fr')->nullable();
+            $table->text('post_en')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 

@@ -9,7 +9,7 @@ class Workshop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'details', 'organiser_id', 'start_date', 'status'];
+    protected $fillable = ['title_fr', 'title_en', 'description', 'language', 'details', 'organiser_id', 'start_date', 'status', 'accepting_students'];
 
     public function organiser()
     {
@@ -25,8 +25,9 @@ class Workshop extends Model
     {
       return [
         'id' => $this->id,
-        'title' => $this->title,
-        'description' => $this->description,
+        'title' => ['fr' => $this->title_fr, 'en' => $this->title_en],
+        'description' => json_decode($this->description),
+        'language' => $this->language,
         'details' => json_decode($this->details),
         'organiser' => [
           'id' => $this->organiser_id,

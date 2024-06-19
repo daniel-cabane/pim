@@ -1,22 +1,25 @@
 <template>
     <v-card @click="seeWorkshop">
-        <workshop-header :workshop="workshop"/>
+        <workshop-header :title="title" :workshop="workshop"/>
         <v-card-text class="threelines">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum aperiam, accusamus quo modi repellendus illo sequi exercitationem quam nihil reprehenderit facilis necessitatibus explicabo vero ullam et unde porro eaque aspernatur.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum aperiam, accusamus quo modi repellendus illo sequi exercitationem quam nihil reprehenderit facilis necessitatibus explicabo vero ullam et unde porro eaque aspernatur.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum aperiam, accusamus quo modi repellendus illo sequi exercitationem quam nihil reprehenderit facilis necessitatibus explicabo vero ullam et unde porro eaque aspernatur.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum aperiam, accusamus quo modi repellendus illo sequi exercitationem quam nihil reprehenderit facilis necessitatibus explicabo vero ullam et unde porro eaque aspernatur.
+            {{ description }}
         </v-card-text>
         <div class="px-4 text-caption text-grey">
             {{ $t('Themes') }}
         </div>
         <div class="px-4 pb-2 d-flex justify-space-between align-center">
-            <workshop-themes-chips :themes="workshop.themes"/>
-            <v-btn size="small" color="primary" icon="mdi-pencil" v-if="workshop.editable" @click.stop="editWorkshop"/>
+            <workshop-themes-chips :themes="workshop.themes" />
+            <v-btn size="small" color="primary" icon="mdi-pencil" v-if="workshop.editable" @click.stop="editWorkshop" />
         </div>
     </v-card>
 </template>
 <script setup>
     import { useRouter } from 'vue-router';
+    import usePickWorkshopLg from '@/composables/usePickWorkshopLg';
 
     const props = defineProps({workshop: Object});
+
+    const { title, description } = usePickWorkshopLg(props.workshop);
 
     const router = useRouter();
     const seeWorkshop = () => {

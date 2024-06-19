@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('workshops', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
-            $table->text('description')->nullable();
+            $table->string('title_fr', 255)->nullable();
+            $table->string('title_en', 255)->nullable();
+            $table->json('description')->nullable();
+            $table->string('language', 255)->default('fr');
             $table->json('details');
             $table->unsignedBigInteger('organiser_id');
             $table->date('start_date')->nullable();
