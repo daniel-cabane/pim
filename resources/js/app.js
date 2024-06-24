@@ -28,6 +28,7 @@ const customLight = {
         info: '#007dc3',
         success: '#acc37e',
         warning: '#fbaf5c',
+        captionColor: '#9E9E9E'
     }
 }
 const customDark = {
@@ -43,6 +44,7 @@ const customDark = {
         info: '#007dc3',
         success: '#acc37e',
         warning: '#fbaf5c',
+        captionColor: '#CDCECE'
     }
 }
 

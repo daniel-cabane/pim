@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Workshop;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -35,5 +36,15 @@ class AdminController extends Controller
         }
 
         return response()->json(['message' => "Roles updated"]);
+    }
+
+
+    public function allWorkshops()
+    {
+        $workshops = [];
+        foreach(Workshop::orderBy('start_date', 'desc')->take(50)->get() as $workshop){
+            $workshops[] = $workshop->format();
+        }
+        return response()->json(['workshops' => $workshops]);
     }
 }

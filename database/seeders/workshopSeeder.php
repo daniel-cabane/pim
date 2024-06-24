@@ -22,6 +22,7 @@ class workshopSeeder extends Seeder
                 'fr' => 'Découvrez l\'histoire passionnante des mathématiques des origines à nos jours',
                 'en' => 'Discover the fascinating history of mathematics from the origins to the present day'
             ]),
+            'term' => 1,
             'language' => 'fr',
             'details' => json_encode([
                 'nbSessions' => 6,
@@ -44,6 +45,7 @@ class workshopSeeder extends Seeder
                 'fr' => 'Lancez-vous dans ce jeu ancestral chinois où se mèlent stratégie et tradition',
                 'en' => 'Play this ancestral chinese game where strategy meets tradition'
             ]),
+            'term' => 1,
             'language' => 'both',
             'details' => json_encode([
                 'nbSessions' => 6,

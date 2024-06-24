@@ -3,6 +3,8 @@
         <v-tab value="t-d">{{ $t('Title and description') }}</v-tab>
         <v-tab value="details">{{ $t('Details') }}</v-tab>
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
+        <v-spacer />
+        <v-select variant="plain" flat :label="$t('Status')" :items="statusOptions" v-model="workshop.status"/>
     </v-tabs>
     <v-card-text>
         <v-window v-model="tab">
@@ -18,8 +20,7 @@
                         :items="[{ value: 'fr', title: $t('French') }, { value: 'en', title: $t('English') }, { value: 'both', title: $t('Bilingual') }]" />
                 </div>
                 <div v-if="workshop.language != 'en'" class="mb-3">
-                    <div class="text-caption"
-                        :class="theme.global.name.value == 'customDark' ? 'text-grey-lighten-2' : 'text-grey'">
+                    <div class="text-caption text-caption-color">
                         Description (fr)
                     </div>
                     <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
@@ -27,8 +28,7 @@
                     }" v-model="workshop.description.fr" v-if="workshop.language != 'en'" />
                 </div>
                 <div v-if="workshop.language !='fr'" class=" mb-3">
-                    <div class="text-caption"
-                        :class="theme.global.name.value == 'customDark' ? 'text-grey-lighten-2' : 'text-grey'">
+                    <div class="text-caption text-caption-color">
                         Description (en)
                     </div>
                     <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
@@ -41,7 +41,7 @@
                     <div class="d-block d-sm-flex align-center" style="gap:5px;">
                         <v-select v-model="workshop.themes" :items="availableThemes" label="Themes" multiple chips
                             variant="outlined" />
-                        <v-select v-model="workshop.teacher" :items="availableThemes" label="Teacher"
+                        <v-select v-model="workshop.teacherId" :items="teachersOptions" label="Teacher"
                             variant="outlined" />
                     </div>
                     <div class="d-block d-sm-flex align-start" style="gap:5px;">
@@ -49,7 +49,8 @@
                             variant="outlined" />
                         <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb" :label="$t('Room')"
                             variant="outlined" validate-on="blur" />
-                        <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1" />
+                        <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1"
+                            :disabled="workshop.details.campus != 'BPR'" />
                     </div>
                     <div class="d-block d-sm-flex align-center" style="gap:5px;">
                         <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
@@ -58,7 +59,7 @@
                         <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
                             v-model="workshop.details.maxStudents" :label="$t('Nb students max')" variant="outlined"
                             validate-on="blur" style="flex:1" />
-                        <v-switch :label="$t('Open to registration')" v-model="workshop.accepting_students"
+                        <v-switch :label="$t('Registration open')" color="primary" v-model="workshop.acceptingStudents"
                             style="flex:1" :disabled="workshop.status != 'confirmed'" />
                     </div>
                     <div class="d-flex justify-space-between align-center px-3 mb-3">
@@ -81,24 +82,21 @@
                         <v-btn variant="text" size="large" style="margin-right:5px;margin-bottom:21px;"
                             icon="mdi-close-octagon-outline" color="red-lighten-2" @click="removeSession(index)" />
                     </div>
-                    <div class="px-3 my-3">
-                        <span class="text-subtitle-1"
-                            :class="theme.global.name.value == 'customDark' ? 'text-grey-lighten-2' : 'text-grey'">
-                            {{ $t('Confirmation') }}
-                        </span>
-                    </div>
-                    <div class="d-block d-sm-flex align-center" style="gap:5px;">
+                    <div style="display: flex;gap:5px;">
                         <v-text-field :label="$t('Start date')" variant="outlined" validate-on="blur" type="date"
-                            v-model="workshop.start_date" style="flex:1" />
-                        <v-select variant="outlined" :label="$t('Status')" :items="statusOptions"
-                            v-model="workshop.status" style="flex:1" />
+                            v-model="workshop.startDate" clearable/>
+                        <v-select :label="$t('Term') " variant="outlined" validate-on="blur" :items="[1,2,3]"
+                            v-model="workshop.term" />
                     </div>
                 </div>
             </v-window-item>
             <v-window-item class="pt-2" value="poster">
                 <v-file-input accept="image/png, image/jpeg, image/jpg" v-model="poster" ref="file"
                     @update:modelValue="posterUpdated" style='display:none;' />
-                <v-window show-arrows="hover">
+                <poster-picker :language="workshop.language" :details="workshop.details" :imageLoading="imageLoading"
+                    @pickPoster="handlePickPoster" @deletePoster="handleDeletePoster"
+                    v-if="workshop.language != 'both'" />
+                <v-window show-arrows="hover" v-else>
                     <v-window-item v-for="lg in ['fr', 'en']" :key="lg">
                         <poster-picker :language="lg" :details="workshop.details" :imageLoading="imageLoading"
                             @pickPoster="handlePickPoster" />
@@ -109,7 +107,7 @@
     </v-card-text>
 </template>
 <script setup>
-    import { ref, defineEmits } from 'vue';
+    import { ref, reactive, defineEmits, computed } from 'vue';
     import Editor from '@tinymce/tinymce-vue';
     import { useTheme } from 'vuetify';
     import { useAuthStore } from '@/stores/useAuthStore';
@@ -121,14 +119,18 @@
     const theme = useTheme();
 
     const props = defineProps({ workshop: Object, availableThemes: Array, imageLoading: Boolean });
-    console.log(props.workshop);
+    const emit = defineEmits(['imageUpdated', 'imageDeleted']);
 
-    let tab = ref('t-d');
+    const tab = ref('t-d');
 
     const { t } = useI18n();
     const statusOptions = [{value: 'draft', title: t('Draft')}, {value: 'submitted', title : t('Submitted')}];
-    const authStore = useAuthStore();
-    const { user } = authStore;
+    const { user, getTeachers } = useAuthStore();
+    let teachers = [];
+    teachers = await getTeachers();
+    const teachersOptions = computed(() => {
+        return teachers.map(t => ({title: t.name, value: t.id}));
+    });
     
     if(user.is.admin){
         statusOptions.push({value: 'confirmed', title: t('Confirmed')});
@@ -139,7 +141,15 @@
         minLengthTitle: value => value.length >= 5 || 'The title must at least 5 characters long',
     };
 
-    const daysOfTheWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const daysOfTheWeek = reactive([
+        { value: 'Monday', title: t('Monday') },
+        { value: 'Tuesday', title: t('Tuesday') },
+        { value: 'Wednesday', title: t('Wednesday') },
+        { value: 'Thursday', title: t('Thursday') },
+        { value: 'Friday', title: t('Friday') },
+        { value: 'Saturday', title: t('Saturday') },
+        { value: 'Sunday', title: t('Sunday') },
+    ]);
 
     const addSession = () => {
         props.workshop.details.schedule.push({day: 'Monday', start: '17:30', finish: '18:30'});
@@ -153,12 +163,14 @@
     }
 
     const poster = ref(null);
-    const file = ref(null)
+    const file = ref(null);
     const posterLanguage = ref(null);
-    const emit = defineEmits(['imageUpdated']);
     const handlePickPoster = (language) => {
         posterLanguage.value = language;
         file.value.click();
+    }
+    const handleDeletePoster = (language) => {
+        emit('imageDeleted', language);
     }
     const posterUpdated = () => {
         emit('imageUpdated', {language: posterLanguage.value, file: poster.value});       

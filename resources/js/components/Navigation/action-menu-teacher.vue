@@ -63,6 +63,8 @@
                             validate-on="blur" v-if="workshopLanguage != 'fr'" />
                         <v-select v-model="workshopLanguage" :items="availableLanguages" :label="$t('Languages')"
                             variant="outlined" />
+                        <v-select :label="$t('Term')" variant="outlined" validate-on="blur" :items="[1, 2, 3]"
+                            v-model="workshopTerm" />
                         <v-select v-model="workshopThemes" :items="availableThemes" label="Themes" multiple chips
                             variant="outlined" />
                     </v-card-text>
@@ -71,7 +73,7 @@
                         <v-btn variant="text" class="mr-2" min-width="150" :disabled="newWorkshopLoading" color="error"
                             @click="newWorkshopDialog = false">{{ $t('Close') }}</v-btn>
                         <v-btn color="primary" min-width="150" :loading="newWorkshopLoading"
-                            @click="submitCreateWorkshop">{{ $t('Submit') }}</v-btn>
+                            @click="submitCreateWorkshop">{{ $t('Create') }}</v-btn>
                     </div>
                 </v-card>
             </v-dialog>
@@ -137,17 +139,28 @@
     let workshopTitleFr = ref('');
     let workshopThemes = ref([]);
     let workshopLanguage = ref('fr');
+    let workshopTerm = ref(1);
     let newWorkshopLoading = ref(false);
     const submitCreateWorkshop = async () => {
         newWorkshopLoading.value = true;
-        const workshop = await createWorkshop({ title_fr: workshopTitleFr.value, title_en: workshopTitleEn.value, themes: workshopThemes.value, language: workshopLanguage.value});
-        workshopTitleFr.value = '';
-        workshopTitleEn.value = '';
-        workshopLanguage.value = 'fr';
-        workshopThemes.value = [];
-        newWorkshopDialog.value = false;
-        newWorkshopLoading.value = false;
-        router.push(`/workshops/${workshop.id}/edit`);
+        try{
+            const workshop = await createWorkshop({ 
+                title_fr: workshopTitleFr.value,
+                title_en: workshopTitleEn.value,
+                themes: workshopThemes.value,
+                language: workshopLanguage.value,
+                term: workshopTerm.value
+            });
+            workshopTitleFr.value = '';
+            workshopTitleEn.value = '';
+            workshopLanguage.value = 'fr';
+            workshopThemes.value = [];
+            newWorkshopDialog.value = false;
+            newWorkshopLoading.value = false;
+            router.push(`/workshops/${workshop.id}/edit`);
+        } catch {
+            newWorkshopLoading.value = false;
+        }
     }
 
     const gotoMyWorkshops = () => {

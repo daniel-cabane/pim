@@ -28,10 +28,13 @@ use App\Http\Controllers\AdminController;
 Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/fetchUsers/{string}', [AdminController::class, 'fetchUsers']);
     Route::post('/admin/users/{user}/updateRoles', [AdminController::class, 'updateUserRoles']);
+    
+    Route::get('/admin/workshops/', [AdminController::class, 'allWorkshops']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::get('/userinfo', [UserController::class, 'info']);
+    Route::get('/userinfo/teachers', [UserController::class, 'teachers']);
 });
 
 /*
@@ -86,9 +89,14 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Workshop']],
 
 Route::group(['middleware'=>['can:view,workshop']], function(){
     Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
+    Route::post('/workshops/{workshop}/apply', [WorkshopController::class, 'apply']);
+    Route::post('/workshops/{workshop}/withdraw', [WorkshopController::class, 'withdraw']);
 });
 
 Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::patch('/workshops/{workshop}', [WorkshopController::class, 'update']);
     Route::post('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'poster']);
+    Route::delete('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'deletePoster']);
+    Route::delete('/workshops/{workshop}/archive', [WorkshopController::class, 'archive']);
+    Route::delete('/workshops/{workshop}', [WorkshopController::class, 'destroy']);
 });

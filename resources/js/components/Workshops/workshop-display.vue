@@ -1,7 +1,7 @@
 <template>
-    <workshop-header :workshop="workshop"/>
+    <workshop-header :title="title" :workshop="workshop" />
     <v-card-text>
-        <div v-html="workshop.description"/>
+        <div v-html="description" />
         <v-container fluid class="px-0">
             <v-row no-gutters>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
@@ -9,47 +9,47 @@
                         {{ $t('Sessions') }}
                     </div>
                     <div v-for="(session, index) in workshop.details.schedule" :key="index">
-                        {{ session.day }} from {{ session.start }} to {{ session.finish }}
+                        {{ $t(session.day) }} {{ $t('from') }} {{ session.start }} {{ $t('to') }} {{ session.finish }}
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
                     <div class="text-caption text-grey">
                         {{ $t('Start date') }}
                     </div>
-                    <div >
-                        {{ workshop.start_date }}
+                    <div>
+                        {{ workshop.startDate ? workshop.formatedStartDate : $t(workshop.formatedStartDate) }}
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
                     <div class="text-caption text-grey">
-                        {{ $t('Finish date') }}
+                        {{ $t('Nb of sessions') }}
                     </div>
-                    <div >
-                        {{ workshop.start_date }}
+                    <div>
+                        {{ workshop.details.nbSessions }}
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
                     <div class="text-caption text-grey">
-                        {{ $t('Room') }}
+                        {{ $t('Room nb') }}
                     </div>
-                    <div >
-                        {{ workshop.details.location }}
+                    <div>
+                        {{ workshop.details.roomNb }}
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
                     <div class="text-caption text-grey">
                         {{ $t('Language') }}
                     </div>
-                    <div >
-                        {{ workshop.details.language }}
+                    <div>
+                        {{ $t(spellLanguage) }}
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
                     <div class="text-caption text-grey">
                         {{ $t('Themes') }}
                     </div>
-                    <div >
-                        <workshop-themes-chips :themes="workshop.themes" size="small"/>
+                    <div>
+                        <workshop-themes-chips :themes="workshop.themes" size="small" />
                     </div>
                 </v-col>
             </v-row>
@@ -57,8 +57,21 @@
     </v-card-text>
 </template>
 <script setup>
-    import { onMounted } from 'vue';
+    import { computed } from 'vue';
+    import usePickWorkshopLg from '@/composables/usePickWorkshopLg';
+
     const props = defineProps({ workshop: Object });
 
-    onMounted(() => console.log(props.workshop));
+    const { title, description } = usePickWorkshopLg(props.workshop);
+
+    const spellLanguage = computed(() => {
+        if(props.workshop.language == 'fr'){
+            return 'French'
+        }
+        if (props.workshop.language == 'en') {
+            return 'English'
+        }
+
+        return 'Both'
+    });
 </script>

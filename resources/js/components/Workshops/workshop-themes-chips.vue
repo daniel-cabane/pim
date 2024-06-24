@@ -10,7 +10,7 @@
         >
             {{ theme }}
         </v-chip>
-        <v-chip label color="secondary" v-if="workshopThemes.length == 0">None</v-chip>
+        <v-chip label color="secondary" v-if="workshopThemes.length == 0">{{ t('None') }}</v-chip>
     </span>
 </template>
 <script setup>
@@ -18,6 +18,8 @@
     import { useI18n } from 'vue-i18n';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { storeToRefs } from 'pinia';
+
+    const { t } = useI18n();
 
     const workshopStore = useWorkshopStore();
     const { getThemes } = workshopStore;

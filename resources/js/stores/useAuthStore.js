@@ -59,7 +59,7 @@ export const useAuthStore = defineStore({
             }
         },
         async logout() {
-            let res = await axios.post('logout');
+            let res = await axios.post('/logout');
             if(res.status == 204){
                 this.user = null;
                 addNotification({ text: 'Signed out !', type: 'info' });
@@ -77,6 +77,15 @@ export const useAuthStore = defineStore({
                     addNotification({ text: 'We encountered an error, please try again', type: 'error' });
                     this.loading = false;
                 }
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
+        },
+        async getTeachers(){
+            try {
+                const res = await axios.get('/api/userinfo/teachers');
+                return res.data;
             } catch (err) {
                 addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;

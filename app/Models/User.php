@@ -59,15 +59,31 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function workshops()
     {
-      return $this->hasMany(Workshop::class, 'organiser_id');
+      return $this->hasMany(Workshop::class, 'organiser_id')->where('archived', 0);
     }
 
-    public function getTeachersAttribute()
+    public function archivedWorkshops()
     {
-        if($this->hasRole('hod') || $this->hasRole('admin')){
-            return User::whereHas("roles", function($q){ $q->where("name", "teacher"); })->get();
-        }
-
-        return null;
+      return $this->hasMany(Workshop::class, 'organiser_id')->where('archived', 1);
     }
+
+    public function enrollements()
+    {
+      return $this->belongsToMany(Workshop::class)->withPivot(['comment', 'available', 'confirmed']);
+    }
+
+    public function scopeTeachers($query)
+    {
+        return $query->whereHas("roles", function($q){ $q->where("name", "teacher"); });
+    }
+
+    // public function teachers()
+    // {
+    //     return $this->hasMany(User::class, 'user_id')->whereHas("roles", function($q){ $q->where("name", "teacher"); });
+        // if($this->hasRole('hod') || $this->hasRole('admin')){
+        //     return User::whereHas("roles", function($q){ $q->where("name", "teacher"); })->get();
+        // }
+
+        // return null;
+    // }
 }

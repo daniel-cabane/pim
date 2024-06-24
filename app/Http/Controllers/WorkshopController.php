@@ -39,10 +39,12 @@ class WorkshopController extends Controller
         ]]);
     }
 
+    
     public function themes()
     {
         return response()->json(Theme::all());
     }
+
 
     public function store(Request $request)
     {
@@ -50,7 +52,8 @@ class WorkshopController extends Controller
             'title_fr' => 'sometimes|max:100',
             'title_en' => 'sometimes|max:100',
             'themes' => 'sometimes|Array',
-            'language' => ['required', Rule::in(['fr', 'en', 'both'])]
+            'language' => ['required', Rule::in(['fr', 'en', 'both'])],
+            'term' => 'required|numeric|min:1|max:3'
         ]);
 
         if($attrs['language'] != 'fr' && $attrs['title_en'] == '' || $attrs['language'] != 'en' && $attrs['title_fr'] == ''){
@@ -61,6 +64,8 @@ class WorkshopController extends Controller
             'title_fr' => $attrs['title_fr'],
             'title_en' => $attrs['title_en'],
             'description' => json_encode(['fr' => '', 'en' => '']),
+            'language' => $attrs['language'],
+            'term' => $attrs['term'],
             'details' => json_encode([
                 'nbSessions' => 6,
                 'roomNb' => 'π (314 BPR)',
@@ -68,7 +73,6 @@ class WorkshopController extends Controller
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],
-                'language' => $attrs['language'],
                 'maxStudents' => 15
             ]),
             'organiser_id' => auth()->id()
@@ -89,28 +93,40 @@ class WorkshopController extends Controller
 
     public function show(Workshop $workshop)
     {
-        return response()->json(['workshop' => $workshop->format(), 'teachers' => auth()->user()->teachers]);
+        $user = auth()->user();
+        return response()->json(['workshop' => $workshop->format(), 'teachers' => $user ? $user->teachers : null]);
     }
 
     public function update(Workshop $workshop, Request $request)
     {
         $attrs = $request->validate([
-            'title' => 'required|min:4|max:100',
+            'title' => 'required',
             'description' => 'sometimes',
+            'language' => ['required', Rule::in(['fr', 'en', 'both'])],
             'details' => 'required|Array',
-            'start_date' => 'nullable|Date',
+            'startDate' => 'nullable|Date',
             'status' => 'required|min:4|max:12',
-            'accepting_students' => 'required|Boolean',
-            'themes' => 'sometimes|Array'
+            'acceptingStudents' => 'required|Boolean',
+            'themes' => 'sometimes|Array',
+            'teacherId' => 'required|numeric',
+            'term' => 'required|numeric'
         ]);
 
+        if($attrs['language'] != 'fr' && $attrs['title']['en'] == '' || $attrs['language'] != 'en' && $attrs['title']['fr'] == ''){
+            return response()->json(['message' => 'A title is required'], 422);
+        }
+
         $workshop->update([
-            'title' => $attrs['title'],
-            'description' => $attrs['description'],
+            'title_fr' => $attrs['title']['fr'],
+            'title_en' => $attrs['title']['en'],
+            'description' => json_encode($attrs['description']),
+            'language' => $attrs['language'],
             'details' => json_encode($attrs['details']),
-            'start_date' => $attrs['start_date'],
+            'start_date' => $attrs['startDate'],
             'status' => $attrs['status'],
-            'accepting_students' => $attrs['accepting_students'],
+            'accepting_students' => $attrs['acceptingStudents'],
+            'organiser_id' => $attrs['teacherId'],
+            'term' => $attrs['term'],
         ]);
 
         $workshop->themes()->sync($attrs['themes']);
@@ -126,7 +142,6 @@ class WorkshopController extends Controller
 
     public function poster(Workshop $workshop,String $language, Request $request)
     {
-        logger($language);
         $posterFile = $request->validate([
             'poster' => 'required|file|image|max:2048|dimensions:max_width=1920,max_height=1080'
         ])['poster'];
@@ -134,6 +149,7 @@ class WorkshopController extends Controller
         $fileName = pathinfo($posterFile->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $posterFile->getClientOriginalExtension();
         Storage::disk('public')->putFileAs('/images/workshops', $posterFile, $fileName);
  
+        $workshop->deletePoster($language);
         $posterLanguage = $language == 'fr' ? 'poster_fr' : 'poster_en';
         $details = json_decode($workshop->details);
         $details->{$posterLanguage} = "/images/workshops/$fileName";
@@ -148,6 +164,77 @@ class WorkshopController extends Controller
                 'text' => 'Poster saved',
                 'type' => 'success'
             ]
+        ]);
+    }
+
+    public function deletePoster(Workshop $workshop,String $language)
+    {
+        $workshop->deletePoster($language);
+
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                'text' => 'Poster deleted',
+                'type' => 'success'
+            ]
+        ]);
+    }
+
+    public function archive(Workshop $workshop)
+    {
+        return response()->json([
+            'workshop' => $workshop->archive(),
+            'message' => [
+                'text' => 'Workshop archived',
+                'type' => 'warning'
+            ]
+        ]);
+    }
+
+    public function destroy(Workshop $workshop)
+    {
+        if($workshop->archived){
+            $workshop->deletePoster();
+            return response()->json([
+                'workshop' => $workshop->delete(),
+                'message' => [
+                    'text' => 'Workshop deleted',
+                    'type' => 'error'
+                ]
+            ]);
+        }
+        return response()->json(['message' => 'You can only delete archived workshops'], 403);
+    }
+
+    public function apply(Workshop $workshop, Request $request)
+    {
+        $attrs = $request->validate([
+            'availability' => 'required|Boolean',
+            'comment' => 'sometimes|max:100'
+        ]);
+
+        $workshop->applicants()->detach(auth()->id());
+
+        $workshop->applicants()->attach(auth()->id(), ['available' => $attrs['availability'], 'comment' => $attrs['comment']]);
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                    'text' => 'Application recorded',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    
+    public function withdraw(Workshop $workshop)
+    {
+        $workshop->applicants()->detach(auth()->id());
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                    'text' => 'Application withdrawn',
+                    'type' => 'warning'
+                ]
         ]);
     }
 }

@@ -18,13 +18,13 @@ class UserController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function info()
-  {
-    // $user = auth()->user();
-    // $user->isTeacher = $user->hasRole('teacher');
-    // $user->isHod = $user->hasRole('hod');
-    // $user->isAdmin = $user->hasRole('admin');
-    
+  { 
     return response()->json(['user' => auth()->user()]);
+  }
+
+  public function teachers()
+  { 
+    return response()->json(User::teachers()->get());
   }
 
   public function googleSigninRedirect()

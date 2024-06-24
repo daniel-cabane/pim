@@ -57,6 +57,36 @@ export const useWorkshopStore = defineStore({
             this.workshop = res.workshop;
             this.imageLoading = false;
             return res.workshop;
+        },
+        async deleteImage(language){
+            this.imageLoading = true;
+            const res = await del(`/api/workshops/${this.workshop.id}/poster/${language}`, {});
+            this.workshop = res.workshop;
+            this.imageLoading = false;
+            return res.workshop;
+        },
+        async archiveWorkshop() {
+            const res = await del(`/api/workshops/${this.workshop.id}/archive`, {});
+            return res;
+        },
+        async deleteWorkshop(){
+            const res = await del(`/api/workshops/${this.workshop.id}`, {});
+            return res;
+        },
+        async adminGetAllWorkshops(){
+            this.isReady = false;
+            const res = await get(`/api/admin/workshops`);
+            this.workshops = res.workshops;
+            this.isReady = true;
+        },
+        async applyWorkshop(data){
+            const res = await post(`/api/workshops/${this.workshop.id}/apply`, data);
+            this.workshop = res.workshop;
+        },
+        async withdrawWorkshop(){
+            const res = await post(`/api/workshops/${this.workshop.id}/withdraw`);
+            console.log(res.workshop);
+            this.workshop = res.workshop;
         }
     }
 });
