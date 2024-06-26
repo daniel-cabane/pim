@@ -18,9 +18,8 @@ export const useWorkshopStore = defineStore({
             this.themes = await get('/api/workshops/themes');
         },
         async createWorkshop(newWorkshop) {
-            console.log(newWorkshop);
             this.isReady = false;
-            const res = await post('/api/workshops', newWorkshop, false);
+            const res = await post('/api/workshops', newWorkshop);
             this.workshop = res.workshop;
             this.isReady = true;
             return res.workshop;
@@ -34,13 +33,14 @@ export const useWorkshopStore = defineStore({
         },
         async getWorkshops() {
             this.isReady = false;
-            const res = await get(`/api/workshops`);
+            const res = await get(`/api/workshops`, true);
             this.workshops = res.workshops;
             this.isReady = true;
         },
         async updateWorkshop() {
-            const res = await patch(`/api/workshops/${this.workshop.id}`, this.workshop, false);
+            const res = await patch(`/api/workshops/${this.workshop.id}`, this.workshop);
             this.workshop = res.workshop;
+            // UPDATE WORKSHOP IN WORKSHOPS ARRAY
             return res.workshop;
         },
         async getMyWorkshops() {
@@ -85,8 +85,11 @@ export const useWorkshopStore = defineStore({
         },
         async withdrawWorkshop(){
             const res = await post(`/api/workshops/${this.workshop.id}/withdraw`);
-            console.log(res.workshop);
             this.workshop = res.workshop;
+        },
+        async editApplicantName(data){
+            console.log(data.name);
+            await post(`/api/workshops/${this.workshop.id}/editApplicantName/${data.id}`, {name: data.name});
         }
     }
 });

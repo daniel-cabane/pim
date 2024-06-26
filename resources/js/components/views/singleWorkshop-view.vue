@@ -4,7 +4,7 @@
             <back-btn />
         </div>
         <v-card>
-            <workshop-display :workshop="workshop" />
+            <workshop-display :workshop="workshop" @editApplicantName="editApplicantName" />
             <div class="pa-4" style="overflow-y:hidden;transition:all .5s"
                 :style="`max-height:${showApplication ? 250 : 0}px;${!showApplication ? 'content-visibility:hidden;' : ''}`"
                 v-if='workshop.application'>
@@ -15,8 +15,9 @@
                 <div>
                     <v-radio-group v-model="workshop.application.available"
                         :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents">
-                        <v-radio label="I'm available" :value="true" />
-                        <v-radio label="I'm interested but not available at the time specified" :value="false" />
+                        <v-radio :label="$t('I\'m available')" :value="true" />
+                        <v-radio :label="$t('I\'m interested but not available at the time specified')"
+                            :value="false" />
                     </v-radio-group>
                     <v-text-field label="Comment (optional)" v-model="workshop.application.comment"
                         :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents" />
@@ -52,11 +53,11 @@
                     </div>
                     <div class="d-flex justify-end" v-else-if="workshop.application.submitted">
                         <div>
-                            <v-chip label size="large" color="success">
-                                Applied !
+                            <v-chip label size="large" color="success" theme="dark" append-icon="mdi-check">
+                                {{ $t('Applied !') }}
                             </v-chip>
-                            <v-btn icon="mdi-eye" color="success" size="small" class="ml-3" variant="outlined"
-                                @click="showApplication = true" />
+                            <v-btn icon="mdi-eye" color="success" theme="dark" size="small" class="ml-3"
+                                variant="outlined" @click="showApplication = true" />
                         </div>
                     </div>
                     <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents">
@@ -89,9 +90,8 @@
     import { storeToRefs } from 'pinia';
     
     const workshopStore = useWorkshopStore();
-    const { getWorkshop, applyWorkshop, withdrawWorkshop } = workshopStore;
+    const { getWorkshop, applyWorkshop, withdrawWorkshop, editApplicantName } = workshopStore;
     const { workshop, isReady } = storeToRefs(workshopStore);
-    console.log(workshop);
     
     const route = useRoute();
     getWorkshop(route.params.id);

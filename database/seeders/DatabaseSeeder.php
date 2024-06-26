@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // Keep in production
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(holidaySeeder::class);
 
         // Dev seeding only
         if (App::environment('local')) {

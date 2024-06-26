@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Workshop;
 use App\Models\Theme;
+use App\Models\User;
 use Carbon\Carbon;
 
 class WorkshopController extends Controller
@@ -234,6 +235,22 @@ class WorkshopController extends Controller
             'message' => [
                     'text' => 'Application withdrawn',
                     'type' => 'warning'
+                ]
+        ]);
+    }
+
+    public function editApplicantName(Workshop $workshop, User $user, Request $request)
+    {
+        $attrs = $request->validate([
+            'name' => 'required|max:50'
+        ]);
+
+        $user->update(['name' => $attrs['name']]);
+
+        return response()->json([
+            'message' => [
+                    'text' => 'Applicant\'s name updated',
+                    'type' => 'success'
                 ]
         ]);
     }

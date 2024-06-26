@@ -1,28 +1,40 @@
 <template>
     <v-container>
-            <v-tabs v-model="tab">
-                <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
-                <v-tab value="posts">{{ $t('Blog posts') }}</v-tab>
-                <v-tab value="users">{{ $t('Users') }}</v-tab>
-            </v-tabs>
-            <div>
-                <v-window v-model="tab">
-                    <v-window-item class="pt-2" value="workshops">
-                        <workshop-card v-for="workshop in workshops" :workshop="workshop" class="my-2" :key="workshop.id" />
-                        <!-- <div v-for="workshop in workshops" :key="workshop.id">{{ workshop.id }}</div> -->
-                    </v-window-item>
-                    <v-window-item class="pt-2" value="posts">
-                        posts
-                    </v-window-item>
-                    <v-window-item class="pt-2" value="users">
-                        <v-text-field label="Search user" :loading="loading" variant="outlined" v-model="data"
-                            @keydown.enter="fetchUsers" />
-                        <div style="display:flex;flex-wrap:wrap;">
-                            <admin-user-card v-for="user in users" :key="user.id" :user="user" />
-                        </div>
-                    </v-window-item>
-                </v-window>
-            </div>
+        <v-tabs v-model="tab">
+            <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
+            <v-tab value="posts">{{ $t('Blog posts') }}</v-tab>
+            <v-tab value="users">{{ $t('Users') }}</v-tab>
+            <v-tab value="sessions">{{ $t('Sessions') }}</v-tab>
+            <v-tab value="holidays">{{ $t('Holidays') }}</v-tab>
+        </v-tabs>
+        <div class="pa-4">
+            <v-window v-model="tab">
+                <v-window-item value="workshops">
+                    <div class="d-flex flex-wrap ">
+                        <workshop-card v-for="workshop in workshops" :workshop="workshop" class="ma-2"
+                            :key="workshop.id" />
+                    </div>
+                </v-window-item>
+                <v-window-item value="posts">
+                    posts
+                </v-window-item>
+                <v-window-item value="users">
+                    <v-text-field label="Search user" :loading="loading" variant="outlined" v-model="data"
+                        @keydown.enter="fetchUsers" />
+                    <div style="display:flex;flex-wrap:wrap;">
+                        <admin-user-card v-for="user in users" :key="user.id" :user="user" />
+                    </div>
+                </v-window-item>
+                <v-window-item value="sessions">
+                    sessions
+                </v-window-item>
+                <v-window-item value="holidays">
+                    <div>
+                        <admin-holidays-table/>
+                    </div>
+                </v-window-item>
+            </v-window>
+        </div>
     </v-container>
 </template>
 <script setup>
@@ -30,13 +42,17 @@
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useRouter } from 'vue-router';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    // import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
 
-    // const { workshops, isReady, adminGetAllWorkshops } = useWorkshopStore();
     const workshopStore = useWorkshopStore();
     const { adminGetAllWorkshops } = workshopStore;
     const { workshops } = storeToRefs(workshopStore);
     adminGetAllWorkshops();
+
+    // const eventStore = useEventStore();
+    // const { getHolidays, createHoliday, editHoliday, deleteHoliday } = eventStore;
+    // const { holidays } = storeToRefs(eventStore);
 
     const authStore = useAuthStore();
     const { user } = authStore;

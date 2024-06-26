@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Workshop;
+use App\Models\Holiday;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -46,5 +49,89 @@ class AdminController extends Controller
             $workshops[] = $workshop->format();
         }
         return response()->json(['workshops' => $workshops]);
+    }
+    
+    public function createHoliday(Request $request)
+    {
+        $attrs = $request->validate([
+            'start' => 'required|date',
+            'finish' => 'required|date',
+            'name' => 'required|String|min:2|max:50'
+        ]);
+
+        $start_carbon = Carbon::parse($attrs['start']);
+        $finish_carbon = Carbon::parse($attrs['finish']);
+        if ($start_carbon->gt($finish_carbon)) {
+            return response()->json([
+                'holiday' => null,
+                'message' => [
+                        'text' => 'The finish date must be after the start date',
+                        'type' => 'error'
+                    ]
+            ]); 
+        }
+
+        $holiday = Holiday::create([
+            'start' => $attrs['start'],
+            'finish' => $attrs['finish'],
+            'name' => $attrs['name']
+        ]);
+
+        return response()->json([
+            'holiday' => $holiday,
+            'message' => [
+                    'text' => 'Holiday added',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function updateHoliday(Holiday $holiday, Request $request)
+    {
+        $attrs = $request->validate([
+            'start' => 'required|date',
+            'finish' => 'required|date',
+            'name' => 'required|String|min:2|max:50'
+        ]);
+
+        $start_carbon = Carbon::parse($attrs['start']);
+        $finish_carbon = Carbon::parse($attrs['finish']);
+        if ($start_carbon->gt($finish_carbon)) {
+            return response()->json([
+                'holiday' => null,
+                'message' => [
+                        'text' => 'The finish date must be after the start date',
+                        'type' => 'error'
+                    ]
+            ]); 
+        }
+
+        $holiday->update([
+            'start' => $attrs['start'],
+            'finish' => $attrs['finish'],
+            'name' => $attrs['name']
+        ]);
+
+        return response()->json([
+            'holiday' => $holiday,
+            'message' => [
+                    'text' => 'Holiday updated',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function deleteHoliday(Holiday $holiday)
+    {
+        $id = $holiday->id;
+        $holiday->delete();
+
+        return response()->json([
+            'id' => $id,
+            'message' => [
+                    'text' => 'Holiday deleted',
+                    'type' => 'warning'
+                ]
+        ]);
     }
 }

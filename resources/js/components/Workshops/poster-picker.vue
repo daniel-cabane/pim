@@ -16,7 +16,7 @@
                                     {{ $t('Are you sure you wish to delete this file ?') }}
                                 </v-card-text>
                                 <div style="display:flex;justify-content:flex-end;" class="pa-3">
-                                    <v-btn variant="text" class="mr-3" color="primary" @click="deleteDialog = false">
+                                    <v-btn variant="tonal" class="mr-3" color="primary" @click="deleteDialog = false">
                                         {{ $t('Cancel') }}
                                     </v-btn>
                                     <v-btn color="error" @click="emit('deletePoster', language);deleteDialog=false;">

@@ -45,8 +45,8 @@
                             </v-card>
                         </template>
                     </v-dialog>
-                    <v-btn color="success" style="min-width:200px;" :loading="loading" append-icon="mdi-content-save"
-                        @click="save">
+                    <v-btn color="success" style="min-width:200px;" theme="dark" :loading="loading"
+                        append-icon="mdi-content-save" @click="save">
                         {{ $t('Save') }}
                     </v-btn>
                 </div>

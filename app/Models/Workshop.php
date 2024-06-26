@@ -36,6 +36,7 @@ class Workshop extends Model
           $applicants[] = [
             'id' => $applicant->id,
             'name' => $applicant->name,
+            'email' => $applicant->email,
             'available' => $applicant->pivot->available,
             'confirmed' => $applicant->pivot->confirmed,
             'comment' => $applicant->pivot->comment

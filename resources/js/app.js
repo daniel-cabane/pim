@@ -13,6 +13,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import { createVuetify, useTheme } from 'vuetify';
 import * as components from 'vuetify/components';
+import { VCalendar } from 'vuetify/labs/VCalendar'
 import * as directives from 'vuetify/directives';
 
 const customLight = {
@@ -57,7 +58,7 @@ if (browserTheme) {
 }
 
 const vuetify = createVuetify({
-    components,
+    components: { VCalendar, ...components },
     directives,
     theme: {
         defaultTheme,

@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\WorkshopController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,10 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/users/{user}/updateRoles', [AdminController::class, 'updateUserRoles']);
     
     Route::get('/admin/workshops/', [AdminController::class, 'allWorkshops']);
+
+    Route::post('/admin/holiday/', [AdminController::class, 'createHoliday']);
+    Route::patch('/admin/holidays/{holiday}', [AdminController::class, 'updateHoliday']);
+    Route::delete('/admin/holidays/{holiday}', [AdminController::class, 'deleteHoliday']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -47,6 +52,9 @@ Route::get('/posts', [PostController::class, 'index']);
 
 Route::get('/workshops', [WorkshopController::class, 'index']);
 Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
+
+Route::get('/events', [EventController::class, 'index']);
+Route::get('/holidays', [EventController::class, 'holidays']);
 
 
 /*
@@ -96,7 +104,14 @@ Route::group(['middleware'=>['can:view,workshop']], function(){
 Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::patch('/workshops/{workshop}', [WorkshopController::class, 'update']);
     Route::post('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'poster']);
+    Route::post('/workshops/{workshop}/editApplicantName/{user}', [WorkshopController::class, 'editApplicantName']);
     Route::delete('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'deletePoster']);
     Route::delete('/workshops/{workshop}/archive', [WorkshopController::class, 'archive']);
     Route::delete('/workshops/{workshop}', [WorkshopController::class, 'destroy']);
 });
+
+/*
+*
+*   EVENTS
+* 
+*/

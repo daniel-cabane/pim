@@ -1,6 +1,26 @@
 <template>
-    <v-card style="position:relative" @click="seeWorkshop">
-        <workshop-header :title="title" :workshop="workshop" />
+    <v-card width="350" style="position:relative" @click="seeWorkshop">
+        <div style="display:flex;flex-wrap:nowrap;max-width:100%">
+            <div style="flex:1;max-width:250px;">
+                <v-card-title class="pb-0" style="text-overflow:ellipsis;">
+                    {{ title }}
+                </v-card-title>
+                <v-card-subtitle class="font-italic">
+                    {{ $t('By') }} {{ workshop.teacher }}
+                </v-card-subtitle>
+            </div>
+            <div class="text-right pa-2">
+                <div class="d-flex align-center">
+                    <v-img :src="`/images/flag ${workshop.language}.png`" :width="30" class="mr-2"/>
+                    <v-chip variant="elevated" theme="dark" size="small"
+                        :color="workshop.details.campus == 'BPR' ? 'blue' : 'red'">
+                        {{ workshop.details.campus }}
+                    </v-chip>
+                </div>
+                <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" theme="dark" class="mt-1"
+                    :color="statusColor[workshop.status]" :text="$t(workshop.status) " v-if="workshop.editable" />
+            </div>
+        </div>
         <v-card-text class="threelines">
             {{ description }}
         </v-card-text>
@@ -25,16 +45,12 @@
     </v-card>
 </template>
 <script setup>
-    import { computed } from "vue";
     import { useRouter } from 'vue-router';
     import usePickWorkshopLg from '@/composables/usePickWorkshopLg';
-    import { useI18n } from 'vue-i18n';
 
     const props = defineProps({workshop: Object});
 
     const { title, description } = usePickWorkshopLg(props.workshop);
-
-    const { locale, t } = useI18n();
 
     const router = useRouter();
     const seeWorkshop = () => {
@@ -44,18 +60,7 @@
         router.push(`/workshops/${props.workshop.id}/edit`);
     }
 
-    // const startDateFormated = computed(() => {
-    //     if(props.workshop.start_date){
-    //         const date = new Date(props.workshop.start_date);
-    //         const day = String(date.getDate()).padStart(2, '0');
-    //         const month = String(date.getMonth() + 1).padStart(2, '0');
-    //         const year = String(date.getFullYear()).slice(2);
-
-    //         return `${day}-${month}-${year}`;
-    //     }
-
-    //     return `${t('Term')} ${props.workshop.term}`;
-    // });
+    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'success' }
 </script>
 
 <style scoped>

@@ -3,8 +3,10 @@
         <v-tab value="t-d">{{ $t('Title and description') }}</v-tab>
         <v-tab value="details">{{ $t('Details') }}</v-tab>
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
+        <v-tab value="launch" v-if="user.is.admin">{{ $t('Launch') }}</v-tab>
         <v-spacer />
-        <v-select variant="plain" flat :label="$t('Status')" :items="statusOptions" v-model="workshop.status"/>
+        <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions"
+            v-model="workshop.status" />
     </v-tabs>
     <v-card-text>
         <v-window v-model="tab">
@@ -84,7 +86,7 @@
                     </div>
                     <div style="display: flex;gap:5px;">
                         <v-text-field :label="$t('Start date')" variant="outlined" validate-on="blur" type="date"
-                            v-model="workshop.startDate" clearable/>
+                            v-model="workshop.startDate" clearable />
                         <v-select :label="$t('Term') " variant="outlined" validate-on="blur" :items="[1,2,3]"
                             v-model="workshop.term" />
                     </div>
@@ -102,6 +104,9 @@
                             @pickPoster="handlePickPoster" />
                     </v-window-item>
                 </v-window>
+            </v-window-item>
+            <v-window-item class="pt-2" value="launch">
+                Launch !
             </v-window-item>
         </v-window>
     </v-card-text>
@@ -135,6 +140,9 @@
     if(user.is.admin){
         statusOptions.push({value: 'confirmed', title: t('Confirmed')});
     }
+    const statusMenuDisabled = computed(() => {
+        return !user.is.admin || ['draft', 'submitted'].includes(props.workshop.status);
+    });
 
     const rules = {
         required: value => !!value || 'Required.',
