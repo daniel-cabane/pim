@@ -26,7 +26,7 @@
                     </div>
                 </v-window-item>
                 <v-window-item value="sessions">
-                    sessions
+                    session
                 </v-window-item>
                 <v-window-item value="holidays">
                     <div>
