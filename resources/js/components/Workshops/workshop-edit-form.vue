@@ -3,7 +3,7 @@
         <v-tab value="t-d">{{ $t('Title and description') }}</v-tab>
         <v-tab value="details">{{ $t('Details') }}</v-tab>
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
-        <v-tab value="launch" v-if="user.is.admin">{{ $t('Launch') }}</v-tab>
+        <v-tab value="sessions" v-if="user.is.admin || workshop.status == 'launched'">{{ $t('Sessions') }}</v-tab>
         <v-spacer />
         <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions"
             v-model="workshop.status" />
@@ -75,7 +75,7 @@
                     </div>
                     <div class="d-block d-sm-flex align-center" style="gap:5px;"
                         v-for="(session, index) in workshop.details.schedule" :key="index">
-                        <v-select variant="outlined" :label="$t('Day')" :items="daysOfTheWeek" v-model="session.day"
+                        <v-select variant="outlined" :label="$t('Day')" v-model="session.day"
                             style="flex:2" />
                         <v-text-field :rules="[rules.required]" :label="$t('Start')" variant="outlined"
                             validate-on="blur" type="time" v-model="session.start" style="flex:1" />
@@ -105,8 +105,35 @@
                     </v-window-item>
                 </v-window>
             </v-window-item>
-            <v-window-item class="pt-2" value="launch">
-                Launch !
+            <v-window-item class="pt-2" value="sessions">
+                <v-dialog max-width="850" v-model="finalizeDialog">
+                    <template v-slot:default="{ isActive }">
+                        <v-card :title="t('Finalize workshop')" style="position:relative;">
+                            <v-progress-linear color="primary" indeterminate style="position:absolute;top:0px;"
+                                class="pa-0" v-if="isLoading && !isLaunching" />
+                            <v-card-text>
+                                <sessions-table :sessions="sessions" :isLoading="isLoading"
+                                    :daysOfTheWeek="daysOfTheWeek" @deleteSession="deleteSession"
+                                    @refreshSessions="prepareFinalizeWorkshop" />
+                            </v-card-text>
+                            <div style="display:flex;justify-content:flex-end;" class="pa-3">
+                                <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
+                                    @click="finalizeDialog = false">
+                                    {{ $t('Cancel') }}
+                                </v-btn>
+                                <v-btn color="success" theme="dark" :disabled="isLoading && sessions.length == 0"
+                                    :loading="isLoading && isLaunching" @click="launchWorkshop">
+                                    {{ $t('Launch') }}
+                                </v-btn>
+                            </div>
+                        </v-card>
+                    </template>
+                </v-dialog>
+                <div v-if="workshop.status == 'confirmed'" class="text-center pa-4">
+                    <v-btn color="primary" @click="prepareFinalizeWorkshop">
+                        {{ t('Finalize workshop') }}
+                    </v-btn>
+                </div>
             </v-window-item>
         </v-window>
     </v-card-text>
@@ -118,6 +145,12 @@
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useI18n } from 'vue-i18n';
     import { useDisplay } from 'vuetify';
+    import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { storeToRefs } from 'pinia';
+
+    const workshopStore = useWorkshopStore();
+const { prepareLaunch, launch } = workshopStore;
+    const { isLoading } = storeToRefs(workshopStore);
 
     const { smAndDown } = useDisplay()
 
@@ -141,7 +174,7 @@
         statusOptions.push({value: 'confirmed', title: t('Confirmed')});
     }
     const statusMenuDisabled = computed(() => {
-        return !user.is.admin || ['draft', 'submitted'].includes(props.workshop.status);
+        return !user.is.admin || !['draft', 'submitted'].includes(props.workshop.status);
     });
 
     const rules = {
@@ -182,5 +215,22 @@
     }
     const posterUpdated = () => {
         emit('imageUpdated', {language: posterLanguage.value, file: poster.value});       
+    }
+
+    const finalizeDialog = ref(false);
+    const sessions = ref([]);
+    const prepareFinalizeWorkshop = async () => {
+        finalizeDialog.value = true;
+        const info = await prepareLaunch();
+        sessions.value = info.sessions;
+    }
+    const deleteSession = id => {
+        sessions.value = sessions.value.filter(s => s.id != id);
+    }
+
+    const isLaunching = ref(false);
+    const launchWorkshop = async () => {
+        isLaunching.value = true;
+        const workshop = await launch({sessions: sessions.value});
     }
 </script>

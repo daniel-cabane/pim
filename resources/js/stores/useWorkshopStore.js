@@ -11,6 +11,7 @@ export const useWorkshopStore = defineStore({
         themes: [],
         workshop: {},
         isReady: false,
+        isLoading: false,
         imageLoading: false
     }),
     actions: {
@@ -88,8 +89,21 @@ export const useWorkshopStore = defineStore({
             this.workshop = res.workshop;
         },
         async editApplicantName(data){
-            console.log(data.name);
             await post(`/api/workshops/${this.workshop.id}/editApplicantName/${data.id}`, {name: data.name});
+        },
+        async prepareLaunch(){
+            this.isLoading = true;
+            const res = await get(`/api/admin/workshops/${this.workshop.id}/prepare`);
+            this.isLoading = false;
+            return res.info;
+        },
+        async launch(data) {
+            console.log(data)
+            this.isLoading = true;
+            const res = await post(`/api/admin/workshops/${this.workshop.id}/launch`, data);
+            this.workshop = res.workshop;
+            this.isLoading = false;
+            return res.workshop;
         }
     }
 });

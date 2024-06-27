@@ -9,5 +9,10 @@ class Session extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['workshop_id', 'index', 'start', 'finish', 'status'];
+    protected $fillable = ['workshop_id', 'index', 'date', 'start', 'finish', 'status'];
+
+    public function workshop()
+    {
+      return $this->belongsTo(Workshop::class);
+    }
 }

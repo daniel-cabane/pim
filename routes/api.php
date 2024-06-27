@@ -31,6 +31,8 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/users/{user}/updateRoles', [AdminController::class, 'updateUserRoles']);
     
     Route::get('/admin/workshops/', [AdminController::class, 'allWorkshops']);
+    Route::get('/admin/workshops/{workshop}/prepare', [AdminController::class, 'prepareWorkshop']);
+    Route::post('/admin/workshops/{workshop}/launch', [AdminController::class, 'launchWorkshop']);
 
     Route::post('/admin/holiday/', [AdminController::class, 'createHoliday']);
     Route::patch('/admin/holidays/{holiday}', [AdminController::class, 'updateHoliday']);

@@ -27,6 +27,11 @@ class Workshop extends Model
       return $this->belongsToMany(Theme::class);
     }
 
+    public function sessions()
+    {
+      return $this->hasMany(Session::class);
+    }
+
     public function format()
     {
       $user = auth()->user();
@@ -78,7 +83,8 @@ class Workshop extends Model
         'acceptingStudents' => $this->accepting_students == 1 && $this->status == 'confirmed',
         'editable' => auth()->check() && auth()->user()->can('update', $this),
         'application' => $application,
-        'applicants' => $applicants
+        'applicants' => $applicants,
+        'sessions' => $this->sessions()->orderBy('index')->get()
       ];
     }
 
