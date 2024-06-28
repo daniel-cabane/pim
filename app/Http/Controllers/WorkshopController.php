@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Workshop;
 use App\Models\Theme;
 use App\Models\User;
+use App\Models\Session;
 use Carbon\Carbon;
 
 class WorkshopController extends Controller
@@ -117,20 +118,29 @@ class WorkshopController extends Controller
             return response()->json(['message' => 'A title is required'], 422);
         }
 
-        $workshop->update([
-            'title_fr' => $attrs['title']['fr'],
-            'title_en' => $attrs['title']['en'],
-            'description' => json_encode($attrs['description']),
-            'language' => $attrs['language'],
-            'details' => json_encode($attrs['details']),
-            'start_date' => $attrs['startDate'],
-            'status' => $attrs['status'],
-            'accepting_students' => $attrs['acceptingStudents'],
-            'organiser_id' => $attrs['teacherId'],
-            'term' => $attrs['term'],
-        ]);
-
-        $workshop->themes()->sync($attrs['themes']);
+        if($workshop->status == 'launched'){
+            $workshop->update([
+                'title_fr' => $attrs['title']['fr'],
+                'title_en' => $attrs['title']['en'],
+                'description' => json_encode($attrs['description']),
+                'language' => $attrs['language']
+            ]);
+        } else {
+            $workshop->update([
+                'title_fr' => $attrs['title']['fr'],
+                'title_en' => $attrs['title']['en'],
+                'description' => json_encode($attrs['description']),
+                'language' => $attrs['language'],
+                'details' => json_encode($attrs['details']),
+                'start_date' => $attrs['startDate'],
+                'status' => $attrs['status'],
+                'accepting_students' => $attrs['acceptingStudents'],
+                'organiser_id' => $attrs['teacherId'],
+                'term' => $attrs['term'],
+            ]);
+    
+            $workshop->themes()->sync($attrs['themes']);
+        }
 
         return response()->json([
             'workshop' => $workshop->format(),
@@ -253,5 +263,93 @@ class WorkshopController extends Controller
                     'type' => 'success'
                 ]
         ]);
+    }
+
+    public function deleteSession(Workshop $workshop, Session $session)
+    {
+        $session->delete();
+        $workshop->orderSessions();
+
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                    'text' => 'Session deleted',
+                    'type' => 'info'
+                ]
+        ]);
+    }
+
+    public function updateSession(Workshop $workshop, Session $session, Request $request)
+    {
+        $attrs = $request->validate([
+            'date' => 'required|Date',
+            'start' => 'required|max:10',
+            'finish' => 'required|max:10',
+            'status' => 'required|max:50',
+        ]);
+
+        $session->update([
+            'date' => $attrs['date'],
+            'start' => $attrs['start'],
+            'finish' => $attrs['finish'],
+            'status' => $attrs['status'],
+        ]);
+
+        $workshop->orderSessions();
+
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                    'text' => 'Session updated',
+                    'type' => 'info'
+                ]
+        ]);
+    }
+
+    public function createSession(Workshop $workshop)
+    {
+        $lastSession = $workshop->sessions()->orderBy('index', 'desc')->first();
+
+        if($lastSession){
+            $index = $lastSession->index + 1;
+            $date = (new Carbon($lastSession->date))->addWeek();
+            $start = $lastSession->start;
+            $finish = $lastSession->finish;
+        } else {
+            $index = 0;
+            $date = (Carbon::today())->addWeek();
+            $start = '12:30';
+            $finish = '13:30';
+        }
+
+        Session::create([
+                'workshop_id' => $workshop->id,
+                'index' => $index,
+                'date' => $date,
+                'start' => $start,
+                'finish' => $finish,
+                'status' => 'confirmed'
+            ]);
+
+        return response()->json([
+                'workshop' => $workshop->format(),
+                'message' => [
+                        'text' => 'Session added',
+                        'type' => 'info'
+                    ]
+            ]); 
+    }
+
+    public function orderSessions(Workshop $workshop)
+    {
+        $workshop->orderSessions();
+        
+        return response()->json([
+                'workshop' => $workshop->format(),
+                'message' => [
+                        'text' => 'Sessions ordered',
+                        'type' => 'info'
+                    ]
+            ]); 
     }
 }

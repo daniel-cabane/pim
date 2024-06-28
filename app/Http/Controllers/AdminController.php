@@ -201,11 +201,13 @@ class AdminController extends Controller
                 'workshop_id' => $workshop->id,
                 'index' => $index++,
                 'date' => $session['date'],
-                'start' => Carbon::createFromFormat('H:i', $session['start']),
-                'finish' => Carbon::createFromFormat('H:i', $session['finish']),
-                'status' => $session['status'],
+                'start' => $session['start'],
+                'finish' => $session['finish'],
+                'status' => $session['status']
             ]);
         }
+        $workshop->update(['status' => 'launched']);
+        $workshop->orderSessions();
 
         return response()->json([
             'workshop' => $workshop->format(),

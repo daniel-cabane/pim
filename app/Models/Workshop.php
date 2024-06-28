@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
+use Carbon\Carbon;
+
 class Workshop extends Model
 {
     use HasFactory;
@@ -104,6 +106,29 @@ class Workshop extends Model
       }
       if($changed){
         $this->update(['details' => json_encode($details)]);
+      }
+    }
+
+    public function initSessions()
+    {
+      foreach($this->sessions as $session){
+        //$session->delete();
+      }
+      // SHOULD I DO THIS ??
+    }
+
+    public function orderSessions()
+    {
+      $sessions = $this->sessions->sort(function($a, $b) {
+          $dateTimeA = Carbon::createFromFormat('Y-m-d H:i', "$a->date $a->start");
+          $dateTimeB = Carbon::createFromFormat('Y-m-d H:i', "$b->date $b->start");
+
+          return $dateTimeA <=> $dateTimeB;
+      });
+
+      $index = 0;
+      foreach($sessions as $session){
+        $session->update(['index' => $index++]);
       }
     }
 

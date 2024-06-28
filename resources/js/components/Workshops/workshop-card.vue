@@ -11,7 +11,7 @@
             </div>
             <div class="text-right pa-2">
                 <div class="d-flex align-center">
-                    <v-img :src="`/images/flag ${workshop.language}.png`" :width="30" class="mr-2"/>
+                    <v-img :src="`/images/flag ${workshop.language}.png`" :width="30" class="mr-2" />
                     <v-chip variant="elevated" theme="dark" size="small"
                         :color="workshop.details.campus == 'BPR' ? 'blue' : 'red'">
                         {{ workshop.details.campus }}
@@ -21,9 +21,7 @@
                     :color="statusColor[workshop.status]" :text="$t(workshop.status) " v-if="workshop.editable" />
             </div>
         </div>
-        <v-card-text class="threelines">
-            {{ description }}
-        </v-card-text>
+        <v-card-text class="threelines" v-html="description"/>
         <div class="px-4" style="display:flex;">
             <div style="flex:1;">
                 <div class="text-caption text-grey">
@@ -60,7 +58,7 @@
         router.push(`/workshops/${props.workshop.id}/edit`);
     }
 
-    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'success' }
+    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'primary', launched: 'success' }
 </script>
 
 <style scoped>

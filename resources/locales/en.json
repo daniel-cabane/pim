@@ -191,5 +191,12 @@
     "Edit Session": "Edit Session",
     "Are you sure you want to delete this session ?": "Are you sure you want to delete this session ?",
     "Workshop launched !": "Workshop launched !",
-    "Pending": "Pending"
+    "Pending": "Pending",
+    "Launched": "Launched",
+    "launched": "launched",
+    "Session deleted": "Session deleted",
+    "Session added": "Session added",
+    "Session updated": "Session updated",
+    "Order sessions": "Order sessions",
+    "Sessions ordered": "Sessions ordered"
 }

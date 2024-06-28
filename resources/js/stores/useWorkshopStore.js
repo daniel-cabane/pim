@@ -98,12 +98,36 @@ export const useWorkshopStore = defineStore({
             return res.info;
         },
         async launch(data) {
-            console.log(data)
             this.isLoading = true;
             const res = await post(`/api/admin/workshops/${this.workshop.id}/launch`, data);
             this.workshop = res.workshop;
             this.isLoading = false;
             return res.workshop;
-        }
+        },
+        async createSession() {
+            this.isLoading = true;
+            const res = await post(`/api/workshops/${this.workshop.id}/session`);
+            this.workshop = res.workshop;
+            this.isLoading = false;
+        },
+        async updateSession(session) {
+            this.isLoading = true;
+            const res = await patch(`/api/workshops/${this.workshop.id}/sessions/${session.id}`, session);
+            this.workshop = res.workshop;
+            this.isLoading = false;
+        },
+        async deleteSession(id) {
+            this.isLoading = true;
+            const res = await del(`/api/workshops/${this.workshop.id}/sessions/${id}`);
+            this.workshop = res.workshop;
+            this.isLoading = false;
+        },
+        async orderSessions() {
+            this.isLoading = true;
+            const res = await patch(`/api/workshops/${this.workshop.id}/orderSessions`);
+            this.workshop = res.workshop;
+            this.isLoading = false;
+        },
+
     }
 });

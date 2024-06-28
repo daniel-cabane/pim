@@ -3,18 +3,22 @@
         <div class="text-h5 text-grey d-flex align-center justify-space-between">
             <span>
                 <span>
-                    {{ sessions.length }} {{ $t('Sessions') }}
+                    {{ workshop.sessions.length }} {{ $t('Sessions') }}
                 </span>
-                <v-btn :disabled="isLoading" size="x-small" color="primary" class="ml-4" icon="mdi-plus" />
+                <v-btn :disabled="isLoading" size="x-small" color="primary" class="ml-4" icon="mdi-plus"
+                    @click="emit('createSession');" />
             </span>
+            <!-- <v-btn :disabled="isLoading" size="small" color="primary" variant="tonal" @click="emit('orderSessions')">
+                {{ $t('Order sessions') }}
+            </v-btn> -->
             <v-btn :disabled="isLoading" size="x-small" color="success" theme="dark" class="ml-4" icon="mdi-refresh"
-                @click="emit('refreshSessions')" />
+                @click="emit('refreshSessions')" v-if="false && workshop.status == 'confirmed'" />
+            <!-- |||||||||||||||||||||||| FIX THIS |||||||||||||||||||||||| -->
         </div>
-        <v-data-table :sort-by="['day']" :headers="headers" :items="sessions" items-per-page="-1" hide-default-footer
-            hover>
+        <v-data-table :sort-by="['day']" :headers="headers" :items="workshop.sessions" items-per-page="-1"
+            hide-default-footer hover>
             <template v-slot:item="{ item }">
                 <tr>
-                    <!-- <td class="text-center">{{ $t(item.day) }}</td> -->
                     <td class="text-center">{{ dayoftheWeek(item.date) }}</td>
                     <td class="text-center">{{ formatDate(item.date) }}</td>
                     <td class="text-center">{{ item.start }}</td>
@@ -46,7 +50,7 @@
                         {{ $t('Are you sure you want to delete this session ?') }}
                     </div>
                     <div>
-                        <b>{{ $t(focusedSession.day) }} {{ focusedSession.date }} {{
+                        <b>{{ dayoftheWeek(focusedSession.date) }} {{ formatDate(focusedSession.date) }} {{
                             focusedSession.start }} → {{ focusedSession.finish }}</b>
                     </div>
                 </v-card-text>
@@ -65,15 +69,20 @@
                 <v-card-text>
                     <v-text-field label="Date" variant="outlined" v-model="focusedSession.date" type="date" />
                     <div class="d-flex">
-                        <v-text-field :label="$t('Start')" variant="outlined" v-model="focusedSession.start" type="time" />
-                        <v-text-field :label="$t('Finish')" variant="outlined" v-model="focusedSession.finish"
+                        <v-text-field class="mr-1" :label="$t('Start')" variant="outlined"
+                            v-model="focusedSession.start" type="time" />
+                        <v-text-field class="ml-1" :label="$t('Finish')" variant="outlined"
+                            v-model="focusedSession.finish"
                             :error="isAfter(focusedSession.start, focusedSession.finish)" type="time" />
                     </div>
-                    <v-select variant="outlined" v-model="focusedSession.status" :items="statusItems"/>
+                    <v-select variant="outlined" label="Status" v-model="focusedSession.status" :items="statusItems" />
                 </v-card-text>
                 <div class="d-flex justify-end px-4 pb-4">
-                    <v-btn variant="tonal" color="primary" @click="editSessionDialog=false">
+                    <v-btn variant="tonal" class="mr-3" color="error" @click="editSessionDialog=false">
                         {{ $t('Close') }}
+                    </v-btn>
+                    <v-btn color="primary" @click="editSession">
+                        {{ $t('Submit') }}
                     </v-btn>
                 </div>
             </v-card>
@@ -84,10 +93,10 @@
     import { ref, reactive } from "vue";
     import { useI18n } from 'vue-i18n';
 
-    const emit = defineEmits(['deleteSession', 'refreshSessions']);
-    const props = defineProps({ sessions: Array, isLoading: Boolean });
+const emit = defineEmits(['deleteSession', 'refreshSessions', 'createSession', 'editSession', 'orderSessions']);
+    const props = defineProps({ workshop: Object, isLoading: Boolean });
 
-    const { t, locale } = useI18n();
+    const { t } = useI18n();
 
     const statusItems = [
         { title: t('Confirmed'), value: 'confirmed' }, { title: t('Pending'), value: 'pending' }
@@ -102,7 +111,9 @@
     ]);
     const formatDate = d => {
         const date = new Date(d);
-        return date.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
+        return date.getDate().toString().padStart(2, '0') + '-' +
+            (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+            date.getFullYear().toString().slice(2);
     }
     const daysOfTheWeek = reactive([t('Sunday'), t('Monday'), t('Tuesday'), t('Wednesday'), t('Thursday'), t('Friday'), t('Saturday')]);
     const dayoftheWeek = d => {
@@ -139,16 +150,11 @@
 
     const editSessionDialog = ref(false);
     const showEditSessionDialog = session => {
-        focusedSession.value = session;
+        focusedSession.value = {...session};
         editSessionDialog.value = true;
     }
     const editSession = () => {
-        emit('editSession', focusedSession);
+        emit('editSession', focusedSession.value);
         editSessionDialog.value = false;
     }
-
-    const launchWorkshop = () => {
-        console.log('launch !');
-    }
-
 </script>

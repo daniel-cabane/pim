@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('workshop_id');
             $table->unsignedTinyInteger('index');
             $table->date('date');
-            $table->dateTime('start');
-            $table->dateTime('finish');
+            $table->string('start', 255);
+            $table->string('finish', 255);
             $table->string('status', 255)->default('confirmed');
             $table->timestamps();
 

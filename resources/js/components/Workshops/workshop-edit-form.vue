@@ -5,10 +5,13 @@
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
         <v-tab value="sessions" v-if="user.is.admin || workshop.status == 'launched'">{{ $t('Sessions') }}</v-tab>
         <v-spacer />
+        <v-chip label size="large" color="success" theme="dark" class="ma-2" v-if="workshop.status == 'launched'">
+            {{ $t('Launched') }}
+        </v-chip>
         <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions"
-            v-model="workshop.status" />
+            v-model="workshop.status" v-else />
     </v-tabs>
-    <v-card-text>
+    <v-card-text v-if="isReady">
         <v-window v-model="tab">
             <v-window-item class="pt-2" value="t-d">
                 <div style="display:flex;gap:10px;" :style="smAndDown ? 'flex-direction:column-reverse' : ''">
@@ -39,69 +42,74 @@
                 </div>
             </v-window-item>
             <v-window-item class="pt-2" value="details">
-                <div>
-                    <div class="d-block d-sm-flex align-center" style="gap:5px;">
-                        <v-select v-model="workshop.themes" :items="availableThemes" label="Themes" multiple chips
-                            variant="outlined" />
-                        <v-select v-model="workshop.teacherId" :items="teachersOptions" label="Teacher"
-                            variant="outlined" />
+                <v-form :disabled="workshop.status == 'launched'">
+                    <div style='position:relative'>
+                        <div class="d-block d-sm-flex align-center" style="gap:5px;">
+                            <v-select v-model="workshop.themes" :items="availableThemes" label="Themes" multiple chips
+                                variant="outlined" />
+                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin" label="Teacher"
+                                variant="outlined" />
+                        </div>
+                        <div class="d-block d-sm-flex align-start" style="gap:5px;">
+                            <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.details.campus"
+                                variant="outlined" />
+                            <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb"
+                                :label="$t('Room')" variant="outlined" validate-on="blur" />
+                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1"
+                                :disabled="workshop.details.campus != 'BPR'" />
+                        </div>
+                        <div class="d-block d-sm-flex align-center" style="gap:5px;">
+                            <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
+                                v-model="workshop.details.nbSessions" :label="$t('Nb sessions')" variant="outlined"
+                                validate-on="blur" style="flex:1" />
+                            <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
+                                v-model="workshop.details.maxStudents" :label="$t('Nb students max')" variant="outlined"
+                                validate-on="blur" style="flex:1" />
+                            <v-switch :label="$t('Registration open')" color="primary"
+                                v-model="workshop.acceptingStudents" style="flex:1"
+                                :disabled="workshop.status != 'confirmed'" />
+                        </div>
+                        <div class="d-flex justify-space-between align-center px-3 mb-3">
+                            <span class="text-subtitle-1"
+                                :class="theme.global.name.value == 'customDark' ? 'text-grey-lighten-2' : 'text-grey'">
+                                {{ $t('Schedule') }}
+                            </span>
+                            <v-btn color="secondary" size="small" :disabled="workshop.status == 'launched'"
+                                @click="addSession">
+                                {{ $t('Add session') }}
+                            </v-btn>
+                        </div>
+                        <div class="d-block d-sm-flex align-center" style="gap:5px;"
+                            v-for="(session, index) in workshop.details.schedule" :key="index">
+                            <v-select variant="outlined" :label="$t('Day')" :items="daysOfTheWeek" v-model="session.day"
+                                style="flex:2" />
+                            <v-text-field :rules="[rules.required]" :label="$t('Start')" variant="outlined"
+                                validate-on="blur" type="time" v-model="session.start" style="flex:1" />
+                            <v-text-field :rules="[rules.required]" :label="$t('Finish')" variant="outlined"
+                                validate-on="blur" type="time" v-model="session.finish" style="flex:1" />
+                            <v-btn variant="text" size="large" style="margin-right:5px;margin-bottom:21px;"
+                                icon="mdi-close-octagon-outline" color="red-lighten-2" @click="removeSession(index)" />
+                        </div>
+                        <div style="display: flex;gap:5px;">
+                            <v-text-field :label="$t('Start date')" variant="outlined" validate-on="blur" type="date"
+                                v-model="workshop.startDate" clearable />
+                            <v-select :label="$t('Term') " variant="outlined" validate-on="blur" :items="[1,2,3]"
+                                v-model="workshop.term" />
+                        </div>
                     </div>
-                    <div class="d-block d-sm-flex align-start" style="gap:5px;">
-                        <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.details.campus"
-                            variant="outlined" />
-                        <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb" :label="$t('Room')"
-                            variant="outlined" validate-on="blur" />
-                        <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1"
-                            :disabled="workshop.details.campus != 'BPR'" />
-                    </div>
-                    <div class="d-block d-sm-flex align-center" style="gap:5px;">
-                        <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
-                            v-model="workshop.details.nbSessions" :label="$t('Nb sessions')" variant="outlined"
-                            validate-on="blur" style="flex:1" />
-                        <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
-                            v-model="workshop.details.maxStudents" :label="$t('Nb students max')" variant="outlined"
-                            validate-on="blur" style="flex:1" />
-                        <v-switch :label="$t('Registration open')" color="primary" v-model="workshop.acceptingStudents"
-                            style="flex:1" :disabled="workshop.status != 'confirmed'" />
-                    </div>
-                    <div class="d-flex justify-space-between align-center px-3 mb-3">
-                        <span class="text-subtitle-1"
-                            :class="theme.global.name.value == 'customDark' ? 'text-grey-lighten-2' : 'text-grey'">
-                            {{ $t('Schedule') }}
-                        </span>
-                        <v-btn color="secondary" size="small" @click="addSession">
-                            {{ $t('Add session') }}
-                        </v-btn>
-                    </div>
-                    <div class="d-block d-sm-flex align-center" style="gap:5px;"
-                        v-for="(session, index) in workshop.details.schedule" :key="index">
-                        <v-select variant="outlined" :label="$t('Day')" v-model="session.day"
-                            style="flex:2" />
-                        <v-text-field :rules="[rules.required]" :label="$t('Start')" variant="outlined"
-                            validate-on="blur" type="time" v-model="session.start" style="flex:1" />
-                        <v-text-field :rules="[rules.required]" :label="$t('Finish')" variant="outlined"
-                            validate-on="blur" type="time" v-model="session.finish" style="flex:1" />
-                        <v-btn variant="text" size="large" style="margin-right:5px;margin-bottom:21px;"
-                            icon="mdi-close-octagon-outline" color="red-lighten-2" @click="removeSession(index)" />
-                    </div>
-                    <div style="display: flex;gap:5px;">
-                        <v-text-field :label="$t('Start date')" variant="outlined" validate-on="blur" type="date"
-                            v-model="workshop.startDate" clearable />
-                        <v-select :label="$t('Term') " variant="outlined" validate-on="blur" :items="[1,2,3]"
-                            v-model="workshop.term" />
-                    </div>
-                </div>
+                </v-form>
             </v-window-item>
             <v-window-item class="pt-2" value="poster">
                 <v-file-input accept="image/png, image/jpeg, image/jpg" v-model="poster" ref="file"
-                    @update:modelValue="posterUpdated" style='display:none;' />
+                    @update:modelValue="updateImage({ language: posterLanguage, file: poster })"
+                    style='display:none;' />
                 <poster-picker :language="workshop.language" :details="workshop.details" :imageLoading="imageLoading"
-                    @pickPoster="handlePickPoster" @deletePoster="handleDeletePoster"
+                    @pickPoster="handlePickPoster(workshop.language)" @deletePoster="deleteImage"
                     v-if="workshop.language != 'both'" />
                 <v-window show-arrows="hover" v-else>
                     <v-window-item v-for="lg in ['fr', 'en']" :key="lg">
                         <poster-picker :language="lg" :details="workshop.details" :imageLoading="imageLoading"
-                            @pickPoster="handlePickPoster" />
+                            @pickPoster="handlePickPoster(lg)" />
                     </v-window-item>
                 </v-window>
             </v-window-item>
@@ -112,34 +120,41 @@
                             <v-progress-linear color="primary" indeterminate style="position:absolute;top:0px;"
                                 class="pa-0" v-if="isLoading && !isLaunching" />
                             <v-card-text>
-                                <sessions-table :sessions="sessions" :isLoading="isLoading"
-                                    :daysOfTheWeek="daysOfTheWeek" @deleteSession="deleteSession"
-                                    @refreshSessions="prepareFinalizeWorkshop" />
+                                <sessions-table :workshop="workshop" :isLoading="isLoading"
+                                    @deleteSession="handleDeleteSession" @refreshSessions="prepareFinalizeWorkshop"
+                                    @createSession="handleCreateSession" @editSession="handleEditSession"
+                                    @orderSessions="orderSessions" />
                             </v-card-text>
-                            <div style="display:flex;justify-content:flex-end;" class="pa-3">
-                                <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
-                                    @click="finalizeDialog = false">
-                                    {{ $t('Cancel') }}
-                                </v-btn>
-                                <v-btn color="success" theme="dark" :disabled="isLoading && sessions.length == 0"
-                                    :loading="isLoading && isLaunching" @click="launchWorkshop">
-                                    {{ $t('Launch') }}
-                                </v-btn>
-                            </div>
+                            <div style=" display:flex;justify-content:flex-end;" class="pa-3">
+                                    <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
+                                        @click="finalizeDialog = false">
+                                        {{ $t('Cancel') }}
+                                    </v-btn>
+                                    <v-btn color="success" theme="dark"
+                                        :disabled="isLoading && workshop.sessions.length == 0"
+                                        :loading="isLoading && isLaunching" @click="launchWorkshop">
+                                        {{ $t('Launch') }}
+                                    </v-btn>
+                                    </div>
                         </v-card>
                     </template>
                 </v-dialog>
                 <div v-if="workshop.status == 'confirmed'" class="text-center pa-4">
                     <v-btn color="primary" @click="prepareFinalizeWorkshop">
-                        {{ t('Finalize workshop') }}
+                        {{ $t('Finalize workshop') }}
                     </v-btn>
+                </div>
+                <div v-if="workshop.status == 'launched'">
+                    <sessions-table :workshop="workshop" :isLoading="isLoading" @deleteSession="handleDeleteSession"
+                        @refreshSessions="refreshSessions" @createSession="handleCreateSession"
+                        @editSession="handleEditSession" @orderSessions="orderSessions" />
                 </div>
             </v-window-item>
         </v-window>
     </v-card-text>
 </template>
 <script setup>
-    import { ref, reactive, defineEmits, computed } from 'vue';
+    import { ref, reactive, computed } from 'vue';
     import Editor from '@tinymce/tinymce-vue';
     import { useTheme } from 'vuetify';
     import { useAuthStore } from '@/stores/useAuthStore';
@@ -147,21 +162,33 @@
     import { useDisplay } from 'vuetify';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { storeToRefs } from 'pinia';
+    import { useRoute } from 'vue-router';
 
     const workshopStore = useWorkshopStore();
-const { prepareLaunch, launch } = workshopStore;
-    const { isLoading } = storeToRefs(workshopStore);
+    const { prepareLaunch, launch, getWorkshop, getThemes, updateImage, deleteImage, deleteSession, createSession, updateSession, orderSessions } = workshopStore;
+    const { workshop, isReady, themes, imageLoading, isLoading } = storeToRefs(workshopStore);
+
+    const route = useRoute();
+    getWorkshop(route.params.id);
+
+    getThemes();
+    const { locale, t } = useI18n();
+    const availableThemes = computed(() => themes.value.map(theme => {
+        return {
+            title: locale == 'en' ? theme.title_en : theme.title_fr,
+            value: theme.id
+        }
+    }));
 
     const { smAndDown } = useDisplay()
 
     const theme = useTheme();
 
-    const props = defineProps({ workshop: Object, availableThemes: Array, imageLoading: Boolean });
-    const emit = defineEmits(['imageUpdated', 'imageDeleted']);
+    // const props = defineProps({ workshop: Object, availableThemes: Array, imageLoading: Boolean });
+    // const emit = defineEmits(['imageUpdated', 'imageDeleted']);
 
     const tab = ref('t-d');
 
-    const { t } = useI18n();
     const statusOptions = [{value: 'draft', title: t('Draft')}, {value: 'submitted', title : t('Submitted')}];
     const { user, getTeachers } = useAuthStore();
     let teachers = [];
@@ -174,7 +201,7 @@ const { prepareLaunch, launch } = workshopStore;
         statusOptions.push({value: 'confirmed', title: t('Confirmed')});
     }
     const statusMenuDisabled = computed(() => {
-        return !user.is.admin || !['draft', 'submitted'].includes(props.workshop.status);
+        return !user.is.admin && !['draft', 'submitted'].includes(workshop.value.status);
     });
 
     const rules = {
@@ -193,44 +220,74 @@ const { prepareLaunch, launch } = workshopStore;
     ]);
 
     const addSession = () => {
-        props.workshop.details.schedule.push({day: 'Monday', start: '17:30', finish: '18:30'});
+        workshop.value.details.schedule.push({day: 'Monday', start: '17:30', finish: '18:30'});
     }
     const removeSession = index => {
-        props.workshop.details.schedule.splice(index, 1);
+        workshop.value.details.schedule.splice(index, 1);
     }
 
     const initRoomNb = () => {
-        props.workshop.details.roomNb = 'π (314 BPR)';
+        workshop.value.details.roomNb = 'π (314 BPR)';
     }
 
     const poster = ref(null);
     const file = ref(null);
     const posterLanguage = ref(null);
-    const handlePickPoster = (language) => {
+    const handlePickPoster = language => {
         posterLanguage.value = language;
         file.value.click();
     }
-    const handleDeletePoster = (language) => {
-        emit('imageDeleted', language);
-    }
-    const posterUpdated = () => {
-        emit('imageUpdated', {language: posterLanguage.value, file: poster.value});       
-    }
+    // const handleDeletePoster = (language) => {
+    //     emit('imageDeleted', language);
+    // }
+    // const posterUpdated = () => {
+    //     emit('imageUpdated', {language: posterLanguage.value, file: poster.value});       
+    // }
 
     const finalizeDialog = ref(false);
-    const sessions = ref([]);
+    // const backUpSessions = [...workshop.value.sessions];
+    // const sessions = ref([]);
     const prepareFinalizeWorkshop = async () => {
         finalizeDialog.value = true;
         const info = await prepareLaunch();
-        sessions.value = info.sessions;
+        workshop.value.sessions = info.sessions;
+        // backUpSessions.value = [...info.sessions];
     }
-    const deleteSession = id => {
-        sessions.value = sessions.value.filter(s => s.id != id);
+    const refreshSessions = () => {
+        // workshop.value.sessions = backUpSessions; <------------------------------------------------ FIX THAT
+    }
+    const handleDeleteSession = id => {
+        if(workshop.value.status == 'launched'){
+            deleteSession(id);
+        } else {
+            workshop.value.sessions = workshop.value.sessions.filter(s => s.id != id);
+        }
+    }
+    const handleCreateSession = () => { 
+        if (workshop.value.status == 'launched') {
+            createSession();
+        } else { // TODO -> MAKE THIS SMARTER (NEXT SESSION NOT JUST NEXT WEEK)
+            const lastSession = workshop.value.sessions[workshop.value.sessions.length-1];
+            const lastSessionDate = new Date(lastSession.date)
+            const date = lastSessionDate.setDate(lastSessionDate.getDate() + 7);
+            workshop.value.sessions.push({
+                date: date.toISOString().slice(0, 10), id: lastSession.id+1, start: lastSession.start, finish: lastSession.finish, status: 'confirmed'
+            });
+        }
+    }
+
+    const handleEditSession = session => {
+        if (workshop.value.status == 'launched') {
+            updateSession(session);
+        } else {
+            workshop.value.sessions = workshop.value.sessions.map(s => s.id == session.id ? session : s);
+        }
     }
 
     const isLaunching = ref(false);
     const launchWorkshop = async () => {
         isLaunching.value = true;
-        const workshop = await launch({sessions: sessions.value});
+        await launch({sessions: workshop.value.sessions});
+        finalizeDialog.value = false;
     }
 </script>

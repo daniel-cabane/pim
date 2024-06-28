@@ -110,6 +110,11 @@ Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::delete('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'deletePoster']);
     Route::delete('/workshops/{workshop}/archive', [WorkshopController::class, 'archive']);
     Route::delete('/workshops/{workshop}', [WorkshopController::class, 'destroy']);
+
+    Route::post('/workshops/{workshop}/session', [WorkshopController::class, 'createSession']);
+    Route::patch('/workshops/{workshop}/sessions/{session}', [WorkshopController::class, 'updateSession']);
+    Route::delete('/workshops/{workshop}/sessions/{session}', [WorkshopController::class, 'deleteSession']);
+    Route::patch('/workshops/{workshop}/orderSessions', [WorkshopController::class, 'orderSessions']);
 });
 
 /*

@@ -11,7 +11,7 @@
     "Close": "Fermer",
     "Cancel": "Annuler",
     "Submit": "Confirmer",
-    "Save": "Sauvegarder",
+    "Save": "Enregistrer",
     "These credentials do not match our records.": "Ces identifiants ne sont pas valides",
     "Sign out": "Déconnexion",
     "See profile": "Voir profile",
@@ -191,5 +191,12 @@
     "Edit session": "Modifier la session",
     "Are you sure you want to delete this session ?": "Voulez-vous vraiment supprimer cette session ?",
     "Workshop launched !": "Atelier lancé !",
-    "Pending": "En suspens"
+    "Pending": "En suspens",
+    "Launched": "Lancé",
+    "launched": "lancé",
+    "Session deleted": "Session supprimée",
+    "Session added": "Session ajoutée",
+    "Session updated": "Session mise à jour",
+    "Order sessions": "Ordonner les sessions",
+    "Sessions ordered": "Sessions ordonnées"
 }
