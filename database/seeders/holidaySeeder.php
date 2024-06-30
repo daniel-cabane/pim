@@ -15,6 +15,7 @@ class holidaySeeder extends Seeder
     public function run(): void
     {
         $holidays = [
+            ['name' => 'First Monday', 'start' => '2024/09/02', 'finish' => '2024/09/02'],
             ['name' => 'Mid-Autumn Festival', 'start' => '2024/09/18', 'finish' => '2024/09/18'],
             ['name' => 'National Day', 'start' => '2024/09/30', 'finish' => '2024/10/01'],
             ['name' => 'Chung Yeung Festival', 'start' => '2024/10/11', 'finish' => '2024/10/11'],

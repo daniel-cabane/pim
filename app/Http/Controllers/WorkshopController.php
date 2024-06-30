@@ -68,10 +68,10 @@ class WorkshopController extends Controller
             'description' => json_encode(['fr' => '', 'en' => '']),
             'language' => $attrs['language'],
             'term' => $attrs['term'],
+            'campus' => 'BPR',
             'details' => json_encode([
                 'nbSessions' => 6,
                 'roomNb' => 'π (314 BPR)',
-                'campus' => 'BPR',
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],
@@ -105,6 +105,7 @@ class WorkshopController extends Controller
             'title' => 'required',
             'description' => 'sometimes',
             'language' => ['required', Rule::in(['fr', 'en', 'both'])],
+            'campus' => ['required', Rule::in(['BPR', 'TKO', 'JL', 'CW'])],
             'details' => 'required|Array',
             'startDate' => 'nullable|Date',
             'status' => 'required|min:4|max:12',
@@ -131,6 +132,7 @@ class WorkshopController extends Controller
                 'title_en' => $attrs['title']['en'],
                 'description' => json_encode($attrs['description']),
                 'language' => $attrs['language'],
+                'campus' => $attrs['campus'],
                 'details' => json_encode($attrs['details']),
                 'start_date' => $attrs['startDate'],
                 'status' => $attrs['status'],

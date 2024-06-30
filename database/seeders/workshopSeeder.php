@@ -24,10 +24,10 @@ class workshopSeeder extends Seeder
             ]),
             'term' => 1,
             'language' => 'fr',
+            'campus' => 'BPR',
             'details' => json_encode([
                 'nbSessions' => 6,
                 'roomNb' => 'π (314 BPR)',
-                'campus' => 'BPR',
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],
@@ -47,10 +47,10 @@ class workshopSeeder extends Seeder
             ]),
             'term' => 1,
             'language' => 'both',
+            'campus' => 'BPR',
             'details' => json_encode([
                 'nbSessions' => 6,
                 'roomNb' => 'π (314 BPR)',
-                'campus' => 'BPR',
                 'schedule' => [
                     ['day' => 'Tuesday', 'start' => '12:30', 'finish' => '13:30']
                 ],

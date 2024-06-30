@@ -12,11 +12,13 @@ class Workshop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title_fr', 'title_en', 'description', 'language', 'details', 'organiser_id', 'start_date', 'status', 'accepting_students', "archived", "term"];
+    protected $fillable = [
+      'title_fr', 'title_en', 'description', 'language', 'campus', 'details', 'organiser_id', 'start_date', 'status', 'accepting_students', 'archived', 'term'
+    ];
 
     public function organiser()
     {
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(User::class, 'organiser_id');
     }
 
     public function applicants()
@@ -75,6 +77,7 @@ class Workshop extends Model
         'description' => json_decode($this->description),
         'language' => $this->language,
         'term' => $this->term,
+        'campus' => $this->campus,
         'details' => json_decode($this->details),
         'teacherId' => $this->organiser_id,
         'teacher' => $this->organiser->name,

@@ -51,12 +51,12 @@
                                 variant="outlined" />
                         </div>
                         <div class="d-block d-sm-flex align-start" style="gap:5px;">
-                            <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.details.campus"
+                            <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus"
                                 variant="outlined" />
                             <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb"
                                 :label="$t('Room')" variant="outlined" validate-on="blur" />
                             <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1"
-                                :disabled="workshop.details.campus != 'BPR'" />
+                                :disabled="workshop.campus != 'BPR'" />
                         </div>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
                             <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
@@ -191,8 +191,7 @@
 
     const statusOptions = [{value: 'draft', title: t('Draft')}, {value: 'submitted', title : t('Submitted')}];
     const { user, getTeachers } = useAuthStore();
-    let teachers = [];
-    teachers = await getTeachers();
+    const teachers = await getTeachers();
     const teachersOptions = computed(() => {
         return teachers.map(t => ({title: t.name, value: t.id}));
     });

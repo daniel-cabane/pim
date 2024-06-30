@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title_en', 255)->nullable();
             $table->json('description')->nullable();
             $table->string('language', 255)->default('fr');
+            $table->enum('campus', ['BPR', 'TKO', 'JL', 'CW']);
             $table->json('details');
             $table->unsignedTinyInteger('term');
             $table->unsignedBigInteger('organiser_id');

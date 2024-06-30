@@ -15,4 +15,20 @@ class Session extends Model
     {
       return $this->belongsTo(Workshop::class);
     }
+
+    public function formatForCalendar()
+    {
+        $colors = ['BPR' => '#0000FF', 'TKO' => '#FF0000'];
+        $workshopTitle = $this->workshop->language == 'fr' ? $this->workshop->title_fr : $this->workshop->title_en;
+        $index = $this->index + 1;
+        return [
+            'title' => "$workshopTitle ($index)",
+            'date' => $this->date,
+            'start' => $this->start,
+            'end' => $this->finish,
+            'color' => $colors[$this->workshop->campus],
+            'eventType' => 'session',
+            'id' => $this->id
+        ];
+    }
 }

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Workshop;
 use App\Models\Holiday;
 use App\Models\Session;
+use App\Models\OpenDoor;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -214,6 +215,114 @@ class AdminController extends Controller
             'message' => [
                     'text' => 'Workshop launched !',
                     'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function createOpenDoor(Request $request)
+    {
+        $attrs = $request->validate([
+            'date' => 'required|Date',
+            'isRecurring' => 'required|Boolean',
+            'finishDate' => 'sometimes|Date|nullable',
+            'start' => 'required|max:10',
+            'finish' => 'required|max:10',
+            'type' => 'required|max:50',
+            'roomNb' => 'required|max:50',
+            'teacher_id' => 'required|Integer',
+            'campus' => 'required|max:10'
+        ]);
+
+        $currentDate = new Carbon($attrs['date']);
+        $endDate = $attrs['isRecurring'] ? new Carbon($attrs['finishDate']) : new Carbon($attrs['date']);
+
+        $count = 0;
+        while($currentDate->lte($endDate)){
+            $count++;
+            OpenDoor::create([
+                'teacher_id' => $attrs['teacher_id'],
+                'type' => $attrs['type'],
+                'date' => $currentDate,
+                'start' => $attrs['start'],
+                'finish' => $attrs['finish'],
+                'roomNb' => $attrs['roomNb'],
+                'campus' => $attrs['campus']
+            ]);
+            $currentDate->addWeek();
+        }
+
+
+        return response()->json([
+            'openDoors' => OpenDoor::with(['teacher:id,name'])->orderBy('date')->orderBy('start')->get(),
+            'message' => [
+                    'text' => $count > 1 ? 'Sessions added' : 'Session added',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function updateOpenDoor(OpenDoor $openDoor, Request $request)
+    {
+        $attrs = $request->validate([
+            'date' => 'required|Date',
+            'isRecurring' => 'required|Boolean',
+            'finishDate' => 'sometimes|Date|nullable',
+            'start' => 'required|max:10',
+            'finish' => 'required|max:10',
+            'type' => 'required|max:50',
+            'roomNb' => 'required|max:50',
+            'teacher_id' => 'required|Integer',
+            'campus' => 'required|max:10'
+        ]);
+
+        $currentDate = new Carbon($openDoor->date);
+        $diffInDays = $currentDate->diffInDays($attrs['date'], false);
+        $endDate = $attrs['isRecurring'] ? new Carbon($attrs['finishDate']) : $currentDate;
+
+        $count = 0;
+        foreach($openDoor->futureSessions($endDate) as $session){
+            $count++;
+            $session->update([
+                'teacher_id' => $attrs['teacher_id'],
+                'type' => $attrs['type'],
+                'date' => (new Carbon($session->date))->addDay($diffInDays)->format('Y-m-d'),
+                'start' => $attrs['start'],
+                'finish' => $attrs['finish'],
+                'roomNb' => $attrs['roomNb'],
+                'campus' => $attrs['campus']
+            ]);
+        }
+
+        return response()->json([
+            'openDoors' => OpenDoor::with(['teacher:id,name'])->orderBy('date')->orderBy('start')->get(),
+            'message' => [
+                    'text' => $count > 1 ? 'Sessions updated' : 'Session updated',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function deleteOpenDoor(OpenDoor $openDoor, Request $request)
+    {
+        $attrs = $request->validate([
+            'isRecurring' => 'required|Boolean',
+            'finishDate' => 'sometimes|Date|nullable'
+        ]);
+
+        $currentDate = new Carbon($openDoor->date);
+        $endDate = $attrs['isRecurring'] ? new Carbon($attrs['finishDate']) : $currentDate;
+
+        $count = 0;
+        foreach($openDoor->futureSessions($endDate) as $session){
+            $count++;
+            $session->delete();
+        }
+
+        return response()->json([
+            'openDoors' => OpenDoor::with(['teacher:id,name'])->orderBy('date')->orderBy('start')->get(),
+            'message' => [
+                    'text' => $count > 1 ? 'Sessions deleted' : 'Session deleted',
+                    'type' => 'info'
                 ]
         ]);
     }

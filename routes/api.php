@@ -37,6 +37,10 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/holiday/', [AdminController::class, 'createHoliday']);
     Route::patch('/admin/holidays/{holiday}', [AdminController::class, 'updateHoliday']);
     Route::delete('/admin/holidays/{holiday}', [AdminController::class, 'deleteHoliday']);
+
+    Route::post('/admin/openDoor/', [AdminController::class, 'createOpenDoor']);
+    Route::patch('/admin/openDoors/{openDoor}', [AdminController::class, 'updateOpenDoor']);
+    Route::post('/admin/openDoors/{openDoor}/delete', [AdminController::class, 'deleteOpenDoor']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -55,9 +59,12 @@ Route::get('/posts', [PostController::class, 'index']);
 Route::get('/workshops', [WorkshopController::class, 'index']);
 Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
 
-Route::get('/events', [EventController::class, 'index']);
+// Route::get('/events', [EventController::class, 'index']);
 Route::get('/holidays', [EventController::class, 'holidays']);
+Route::get('/openDoors', [EventController::class, 'openDoors']);
 
+Route::get('/calendar/getMonths', [EventController::class, 'getCalendarMonths']);
+// Route::get('/calendar/adjacentMonths', [EventController::class, 'getAdjacentMonths']);
 
 /*
 *

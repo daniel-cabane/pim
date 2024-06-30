@@ -4,7 +4,7 @@
             <v-dialog width="500" v-model="addHolidayDialog">
                 <template v-slot:activator="{ props: activatorProps }">
                     <v-btn color="primary" class="mb-3" v-bind="activatorProps" append-icon="mdi-plus">
-                        Add holiday
+                        {{ $t('Add a holiday') }}
                     </v-btn>
                 </template>
                 <template v-slot:default="{ isActive }">
@@ -67,7 +67,7 @@
                 </v-card>
             </v-dialog>
         </div>
-        <v-data-table :headers="headers" :items="holidays" item-value="name" items-per-page="25"
+        <v-data-table hover :headers="headers" :items="holidays" item-value="name" items-per-page="25"
             :items-per-page-options="ipp">
             <template v-slot:item="{ item }">
                 <tr>
@@ -104,7 +104,7 @@
     const { holidays, isLoading } = storeToRefs(eventStore);
     getHolidays();
 
-    const props = defineProps({ holidays: Array });
+    // const props = defineProps({ holidays: Array });
 
     const start = ref(null);
     const finish = ref(null);

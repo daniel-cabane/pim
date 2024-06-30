@@ -4,7 +4,8 @@
             <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
             <v-tab value="posts">{{ $t('Blog posts') }}</v-tab>
             <v-tab value="users">{{ $t('Users') }}</v-tab>
-            <v-tab value="sessions">{{ $t('Sessions') }}</v-tab>
+            <!-- <v-tab value="sessions">{{ $t('Sessions') }}</v-tab> -->
+            <v-tab value="openDoors">{{ $t('Open doors') }}</v-tab>
             <v-tab value="holidays">{{ $t('Holidays') }}</v-tab>
         </v-tabs>
         <div class="pa-4">
@@ -25,12 +26,12 @@
                         <admin-user-card v-for="user in users" :key="user.id" :user="user" />
                     </div>
                 </v-window-item>
-                <v-window-item value="sessions">
-                    session
+                <v-window-item value="openDoors">
+                    <admin-open-door-table />
                 </v-window-item>
                 <v-window-item value="holidays">
                     <div>
-                        <admin-holidays-table/>
+                        <admin-holidays-table />
                     </div>
                 </v-window-item>
             </v-window>

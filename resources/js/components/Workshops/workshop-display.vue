@@ -15,8 +15,8 @@
                 <v-img src="/images/flag en.png" :width="30" class="mr-2"
                     v-if="['en', 'both'].includes(workshop.language)" />
                 <v-chip variant="elevated" theme="dark" size="small"
-                    :color="workshop.details.campus == 'BPR' ? 'blue' : 'red'">
-                    {{ workshop.details.campus }}
+                    :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
+                    {{ workshop.campus }}
                 </v-chip>
             </div>
             <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" theme="dark" class="mt-1"
