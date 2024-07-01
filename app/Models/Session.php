@@ -28,7 +28,14 @@ class Session extends Model
             'end' => $this->finish,
             'color' => $colors[$this->workshop->campus],
             'eventType' => 'session',
-            'id' => $this->id
+            'campus' => $this->workshop->campus,
+            'roomNb' => json_decode($this->workshop->details)->roomNb,
+            'id' => "s$this->id",
+            'url' => "/workshops/".$this->workshop->id,
+            'teacher' => [
+              'id' => $this->workshop->organiser->id,
+              'name' => $this->workshop->organiser->name
+            ]
         ];
     }
 }

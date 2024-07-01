@@ -56,7 +56,13 @@ class OpenDoor extends Model
             'end' => $this->finish,
             'color' => $colors[$this->campus][$type],
             'eventType' => 'openDoor',
-            'id' => $this->id
+            'campus' => $this->campus,
+            'roomNb' => $this->roomNb,
+            'id' => "o$this->id",
+            'teacher' => [
+              'id' => $this->teacher->id,
+              'name' => $this->teacher->name
+            ]
         ];
     }
 }

@@ -35,11 +35,12 @@ class RolesAndPermissionsSeeder extends Seeder
         // Themes seeder
         $themes = [
             ['title_en' => 'mathematics', 'title_fr' => 'mathématiques'],
+            ['title_en' => 'advanced', 'title_fr' => 'approfondissement'],
             ['title_en' => 'computer science', 'title_fr' => 'informatique'],
             ['title_en' => 'creativity', 'title_fr' => 'créativité'],
             ['title_en' => 'culture', 'title_fr' => 'culture'],
             ['title_en' => 'games', 'title_fr' => 'jeux'],
-            ['title_en' => 'strategy', 'title_fr' => 'stratégie'],
+            ['title_en' => 'strategy', 'title_fr' => 'stratégie']
         ];
         foreach($themes as $theme) {
             Theme::create($theme);

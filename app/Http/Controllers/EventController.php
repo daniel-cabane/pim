@@ -123,8 +123,8 @@ class EventController extends Controller
             $weekNumbers = [];
     
             while ($weekStart <= $weekEnd) {
-                $weekNumbers[] = $weekStart->weekOfYear;
-                $globalWeekNbs[] = $weekStart->weekOfYear;
+                $weekNumbers[] = ['nb' => $weekStart->weekOfYear, 'year' => $weekEnd->format('Y')];
+                $globalWeekNbs[] = ['nb' => $weekStart->weekOfYear, 'year' => $weekEnd->format('Y')];
                 $weekStart->addWeek();
             }
     
@@ -133,7 +133,7 @@ class EventController extends Controller
                 'nb' => $startDate->format('m'),
                 'year' => $startDate->format('Y'),
                 'index' => intval($startDate->format('m')) + intval($startDate->format('Y'))*100,
-                'weekNbs' => $weekNumbers
+                'weekRefs' => $weekNumbers
             ];
             $startDate->addMonth();
         }
@@ -149,22 +149,23 @@ class EventController extends Controller
         }
 
         $weeks = [];
-        foreach(array_unique($globalWeekNbs) as $nb){
-            $startDate = Carbon::now()->setISODate(date('Y'), $nb, 1);
-            $year = $startDate->format('Y');
+        $uniqueWeeks = array_unique(array_map('serialize', $globalWeekNbs), SORT_REGULAR);
+        $uniqueWeeks = array_map('unserialize', $uniqueWeeks);
+        foreach($uniqueWeeks as $week){
+            $startDate = Carbon::now()->setISODate($week['year'], $week['nb'], 1);
             $days = [];
 
             for ($i = 0; $i < 7; $i++) {
                 $date = $startDate->format('Y-m-d');
                 $days[] = [
                     'date' => $date,
-                    'events' => $events->where('date', $date),
+                    'events' => $events->where('date', $date)->values()->toArray(),
                     'isHoliday' => $holidays->where('start', '<=', $date)->where('finish', '>=', $date)->count() > 0
                 ];
                 $startDate->addDay();
             }
 
-            $weeks[] = ['days' => $days, 'nb' => $nb, 'year' => $year];
+            $weeks[] = ['days' => $days, 'nb' => $week['nb'], 'year' => $week['year']];
         }
 
         return response()->json(['months' => $months, 'weeks' => $weeks]);

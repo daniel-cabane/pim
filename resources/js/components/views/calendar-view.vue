@@ -1,8 +1,8 @@
 <template>
-    <v-container v-if="isReady">
+    <v-container>
         <div class="d-flex justify-space-between align-center">
             <span class="d-flex align-center" style="gap:10px;">
-                <v-btn variant="outlined">
+                <v-btn variant="outlined" @click="displayToday">
                     {{ $t('Today') }}
                 </v-btn>
                 <v-btn icon="mdi-chevron-left" flat @click="previous" :disabled="noBackward"/>
@@ -12,18 +12,14 @@
                 </span>
             </span>
             <span class="d-flex align-center">
-                <!-- <span class="text-grey">
-                    {{ $t('Week view') }}
-                </span>
-                <v-switch hide-details class="mx-2" />
-                <span class="text-grey">
-                    {{ $t('Month view') }}
-                </span> -->
                 <v-progress-circular indeterminate :width="2" v-if="isLoading"/>
             </span>
         </div>
-        <div>
+        <div v-if="isReady">
             <calendar-month :weeks="displayMonth.weeks" :currentMonth="currentMonthNb" />
+        </div>
+        <div v-else>
+            <calendar-squeleton/>
         </div>
     </v-container>
 </template>
@@ -47,13 +43,13 @@
         const month = months.value.find(m => m.nb == currentMonthNb.value && m.year == currentYear.value);
         if(month){
             const monthWeeks = [];
-            month.weekNbs.forEach(nb => {
-                monthWeeks.push(weeks.value.find(w => w.nb == nb));
+            month.weekRefs.forEach(week => {
+                monthWeeks.push(weeks.value.find(w => w.nb == week.nb && w.year == week.year));
             });
             month.weeks = monthWeeks;
+            return month;
         }
-
-        return month;
+        return {name: 'Loading', year: '...', weeks: []}
     });
     const noForward = computed(() => {
         if (currentMonthNb.value == 12){
@@ -76,10 +72,9 @@
             currentMonthNb.value--;
         }
         if(noBackward.value){
-            // const firstMonth = months.value.reduce((prev, curr) => {
-            //     return prev.year < curr.year || prev.nb < curr.nb ? prev : curr;
-            // });
-            getMoredMonths(-2, `${currentYear.value}-${(currentMonthNb.value+11)%12}-01`);
+            const newMonthNb = currentMonthNb.value == 1 ? 12 : currentMonthNb.value - 1;
+            const newYearNb = currentMonthNb.value == 1 ? currentYear.value - 1 : currentYear.value;
+            getMoredMonths(-2, `${newYearNb}-${newMonthNb}-01`);
         }
     }
     const next = () => {
@@ -90,7 +85,15 @@
             currentMonthNb.value++;
         }
         if (noForward.value) {
-            getMoredMonths(2);
+            const newMonthNb = currentMonthNb.value == 12 ? 1 : currentMonthNb.value + 1;
+            const newYearNb = currentMonthNb.value == 12 ? currentYear.value + 1 : currentYear.value;
+            getMoredMonths(2, `${newYearNb}-${newMonthNb}-01`);
         }
+    }
+
+    const displayToday = () => {
+        const currentDate = new Date();
+        currentMonthNb.value = currentDate.getMonth() + 1;
+        currentYear.value = currentDate.getFullYear();
     }
 </script>

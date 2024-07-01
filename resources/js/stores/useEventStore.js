@@ -80,7 +80,7 @@ export const useEventStore = defineStore({
             const currentDate = new Date();
             let date = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
             let formattedDate = date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-            const res = await get(`/api/calendar/getMonths?query=Laravel&org=${formattedDate}&backward=0&forward=1`);
+            const res = await get(`/api/calendar/getMonths?query=Laravel&org=${formattedDate}&backward=0&forward=1`, true);
             this.weeks = res.weeks;
             this.months = res.months;
             this.isReady = true;
@@ -90,29 +90,19 @@ export const useEventStore = defineStore({
             const adj = await get(`/api/calendar/getMonths?query=Laravel&org=${formattedDate}&backward=2&forward=3`);
             this.weeks = adj.weeks;
             this.months = adj.months;
-            console.log(this.months);
             this.isLoading = false;
         },
         async getMoredMonths(nb, date){
             this.isLoading = true;
-            const backward = nb < 0 ? -nb+1 : 0;
+            const backward = nb < 0 ? -nb-1 : 0;
             const forward = nb > 0 ? nb-1 : 0;
-            console.log(date, nb);
-            // const monthNb = nb > 0 ? Math.max(...this.months.map(m => parseInt(m.nb))) : Math.min(...this.months.map(m => parseInt(m.nb)));
-            // const date = new Date(new Date().getFullYear(), monthNb, 1).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-            // const formattedDate = date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
             const res = await get(`/api/calendar/getMonths?query=Laravel&org=${date}&backward=${backward}&forward=${forward}`);
-            res.months.forEach(m => console.log(m.nb, m.year));
-            this.months = [...res.months, ...this.months];
+            this.months = nb > 0 ? [...this.months, ...res.months] : [...res.months, ...this.months];
             res.weeks.forEach(w => {
                 if(!this.weeks.some(w2 => w2.nb == w.nb && w2.year == w.year)){
                     this.weeks.push(w);
                 }
             });
-            // console.log(this.months);
-            const test = [];
-            this.months.forEach(m => test.push(`${m.year}-${m.nb}`));
-            console.log(test.sort((a, b) => a - b));
             this.isLoading = false;
         }
     }

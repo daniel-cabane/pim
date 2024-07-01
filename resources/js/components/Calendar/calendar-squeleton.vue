@@ -3,23 +3,17 @@
         <div class="d-flex align-center">
             <div v-for="i in 7" class="topBox text-captionColor text-body-2">
                 <span>
-                    {{ daysOfWeek[i-1] }}
+                    {{ daysOfWeek[i - 1] }}
                 </span>
             </div>
         </div>
-        <week-row v-for="week in weeks" :week="week" :key="week.days[0].date" :currentMonth="currentMonth" :focusedId="focusedId"
-            @updateFocusedId="updateFocusedId" />
+        <div v-for="i in 4" style="display:flex;">
+            <div v-for="j in 7" class="dayBox"/>
+        </div>
     </div>
 </template>
 <script setup>
-    import { ref } from "vue";
-
-    const props = defineProps({ weeks: Array, currentMonth: Number });
-
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-    const focusedId = ref('0');
-    const updateFocusedId = id => focusedId.value = id;
 </script>
 <style scoped>
     .topBox {
@@ -29,5 +23,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    .dayBox {
+        width: 200px;
+        max-width: 14.2857%;
+        height: 150px;
+        border: 1px solid #cccccc;
     }
 </style>
