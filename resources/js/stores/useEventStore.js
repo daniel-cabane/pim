@@ -93,6 +93,7 @@ export const useEventStore = defineStore({
             this.isLoading = false;
         },
         async getMoredMonths(nb, date){
+            console.log('getting more', date);
             this.isLoading = true;
             const backward = nb < 0 ? -nb-1 : 0;
             const forward = nb > 0 ? nb-1 : 0;

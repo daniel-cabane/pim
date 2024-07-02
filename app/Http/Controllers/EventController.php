@@ -106,7 +106,8 @@ class EventController extends Controller
         $months = [];
         $globalWeekNbs = [];
         $startDate = (new Carbon($attrs['org']))->startOfMonth()->subMonths($attrs['backward']);
-        $eventStart = null;
+        $eventStart = $startDate->copy()->startOfWeek();
+        $eventEnd = $startDate->copy()->addMonths($attrs['backward'] + $attrs['forward'] + 1)->endOfWeek();
         $today = Carbon::today();
         for($i=0 ; $i<$attrs['backward'] + $attrs['forward']+1 ; $i++){
             if(abs($today->diffInYears($startDate)) > 2){
@@ -116,9 +117,6 @@ class EventController extends Controller
     
             $weekStart = $startDate->copy()->startOfWeek();
             $weekEnd = $endDate->copy()->endOfWeek();
-            if($eventStart == null){
-                $eventStart = $weekStart->copy();
-            } 
     
             $weekNumbers = [];
     
@@ -137,7 +135,6 @@ class EventController extends Controller
             ];
             $startDate->addMonth();
         }
-        $eventEnd = $weekEnd->copy();
 
         $holidays = Holiday::where('start', '<=', $eventEnd)->orWhere('finish', '>=', $eventStart)->get();
         $events = collect([]);
@@ -153,6 +150,9 @@ class EventController extends Controller
         $uniqueWeeks = array_map('unserialize', $uniqueWeeks);
         foreach($uniqueWeeks as $week){
             $startDate = Carbon::now()->setISODate($week['year'], $week['nb'], 1);
+            $startMonthName = $startDate->format('F');
+            $startYear = $startDate->format('Y');
+             $monthNb = $startDate->format('m');
             $days = [];
 
             for ($i = 0; $i < 7; $i++) {
@@ -164,8 +164,24 @@ class EventController extends Controller
                 ];
                 $startDate->addDay();
             }
+            $endMonthName = $startDate->format('F');
+            $endYear = $startDate->format('Y');
 
-            $weeks[] = ['days' => $days, 'nb' => $week['nb'], 'year' => $week['year']];
+            $monthDisplay = ['name' => $startMonthName, 'year' => $startYear, 'over' => false];
+            if($startMonthName != $endMonthName){
+                $monthDisplay = $startYear == $endYear ? 
+                    ['name1' => $startMonthName, 'name2' => $endMonthName, 'year' => $startYear, 'over' => 'month'] 
+                    : ['name1' => $startMonthName, 'name2' => $endMonthName, 'year1' => $startYear, 'year2' => $endYear, 'over' => 'year'];
+            }
+
+
+            $weeks[] = [
+                'days' => $days,
+                'nb' => $week['nb'],
+                'year' => $week['year'],
+                'monthDisplay' => $monthDisplay,
+                'monthNb' => $monthNb
+            ];
         }
 
         return response()->json(['months' => $months, 'weeks' => $weeks]);

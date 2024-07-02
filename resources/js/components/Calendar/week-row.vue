@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex text-center justify-space-between">
         <div class="dayBox" :class="{ holiday: day.isHoliday }" v-for="day in days" :key="day.date">
-            <v-btn :variant="day.button.variant" class="my-1" :class="day.button.class" :color="day.button.color" icon>
+            <v-btn :variant="day.button.variant" class="my-1" :class="day.button.class" :color="day.button.color" icon @click="emit('seeWeek', week)">
                 {{ day.date.substr(8, 2) }}
             </v-btn>
             <div v-if="day.events.length">
@@ -28,7 +28,7 @@
     </div>
 </template>
 <script setup>
-    import { ref, computed, onMounted, onUnmounted } from "vue";
+    import { ref, computed } from "vue";
 
     const props = defineProps({ week: Object, currentMonth: Number, focusedId: String });
 
@@ -60,17 +60,7 @@
         emit('updateFocusedId', id);
     }
 
-    const emit = defineEmits(['updateFocusedId'])
-    onMounted(() => {
-        document.addEventListener("click", emitOnClick);
-    });
-
-    onUnmounted(() => {
-        document.removeEventListener("click", emitOnClick);
-    });
-    const emitOnClick = () => {
-        emit('updateFocusedId', '0');
-    }
+    const emit = defineEmits(['updateFocusedId', 'seeWeek']);
 
     const dayDialog = ref(false);
     const focusedDay = ref(null);
