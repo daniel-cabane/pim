@@ -239,5 +239,16 @@
     "Retract post": "Retract post",
     "Status updated": "Status updated",
     "Post preview": "Post preview",
-    "published": "published"
+    "published": "published",
+    "Cover image": "Cover image",
+    "Update cover": "Update cover",
+    "Cover image updated": "Cover image updated",
+    "The cover image is used to promote the post on the home page.": "The cover image is used to promote the post on the home page.",
+    "Deleting this post is permanent and cannot be undone": "Deleting this post is permanent and cannot be undone",
+    "Yes, delete it forever !": "Yes, delete it forever !",
+    "Dark": "Dark",
+    "Bright": "Bright",
+    "Pick a color": "Pick a color",
+    "Title color": "Title color",
+    "Aspect ratio should be": "Aspect ratio should be"
 }

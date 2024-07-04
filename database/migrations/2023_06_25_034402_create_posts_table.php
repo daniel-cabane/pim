@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('slug', 255)->unique();
             $table->string('language', 255)->default('fr');
             $table->text('description');
+            $table->json('images');
             $table->text('post')->nullable();
             $table->string('status', 255)->default('draft');
             $table->timestamp('published_at')->nullable();

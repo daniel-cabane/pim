@@ -12,7 +12,8 @@ export const usePostStore = defineStore({
         post: {},
         isReady: false,
         isLoading: false,
-        statusLoading: false
+        statusLoading: false,
+        imageLoading: false
     }),
     actions: {
         async createPost(newPost){
@@ -31,6 +32,10 @@ export const usePostStore = defineStore({
             this.myPosts = res.posts;
             this.isReady = true;
         },
+        async getPublishedPosts() {
+            const res = await get('/api/posts/published', true);
+            this.posts = res.posts;
+        },
         async getPost(slug) {
             this.isReady = false;
             const res = await get(`/api/posts/${slug}`, true);
@@ -44,6 +49,17 @@ export const usePostStore = defineStore({
             this.posts = res.publishedPosts;
             this.submittedPosts = res.submittedPosts;
             this.isReady = true;
+        },
+        async updateCoverImage(data){
+            this.imageLoading = true;
+            let formData = new FormData()
+            formData.append('file', data.file);
+            const res = await post(`/api/posts/${this.post.slug}/cover`, formData);
+            this.post = res.post;
+            this.imageLoading = false;
+        },
+        async uploadPostImage(formData) {
+            return await post(`/api/posts/${this.post.slug}/image`, formData);
         },
         async updatePost() {
             this.isLoading = true;

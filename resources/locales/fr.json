@@ -239,5 +239,16 @@
     "Retract post": "Retirer l'article",
     "Status updated": "Statut mis à jour",
     "Post preview": "Apperçu de l'article",
-    "published": "publié"
+    "published": "publié",
+    "Cover image": "Image de couverture",
+    "Update cover": "Modifier l'image",
+    "Cover image updated": "Image de couverture mise à jour",
+    "The cover image is used to promote the post on the home page.": "L'image de couverture est utilisée pour promouvoir l'article sur la page d'acceuil.",
+    "Deleting this post is permanent and cannot be undone": "Supprimer cet article est définitif et ne peut pas être annulé",
+    "Yes, delete it forever !": "Oui, supprimer cet article à jamais !",
+    "Dark": "Sombre",
+    "Bright": "Clair",
+    "Pick a color": "Choisir une couleur",
+    "Title color": "Couleur du titre",
+    "Aspect ratio should be": "Le rapport largeur/hauteur doit être"
 }

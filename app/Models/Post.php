@@ -10,7 +10,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post','author_id', 'published_at'];
+    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'images', 'author_id', 'published_at'];
 
     public function getRouteKeyName(){
         return 'slug';
@@ -34,6 +34,7 @@ class Post extends Model
             'status' => $this->status,
             'language' => $this->language,
             'post' => $this->post,
+            'cover' => (json_decode($this->images))->cover,
             'published_at' => $this->published_at,
             'published_at_formated' => $this->published_at ? $publishDate->format('d/m/Y') : 'Not published',
             'updated_at' => $this->updated_at,

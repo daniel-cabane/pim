@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <post-display :post="post" :editing="false"/>
+        <post-display :post="post" v-if="isReady"/>
     </v-container>
 </template>
 <script setup>
@@ -11,7 +11,7 @@
     const route = useRoute();
     const postStore = usePostStore();
     const { getPost } = postStore;
-    const { post } = storeToRefs(postStore)
+    const { post, isReady } = storeToRefs(postStore)
 
     getPost(route.params.slug);
 </script>

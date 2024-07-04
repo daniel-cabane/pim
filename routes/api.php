@@ -57,7 +57,7 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 * 
 */
 
-Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/published', [PostController::class, 'published']);
 
 Route::get('/workshops', [WorkshopController::class, 'index']);
 Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
@@ -91,6 +91,8 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Post']], fun
 Route::group(['middleware'=>['auth:sanctum', 'can:update,post']], function(){
     Route::patch('/posts/{post}', [PostController::class, 'update']);
     Route::patch('/posts/{post}/status', [PostController::class, 'updateStatus']);
+    Route::post('/posts/{post}/cover', [PostController::class, 'updateCoverImage']);
+    Route::post('/posts/{post}/image', [PostController::class, 'uploadImage']);
 });
 
 Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){
