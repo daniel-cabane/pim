@@ -14,12 +14,12 @@
                     v-if="['fr', 'both'].includes(workshop.language)" />
                 <v-img src="/images/flag en.png" :width="30" class="mr-2"
                     v-if="['en', 'both'].includes(workshop.language)" />
-                <v-chip variant="elevated" theme="dark" size="small"
+                <v-chip variant="elevated"  size="small"
                     :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
                     {{ workshop.campus }}
                 </v-chip>
             </div>
-            <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" theme="dark" class="mt-1"
+            <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'"  class="mt-1"
                 :color="statusColor[workshop.status]" :text="$t(workshop.status) " v-if="workshop.editable" />
         </div>
     </div>
@@ -107,7 +107,7 @@
                         <v-btn variant="tonal" class="mr-3" color="error" @click="focusedApplicantDialog = false">
                             {{ $t('Cancel') }}
                         </v-btn>
-                        <v-btn color="success" theme="dark"
+                        <v-btn color="success" 
                             @click="emit('editApplicantName', { id: focusedApplicant.id, name: focusedApplicant.name }); focusedApplicantDialog = false;">
                             {{ $t('Save') }}
                         </v-btn>
@@ -118,7 +118,7 @@
     </v-card-text>
 </template>
 <script setup>
-    import { computed, ref, defineEmits } from 'vue';
+    import { computed, ref } from 'vue';
     import usePickWorkshopLg from '@/composables/usePickWorkshopLg';
     import { useAuthStore } from '@/stores/useAuthStore';
 

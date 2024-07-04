@@ -5,7 +5,7 @@
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
         <v-tab value="sessions" v-if="user.is.admin || workshop.status == 'launched'">{{ $t('Sessions') }}</v-tab>
         <v-spacer />
-        <v-chip label size="large" color="success" theme="dark" class="ma-2" v-if="workshop.status == 'launched'">
+        <v-chip label size="large" color="success"  class="ma-2" v-if="workshop.status == 'launched'">
             {{ $t('Launched') }}
         </v-chip>
         <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions"
@@ -130,7 +130,7 @@
                                         @click="finalizeDialog = false">
                                         {{ $t('Cancel') }}
                                     </v-btn>
-                                    <v-btn color="success" theme="dark"
+                                    <v-btn color="success" 
                                         :disabled="isLoading && workshop.sessions.length == 0"
                                         :loading="isLoading && isLaunching" @click="launchWorkshop">
                                         {{ $t('Launch') }}

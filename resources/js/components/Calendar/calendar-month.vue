@@ -3,7 +3,7 @@
         <div class="d-flex align-center">
             <div v-for="i in 7" class="topBox text-captionColor text-body-2">
                 <span>
-                    {{ daysOfWeek[i-1] }}
+                    {{ $t(daysOfWeek[i-1]) }}
                 </span>
             </div>
         </div>

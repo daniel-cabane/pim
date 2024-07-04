@@ -8,11 +8,10 @@
                 By {{ post.author.name }}
             </div>
         </div>
-        <v-chip color="secondary" label v-if="post.published_at == null">
-          <v-icon start icon="mdi-note-remove"></v-icon>
-          Draft
+        <v-chip :prepend-icon="chipDetails.icon" :color="chipDetails.color" label>
+          {{ chipDetails.title }}
         </v-chip>
-        <div class="text-right" v-else>
+        <div class="text-right" v-if="post.published_at">
             <div class="text-caption">
                 {{ $t('Published on') }} {{ post.published_at_formated }}
             </div>
@@ -23,5 +22,21 @@
     </div>
 </template>
 <script setup>
+    import { computed } from "vue";
+
     const props = defineProps({ post: Object });
+
+    const chipDetails = computed(() => {
+        switch(props.post.status){
+            case 'submitted':
+                return { title: "Submitted", icon: "mdi-file-eye", color: "primary" };
+                break;
+            case 'published':
+                return { title: "Published", icon: "mdi-file-check", color: "success" };
+                break;
+            default:
+                return {title: "Draft", icon: "mdi-file-hidden", color: "secondary"};
+                break;
+        }
+    });
 </script>

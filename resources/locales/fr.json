@@ -233,5 +233,11 @@
     "Today": "Aujourd'hui",
     "more": "de plus",
     "more info": "Plus d'informations",
-    "Loading": "Chargement"
+    "Loading": "Chargement",
+    "Preview post": "Voir un aperçu",
+    "Submit post": "Proposer l'article",
+    "Retract post": "Retirer l'article",
+    "Status updated": "Statut mis à jour",
+    "Post preview": "Apperçu de l'article",
+    "published": "publié"
 }

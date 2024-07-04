@@ -157,9 +157,11 @@ class EventController extends Controller
 
             for ($i = 0; $i < 7; $i++) {
                 $date = $startDate->format('Y-m-d');
+                $weekEvents = $events->where('date', $date)->values()->toArray();
                 $days[] = [
                     'date' => $date,
-                    'events' => $events->where('date', $date)->values()->toArray(),
+                    'events' => $weekEvents,
+                    'unfilteredEvents' => $weekEvents,
                     'isHoliday' => $holidays->where('start', '<=', $date)->where('finish', '>=', $date)->count() > 0
                 ];
                 $startDate->addDay();

@@ -20,7 +20,7 @@
         <div v-for="(day, index) in days" style="min-width:14%;max-width:14%;" :key="day.date">
             <div class="topBox text-center">
                 <div>
-                    {{ daysOfWeek[index] }}
+                    {{ $t(daysOfWeek[index]) }}
                 </div>
                 <div class="text-h5 font-weight-bold pa-2" :class="isToday(day.date) ? 'today' : ''">
                     {{ day.date.substr(8, 2) }}
@@ -85,7 +85,6 @@
 
     const focusedId = ref('0');
     const updateFocusedId = id => {
-        console.log(id);
         focusedId.value = id
     };
     onMounted(() => {

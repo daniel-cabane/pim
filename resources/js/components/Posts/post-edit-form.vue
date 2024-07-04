@@ -1,7 +1,7 @@
 <template>
-    <v-text-field :rules="[rules.required, rules.minLengthTitle]" v-model="post.title" :label="$t('Title')"
+    <v-text-field :rules="[rules.required, rules.minLengthTitle]" max="100" v-model="post.title" :label="$t('Title')"
         variant="outlined" validate-on="blur" :disabled="!post.editable" />
-    <v-textarea :rules="[rules.required, rules.minLengthDescription]" v-model="post.description"
+    <v-textarea :rules="[rules.required, rules.minLengthDescription]" max="255" v-model="post.description"
         :label="$t('Description')" variant="outlined" validate-on="blur" :disabled="!post.editable" />
     <div class="text-grey text-caption">
         Content

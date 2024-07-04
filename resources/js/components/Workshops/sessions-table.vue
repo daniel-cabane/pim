@@ -11,7 +11,7 @@
             <!-- <v-btn :disabled="isLoading" size="small" color="primary" variant="tonal" @click="emit('orderSessions')">
                 {{ $t('Order sessions') }}
             </v-btn> -->
-            <v-btn :disabled="isLoading" size="x-small" color="success" theme="dark" class="ml-4" icon="mdi-refresh"
+            <v-btn :disabled="isLoading" size="x-small" color="success" class="ml-4" icon="mdi-refresh"
                 @click="emit('refreshSessions')" v-if="false && workshop.status == 'confirmed'" />
             <!-- |||||||||||||||||||||||| FIX THIS |||||||||||||||||||||||| -->
         </div>
@@ -26,7 +26,7 @@
                         :class="isAfter(item.finish, item.start) ? '' : 'text-error font-weight-bold'">{{ item.finish }}
                     </td>
                     <td class="text-center">
-                        <v-icon theme="dark" size="large" :color="item.status == 'confirmed' ? 'success' : 'warning'">
+                        <v-icon  size="large" :color="item.status == 'confirmed' ? 'success' : 'warning'">
                             {{ item.status == 'confirmed' ? 'mdi-check' :
                             'mdi-close-circle-outline' }}
                         </v-icon>

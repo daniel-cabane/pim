@@ -26,7 +26,7 @@ const customLight = {
         'secondary-darken-1': '#646469',
         error: '#e31b23',
         info: '#007dc3',
-        success: '#acc37e',
+        success: '#4CAF50',
         warning: '#fbaf5c',
         captionColor: '#9E9E9E'
     }
@@ -42,7 +42,7 @@ const customDark = {
         'secondary-darken-1': '#646469',
         error: '#e31b23',
         info: '#007dc3',
-        success: '#acc37e',
+        success: '#4CAF50',
         warning: '#fbaf5c',
         captionColor: '#CDCECE'
     }
@@ -82,7 +82,6 @@ const i18n = createI18n({
     locale: localStorage.getItem('locale') ? localStorage.getItem('locale') : 'en',
     messages: { en, fr }
 });
-
 
 import router from "./router";
 

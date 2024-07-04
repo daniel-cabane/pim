@@ -17,7 +17,7 @@
                     </div>
                 </v-window-item>
                 <v-window-item value="posts">
-                    posts
+                    <admin-posts-tabs/>
                 </v-window-item>
                 <v-window-item value="users">
                     <v-text-field label="Search user" :loading="loading" variant="outlined" v-model="data"
@@ -43,17 +43,12 @@
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useRouter } from 'vue-router';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
-    // import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
 
     const workshopStore = useWorkshopStore();
     const { adminGetAllWorkshops } = workshopStore;
     const { workshops } = storeToRefs(workshopStore);
     adminGetAllWorkshops();
-
-    // const eventStore = useEventStore();
-    // const { getHolidays, createHoliday, editHoliday, deleteHoliday } = eventStore;
-    // const { holidays } = storeToRefs(eventStore);
 
     const authStore = useAuthStore();
     const { user } = authStore;

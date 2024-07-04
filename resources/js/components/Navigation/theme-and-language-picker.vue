@@ -5,7 +5,7 @@
         </div>
         <span style='display:flex;align-items:center;justify-content:center;'>
             <v-img max-width='35px' min-width='35px' class='mr-3' :style='languageSwitch ? "filter: grayscale(80%)" : ""' src="/images/flag en.png" contain/>
-            <v-switch :color="languageSwitch ? 'blue' : 'red'" density="compact" hide-details v-model='languageSwitch' @change="setLocale">
+            <v-switch density="compact" hide-details v-model='languageSwitch' @change="setLocale">
                 <template v-slot:label>
                     <v-img max-width='35px' min-width='35px' :style='languageSwitch ? "" : "filter: grayscale(80%)"' src="/images/flag fr.png" contain/>
                 </template>
@@ -18,7 +18,7 @@
         </div>
         <span style='display:flex;align-items:center;justify-content:center;'>
             <v-img max-width='30px' min-width='30px' class='mr-4' :style='themeSwitch ? "filter: grayscale(80%)" : ""' src="/images/sun.png" contain/>
-            <v-switch :color="themeSwitch ? 'blue' : 'red'" density="compact" hide-details v-model='themeSwitch' @change="setTheme">
+            <v-switch density="compact" hide-details v-model='themeSwitch' @change="setTheme">
                 <template v-slot:label>
                     <v-img max-width='30px' min-width='30px' :style='themeSwitch ? "" : "filter: brightness(10%)"' src="/images/moon.png" contain/>
                 </template>
@@ -34,11 +34,11 @@
     const { locale } = useI18n();
 
     let languageSwitch = ref(locale == 'fr');
-    // const browserLocale = localStorage.getItem('locale');
-    // if (browserLocale) {
-    //     locale.value = browserLocale;
-    //     languageSwitch.value = browserLocale == 'fr';
-    // }
+    const browserLocale = localStorage.getItem('locale');
+    if (browserLocale) {
+        locale.value = browserLocale;
+        languageSwitch.value = browserLocale == 'fr';
+    }
     const setLocale = () => {
         let newLocal = languageSwitch.value ? 'fr' : 'en';
         locale.value = newLocal;

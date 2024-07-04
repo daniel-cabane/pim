@@ -24,6 +24,8 @@
                     <v-card-text>
                         <v-text-field :rules="[rules.required, rules.minLengthTitle]" v-model="newPost.title"
                             :label="$t('Title')" variant="outlined" validate-on="blur" />
+                        <v-select v-model="newPost.language" :items="[{title: 'Français', value: 'fr'}, {title: 'English', value: 'en'}]" :label="$t('Language') "
+                            variant="outlined" />
                         <v-textarea :rules="[rules.required, rules.minLengthDescription]" v-model="newPost.description"
                             :label="$t('Description')" variant="outlined" validate-on="blur" />
                     </v-card-text>
@@ -31,8 +33,8 @@
                         <v-spacer />
                         <v-btn variant="text" class="mr-2" min-width="150" :disabled="newPostLoading" color="error"
                             @click="newPostDialog = false">{{ $t('Close') }}</v-btn>
-                        <v-btn color="primary" min-width="150" :loading="newPostLoading" @click="submitNewPost">{{
-                            $t('Submit') }}</v-btn>
+                        <v-btn color="success" min-width="150" :loading="newPostLoading" @click="submitNewPost">{{
+                            $t('Create') }}</v-btn>
                     </div>
                 </v-card>
             </v-dialog>
@@ -94,7 +96,7 @@
     const router = useRouter();
 
     let newPostDialog = ref(false);
-    const newPost = reactive({title: '', description: ''});
+    const newPost = reactive({title: '', description: '', language: ''});
 
     const rules = {
         required: value => !!value || 'Required.',

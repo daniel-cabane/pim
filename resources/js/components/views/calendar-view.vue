@@ -29,11 +29,18 @@
             </span>
             <span class="d-flex align-center">
                 <v-progress-circular indeterminate :width="2" v-if="isLoading" />
+                <v-chip :variant="filters.TKO ? 'flat' : 'tonal'" :color="filters.TKO ? '#FF0000' : 'black'" class="mr-1"
+                    @click="toggleTKO">
+                    TKO
+                </v-chip>
+                <v-chip :variant="filters.BPR ? 'flat' : 'tonal'" :color="filters.BPR ? '#0017FF' : 'black'" @click="toggleBPR">
+                    BPR
+                </v-chip>
             </span>
         </div>
         <div class="mb-16" v-if="isReady">
             <calendar-month :weeks="displayMonth.weeks" :currentMonth="currentMonthNb" @seeWeek="seeWeek"
-                v-if="viewing == 'month'" />
+                v-if="viewing == 'month'"/>
             <calendar-week :week="displayWeek" v-else />
         </div>
         <div v-else>
@@ -42,7 +49,7 @@
     </v-container>
 </template>
 <script setup>
-    import { ref, computed } from "vue";
+    import { ref, reactive, computed } from "vue";
     import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
     // import { useI18n } from 'vue-i18n';
@@ -156,5 +163,21 @@
         const dayOfYear = Math.floor((currentDate - firstDayOfYear) / 86400000);
         currentWeekNb.value = Math.ceil((dayOfYear + (7 - dayOfWeek)) / 7);
     }
-    // console.log(weeks.value);
+    
+    const filters = reactive({BPR: true, TKO: true})
+    const toggleBPR = () => {
+        filters.BPR = !filters.BPR;
+        filterEvents();
+    }
+    const toggleTKO = () => {
+        filters.TKO = !filters.TKO;
+        filterEvents();
+    }
+    const filterEvents = () => {
+        weeks.value.forEach(w => {
+            w.days.forEach(d => {
+                d.events = d.unfilteredEvents.filter(e => e.campus == 'BPR' && filters.BPR || e.campus == 'TKO' && filters.TKO);
+            })
+        });
+    }
 </script>

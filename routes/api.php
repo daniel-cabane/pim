@@ -41,6 +41,9 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/openDoor/', [AdminController::class, 'createOpenDoor']);
     Route::patch('/admin/openDoors/{openDoor}', [AdminController::class, 'updateOpenDoor']);
     Route::post('/admin/openDoors/{openDoor}/delete', [AdminController::class, 'deleteOpenDoor']);
+
+    Route::get('/admin/posts/', [AdminController::class, 'getPosts']);
+    Route::get('/admin/morePosts/', [AdminController::class, 'getMorePosts']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -87,6 +90,7 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Post']], fun
 
 Route::group(['middleware'=>['auth:sanctum', 'can:update,post']], function(){
     Route::patch('/posts/{post}', [PostController::class, 'update']);
+    Route::patch('/posts/{post}/status', [PostController::class, 'updateStatus']);
 });
 
 Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){

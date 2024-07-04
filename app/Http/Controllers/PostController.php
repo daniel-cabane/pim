@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
@@ -45,11 +46,13 @@ class PostController extends Controller
     {
         $attrs = $request->validate([
             'title' => 'required|min:5|max:50',
+            'language'  => 'required|min:2|max:2',
             'description' => 'required|min:10|max:255',
         ]);
 
         $post = Post::create([
             'title' => $attrs['title'],
+            'language' => $attrs['language'],
             'description' => $attrs['description'],
             'slug' => Str::slug($attrs['title']),
             'author_id' => auth()->id()
@@ -79,33 +82,44 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $attrs = $request->validate([
-            'title' => 'required|min:8|max:50',
+            'title' => 'required|min:8|max:150',
             'description' => 'required|min:20|max:255',
-            'post' => 'required',
-            'publish' => 'required|min:4|max:15'
+            'language' => 'required|min:2|max:2',
+            'post' => 'required|max:5000'
         ]);
 
-        $newData = [
+        $post->update([
             'title' => $attrs['title'],
             'slug' => Str::slug($attrs['title']),
             'description' => $attrs['description'],
+            'language' => $attrs['language'],
             'post' => $attrs['post'],
-        ];
-        $messageText = "Post updated";
-        if ($attrs['publish'] == 'publish'){
-            $newData['published_at'] = Carbon::now();
-            $messageText = "Post published";
-        } else if ($attrs['publish'] == 'unpublish'){
-            $newData['published_at'] = null;
-            $messageText = "Post unpublished";
-        }
-
-        $post->update($newData);
+        ]);
 
         return response()->json([
             'post' => $post->format(),
             'message' => [
-                'text' => $messageText,
+                'text' => 'Post updated',
+                'type' => 'success'
+            ]
+        ]);
+    }
+
+    public function updateStatus(Request $request, Post $post)
+
+    {
+        $status = $request->validate(['status' => ['required', Rule::in(['draft', 'submitted', 'published'])]])['status'];
+
+        if($status == 'published' && !auth()->user()->is['admin']){
+            return response()->json(['message' => ['text' => 'This action is unauthorized', 'type' => 'error']]);
+        }
+
+        $post->update(['status' => $status]);
+
+        return response()->json([
+            'post' => $post->format(),
+            'message' => [
+                'text' => 'Status updated',
                 'type' => 'success'
             ]
         ]);

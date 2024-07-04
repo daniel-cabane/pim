@@ -12,12 +12,12 @@
             <div class="text-right pa-2">
                 <div class="d-flex align-center">
                     <v-img :src="`/images/flag ${workshop.language}.png`" :width="30" class="mr-2" />
-                    <v-chip variant="elevated" theme="dark" size="small"
+                    <v-chip variant="elevated"  size="small"
                         :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
                         {{ workshop.campus }}
                     </v-chip>
                 </div>
-                <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" theme="dark" class="mt-1"
+                <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'"  class="mt-1"
                     :color="statusColor[workshop.status]" :text="$t(workshop.status) " v-if="workshop.editable" />
             </div>
         </div>

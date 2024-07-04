@@ -1,53 +1,6 @@
 <template>
     <div>
         <div class="text-right">
-            <!-- <v-dialog width="500" v-model="addOpenDoorDialog">
-                <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn color="primary" class="mb-3" v-bind="activatorProps" append-icon="mdi-plus">
-                        {{ $t('Add a session')}}
-                    </v-btn>
-                </template>
-                <v-card :title="$t('Add a session')">
-                    <v-card-text>
-                        <div class="d-flex" style="gap:10px;">
-                            <v-text-field :label="$t('Date')" variant="outlined" type="date"
-                                v-model="newSession.date" />
-                            <v-switch :label="$t('Recurring')" color="primary" v-model="newSession.isRecurring" />
-                        </div>
-                        <v-text-field :label="$t('Finish date')" variant="outlined" type="date"
-                            v-model="newSession.finishDate" v-if="newSession.isRecurring" />
-                        <div class="d-flex" style="gap:10px;">
-                            <v-text-field :label="$t('Start')" variant="outlined" type="time"
-                                v-model="newSession.start" />
-                            <v-text-field :label="$t('Finish')" variant="outlined" type="time"
-                                v-model="newSession.finish" />
-                        </div>
-                        <v-select label="Campus" :items="['BPR', 'TKO']" v-model="newSession.campus"
-                            variant="outlined" />
-                        <div class="d-flex" style="gap:10px;">
-                            <v-text-field v-model="newSession.roomNb" :label="$t('Room')" variant="outlined"
-                                clearable />
-                            <v-btn icon="mdi-pi" @click='newSession.roomNb = "π (314 BPR)"' class="mt-1"
-                                :disabled="newSession.campus != 'BPR'" />
-                        </div>
-                        <div class="d-flex" style="gap:10px;">
-                            <v-text-field :label="$t('Type')" variant="outlined" v-model="newSession.type" clearable />
-                            <v-btn icon="mdi-refresh" @click='newSession.type = "Open doors"' class="mt-1" />
-                        </div>
-                        <v-select v-model="newSession.teacher_id" :items="teachersOptions" :label="$t('Teacher')"
-                            variant="outlined" />
-                    </v-card-text>
-                    <div style="display:flex;justify-content:flex-end;" class="pa-3">
-                        <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
-                            @click="addHolidayDialog = false">
-                            {{ $t('Cancel') }}
-                        </v-btn>
-                        <v-btn color="success" theme="dark" :loading="isLoading" @click="handleCreateOpenDoor">
-                            {{ $t('Add') }}
-                        </v-btn>
-                    </div>
-                </v-card>
-            </v-dialog> -->
             <v-btn color="primary" class="mb-3" append-icon="mdi-plus" @click="showEditDialog('creating', newSession)">
                 {{ $t('Add a session') }}
             </v-btn>
@@ -89,11 +42,11 @@
                             @click="addHolidayDialog = false">
                             {{ $t('Cancel') }}
                         </v-btn>
-                        <v-btn color="success" theme="dark" :loading="isLoading" @click="handleCreate"
+                        <v-btn color="success" :loading="isLoading" @click="handleCreate"
                             v-if="editAction == 'creating'">
                             {{ $t('Add') }}
                         </v-btn>
-                        <v-btn color="primary" theme="dark" :loading="isLoading" @click="handleUpdate" v-else>
+                        <v-btn color="primary" :loading="isLoading" @click="handleUpdate" v-else>
                             {{ $t('Update') }}
                         </v-btn>
                     </div>

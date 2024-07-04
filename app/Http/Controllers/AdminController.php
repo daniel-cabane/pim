@@ -10,6 +10,7 @@ use App\Models\Workshop;
 use App\Models\Holiday;
 use App\Models\Session;
 use App\Models\OpenDoor;
+use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -325,5 +326,20 @@ class AdminController extends Controller
                     'type' => 'info'
                 ]
         ]);
+    }
+
+    public function getPosts()
+    {
+        return response()->json([
+            'submittedPosts' => Post::where('status', 'submitted')->get(),
+            'publishedPosts' => Post::where('status', 'published')->orderBy('published_at', 'desc')->take(20)->get()
+        ]);
+
+    }
+    public function getMorePosts(Request $request)
+    {
+        $date = $request->validate(['date' => 'required|Date'])['date'];
+
+        return response()->json(['posts' => Post::where('status', 'published')->where('published_at', '<', $date)->orderBy('published_at', 'desc')->take(50)->get()]);
     }
 }

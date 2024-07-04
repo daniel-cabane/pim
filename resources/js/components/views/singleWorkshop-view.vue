@@ -53,10 +53,10 @@
                     </div>
                     <div class="d-flex justify-end" v-else-if="workshop.application.submitted">
                         <div>
-                            <v-chip label size="large" color="success" theme="dark" append-icon="mdi-check">
+                            <v-chip label size="large" color="success" append-icon="mdi-check">
                                 {{ $t('Applied !') }}
                             </v-chip>
-                            <v-btn icon="mdi-eye" color="success" theme="dark" size="small" class="ml-3"
+                            <v-btn icon="mdi-eye" color="success" size="small" class="ml-3"
                                 variant="outlined" @click="showApplication = true" />
                         </div>
                     </div>
