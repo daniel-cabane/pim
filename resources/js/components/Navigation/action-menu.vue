@@ -4,13 +4,13 @@
             <v-btn dark icon="mdi-school" v-bind="props" />
         </template>
         <v-list>
-            <v-list-item @click="gotoMyPosts">
+            <v-list-item @click="gotoMyPosts" v-if="user.is.publisher">
                 <template v-slot:prepend>
                     <v-icon icon="mdi-post-outline"></v-icon>
                 </template>
                 <v-list-item-title>{{ $t("My posts") }}</v-list-item-title>
             </v-list-item>
-            <v-dialog v-model="newPostDialog" width="450">
+            <v-dialog v-model="newPostDialog" width="450" v-if="user.is.publisher">
                 <template v-slot:activator="{ props }">
                     <v-list-item v-bind="props">
                         <template v-slot:prepend>
@@ -24,8 +24,9 @@
                     <v-card-text>
                         <v-text-field :rules="[rules.required, rules.minLengthTitle]" v-model="newPost.title"
                             :label="$t('Title')" variant="outlined" validate-on="blur" />
-                        <v-select v-model="newPost.language" :items="[{title: 'Français', value: 'fr'}, {title: 'English', value: 'en'}]" :label="$t('Language') "
-                            variant="outlined" />
+                        <v-select v-model="newPost.language"
+                            :items="[{title: 'Français', value: 'fr'}, {title: 'English', value: 'en'}]"
+                            :label="$t('Language') " variant="outlined" />
                         <v-textarea :rules="[rules.required, rules.minLengthDescription]" v-model="newPost.description"
                             :label="$t('Description')" variant="outlined" validate-on="blur" />
                     </v-card-text>
@@ -39,13 +40,13 @@
                 </v-card>
             </v-dialog>
             <v-divider />
-            <v-list-item @click="gotoMyWorkshops">
+            <v-list-item @click="gotoMyWorkshops" v-if="user.is.teacher">
                 <template v-slot:prepend>
                     <v-icon icon="mdi-puzzle"></v-icon>
                 </template>
                 <v-list-item-title>{{ $t("My workshops") }}</v-list-item-title>
             </v-list-item>
-            <v-dialog v-model="newWorkshopDialog" width="450">
+            <v-dialog v-model="newWorkshopDialog" width="450" v-if="user.is.teacher">
                 <template v-slot:activator="{ props }">
                     <v-list-item v-bind="props">
                         <template v-slot:prepend>
@@ -88,12 +89,14 @@
     import { useRouter } from 'vue-router';
     import { usePostStore } from '@/stores/usePostStore';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
 
     const postStore = usePostStore();
     const { createPost } = postStore;
     const router = useRouter();
+    const { user } = storeToRefs(useAuthStore());
 
     let newPostDialog = ref(false);
     const newPost = reactive({title: '', description: '', language: ''});

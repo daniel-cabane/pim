@@ -35,7 +35,7 @@
 
       <template v-slot:append>
         <div style="white-space:nowrap;display:flex;align-items:center;" v-if="user">
-          <action-menu-teacher v-if="user.is.teacher"/>
+          <action-menu v-if="user.is.teacher || user.is.publisher"/>
           <profile-menu/>
         </div>
         <div style="white-space:nowrap;display:flex;align-items:center;" v-else>

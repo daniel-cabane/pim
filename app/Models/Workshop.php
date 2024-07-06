@@ -71,6 +71,7 @@ class Workshop extends Model
           ];
         }
       }
+      
       return [
         'id' => $this->id,
         'title' => ['fr' => $this->title_fr, 'en' => $this->title_en],
@@ -80,7 +81,7 @@ class Workshop extends Model
         'campus' => $this->campus,
         'details' => json_decode($this->details),
         'teacherId' => $this->organiser_id,
-        'teacher' => $this->organiser->name,
+        'teacher' => $this->organiser->formal_name,
         'themes' => $this->themes()->pluck('themes.id'),
         'startDate' => $this->start_date,
         'formatedStartDate' => $this->start_date ? date_format(date_create($this->start_date) ,"d-m-y") : "Term $this->term",
@@ -155,6 +156,6 @@ class Workshop extends Model
     {
       $today = Carbon::now()->addMonth(2)->toDateString(); // REMOVE THE ADDMONTH(2) !!!!!!!!!!!!!
       $term = Term::whereDate('start_date', '<=', $today)->whereDate('finish_date', '>=', $today)->first();
-      return $query->where('start_date', '>=', $today)->orWhere('term', $term->nb);
+      return $query->whereIn('status', ['confirmed', 'launched'])->where('start_date', '>=', $today)->orWhere('term', $term->nb);
     }
   }

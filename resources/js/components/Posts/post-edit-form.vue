@@ -128,8 +128,8 @@
         minLengthDescription: value => value.length >= 10 || 'The description must at least 10 characters long',
     };
 
-    const plugins = 'lists link image table code help wordcount';
-    const toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor removeformat | charmap emoticons | image media table link unlink'
+    const plugins = 'lists link image table code help wordcount media';
+    const toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | numlist bullist | forecolor backcolor removeformat | charmap emoticons | image media table link unlink'
     const options = {
         image_title: true,
         automatic_uploads: true,

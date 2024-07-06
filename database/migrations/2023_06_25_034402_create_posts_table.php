@@ -19,12 +19,14 @@ return new class extends Migration
             $table->string('language', 255)->default('fr');
             $table->text('description');
             $table->json('images');
+            $table->unsignedBigInteger('translation_id')->nullable();
             $table->text('post')->nullable();
             $table->string('status', 255)->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('translation_id')->references('id')->on('posts');
         });
     }
 

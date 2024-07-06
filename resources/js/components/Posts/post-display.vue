@@ -17,7 +17,7 @@
                     {{ $t('By') }} {{ post.author.name }}
                 </div>
             </div>
-            <v-img class="align-end text-white" max-width="120" max-height="67.5" aspect-ratio="16/9" cover :src="post.cover.url" />
+            <v-img class="align-end text-white" max-width="240" max-height="135" aspect-ratio="16/9" cover :src="post.cover.url" />
         </div>
         <v-divider class="my-2" />
         <div class="mt-4" v-html="post.post" />

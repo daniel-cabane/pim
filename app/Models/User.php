@@ -79,6 +79,31 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->whereHas("roles", function($q){ $q->where("name", "teacher"); });
     }
 
+    public function getFormalNameAttribute()
+    {
+      $name = $this->name;
+      if($this->is['teacher']){
+        $nameParts = explode(' ', $this->name);
+        if(count($nameParts) > 1){
+          array_shift($nameParts);
+        }
+        $name = implode(' ', $nameParts);
+        if($this->preferences->title){
+          $name = $this->preferences->title." ".$name;
+        }
+      }
+      if($this->is['student']){
+        $nameParts = explode(' ', $this->name);
+        $name = $nameParts[0]." ";
+        array_shift($nameParts);
+        foreach($nameParts as $namePart){
+          $name .= substr($namePart,0,1).".";
+        }
+      }
+
+      return $name;
+    }
+
     // public function teachers()
     // {
     //     return $this->hasMany(User::class, 'user_id')->whereHas("roles", function($q){ $q->where("name", "teacher"); });

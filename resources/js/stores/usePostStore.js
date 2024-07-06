@@ -10,6 +10,7 @@ export const usePostStore = defineStore({
         submittedPosts: [],
         myPosts: [],
         post: {},
+        totalNbPosts: 0,
         isReady: false,
         isLoading: false,
         statusLoading: false,
@@ -32,8 +33,16 @@ export const usePostStore = defineStore({
             this.myPosts = res.posts;
             this.isReady = true;
         },
-        async getPublishedPosts() {
-            const res = await get('/api/posts/published', true);
+        async getPublishedPosts(skip = 0, take = 10) {
+            this.isReady = false;
+            this.posts = [];
+            const res = await get(`/api/posts/published?query=Laravel&skip=${skip}&take=${take}`, true);
+            this.posts = res.posts;
+            this.totalNbPosts = res.total;
+            this.isReady = true;
+        },
+        async searchPosts(text){
+            const res = await get(`/api/posts/search?query=Laravel&text=${text}`, true);
             this.posts = res.posts;
         },
         async getPost(slug) {

@@ -14,15 +14,31 @@ class PostController extends Controller
     /**
      * Display all the recent posts
      */
-    public function published()
+    public function published(Request $request)
     {
+        $attrs = $request->validate([
+            'skip' => 'required|Integer|min:0|max:1000',
+            'take' => 'required|Integer|min:1|max:100'
+        ]);
         $posts = [];
-        foreach(Post::where('status', 'published')->orderBy('published_at', 'desc')->take(10)->get() as $post){
+        foreach(Post::where('status', 'published')->orderBy('published_at', 'desc')->skip($attrs['skip'])->take($attrs['take'])->get() as $post){
             $posts[] = $post->format();
         }
         return response()->json([
-            'posts' => $posts
+            'posts' => $posts, 'total' => Post::where('status', 'published')->count()
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $attrs = $request->validate(['text' => 'required|min:3|max:100']);
+
+        $posts = [];
+        foreach(Post::where('status', 'published')->where('title', 'like', '%'.$attrs['text'].'%')->orderBy('published_at', 'desc')->get() as $post){
+            $posts[] = $post->format();
+        }
+
+        return response()->json(['posts' => $posts]);
     }
 
     /**

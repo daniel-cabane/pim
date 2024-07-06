@@ -10,7 +10,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'images', 'author_id', 'published_at'];
+    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'images', 'author_id', 'published_at', 'translation_id'];
 
     public function getRouteKeyName(){
         return 'slug';
@@ -19,6 +19,11 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function translation()
+    {
+        return $this->belongsTo(Post::class, 'translation_id');
     }
 
     public function format()
@@ -43,7 +48,7 @@ class Post extends Model
             'editable' => auth()->check() && auth()->user()->can('update', $this),
             'author' => [
                 'id' => $author->id,
-                'name' => $author->name
+                'name' => $author->formal_name
             ]
         ];
     }

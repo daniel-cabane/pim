@@ -20,10 +20,10 @@
                     <admin-posts-tabs/>
                 </v-window-item>
                 <v-window-item value="users">
-                    <v-text-field label="Search user" :loading="loading" variant="outlined" v-model="data"
+                    <v-text-field label="Search user" class="mt-2" :loading="loading" variant="outlined" v-model="data"
                         @keydown.enter="fetchUsers" />
                     <div style="display:flex;flex-wrap:wrap;">
-                        <admin-user-card v-for="user in users" :key="user.id" :user="user" />
+                        <admin-user-card v-for="user in users" class="ma-2" :key="user.id" :user="user" />
                     </div>
                 </v-window-item>
                 <v-window-item value="openDoors">

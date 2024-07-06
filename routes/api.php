@@ -62,6 +62,7 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 */
 
 Route::get('/posts/published', [PostController::class, 'published']);
+Route::get('/posts/search', [PostController::class, 'search']);
 
 Route::get('/terms', [EventController::class, 'getTerms']);
 

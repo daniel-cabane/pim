@@ -14,11 +14,17 @@ class EventController extends Controller
 {
     public function upcoming()
     {
-        $today = Carbon::now()->addMonth(2)->toDateString();
+        $campus = ['BPR', 'TKO'];
+        $user = auth()->user();
+        if($user && $user->preferences->campus != 'both'){
+            $campus = [$user->preferences->campus];
+        }
+
+        $today = Carbon::now()->addMonth(2)->toDateString(); //////////////////////////////////////////// REMOVE THE ADDMONTH(2) HERE ///////////////////////
         $term = Term::whereDate('start_date', '<=', $today)->whereDate('finish_date', '>=', $today)->first();
 
         $workshops = [];
-        foreach(Workshop::upcoming()->whereIn('status', ['confirmed', 'launched'])->orderBy('start_date')->take(6)->get() as $workshop){
+        foreach(Workshop::upcoming()->whereIn('campus', $campus)->orderBy('start_date')->take(6)->get() as $workshop){
             $workshops[] = $workshop->format();
         }
         return response()->json(['events' => $workshops]);

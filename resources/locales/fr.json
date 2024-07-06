@@ -133,7 +133,7 @@
     "Update status": "Modifier le statut",
     "Do you want to submit this workshop ?": "Voulez-vous proposer cet atelier ?",
     "Do you want to confirm this workshop ?": "Voulez-vous confirmer cet atelier ?",
-    "Blog posts": "Publications",
+    "Blog posts": "Articles du blog",
     "Users": "Utilisateurs",
     "Workshops": "Ateliers",
     "Nb of sessions": "Nb de séances",
@@ -260,6 +260,6 @@
     "First name": "Prénom",
     "Last name": "Nom de famille",
     "Please indicate your preferences": "Merci d'indiquer vos préférences",
-    "Incomplete data": "Données incomplètes"
-
+    "Incomplete data": "Données incomplètes",
+    "Recent posts": "Articles récents"
 }

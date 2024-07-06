@@ -38,15 +38,15 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         $teacherEmails = [
-            'adelettrez' => 'Antoine Delettrez',
-            'bbarre' => 'Benjamin Barre',
-            'jcabrit' => 'Jose Cabrit',
-            'ngouez' => 'Nicolas Gouez',
-            'dcabane' => 'Daniel Cabane',
-            'rdelpuech' => 'Rémi Delpuech',
-            'sparis' => 'Sébastien Paris',
-            'ghenry' => 'Guillaume Henry',
-            'tbelmekki' => 'Tarik Belmekki'
+            'adelettrez' => ['name' => 'Antoine Delettrez', 'campus' => 'BPR', 'language' => 'both'],
+            'bbarre' => ['name' => 'Benjamin Barre', 'campus' => 'both', 'language' => 'both'],
+            'jcabrit' => ['name' => 'Jose Cabrit', 'campus' => 'BPR', 'language' => 'both'],
+            'ngouez' => ['name' => 'Nicolas Gouez', 'campus' => 'BPR', 'language' => 'both'],
+            'dcabane' => ['name' => 'Daniel Cabane', 'campus' => 'both', 'language' => 'both'],
+            'rdelpuech' => ['name' => 'Rémi Delpuech', 'campus' => 'both', 'language' => 'both'],
+            'sparis' => ['name' => 'Sébastien Paris', 'campus' => 'both', 'language' => 'both'],
+            'ghenry' => ['name' => 'Guillaume Henry', 'campus' => 'both', 'language' => 'both'],
+            'tbelmekki' => ['name' => 'Tarik Belmekki', 'campus' => 'both', 'language' => 'both']
         ];
         $emailParts = explode('@', $user->email);
 
@@ -55,8 +55,13 @@ class CreateNewUser implements CreatesNewUsers
                 $user->assignRole('teacher');
                 $user->assignRole('publisher');
                 $user->update([
-                    'name' => $teacherEmails[$emailParts[0]],
-                    'prefrence' => json_encode(['notifications' => 'all', 'title' => 'M.'])
+                    'name' => $teacherEmails[$emailParts[0]]['name'],
+                    'prefrence' => json_encode([
+                        'notifications' => 'all',
+                        'title' => 'M.',
+                        'campus' => $teacherEmails[$emailParts[0]]['campus'],
+                        'language' => $teacherEmails[$emailParts[0]]['language']
+                        ])
                 ]);
             } else if(is_numeric(substr($emailParts[0], -1))){
                 $user->assignRole('student');

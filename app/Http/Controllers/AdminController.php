@@ -26,23 +26,38 @@ class AdminController extends Controller
     public function updateUserRoles(User $user, Request $request)
     {
         $attrs = $request->validate([
+            'student' => 'required|boolean',
+            'publisher' => 'required|boolean',
             'teacher' => 'required|boolean',
             'hod' => 'required|boolean'
         ]);
 
         $roles = [];
-        if($attrs['teacher']){
-            $roles[] = 'teacher';
+        foreach($attrs as $name => $value){
+            if($value){
+                $roles[] = $name;
+            }
         }
-        if($attrs['hod']){
-            $roles[] = 'hod';
-        }
+        // if($attrs['student']){
+        //     $roles[] = 'student';
+        // }
+        // if($attrs['publisher']){
+        //     $roles[] = 'publisher';
+        // }
+        // if($attrs['teacher']){
+        //     $roles[] = 'teacher';
+        // }
+        // if($attrs['hod']){
+        //     $roles[] = 'hod';
+        // }
+
+        logger($roles);
 
         if(!$user->hasRole('admin')){
             $user->syncRoles($roles);
         }
 
-        return response()->json(['message' => "Roles updated"]);
+        return response()->json(['message' => ['text' => 'Roles updated', 'type' => 'success']]);
     }
 
 

@@ -14,13 +14,13 @@
                     v-if="['fr', 'both'].includes(workshop.language)" />
                 <v-img src="/images/flag en.png" :width="30" class="mr-2"
                     v-if="['en', 'both'].includes(workshop.language)" />
-                <v-chip variant="elevated"  size="small"
-                    :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
+                <v-chip variant="elevated" size="small" :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
                     {{ workshop.campus }}
                 </v-chip>
             </div>
-            <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'"  class="mt-1"
-                :color="statusColor[workshop.status]" :text="$t(workshop.status) " v-if="workshop.editable" />
+            <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" class="mt-1"
+                :color="statusDetails[workshop.status].color" :text="$t(statusDetails[workshop.status].text) "
+                v-if="workshop.editable" />
         </div>
     </div>
     <v-card-text>
@@ -107,7 +107,7 @@
                         <v-btn variant="tonal" class="mr-3" color="error" @click="focusedApplicantDialog = false">
                             {{ $t('Cancel') }}
                         </v-btn>
-                        <v-btn color="success" 
+                        <v-btn color="success"
                             @click="emit('editApplicantName', { id: focusedApplicant.id, name: focusedApplicant.name }); focusedApplicantDialog = false;">
                             {{ $t('Save') }}
                         </v-btn>
@@ -139,7 +139,14 @@
         return 'Both'
     });
 
-    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'success' }
+    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'primary', launched: 'success' }
+
+    const statusDetails = {
+        draft: { color: 'secondary', text: 'Draft' },
+        submitted: { color: 'warning', text: 'Submitted' },
+        confirmed: { color: 'primary', text: 'Confirmed' },
+        launched: { color: 'success', text: 'Confirmed' }
+    }
 
     const headers = [
         { title: '', sortable: false, width: 10 },

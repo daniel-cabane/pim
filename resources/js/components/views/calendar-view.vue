@@ -49,7 +49,7 @@
     </v-container>
 </template>
 <script setup>
-    import { ref, reactive, computed } from "vue";
+    import { ref, reactive, computed, watch } from "vue";
     import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
     
@@ -101,7 +101,7 @@
         return !months.value.some(m => m.nb == currentMonthNb.value - 1 && m.year == currentYear.value);
     });
 
-    const previous = () => {
+    const previous = async () => {
         if(viewing.value == 'month'){
             if(currentMonthNb.value == 1){
                 currentMonthNb.value = 12;
@@ -122,10 +122,11 @@
             const nb = currentMonthNb.value;
             const newMonthNb = nb == 1 ? 12 : nb - 1;
             const newYearNb = nb == 1 ? currentYear.value - 1 : currentYear.value;
-            getMoredMonths(-2, `${newYearNb}-${newMonthNb}-01`);
+            await getMoredMonths(-2, `${newYearNb}-${newMonthNb}-01`);
+            filterEvents();
         }
     }
-    const next = () => {
+    const next = async () => {
         if (viewing.value == 'month') {
             if (currentMonthNb.value == 12) {
                 currentMonthNb.value = 1;
@@ -146,7 +147,8 @@
             const nb = currentMonthNb.value;
             const newMonthNb = nb == 12 ? 1 : nb + 1;
             const newYearNb = nb == 12 ? currentYear.value + 1 : currentYear.value;
-            getMoredMonths(2, `${newYearNb}-${newMonthNb}-01`);
+            await getMoredMonths(2, `${newYearNb}-${newMonthNb}-01`);
+            filterEvents();
         }
     }
 
