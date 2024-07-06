@@ -37,8 +37,30 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        if(explode('@', $user->email)[1] == 'g.lfis.edu.hk'){
-            $user->assignRole('student');
+        $teacherEmails = [
+            'adelettrez' => 'Antoine Delettrez',
+            'bbarre' => 'Benjamin Barre',
+            'jcabrit' => 'Jose Cabrit',
+            'ngouez' => 'Nicolas Gouez',
+            'dcabane' => 'Daniel Cabane',
+            'rdelpuech' => 'Rémi Delpuech',
+            'sparis' => 'Sébastien Paris',
+            'ghenry' => 'Guillaume Henry',
+            'tbelmekki' => 'Tarik Belmekki'
+        ];
+        $emailParts = explode('@', $user->email);
+
+        if($user->google_id != null && $emailParts[1] == 'g.lfis.edu.hk'){
+            if(isset($teacherEmails[$emailParts[0]])){
+                $user->assignRole('teacher');
+                $user->assignRole('publisher');
+                $user->update([
+                    'name' => $teacherEmails[$emailParts[0]],
+                    'prefrence' => json_encode(['notifications' => 'all', 'title' => 'M.'])
+                ]);
+            } else if(is_numeric(substr($emailParts[0], -1))){
+                $user->assignRole('student');
+            }
         }
 
         return $user;

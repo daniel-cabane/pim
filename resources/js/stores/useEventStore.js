@@ -14,6 +14,8 @@ export const useEventStore = defineStore({
         weeks: [],
         months: [],
         boundaries: {},
+        terms: [],
+        events: [],
         isReady: false,
         isLoading: false
     }),
@@ -93,7 +95,6 @@ export const useEventStore = defineStore({
             this.isLoading = false;
         },
         async getMoredMonths(nb, date){
-            console.log('getting more', date);
             this.isLoading = true;
             const backward = nb < 0 ? -nb-1 : 0;
             const forward = nb > 0 ? nb-1 : 0;
@@ -105,6 +106,29 @@ export const useEventStore = defineStore({
                 }
             });
             this.isLoading = false;
+        },
+        async getTerms() {
+            this.isLoading = true;
+            const res = await get(`/api/terms`);
+            this.terms = res.terms;
+            this.isLoading = false;
+        },
+        async createTerm(data) {
+            this.isLoading = true;
+            const res = await post(`/api/admin/term`, data);
+            this.terms = res.terms;
+            this.isLoading = false;
+        },
+        async deleteTerm(id) {
+            this.isLoading = true;
+            const res = await del(`/api/admin/term/${id}`);
+            console.log(res.terms);
+            this.terms = res.terms;
+            this.isLoading = false;
+        },
+        async getUpcomingEvents() {
+            const res = await get(`/api/events/upcoming`,true);
+            this.events = res.events;
         }
     }
 });

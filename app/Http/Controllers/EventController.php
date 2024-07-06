@@ -7,33 +7,23 @@ use Carbon\Carbon;
 use App\Models\Holiday;
 use App\Models\OpenDoor;
 use App\Models\Session;
+use App\Models\Term;
+use App\Models\Workshop;
 
 class EventController extends Controller
 {
-    // public function index()
-    // {
-    //     $events = [];
-    //     $start = (Carbon::today())->addMonth(-2);
-    //     $finish = (Carbon::today())->addMonth(3);
+    public function upcoming()
+    {
+        $today = Carbon::now()->addMonth(2)->toDateString();
+        $term = Term::whereDate('start_date', '<=', $today)->whereDate('finish_date', '>=', $today)->first();
 
-    //     foreach(Holiday::whereBetween('start', [$start, $finish])->get() as $holiday){
-    //         $events[] = $holiday->formatForCalendar();
-    //     }
-    //     foreach(OpenDoor::whereBetween('date', [$start, $finish])->get() as $openDoor){
-    //         $events[] = $openDoor->formatForCalendar();
-    //     }
-    //     foreach(Session::whereBetween('date', [$start, $finish])->get() as $session){
-    //         $events[] = $session->formatForCalendar();
-    //     }
+        $workshops = [];
+        foreach(Workshop::upcoming()->whereIn('status', ['confirmed', 'launched'])->orderBy('start_date')->take(6)->get() as $workshop){
+            $workshops[] = $workshop->format();
+        }
+        return response()->json(['events' => $workshops]);
+    }
 
-    //     return response()->json([
-    //         'events' => $events,
-    //         'boundaries' => [
-    //             'start' => $start,
-    //             'finish' => $finish
-    //         ]
-    //     ]);
-    // }
 
     public function holidays()
     {
@@ -44,53 +34,6 @@ class EventController extends Controller
     {
         return response()->json(['openDoors' => OpenDoor::with(['teacher:id,name'])->orderBy('date')->orderBy('start')->get()]);
     }
-
-    // public function getCurrentMonth()
-    // {
-    //     $start = Carbon::today()->startOfMonth()->startOfWeek();
-    //     $finish = Carbon::today()->endOfMonth()->endOfWeek();
-
-    //     $holidays = Holiday::where('start', '<=', $finish)->orWhere('finish', '>=', $start)->get();
-    //     $events = collect([]);
-    //     foreach(OpenDoor::whereBetween('date', [$start, $finish])->get() as $openDoor){
-    //         $events->push($openDoor->formatForCalendar());
-    //     }
-    //     foreach(Session::whereBetween('date', [$start, $finish])->get() as $session){
-    //         $events->push($session->formatForCalendar());
-    //     }
-    //     $weeks = [];
-    //     $weekNbs = [];
-    //     $finish->subWeek()->addDay();
-    //     while($start->lt($finish)){
-    //         $weekNumber = $start->weekOfYear;
-    //         $year = $start->format('Y');
-    //         $weekNbs[] = $weekNumber;
-    //         $weekDates = [];
-    //         for ($i = 0; $i <= 6; $i++) {
-    //             $date = $start->toDateString();
-    //             $weekDates[] = [
-    //                 'date' => $date,
-    //                 'events' => $events->where('date', $date),
-    //                 'isHoliday' => $holidays->where('start', '<=', $date)->where('finish', '>=', $date)->count() > 0
-    //             ];
-    //             $start->addDays();
-    //         }
-
-    //         $weeks[] = ['days' => $weekDates, 'nb' => $weekNumber, 'year' => $year];
-    //     }
-
-    //     $now = Carbon::now();
-    //     return response()->json([
-    //         'months' => [[
-    //             'name' => $now->format('F'),
-    //             'nb' => $now->format('m'),
-    //             'year' => $now->format('Y'),
-    //             'index' => intval($now->format('m')) + intval($now->format('Y'))*100,
-    //             'weekNbs' => $weekNbs
-    //         ]],
-    //         'weeks' => $weeks
-    //     ]);
-    // }
 
     public function getCalendarMonths(Request $request)
     {
@@ -189,24 +132,11 @@ class EventController extends Controller
         return response()->json(['months' => $months, 'weeks' => $weeks]);
     }
 
-    // public function weeks(Request $request)
-    // {
-    //     $attrs = $request->validate([
-    //         'start' => 'required|Date',
-    //         'finish' => 'required|Date',
-    //     ]);
+    public function getTerms()
+    {
+        $startDate = Carbon::create(Carbon::now()->subYear()->format('Y'), 8, 1, 0, 0, 0);
+        $endDate = Carbon::create(Carbon::now()->addYear()->format('Y'), 7, 31, 23, 59, 59);
 
-    //     $start = (new Carbon($attrs['start']))->startOfWeek();
-    //     $finish = (new Carbon($attrs['finish']))->endOfWeek();
-    //     $events = [];
-    //     foreach(OpenDoor::whereBetween('date', [$start, $finish])->get() as $openDoor){
-    //         $events[] = $openDoor->formatForCalendar();
-    //     }
-    //     foreach(Session::whereBetween('date', [$start, $finish])->get() as $session){
-    //         $events[] = $session->formatForCalendar();
-    //     }
-        
-
-    //     return response()->json(['weeks' => [$start, $finish]]);
-    // }
+        return response()->json(['terms' => Term::whereBetween('start_date', [$startDate, $endDate])->get()]);
+    }
 }

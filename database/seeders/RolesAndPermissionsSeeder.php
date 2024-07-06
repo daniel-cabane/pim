@@ -19,6 +19,7 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // create roles and assign created permissions
         $role = Role::create(['name' => 'student']);
+        $role = Role::create(['name' => 'publisher']);
         $role = Role::create(['name' => 'teacher']);
         $role = Role::create(['name' => 'hod']);
         $role = Role::create(['name' => 'admin']);
@@ -27,10 +28,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'name'=>'Pim',
             'email'=>'pim@g.lfis.edu.hk',
             'email_verified_at' => now(),
-            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm' // secret
+            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+            'preferences' => json_encode(['notifications' => 'all', 'title' => 'M.'])
         ]);
         $rootUser->assignRole('admin');
         $rootUser->assignRole('teacher');
+        $rootUser->assignRole('publisher');
 
         // Themes seeder
         $themes = [
@@ -40,7 +43,8 @@ class RolesAndPermissionsSeeder extends Seeder
             ['title_en' => 'creativity', 'title_fr' => 'créativité'],
             ['title_en' => 'culture', 'title_fr' => 'culture'],
             ['title_en' => 'games', 'title_fr' => 'jeux'],
-            ['title_en' => 'strategy', 'title_fr' => 'stratégie']
+            ['title_en' => 'strategy', 'title_fr' => 'stratégie'],
+            ['title_en' => 'Professional development', 'title_fr' => 'Formation professionnelle']
         ];
         foreach($themes as $theme) {
             Theme::create($theme);

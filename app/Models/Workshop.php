@@ -150,4 +150,11 @@ class Workshop extends Model
         ]);
       } 
     }
+
+    public function scopeUpcoming($query)
+    {
+      $today = Carbon::now()->addMonth(2)->toDateString(); // REMOVE THE ADDMONTH(2) !!!!!!!!!!!!!
+      $term = Term::whereDate('start_date', '<=', $today)->whereDate('finish_date', '>=', $today)->first();
+      return $query->where('start_date', '>=', $today)->orWhere('term', $term->nb);
+    }
   }

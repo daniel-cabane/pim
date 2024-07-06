@@ -90,6 +90,17 @@ export const useAuthStore = defineStore({
                 addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
+        },
+        async updatePreferences(data) {
+            this.loading = true;
+            try {
+                const res = await axios.patch('/api/userinfo/preferences', data);
+                this.loading = false;
+                this.user = res.data.user;
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
         }
     }
 });

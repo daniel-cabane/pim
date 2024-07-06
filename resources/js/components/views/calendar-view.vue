@@ -52,10 +52,6 @@
     import { ref, reactive, computed } from "vue";
     import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
-    // import { useI18n } from 'vue-i18n';
-
-    // const { t } = useI18n();
-
     
     const eventStore = useEventStore();
     const { getCurrentMonth, getMoredMonths } = eventStore;
@@ -164,7 +160,7 @@
         currentWeekNb.value = Math.ceil((dayOfYear + (7 - dayOfWeek)) / 7);
     }
     
-    const filters = reactive({BPR: true, TKO: true})
+    const filters = reactive({BPR: true, TKO: true});
     const toggleBPR = () => {
         filters.BPR = !filters.BPR;
         filterEvents();

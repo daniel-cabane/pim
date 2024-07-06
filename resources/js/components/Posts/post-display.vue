@@ -2,7 +2,7 @@
     <v-card width="100%" class="pa-3">
         <div class="d-flex justify-space-between">
             <div>
-                <div class="text-h5 font-weight-bold">
+                <div class="pimSubtitleFont font-weight-bold mb-1" style="font-size:48px;">
                     {{ post.title }}
                 </div>
                 <div v-if="post.published_at">

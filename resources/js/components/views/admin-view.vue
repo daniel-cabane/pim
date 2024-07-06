@@ -32,6 +32,7 @@
                 <v-window-item value="holidays">
                     <div>
                         <admin-holidays-table />
+                        <admin-terms-display />
                     </div>
                 </v-window-item>
             </v-window>

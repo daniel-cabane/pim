@@ -6,7 +6,9 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 use App\Models\Workshop;
+use App\Models\OpenDoor;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class workshopSeeder extends Seeder
 {
@@ -61,5 +63,61 @@ class workshopSeeder extends Seeder
         ]);
 
         $w->themes()->attach([4,5]);
+
+        $faker = Faker::create();
+        $locations = [
+            ['campus' => 'BPR', 'room' => 'π (314 BPR)'], ['campus' => 'TKO', 'room' => 'S302']
+        ];
+        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        for($i=0 ; $i <= 10 ; $i++){
+            $nb = rand(0, 4);
+            $themes = [];
+            for($k=0 ; $k <= $nb ; $k++){
+                $themes[] = rand(1, 8);
+            }
+            $location = $locations[rand(0,1)];
+            $time = rand(8, 15);
+
+            $w = Workshop::create([
+            'title_fr' => '',
+            'title_en' => $faker->sentence(),
+            'description' => json_encode([
+                'fr' => '',
+                'en' => $faker->paragraph()
+            ]),
+            'term' => 1,
+            'language' => 'en',
+            'campus' => $location['campus'],
+            'details' => json_encode([
+                'nbSessions' => rand(4, 10),
+                'roomNb' => $location['room'],
+                'schedule' => [
+                    ['day' => $daysOfWeek[rand(0,6)], 'start' => $time.':'.['00', '30'][rand(0,1)], 'finish' => ($time+1).':'.['00', '30'][rand(0,1)]]
+                ],
+                'maxStudents' => rand(10, 20)
+            ]),
+            'organiser_id' => rand(1, 4),
+            'start_date' => $faker->dateTimeBetween('2024-09-01', '2024-11-15')
+        ]);
+
+        $w->themes()->attach($themes);
+        }
+
+        $locations = [
+            ['campus' => 'BPR', 'room' => 'π (314 BPR)'], ['campus' => 'TKO', 'room' => 'S302']
+        ];
+        for($i=0 ; $i<=50 ; $i++){
+            $location = $locations[rand(0,1)];
+            $time = rand(8, 15);
+            OpenDoor::create([
+                'teacher_id' => rand(1, 4),
+                'type' => 'Open doors',
+                'date' => $faker->dateTimeBetween('2024-09-01', '2024-11-15'),
+                'start' => $time.':'.['00', '30'][rand(0,1)], 
+                'finish' => ($time+1).':'.['00', '30'][rand(0,1)],
+                'roomNb' => $location['room'],
+                'campus' => $location['campus']
+            ]);
+        }
     }
 }

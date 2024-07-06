@@ -4,7 +4,20 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- <title>PIM</title> -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Sue+Ellen+Francisco&display=swap');
+            .pimTitleFont {
+                font-family: "Shrikhand", serif;
+                font-weight: 400;
+                font-style: normal;
+            }
+            .pimSubtitleFont {
+                font-family: "Sue Ellen Francisco", cursive;
+                font-weight: 400;
+                font-style: normal;
+            }
+        </style>
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">

@@ -44,11 +44,15 @@ Route::group(['middleware'=>['role:admin']], function(){
 
     Route::get('/admin/posts/', [AdminController::class, 'getPosts']);
     Route::get('/admin/morePosts/', [AdminController::class, 'getMorePosts']);
+
+    Route::post('/admin/term', [AdminController::class, 'createTerm']);
+    Route::delete('/admin/term/{term}', [AdminController::class, 'deleteTerm']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::get('/userinfo', [UserController::class, 'info']);
     Route::get('/userinfo/teachers', [UserController::class, 'teachers']);
+    Route::patch('/userinfo/preferences', [UserController::class, 'updatePreferences']);
 });
 
 /*
@@ -59,10 +63,12 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 
 Route::get('/posts/published', [PostController::class, 'published']);
 
+Route::get('/terms', [EventController::class, 'getTerms']);
+
 Route::get('/workshops', [WorkshopController::class, 'index']);
 Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
 
-// Route::get('/events', [EventController::class, 'index']);
+Route::get('/events/upcoming', [EventController::class, 'upcoming']);
 Route::get('/holidays', [EventController::class, 'holidays']);
 Route::get('/openDoors', [EventController::class, 'openDoors']);
 

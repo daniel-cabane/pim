@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "./components/views/home-view.vue";
 import Workshops from "./components/views/workshops-view.vue";
 import Calendar from "./components/views/calendar-view.vue";
+import Blog from "./components/views/blog-view.vue";
 import myPosts from "./components/views/myPosts-view.vue";
 import editPost from "./components/views/editPost-view.vue";
 import singlePost from "./components/views/singlePost-view.vue";
@@ -60,6 +61,11 @@ const routes = [
         path: "/workshops/:id/edit",
         name: "Edit Workshop",
         component: editWorkshop,
+    },
+    {
+        path: "/blog",
+        name: "Blog",
+        component: Blog,
     },
 ];
 

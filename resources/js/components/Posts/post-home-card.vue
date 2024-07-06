@@ -1,7 +1,7 @@
 <template>
     <v-card class="mx-auto" max-width="350" :to="`/posts/${props.post.slug}`">
         <v-img class="align-end text-white" aspect-ratio="16/9" max-height="197" :src="post.cover.url" cover>
-            <v-card-title style="font-weight:bold;" :style="`color:${post.cover.titleColor};`">
+            <v-card-title class="pimSubtitleFont py-0" style="font-weight:bold;font-size:28px;" :style="`color:${post.cover.titleColor};`">
                 {{ post.title }}
             </v-card-title>
         </v-img>

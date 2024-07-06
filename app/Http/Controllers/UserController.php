@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
@@ -12,11 +13,6 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
-    /**
-   * Returns a listing of the 20 latest collectibles
-   *
-   * @return \Illuminate\Http\Response
-   */
   public function info()
   { 
     return response()->json(['user' => auth()->user()]);
@@ -25,6 +21,37 @@ class UserController extends Controller
   public function teachers()
   { 
     return response()->json(User::teachers()->get());
+  }
+
+  public function updatePreferences(Request $request)
+  {
+    $attrs = $request->validate([
+      'init' => 'required|Boolean',
+      'title' => 'sometimes|max:16',
+      'firstName' => 'sometimes|max:25',
+      'lastName' => 'sometimes|max:25',
+      'language' => ['required', Rule::in(['fr', 'en', 'both'])],
+      'campus' => ['required', Rule::in(['BPR', 'TKO', 'both'])]
+    ]);
+
+    $user = auth()->user();
+    $preferences = $user->preferences;
+    $preferences->language = $attrs['language'];
+    $preferences->campus = $attrs['campus'];
+    if($attrs['init']){
+      if(!isset($attrs['firstName']) || !isset($attrs['lastName']) || ($user->is['teacher'] && !isset($attrs['title']))){
+        return response()->json(['message' => 'Incomplete data'], 422);
+      }
+      $firstName = implode('-', explode(' ', ucwords(strtolower($attrs['firstName']))));
+      $lastName = strtoupper($attrs['lastName']);
+      $user->update(['name' => "$firstName $lastName"]);
+    }
+    if($user->is['teacher'] && strlen($attrs['title']) >= 2){
+      $preferences->title = $attrs['title'];
+    }
+    $user->update(['preferences' => $preferences]);
+
+    return response()->json(['user' => $user]);
   }
 
   public function googleSigninRedirect()
@@ -45,7 +72,8 @@ class UserController extends Controller
         'email' => $google_user->getEmail(),
         'google_id' => $google_user->getId(),
         'email_verified_at' => Carbon::now(),
-        'password' => Hash::make(Str::password())
+        'password' => Hash::make(Str::password()),
+        'prefrences' => json_encode(['notifications' => 'all'])
       ]);
     }
 

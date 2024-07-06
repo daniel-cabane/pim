@@ -1,7 +1,7 @@
 <template>
     <div style="display:flex;flex-wrap:nowrap;max-width:100%">
         <div style="flex:1;">
-            <v-card-title class="pb-0" style="text-overflow:ellipsis;">
+            <v-card-title class="pb-1 pimSubtitleFont" style="text-overflow:ellipsis;font-size:48px;">
                 {{ title }}
             </v-card-title>
             <v-card-subtitle class="font-italic">

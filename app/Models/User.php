@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password', 'google_id', 'email_verified_at'];
+    protected $fillable = ['name', 'email', 'password', 'google_id', 'email_verified_at', 'preferences'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,18 +38,20 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'preferences' => 'object'
     ];
 
     protected $appends = ['is'];
 
     public function getIsAttribute()
     {
-        return [
-            'student' => $this->email_verified_at != null && $this->hasRole('student'),
-            'teacher' => $this->email_verified_at != null && $this->hasRole('teacher'),
-            'hod' => $this->email_verified_at != null && $this->hasRole('hod'),
-            'admin' => $this->email_verified_at != null && $this->hasRole('admin')
-        ];
+      return [
+          'student' => $this->email_verified_at != null && $this->hasRole('student'),
+          'publisher' => $this->email_verified_at != null && $this->hasRole('publisher'),
+          'teacher' => $this->email_verified_at != null && $this->hasRole('teacher'),
+          'hod' => $this->email_verified_at != null && $this->hasRole('hod'),
+          'admin' => $this->email_verified_at != null && $this->hasRole('admin')
+      ];
     }
 
     public function posts()

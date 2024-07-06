@@ -11,6 +11,7 @@ use App\Models\Holiday;
 use App\Models\Session;
 use App\Models\OpenDoor;
 use App\Models\Post;
+use App\Models\Term;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -140,11 +141,11 @@ class AdminController extends Controller
 
     public function prepareWorkshop(Workshop $workshop)
     {
-        $endOfSchool = Holiday::where('name', 'End of school')->first();
+        $endOfSchool = Term::orderBy('start_date', 'desc')->first();
         if($endOfSchool == null){
             return response()->json([
                 'message' => [
-                    'text' => 'No end of school set. Create a holiday named "End of school"',
+                    'text' => 'No terms created yet. Create terms for the school year',
                     'type' => 'error'
                     ]
                 ]);
@@ -164,7 +165,7 @@ class AdminController extends Controller
         
         $sessions = [];
         $currentDate = new Carbon($workshop->start_date);
-        $end = new Carbon($endOfSchool->start);
+        $end = new Carbon($endOfSchool->finish_date);
         $id = 0;
         while(count($sessions) < $details->nbSessions && $currentDate->lt($end)){
             $holiday = Holiday::where('start', '<=', $currentDate)->where('finish', '>=', $currentDate)->first();
@@ -341,5 +342,43 @@ class AdminController extends Controller
         $date = $request->validate(['date' => 'required|Date'])['date'];
 
         return response()->json(['posts' => Post::where('status', 'published')->where('published_at', '<', $date)->orderBy('published_at', 'desc')->take(50)->get()]);
+    }
+
+    public function createTerm(Request $request)
+    {
+        $attrs = $request->validate([
+            'nb' => 'required|Integer|min:1|max:10',
+            'start_date' => 'required|date',
+            'finish_date' => 'required|date'
+        ]);
+
+        Term::create($attrs);
+
+        $startDate = Carbon::create(Carbon::now()->subYear()->format('Y'), 8, 1, 0, 0, 0);
+        $endDate = Carbon::create(Carbon::now()->addYear()->format('Y'), 7, 31, 23, 59, 59);
+
+        return response()->json([
+            'terms' => Term::whereBetween('start_date', [$startDate, $endDate])->get(),
+            'message' => [
+                    'text' => 'Term created',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function deleteTerm(Term $term)
+    {
+        $term->delete();
+
+        $startDate = Carbon::create(Carbon::now()->subYear()->format('Y'), 8, 1, 0, 0, 0);
+        $endDate = Carbon::create(Carbon::now()->addYear()->format('Y'), 7, 31, 23, 59, 59);
+
+        return response()->json([
+            'terms' => Term::whereBetween('start_date', [$startDate, $endDate])->get(),
+            'message' => [
+                    'text' => 'Term deleted',
+                    'type' => 'warning'
+                ]
+        ]);
     }
 }

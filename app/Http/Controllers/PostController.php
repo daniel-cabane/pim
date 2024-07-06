@@ -17,7 +17,7 @@ class PostController extends Controller
     public function published()
     {
         $posts = [];
-        foreach(Post::where('status', 'published')->orderBy('published_at', 'desc')->take(20)->get() as $post){
+        foreach(Post::where('status', 'published')->orderBy('published_at', 'desc')->take(10)->get() as $post){
             $posts[] = $post->format();
         }
         return response()->json([
