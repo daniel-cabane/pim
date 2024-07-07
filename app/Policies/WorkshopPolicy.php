@@ -21,7 +21,7 @@ class WorkshopPolicy
      */
     public function view(?User $user, Workshop $workshop): bool
     {
-        return $workshop->status == 'confirmed' || $user?->hasRole('admin') || $user?->hasRole('hod') || $workshop->organiser_id == $user?->id;
+        return in_array($workshop->status, ['confirmed', 'launched', 'progress', 'finished']) || $user?->hasRole('admin') || $user?->hasRole('hod') || $workshop->organiser_id == $user?->id;
     }
 
     /**

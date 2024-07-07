@@ -20,9 +20,6 @@ class EventController extends Controller
             $campus = [$user->preferences->campus];
         }
 
-        $today = Carbon::now()->addMonth(2)->toDateString(); //////////////////////////////////////////// REMOVE THE ADDMONTH(2) HERE ///////////////////////
-        $term = Term::whereDate('start_date', '<=', $today)->whereDate('finish_date', '>=', $today)->first();
-
         $workshops = [];
         foreach(Workshop::upcoming()->whereIn('campus', $campus)->orderBy('start_date')->take(6)->get() as $workshop){
             $workshops[] = $workshop->format();

@@ -152,13 +152,16 @@ class PostController extends Controller
 
     public function updateCoverImage(Request $request, Post $post)
     {
-        $file = $request->validate(['file' => 'required|file|image|max:1024|dimensions:max_width=1920,max_height=1080'])['file'];
+        $file = $request->validate(['file' => 'required|file|image|max:256|dimensions:max_width=1920,max_height=1080'])['file'];
 
-        $filename = time() . $file->getClientOriginalName();
+        $filename = $post->id.'-'.time().'-'.$file->getClientOriginalName();
         $file->storeAs('public/images/posts', $filename);
 
         $postImages = json_decode($post->images);
-        $postImages->cover->url = asset('storage/images/posts/' . $filename);
+        if($postImages->cover->url != '/images/post default cover.png'){
+            Storage::delete('/public/'.$postImages->cover->url);
+        }
+        $postImages->cover->url = "/images/posts/$filename";
         $post->update(['images' => json_encode($postImages)]);
 
         return response()->json([
@@ -173,10 +176,16 @@ class PostController extends Controller
     public function uploadImage(Request $request, Post $post)
     {
         // $file = $request->file('file');
-        $file = $request->validate(['file' => 'required|file|image|max:1024|dimensions:max_width=1920,max_height=1080'])['file'];
+        $file = $request->validate(['file' => 'required|file|image|max:512|dimensions:max_width=1920,max_height=1080'])['file'];
 
-        $filename = time() . $file->getClientOriginalName();
+        $filename = $post->id.'-'.time().'-'.$file->getClientOriginalName();
         $file->storeAs('public/images/posts', $filename);
+
+        $images = json_decode($post->images);
+        $images->post[] = "/images/posts/$filename";
+
+        $post->update(['images' => json_encode($images)]);
+
         return response()->json(['url' => asset('storage/images/posts/' . $filename)]);
     }
 
@@ -185,6 +194,13 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $images = json_decode($post->images);
+        foreach($images->post as $image){
+            Storage::delete($image);
+        }
+        if($images->cover->url != '/images/post default cover.png'){
+            Storage::delete('/public/'.$images->cover->url);
+        }
         return response()->json([
             'post' => $post->delete(),
             'message' => [

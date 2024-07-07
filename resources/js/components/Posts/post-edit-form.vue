@@ -53,10 +53,10 @@
                     </v-col>
                 </v-row>
             </v-container>
-            <v-textarea :rules="[rules.required, rules.minLengthDescription]" max="255" v-model="post.description"
+            <v-textarea no-resize rows="3" :rules="[rules.required, rules.minLengthDescription]" max="255" v-model="post.description"
                 :label="$t('Description')" variant="outlined" validate-on="blur" :disabled="!post.editable" />
         </div>
-        <div style="width:310px">
+        <div style="width:320px">
             <v-file-input accept="image/png, image/jpeg, image/jpg" v-model="coverImageFile" ref="coverImageFileInput"
                 @update:modelValue="updateCoverImage({ file: coverImageFile })" style='display:none;' />
             <div class="d-flex align-center">
@@ -89,7 +89,7 @@
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <div style="position:relative" v-bind="props">
-                        <v-img :src="post.cover.url" />
+                        <v-img :src="post.cover.url" aspect-ratio="16/9" max-width="320" min-width="320" max-height="180" min-height="180" cover/>
                         <v-btn size="small" color="primary" v-show="isHovering"
                             style="position:absolute;right:5px;bottom:5px;" :disabled="imageLoading"
                             @click="pickCoverFile">
@@ -132,7 +132,10 @@
     const toolbar = 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | numlist bullist | forecolor backcolor removeformat | charmap emoticons | image media table link unlink'
     const options = {
         image_title: true,
+        height: 800,
         automatic_uploads: true,
+        image_dimensions: false,
+        image_title: false,
         file_picker_types: 'image',
         file_picker_callback: (cb, value, meta) => {
             const input = document.createElement('input');
@@ -143,11 +146,28 @@
                 const formData = new FormData();
                 formData.append('file', file);
                 const res = await uploadPostImage(formData);
-                console.log(res);
                 cb(res.url, { title: file.name });
             };
             input.click();
         },
+        style_formats: [
+            {
+                title: 'Image Left',
+                selector: 'img',
+                styles: {
+                    float: 'left',
+                    margin: '0 10px 0 10px'
+                }
+            },
+            {
+                title: 'Image Right',
+                selector: 'img',
+                styles: {
+                    float: 'right',
+                    margin: '0 10px 0 10px'
+                }
+            }
+        ]
     }
 
     const coverImageFileInput = ref(null);

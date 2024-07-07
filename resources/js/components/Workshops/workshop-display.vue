@@ -8,20 +8,7 @@
                 {{ $t('By') }} {{ workshop.teacher }}
             </v-card-subtitle>
         </div>
-        <div class="text-right pa-2">
-            <div class="d-flex align-center">
-                <v-img src="/images/flag fr.png" :width="30" class="mr-2"
-                    v-if="['fr', 'both'].includes(workshop.language)" />
-                <v-img src="/images/flag en.png" :width="30" class="mr-2"
-                    v-if="['en', 'both'].includes(workshop.language)" />
-                <v-chip variant="elevated" size="small" :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
-                    {{ workshop.campus }}
-                </v-chip>
-            </div>
-            <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" class="mt-1"
-                :color="statusDetails[workshop.status].color" :text="$t(statusDetails[workshop.status].text) "
-                v-if="workshop.editable" />
-        </div>
+        <workshop-lcs :workshop="workshop"/>
     </div>
     <v-card-text>
         <div v-html="description" />
@@ -76,7 +63,7 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-row v-if="user.is.teacher">
+            <v-row v-if="user && user.is.teacher">
                 <v-col cols="12" class="text-h6 text-captionColor pb-0">
                     {{ $t('Students enrolled') }} ({{ workshop.applicants.length }})
                 </v-col>
@@ -138,15 +125,6 @@
 
         return 'Both'
     });
-
-    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'primary', launched: 'success' }
-
-    const statusDetails = {
-        draft: { color: 'secondary', text: 'Draft' },
-        submitted: { color: 'warning', text: 'Submitted' },
-        confirmed: { color: 'primary', text: 'Confirmed' },
-        launched: { color: 'success', text: 'Confirmed' }
-    }
 
     const headers = [
         { title: '', sortable: false, width: 10 },

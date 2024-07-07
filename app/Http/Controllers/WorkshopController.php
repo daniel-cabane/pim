@@ -16,11 +16,22 @@ class WorkshopController extends Controller
 {
     public function index ()
     {
-        $workshops = [];
-        foreach(Workshop::where('status', 'confirmed')->where('start_date', '>=', Carbon::today())->get() as $workshop){
-            $workshops[] = $workshop->format();
+        $user = auth()->user();
+        $upcoming = [];
+        foreach(Workshop::upcoming()->get() as $workshop){
+            $upcoming[] = $workshop->format();
         }
-        return response()->json(['workshops' => $workshops]);
+
+        $enrollements = [];
+        foreach($user->enrollements as $workshop){
+            $enrollements[] = $workshop->format();
+        }
+
+        $past = [];
+        foreach(Workshop::where('status', 'finished')->orderBy('start_date', 'desc')->take(10)->get() as $workshop){
+            $past[] = $workshop->format();
+        }
+        return response()->json(['workshops' => ['upcoming' => $upcoming, 'enrollements' => $enrollements, 'past' => $past]]);
     }
 
     public function myWorkshops ()

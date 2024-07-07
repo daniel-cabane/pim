@@ -7,7 +7,6 @@ export const usePostStore = defineStore({
     id: 'post',
     state: () => ({
         posts: [],
-        submittedPosts: [],
         myPosts: [],
         post: {},
         totalNbPosts: 0,
@@ -33,7 +32,7 @@ export const usePostStore = defineStore({
             this.myPosts = res.posts;
             this.isReady = true;
         },
-        async getPublishedPosts(skip = 0, take = 10) {
+        async getPublishedPosts(skip = 0, take = 6) {
             this.isReady = false;
             this.posts = [];
             const res = await get(`/api/posts/published?query=Laravel&skip=${skip}&take=${take}`, true);
@@ -55,8 +54,7 @@ export const usePostStore = defineStore({
         async adminGetposts() {
             this.isReady = false;
             const res = await get(`/api/admin/posts/`, true);
-            this.posts = res.publishedPosts;
-            this.submittedPosts = res.submittedPosts;
+            this.posts = res.posts;
             this.isReady = true;
         },
         async updateCoverImage(data){
@@ -64,7 +62,7 @@ export const usePostStore = defineStore({
             let formData = new FormData()
             formData.append('file', data.file);
             const res = await post(`/api/posts/${this.post.slug}/cover`, formData);
-            this.post = res.post;
+            this.post.cover = res.post.cover;
             this.imageLoading = false;
         },
         async uploadPostImage(formData) {
@@ -81,7 +79,7 @@ export const usePostStore = defineStore({
         async updatePostStatus(status) {
             this.statusLoading = true;
             const res = await patch(`/api/posts/${this.post.slug}/status`, { status }, false);
-            this.post = res.post;
+            this.post.status = res.post.status;
             this.statusLoading = false;
         },
         async deletePost(slug) {

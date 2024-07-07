@@ -29,6 +29,7 @@ export const useWorkshopStore = defineStore({
             this.isReady = false;
             const res = await get(`/api/workshops/${id}`);
             this.workshop = res.workshop;
+            console.log(res.workshop);
             this.isReady = true;
             return res.workshop;
         },
@@ -41,7 +42,7 @@ export const useWorkshopStore = defineStore({
         async updateWorkshop() {
             const res = await patch(`/api/workshops/${this.workshop.id}`, this.workshop);
             this.workshop = res.workshop;
-            // UPDATE WORKSHOP IN WORKSHOPS ARRAY
+            // UPDATE WORKSHOP IN WORKSHOPS ARRAY + LOAD ??
             return res.workshop;
         },
         async getMyWorkshops() {

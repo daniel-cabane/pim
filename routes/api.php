@@ -68,6 +68,7 @@ Route::get('/terms', [EventController::class, 'getTerms']);
 
 Route::get('/workshops', [WorkshopController::class, 'index']);
 Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
+Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
 
 Route::get('/events/upcoming', [EventController::class, 'upcoming']);
 Route::get('/holidays', [EventController::class, 'holidays']);
@@ -118,7 +119,6 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Workshop']],
 });
 
 Route::group(['middleware'=>['can:view,workshop']], function(){
-    Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
     Route::post('/workshops/{workshop}/apply', [WorkshopController::class, 'apply']);
     Route::post('/workshops/{workshop}/withdraw', [WorkshopController::class, 'withdraw']);
 });

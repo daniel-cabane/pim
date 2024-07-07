@@ -346,10 +346,10 @@ class AdminController extends Controller
 
     public function getPosts()
     {
-        return response()->json([
-            'submittedPosts' => Post::where('status', 'submitted')->get(),
-            'publishedPosts' => Post::where('status', 'published')->orderBy('published_at', 'desc')->take(20)->get()
-        ]);
+        return response()->json(['posts' => [
+            'submitted' => Post::where('status', 'submitted')->get(),
+            'published' => Post::where('status', 'published')->orderBy('published_at', 'desc')->take(20)->get()
+        ]]);
 
     }
     public function getMorePosts(Request $request)

@@ -9,7 +9,8 @@
                     {{ $t('By') }} {{ workshop.teacher }}
                 </v-card-subtitle>
             </div>
-            <div class="text-right pa-2">
+            <workshop-lcs :workshop="workshop" />
+            <!-- <div class="text-right pa-2">
                 <div class="d-flex align-center">
                     <v-img :src="`/images/flag ${workshop.language}.png`" :width="30" class="mr-2" />
                     <v-chip variant="elevated" size="small" :color="workshop.campus == 'BPR' ? 'blue' : 'red'">
@@ -19,7 +20,7 @@
                 <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" class="mt-1"
                     :color="statusDetails[workshop.status].color" :text="$t(statusDetails[workshop.status].text)"
                     v-if="workshop.editable" />
-            </div>
+            </div> -->
         </div>
         <v-card-text class="threelines" v-html="description" />
         <div class="px-4">
@@ -56,15 +57,6 @@
     }
     const editWorkshop = () => {
         router.push(`/workshops/${props.workshop.id}/edit`);
-    }
-
-    const statusColor = { draft: 'secondary', submitted: 'warning', confirmed: 'primary', launched: 'success' }
-
-    const statusDetails = {
-        draft:{ color: 'secondary', text: 'Draft'}, 
-        submitted:{ color: 'warning', text: 'Submitted' },
-        confirmed: { color: 'primary', text: 'Confirmed' },
-        launched: { color: 'success', text: 'Confirmed' }
     }
 </script>
 

@@ -154,8 +154,12 @@ class Workshop extends Model
 
     public function scopeUpcoming($query)
     {
-      $today = Carbon::now()->addMonth(2)->toDateString(); // REMOVE THE ADDMONTH(2) !!!!!!!!!!!!!
-      $term = Term::whereDate('start_date', '<=', $today)->whereDate('finish_date', '>=', $today)->first();
-      return $query->whereIn('status', ['confirmed', 'launched'])->where('start_date', '>=', $today)->orWhere('term', $term->nb);
+      $today = Carbon::now();/////////////////// LINE BELOW CHANGE (2) TO (1) !!!!!!!!!!!!! ///////////////////////////////////////
+      $terms = Term::whereDate('start_date', '<=', $today->addMonth(2))->whereDate('finish_date', '>=', $today)->pluck('nb');
+      return $query->whereIn('status', ['confirmed', 'launched'])
+                  ->where(function($q) use ($today, $terms) {
+                        $q->where('start_date', '>=', $today)
+                        ->orWhereIn('term', $terms);
+                  });
     }
   }
