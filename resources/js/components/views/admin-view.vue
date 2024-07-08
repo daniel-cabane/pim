@@ -2,6 +2,7 @@
     <v-container>
         <v-tabs v-model="tab">
             <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
+            <v-tab value="surveys">{{ $t('Surveys') }}</v-tab>
             <v-tab value="posts">{{ $t('Blog posts') }}</v-tab>
             <v-tab value="users">{{ $t('Users') }}</v-tab>
             <!-- <v-tab value="sessions">{{ $t('Sessions') }}</v-tab> -->
@@ -16,8 +17,11 @@
                             :key="workshop.id" />
                     </div>
                 </v-window-item>
+                <v-window-item value="surveys">
+                    <admin-survey-table />
+                </v-window-item>
                 <v-window-item value="posts">
-                    <admin-posts-tabs/>
+                    <admin-posts-tabs />
                 </v-window-item>
                 <v-window-item value="users">
                     <v-text-field label="Search user" class="mt-2" :loading="loading" variant="outlined" v-model="data"

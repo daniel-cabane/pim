@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\WorkshopController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SurveyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,8 @@ Route::group(['middleware'=>['role:admin']], function(){
 
     Route::post('/admin/term', [AdminController::class, 'createTerm']);
     Route::delete('/admin/term/{term}', [AdminController::class, 'deleteTerm']);
+
+    Route::get('/admin/surveys', [AdminController::class, 'getSurveys']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -139,6 +142,15 @@ Route::group(['middleware'=>['can:update,workshop']], function(){
 
 /*
 *
-*   EVENTS
+*   SURVEYS
 * 
 */
+
+Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Survey']], function(){
+    Route::post('/survey', [SurveyController::class, 'create']);
+});
+
+Route::group(['middleware'=>['can:update,survey']], function(){
+    Route::patch('/survey/{survey}', [SurveyController::class, 'update']);
+    Route::delete('/survey/{survey}', [SurveyController::class, 'destroy']);
+});

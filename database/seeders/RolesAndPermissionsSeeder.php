@@ -24,11 +24,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $role = Role::create(['name' => 'hod']);
         $role = Role::create(['name' => 'admin']);
 
+        $password = App::environment('local') ? '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm' : Hash::make(Str::password());
+        // '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm' = 'secret'
         $rootUser = User::firstOrCreate([
             'name'=>'Pim',
             'email'=>'pim@g.lfis.edu.hk',
             'email_verified_at' => now(),
-            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+            'password' => $password,
             'preferences' => json_encode(['notifications' => 'all', 'title' => 'M.'])
         ]);
         $rootUser->assignRole('admin');

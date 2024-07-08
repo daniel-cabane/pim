@@ -49,7 +49,7 @@
     </v-container>
 </template>
 <script setup>
-    import { ref, reactive, computed, watch } from "vue";
+    import { ref, reactive, computed } from "vue";
     import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
     
