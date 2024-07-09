@@ -21,7 +21,7 @@ export const useSurveyStore = defineStore({
             }
             this.isLoading = false;
         },
-        async getSurveys() {
+        async getAdminSurveys() {
             this.isReady = false;
             const res = await get('/api/admin/surveys');
             this.surveys = res.surveys;
@@ -38,6 +38,12 @@ export const useSurveyStore = defineStore({
         async deleteSurvey(survey) {
             this.isLoading = true;
             const res = await del(`/api/survey/${survey.id}`);
+            this.surveys = res.surveys;
+            this.isLoading = false;
+        },
+        async getWorkshopSurveys(id) {
+            this.isLoading = true;
+            const res = await get(`/api/workshops/${id}/surveys`);
             this.surveys = res.surveys;
             this.isLoading = false;
         }

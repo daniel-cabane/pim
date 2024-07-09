@@ -124,6 +124,8 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Workshop']],
 Route::group(['middleware'=>['can:view,workshop']], function(){
     Route::post('/workshops/{workshop}/apply', [WorkshopController::class, 'apply']);
     Route::post('/workshops/{workshop}/withdraw', [WorkshopController::class, 'withdraw']);
+
+    Route::get('/workshops/{workshop}/surveys', [WorkshopController::class, 'surveys']);
 });
 
 Route::group(['middleware'=>['can:update,workshop']], function(){

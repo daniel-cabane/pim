@@ -95,6 +95,8 @@ class WorkshopController extends Controller
             $workshop->themes()->attach($theme);
         }
 
+        $workshop->createExitSurvey();
+
         return response()->json([
             'workshop' => $workshop->format(),
             'message' => [
@@ -364,5 +366,15 @@ class WorkshopController extends Controller
                         'type' => 'info'
                     ]
             ]); 
+    }
+
+    public function surveys(Workshop $workshop)
+    {
+        $surveys = [];
+        foreach($workshop->surveys as $survey){
+            $surveys[] = $survey->format();
+        }
+
+        return response()->json(['surveys' => $surveys]);
     }
 }

@@ -5,7 +5,7 @@
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
         <v-tab value="sessions" v-if="user.is.admin || workshop.status == 'launched'">{{ $t('Sessions') }}</v-tab>
         <v-spacer />
-        <v-chip label size="large" color="success"  class="ma-2" v-if="workshop.status == 'launched'">
+        <v-chip label size="large" color="success" class="ma-2" v-if="workshop.status == 'launched'">
             {{ $t('Launched') }}
         </v-chip>
         <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions"
@@ -25,21 +25,23 @@
                         :items="[{ value: 'fr', title: $t('French') }, { value: 'en', title: $t('English') }, { value: 'both', title: $t('Bilingual') }]" />
                 </div>
                 <div v-if="workshop.language != 'en'" class="mb-3">
-                    <div class="text-caption text-caption-color">
+                    <div class="text-caption text-captionColor">
                         Description (fr)
                     </div>
                     <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
-                        plugins: 'lists link image table code help wordcount'
+                        plugins: 'lists link image table code help wordcount', height: 300, resize: false
                     }" v-model="workshop.description.fr" v-if="workshop.language != 'en'" />
                 </div>
                 <div v-if="workshop.language !='fr'" class=" mb-3">
-                    <div class="text-caption text-caption-color">
+                    <div class="text-caption text-captionColor">
                         Description (en)
                     </div>
                     <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
-                        plugins: 'lists link image table code help wordcount'
+                        plugins: 'lists link image table code help wordcount', height: 300, resize: false
                     }" v-model="workshop.description.en" v-if="workshop.language != 'fr'" />
                 </div>
+                <v-divider class="my-6"/>
+                <survey-table :workshopId="workshop.id"/>
             </v-window-item>
             <v-window-item class="pt-2" value="details">
                 <v-form :disabled="workshop.status == 'launched'">
@@ -47,8 +49,8 @@
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
                             <v-select v-model="workshop.themes" :items="availableThemes" label="Themes" multiple chips
                                 variant="outlined" />
-                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin" label="Teacher"
-                                variant="outlined" />
+                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin"
+                                label="Teacher" variant="outlined" />
                         </div>
                         <div class="d-block d-sm-flex align-start" style="gap:5px;">
                             <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus"
@@ -126,16 +128,15 @@
                                     @orderSessions="orderSessions" />
                             </v-card-text>
                             <div style=" display:flex;justify-content:flex-end;" class="pa-3">
-                                    <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
-                                        @click="finalizeDialog = false">
-                                        {{ $t('Cancel') }}
-                                    </v-btn>
-                                    <v-btn color="success" 
-                                        :disabled="isLoading && workshop.sessions.length == 0"
-                                        :loading="isLoading && isLaunching" @click="launchWorkshop">
-                                        {{ $t('Launch') }}
-                                    </v-btn>
-                                    </div>
+                                <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
+                                    @click="finalizeDialog = false">
+                                    {{ $t('Cancel') }}
+                                </v-btn>
+                                <v-btn color="success" :disabled="isLoading && workshop.sessions.length == 0"
+                                    :loading="isLoading && isLaunching" @click="launchWorkshop">
+                                    {{ $t('Launch') }}
+                                </v-btn>
+                            </div>
                         </v-card>
                     </template>
                 </v-dialog>

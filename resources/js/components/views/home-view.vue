@@ -17,7 +17,8 @@
                         <post-home-card class="my-2" v-for="post in posts" :key="post.id" :post="post" />
                     </div>
                     <div class="d-flex justify-end">
-                        <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog">
+                        <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog"
+                            v-if="posts.length > 4">
                             {{ $t('More') }}
                         </v-btn>
                     </div>
@@ -36,8 +37,8 @@
                             :key="workshop.id" />
                     </div>
                     <div class="d-flex justify-end">
-                        <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new"
-                            to="/workshops">
+                        <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops"
+                            v-if="events.length > 2">
                             {{ $t('More') }}
                         </v-btn>
                     </div>
@@ -60,7 +61,8 @@
                 <post-home-card class="my-2" v-for="post in posts" :key="post.id" :post="post" />
             </div>
             <div class="d-flex justify-end">
-                <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog">
+                <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog"
+                    v-if="posts.length > 4">
                     {{ $t('More') }}
                 </v-btn>
             </div>
@@ -77,7 +79,8 @@
             </div>
             <workshop-card v-for="workshop in events" :workshop="workshop" class="my-2" :key="workshop.id" />
             <div class="d-flex justify-end">
-                <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops">
+                <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops"
+                    v-if="events.length > 2">
                     {{ $t('More') }}
                 </v-btn>
             </div>

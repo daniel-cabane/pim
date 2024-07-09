@@ -1,11 +1,14 @@
 <template>
     <div>
         <v-divider>
-            <span class="text-caption text-captionColor" style="white-space:nowrap;">
+            <span class="text-caption text-captionColor mt-5 mb-2" style="white-space:nowrap;">
                 Question {{ index + 1 }}
             </span>
         </v-divider>
-        <v-select variant="outlined" label="Type" :items="questionTypes" v-model="question.type" />
+        <div class="d-flex">
+            <v-select variant="outlined" label="Type" :items="questionTypes" v-model="question.type" />
+            <v-switch class="ml-3" :label="$t('Required')" color="primary" v-model="question.required"/>
+        </div>
         <div style="display:flex;gap:15px;">
             <v-text-field hide-details variant="outlined" style="flex:1" label="Question (en)" v-model="question.q_en"
                 v-if="language != 'fr'" />
@@ -21,7 +24,7 @@
                 <v-icon icon="mdi-close-octagon" size="x-large" color="error" @click="emit('deleteOption', {question, index})"/>
             </div>
             <div class="text-center">
-                <v-btn size="x-small" block color="primary" @click="emit('addOption', question)">
+                <v-btn size="x-small" variant="tonal" block color="primary" @click="emit('addOption', question)">
                     {{ $t('Add option') }}
                 </v-btn>
             </div>

@@ -26,7 +26,8 @@ class SurveyController extends Controller
             'options' => [
                 ['fr' => 'Réponse A','en' => 'Answer A'],
                 ['fr' => 'Réponse B', 'en' => 'Answer B']
-            ]
+            ],
+            'required' => true
         ]];
 
         $survey = Survey::create([

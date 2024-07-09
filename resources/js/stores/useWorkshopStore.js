@@ -29,13 +29,13 @@ export const useWorkshopStore = defineStore({
             this.isReady = false;
             const res = await get(`/api/workshops/${id}`);
             this.workshop = res.workshop;
-            console.log(res.workshop);
             this.isReady = true;
             return res.workshop;
         },
         async getWorkshops() {
             this.isReady = false;
             const res = await get(`/api/workshops`, true);
+            console.log(res.workshop);
             this.workshops = res.workshops;
             this.isReady = true;
         },

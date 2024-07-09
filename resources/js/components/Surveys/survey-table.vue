@@ -1,9 +1,14 @@
 <template>
     <div>
-        <div class="text-right mb-3">
+        <div class="d-flex mb-3">
             <v-dialog width="450" v-model="newSurveyDialog">
                 <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn color="primary" append-icon="mdi-plus" v-bind="activatorProps">
+                    <span class="text-caption text-captionColor" v-if="!admin">
+                        {{ $t('Surveys') }}
+                    </span>
+                    <v-spacer />
+                    <v-btn color="primary" append-icon="mdi-plus" :size="admin ? 'default' : 'x-small'"
+                        v-bind="activatorProps">
                         {{ $t('Add a survey') }}
                     </v-btn>
                 </template>
@@ -13,12 +18,12 @@
                             v-model="newSurvey.language" />
                         <v-text-field variant="outlined" label="Titre (fr)" v-model="newSurvey.title_fr"
                             v-if="newSurvey.language != 'en'" />
-                        <v-text-field variant="outlined" label="Title (en)" v-model=" newSurvey.title_en "
+                        <v-text-field variant="outlined" label="Title (en)" v-model="newSurvey.title_en"
                             v-if="newSurvey.language != 'fr'" />
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
-                        <v-btn color="error" variant="text" :disabled="isLoading" @click="newSurveyDialog=false">
+                        <v-btn color="error" variant="text" :disabled="isLoading" @click="newSurveyDialog = false">
                             {{ $t('Cancel') }}
                         </v-btn>
                         <v-btn color="primary" variant="flat" :loading="isLoading" @click="handleNnewSurvey">
@@ -29,7 +34,7 @@
             </v-dialog>
         </div>
         <v-data-table hover :headers="headers" :items="surveys" item-value="name" items-per-page="25"
-            :items-per-page-options="ipp">
+            :items-per-page-options="ipp" v-if="admin">
             <template v-slot:item="{ item }">
                 <tr>
                     <td class="text-center">
@@ -62,32 +67,37 @@
                 </tr>
             </template>
         </v-data-table>
+        <v-table hover v-else>
+            <tbody>
+                <tr v-for="survey in surveys">
+                    <td>{{ survey.mainTitle }}</td>
+                    <td>{{ survey.questions.length }} question<span v-if="survey.questions.length>1">s</span></td>
+                    <td>{{ survey.status }}</td>
+                    <td>
+                        <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(survey)">
+                            mdi-eye
+                        </v-icon>
+                        <v-icon size="small" class="mr-3" color="primary" @click="showEditDialog(survey)">
+                            mdi-pencil
+                        </v-icon>
+                        <v-icon size="small" color="error" @click="showDeleteDialog(survey)">
+                            mdi-delete
+                        </v-icon>
+                    </td>
+                </tr>
+            </tbody>
+        </v-table>
         <v-dialog width="300" v-model="deleteDialog">
-            <v-card :title="$t('Delete survey')">
-                <v-card-text>
-                    <div>
-                        {{ t('Are you sure you want to delete this survey') }} ?
-                    </div>
-                    <div>
-                        <b>{{ focusedSurvey.mainTitle }}</b> ({{ focusedSurvey.questions.length }} question<span
-                            v-if="focusedSurvey.questions.length>1">s</span>)
-                    </div>
-                </v-card-text>
-                <div style="display:flex;justify-content:flex-end;" class="pa-3">
-                    <v-btn variant="tonal" class="mr-3" color="primary" :disabled="isLoading"
-                        @click="deleteDialog = false">
-                        {{ $t('Cancel') }}
-                    </v-btn>
-                    <v-btn color="error" :loading="isLoading" @click="handleDelete">
-                        {{ $t('Delete') }}
-                    </v-btn>
-                </div>
-            </v-card>
+            <survey-delete-card :survey="focusedSurvey" :isLoading="isLoading" @closeDialog="deleteDialog = false"
+                @deleteSurvey="handleDelete" />
         </v-dialog>
         <v-dialog width="850" scrollable v-model="editDialog">
-            <survey-edit-card :survey="focusedSurvey" :isLoading="isLoading"
-                @closeDialog="editDialog = false" @updateSurvey="handleEditSurvey" @addQuestion="addQuestion"
-                @addOption="addOption" @deleteOption="deleteOption" />
+            <survey-edit-card :survey="focusedSurvey" :isLoading="isLoading" @closeDialog="editDialog = false"
+                @updateSurvey="handleEditSurvey" @addQuestion="addQuestion" @addOption="addOption"
+                @deleteOption="deleteOption" />
+        </v-dialog>
+        <v-dialog v-model="previewDialog" transition="dialog-bottom-transition" fullscreen>
+            <survey-display-card :survey="focusedSurvey"/>
         </v-dialog>
     </div>
 </template>
@@ -100,12 +110,18 @@
 
     const { addNotification } = useNotifications();
 
+    const props = defineProps({ workshopId: { type: Number, nullable: true }, admin: { type: Boolean, default: false }});
+
     const { t } = useI18n();
 
     const SurveyStore = useSurveyStore();
-    const { createSurvey, getSurveys, deleteSurvey, updateSurvey } = SurveyStore;
+    const { createSurvey, getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey } = SurveyStore;
     const { survey, surveys, isLoading } = storeToRefs(SurveyStore);
-    getSurveys();
+    if(props.workshopId){
+        getWorkshopSurveys(props.workshopId)
+    } else if(props.admin) {
+        getAdminSurveys();
+    }
 
     const headers = ref([
         { title: t('Title'), align: 'center', key: 'mainTitle' },
@@ -122,7 +138,7 @@
         { title: 'Français', value: 'fr' }, { title: 'English', value: 'en' }, { title: t('Both'), value: 'both' }
     ]);
     const newSurveyDialog = ref(false);
-    const newSurvey = reactive({ title_fr: '', title_en: '', language: 'fr'});
+    const newSurvey = reactive({ title_fr: '', title_en: '', language: 'fr' });
     const handleNnewSurvey = async () => {
         await createSurvey(newSurvey);
         newSurveyDialog.value = false;
@@ -156,19 +172,24 @@
         });
     }
     const addOption = question => {
-        question.options.push({fr: 'Nouvelle option', en: 'New option'});
+        question.options.push({ fr: 'Nouvelle option', en: 'New option' });
     }
     const deleteOption = data => {
         const options = [];
         Object.values(data.question.options).forEach((o, i) => {
-            if(i != data.index){
+            if (i != data.index) {
                 options.push(o);
             }
         });
-        if(options.length > 0){
+        if (options.length > 0) {
             data.question.options = options;
         } else {
             addNotification({ text: 'You need at least one option', type: 'warning' });
         }
+    }
+    const previewDialog = ref(false);
+    const showPreviewDialog = survey => {
+        focusedSurvey.value = survey;
+        previewDialog.value = true;
     }
 </script>

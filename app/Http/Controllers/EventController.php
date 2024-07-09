@@ -16,7 +16,7 @@ class EventController extends Controller
     {
         $campus = ['BPR', 'TKO'];
         $user = auth()->user();
-        if($user && $user->preferences->campus != 'both'){
+        if($user && isset($user->preferences->campus) && $user->preferences->campus != 'both'){
             $campus = [$user->preferences->campus];
         }
 

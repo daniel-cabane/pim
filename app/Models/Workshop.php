@@ -36,6 +36,11 @@ class Workshop extends Model
       return $this->hasMany(Session::class);
     }
 
+    public function surveys()
+    {
+      return $this->hasMany(Survey::class);
+    }
+
     public function format()
     {
       $user = auth()->user();
@@ -71,6 +76,10 @@ class Workshop extends Model
           ];
         }
       }
+      // $surveys = [];
+      // foreach($this->surveys as $survey){
+      //   $surveys[] = $survey->format();
+      // }
       
       return [
         'id' => $this->id,
@@ -90,7 +99,8 @@ class Workshop extends Model
         'editable' => auth()->check() && auth()->user()->can('update', $this),
         'application' => $application,
         'applicants' => $applicants,
-        'sessions' => $this->sessions()->orderBy('index')->get()
+        'sessions' => $this->sessions()->orderBy('index')->get(),
+        // 'surveys' => $surveys
       ];
     }
 
@@ -162,4 +172,85 @@ class Workshop extends Model
                         ->orWhereIn('term', $terms);
                   });
     }
-  }
+
+    public function createExitSurvey()
+    {
+      $options = [
+        'language' => $this->language,
+        'title_fr' => "Bilan atelier - $this->title_fr",
+        'title_en' => "Bilan atelier - $this->title_en",
+        'description_fr' => "Vous avez récemment participé à l'atelier $this->title_fr. Pourriez-vous partager vos impressions ?",
+        'description_en' => "You recently participated in the workshop $this->title_en. Can you share you thoughts ?"
+      ];
+      $questions = [
+        [
+          'q_fr' => 'Le contenu de cet atelier correspondait-il à ce que vous espériez ?',
+          'q_en' => 'Did the content of this workshop match what you were hoping for ?',
+          'type' => 'radio',
+          'options' => [
+              ['fr' => "Pas du tout",'en' => 'Not at all'],
+              ['fr' => "Pas vraiment", 'en' => 'Not really'],
+              ['fr' => "Plus ou moins", 'en' => 'More or less'],
+              ['fr' => "Oui, mais j'en attendais plus", 'en' => 'Yes but I excpected more'],
+              ['fr' => "Oui tout à fait", 'en' => 'Not really']
+          ],
+          'required' => true
+        ],
+        [
+          'q_fr' => "Avez vous des remarques sur le contenu ? Des points que vous auriez aimé aborder lors de l'atelier ?",
+          'q_en' => "Do you have any comments on the content ? Are there any points that you would have liked to have addressed during the workshop ?",
+          'type' => 'longText',
+          'options' => [],
+          'required' => false
+        ],
+        [
+          'q_fr' => "Que pensez-vous de la durée de l'atelier ?",
+          'q_en' => "What do you think about the duration of the workshop ?",
+          'type' => 'radio',
+          'options' => [
+              ['fr' => "Trop court",'en' => 'Too short'],
+              ['fr' => "Un peu court", 'en' => 'Rather short'],
+              ['fr' => "Bien choisie", 'en' => 'Well balanced'],
+              ['fr' => "Un peu long", 'en' => 'Rather long'],
+              ['fr' => "Trop long", 'en' => 'Too long']
+          ],
+          'required' => true
+        ],
+        [
+          'q_fr' => "Seriez-vous intéressé par une suite à cet atelier ?",
+          'q_en' => "Would you be interested in a follow-up to this workshop ?",
+          'type' => 'radio',
+          'options' => [
+              ['fr' => "Pas du tout",'en' => 'Not at all'],
+              ['fr' => "Pas vraiment", 'en' => 'Not really'],
+              ['fr' => "Peut-être", 'en' => 'Maybe'],
+              ['fr' => "Oui, cela m'intéresserait", 'en' => "Yes I'd be interested"],
+              ['fr' => "TOui, cela m'intéresserait beaucoup", 'en' => "Yes I'd be very interested"]
+          ],
+          'required' => true
+        ],
+        [
+          'q_fr' => "Quels des éléments spécifiques que vous souhaiteriez aborder lors de cette suite ?",
+          'q_en' => "What specific elements would you like to cover in a follow-up to this workshop ?",
+          'type' => 'longText',
+          'options' => [],
+          'required' => false
+        ],
+        [
+          'q_fr' => "Avez-vous des remarques générales sur cet atelier ou son organisation ?",
+          'q_en' => "Do you have any general comments on this workshop or its organization ?",
+          'type' => 'longText',
+          'options' => [],
+          'required' => false
+        ],
+      ];
+
+      $survey = Survey::create([
+            'author_id' => $this->organiser_id,
+            'questions' => json_encode($questions),
+            'options' => json_encode($options),
+            'workshop_id' => $this->id,
+            'status' => 'closed'
+        ]);
+    }
+}

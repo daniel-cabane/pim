@@ -37,7 +37,6 @@ class SurveyPolicy
      */
     public function update(User $user, Survey $survey): bool
     {
-        logger('calling update');
         return $survey->author_id == $user->id || $user->hasRole('admin');
     }
 

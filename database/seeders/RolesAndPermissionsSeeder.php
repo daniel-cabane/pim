@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -31,7 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'email'=>'pim@g.lfis.edu.hk',
             'email_verified_at' => now(),
             'password' => $password,
-            'preferences' => json_encode(['notifications' => 'all', 'title' => 'M.'])
+            'preferences' => ['notifications' => 'all', 'title' => 'M.']
         ]);
         $rootUser->assignRole('admin');
         $rootUser->assignRole('teacher');
