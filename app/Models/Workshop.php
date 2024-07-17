@@ -178,7 +178,7 @@ class Workshop extends Model
       $options = [
         'language' => $this->language,
         'title_fr' => "Bilan atelier - $this->title_fr",
-        'title_en' => "Bilan atelier - $this->title_en",
+        'title_en' => "Workshop review - $this->title_en",
         'description_fr' => "Vous avez récemment participé à l'atelier $this->title_fr. Pourriez-vous partager vos impressions ?",
         'description_en' => "You recently participated in the workshop $this->title_en. Can you share you thoughts ?"
       ];

@@ -11,13 +11,13 @@
         <div class="pa-4">
             <v-window v-model="tab">
                 <v-window-item value="workshops">
-                    <div class="d-flex flex-wrap ">
+                    <div class="d-flex flex-wrap " v-if="isReady">
                         <workshop-card v-for="workshop in workshops" :workshop="workshop" class="ma-2"
                             :key="workshop.id" />
                     </div>
                 </v-window-item>
                 <v-window-item value="surveys">
-                    <survey-table admin/>
+                    <survey-table admin />
                 </v-window-item>
                 <v-window-item value="posts">
                     <admin-posts-tabs />
@@ -26,7 +26,8 @@
                     <v-text-field label="Search user" class="mt-2" :loading="loading" variant="outlined" v-model="data"
                         @keydown.enter="fetchUsers" />
                     <div style="display:flex;flex-wrap:wrap;">
-                        <admin-user-card v-for="user in users" class="ma-2" :key="user.id" :user="user" />
+                        <admin-user-card v-for="user in users" class="ma-2" :key="user.id" :user="user"
+                            @userNameUpdated="fetchUsers" />
                     </div>
                 </v-window-item>
                 <v-window-item value="openDoors">
@@ -51,7 +52,7 @@
 
     const workshopStore = useWorkshopStore();
     const { adminGetAllWorkshops } = workshopStore;
-    const { workshops } = storeToRefs(workshopStore);
+    const { workshops, isReady } = storeToRefs(workshopStore);
     adminGetAllWorkshops();
 
     const authStore = useAuthStore();

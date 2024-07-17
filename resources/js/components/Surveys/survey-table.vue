@@ -52,10 +52,13 @@
                     <td class="text-center">
                         {{ item.questions.length }}
                     </td>
-                    <td class="text-center">
-                        {{ item.workshop ? item.workshop.title : '--' }}
+                    <td class="text-center" style="cursor:pointer;" @click="navigateToWorkshop(item.workshopId)">
+                        {{ item.workshopName ? item.workshopName : '--' }}
                     </td>
                     <td class="pr-0 text-center">
+                        <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(item)">
+                            mdi-eye
+                        </v-icon>
                         <v-icon size="small" class="mr-3" color="primary" @click="showEditDialog(item)">
                             mdi-pencil
                         </v-icon>
@@ -73,7 +76,7 @@
                     <td>{{ survey.mainTitle }}</td>
                     <td>{{ survey.questions.length }} question<span v-if="survey.questions.length>1">s</span></td>
                     <td>{{ survey.status }}</td>
-                    <td>
+                    <td style="width:120px;text-align:center;">
                         <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(survey)">
                             mdi-eye
                         </v-icon>
@@ -97,7 +100,7 @@
                 @deleteOption="deleteOption" />
         </v-dialog>
         <v-dialog v-model="previewDialog" transition="dialog-bottom-transition" fullscreen>
-            <survey-display-card :survey="focusedSurvey"/>
+            <survey-display-card :survey="focusedSurvey" showCloseButton @closeDialog="previewDialog=false;" />
         </v-dialog>
     </div>
 </template>
@@ -107,6 +110,9 @@
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
     import useNotifications from '@/composables/useNotifications';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
 
     const { addNotification } = useNotifications();
 
@@ -186,6 +192,9 @@
         } else {
             addNotification({ text: 'You need at least one option', type: 'warning' });
         }
+    }
+    const navigateToWorkshop = id => {
+        router.push(`/workshops/${id}`);
     }
     const previewDialog = ref(false);
     const showPreviewDialog = survey => {

@@ -279,5 +279,10 @@
     "Add option": "Add option",
     "You need at least one option": "You need at least one option",
     "User is not logged in.": "User is not logged in",
-    "Survey updated": "Survey updated"
+    "Survey updated": "Survey updated",
+    "Answer": "Answer",
+    "Class level": "Class level",
+    "Class name": "Class name",
+    "Edit user": "Edit user",
+    "User updated": "User updated"
 }

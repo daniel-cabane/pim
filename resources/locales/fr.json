@@ -279,5 +279,10 @@
     "Add option": "Ajouter une option",
     "You need at least one option": "Il faut au moins une option",
     "User is not logged in.": "Utilisateur déconnecté",
-    "Survey updated": "Questionnaire mis à jour"
+    "Survey updated": "Questionnaire mis à jour",
+    "Answer": "Réponse",
+    "Class level": "Niveau",
+    "Class name": "Nom de la classe",
+    "Edit user": "Modifier l'utilisateur",
+    "User updated": "Utilisateur mis à jour"
 }

@@ -61,6 +61,18 @@ class AdminController extends Controller
         return response()->json(['message' => ['text' => 'Roles updated', 'type' => 'success']]);
     }
 
+    public function updateUserName(User $user, Request $request)
+    {
+        $attrs = $request->validate([
+            'name' => 'required|String|min:3|max:25',
+            'className' => 'required|String|min:2|max:6',
+        ]);
+        
+        $user->update(['name' => $attrs['name'], 'className' => $attrs['className']]);
+
+        return response()->json(['user' => $user, 'message' => ['text' => 'User updated', 'type' => 'success']]);
+    }
+
 
     public function allWorkshops()
     {
@@ -440,20 +452,9 @@ class AdminController extends Controller
     {
         $surveys = [];
         foreach(Survey::orderBy('created_at', 'desc')->get() as $survey){
-            $surveys[] = $survey->format();
+            $surveys[] = $survey->format(true);
         }
         return response()->json(['surveys' => $surveys]);
     }
-
-    // public function deleteSurvey(Survey $survey)
-    // {
-    //     $survey->delete();
-
-    //     $surveys = [];
-    //     foreach(Survey::orderBy('created_at', 'desc')->get() as $survey){
-    //         $surveys[] = $survey->format();
-    //     }
-    //     return response()->json(['surveys' => $surveys]);
-    // }
 
 }

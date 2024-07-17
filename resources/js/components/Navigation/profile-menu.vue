@@ -40,6 +40,10 @@
                         <v-text-field variant="outlined" :label="$t('Last name')" maxLength="25"
                             v-model="initData.lastName" />
                     </div>
+                    <div style="display:flex;gap:15px;" v-if="user.is.student">
+                        <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="initData.classLevel" />
+                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']" v-model="initData.className" />
+                    </div>
                     <div class="d-flex">
                         <div style="flex:1">
                             <div class="text-caption text-captionColor">{{ $t('Language') }}</div>
@@ -93,4 +97,6 @@
     const forceOpen = computed(() => {
         return !user.value.preferences || !user.value.preferences.language || !user.value.preferences.campus;
     });
+
+    const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
 </script>

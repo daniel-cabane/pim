@@ -27,9 +27,11 @@ class UserController extends Controller
   {
     $attrs = $request->validate([
       'init' => 'required|Boolean',
-      'title' => 'sometimes|max:16',
-      'firstName' => 'sometimes|max:25',
-      'lastName' => 'sometimes|max:25',
+      'title' => 'sometimes|String|Nullable|max:16',
+      'firstName' => 'sometimes|String|Nullable|max:25',
+      'lastName' => 'sometimes|String|Nullable|max:25',
+      'classLevel' => 'sometimes|String|Nullable|max:5',
+      'className' => 'sometimes|String|Nullable|max:1',
       'language' => ['required', Rule::in(['fr', 'en', 'both'])],
       'campus' => ['required', Rule::in(['BPR', 'TKO', 'both'])]
     ]);
@@ -44,7 +46,11 @@ class UserController extends Controller
       }
       $firstName = implode('-', explode(' ', ucwords(strtolower($attrs['firstName']))));
       $lastName = strtoupper($attrs['lastName']);
-      $user->update(['name' => "$firstName $lastName"]);
+      if($user->is['student'] && isset($attrs['classLevel']) && isset($attrs['className'])){
+        $user->update(['name' => "$firstName $lastName", 'className' => $attrs['classLevel'].$attrs['className']]);
+      } else {
+        $user->update(['name' => "$firstName $lastName"]);
+      }
     }
     if($user->is['teacher'] && strlen($attrs['title']) >= 2){
       $preferences->title = $attrs['title'];

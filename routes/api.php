@@ -30,6 +30,7 @@ use App\Http\Controllers\SurveyController;
 Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/fetchUsers/{string}', [AdminController::class, 'fetchUsers']);
     Route::post('/admin/users/{user}/updateRoles', [AdminController::class, 'updateUserRoles']);
+    Route::patch('/admin/users/{user}/name', [AdminController::class, 'updateUserName']);
     
     Route::get('/admin/workshops/', [AdminController::class, 'allWorkshops']);
     Route::get('/admin/workshops/{workshop}/prepare', [AdminController::class, 'prepareWorkshop']);

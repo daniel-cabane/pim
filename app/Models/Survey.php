@@ -21,7 +21,7 @@ class Survey extends Model
         return $this->belongsTo(Workshop::class);
     }
 
-    public function format($includeWorkshop = false)
+    public function format($includeWorkshopName = false)
     {
         $options = json_decode($this->options);
         $mainTitle = $options->language == 'fr' ? $options->title_fr : $options->title_en;
@@ -37,8 +37,9 @@ class Survey extends Model
             ],
             'workshopId' => $this->workshop_id
         ];
-        if($includeWorkshop){
-            $formatted['workshop'] = $this->workshop->format();
+        if($includeWorkshopName && $this->workshop){
+            $workshopMainTitle = $this->workshop->language == 'fr' ? $this->workshop->title_fr : $this->workshop->title_en;
+            $formatted['workshopName'] = $workshopMainTitle;
         }
 
         return $formatted;
