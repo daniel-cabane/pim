@@ -180,7 +180,8 @@ class Workshop extends Model
         'title_fr' => "Bilan atelier - $this->title_fr",
         'title_en' => "Workshop review - $this->title_en",
         'description_fr' => "Vous avez récemment participé à l'atelier $this->title_fr. Pourriez-vous partager vos impressions ?",
-        'description_en' => "You recently participated in the workshop $this->title_en. Can you share you thoughts ?"
+        'description_en' => "You recently participated in the workshop $this->title_en. Can you share you thoughts ?",
+        'answerEditable' => false
       ];
       $questions = [
         [
@@ -192,7 +193,7 @@ class Workshop extends Model
               ['fr' => "Pas vraiment", 'en' => 'Not really'],
               ['fr' => "Plus ou moins", 'en' => 'More or less'],
               ['fr' => "Oui, mais j'en attendais plus", 'en' => 'Yes but I excpected more'],
-              ['fr' => "Oui tout à fait", 'en' => 'Not really']
+              ['fr' => "Oui tout à fait", 'en' => 'Yes, absolutely']
           ],
           'required' => true
         ],
@@ -208,11 +209,11 @@ class Workshop extends Model
           'q_en' => "What do you think about the duration of the workshop ?",
           'type' => 'radio',
           'options' => [
-              ['fr' => "Trop court",'en' => 'Too short'],
-              ['fr' => "Un peu court", 'en' => 'Rather short'],
-              ['fr' => "Bien choisie", 'en' => 'Well balanced'],
+              ['fr' => "Trop long", 'en' => 'Too long'],
               ['fr' => "Un peu long", 'en' => 'Rather long'],
-              ['fr' => "Trop long", 'en' => 'Too long']
+              ['fr' => "Bien choisie", 'en' => 'Well balanced'],
+              ['fr' => "Un peu court", 'en' => 'Rather short'],
+              ['fr' => "Trop court",'en' => 'Too short']
           ],
           'required' => true
         ],
@@ -225,7 +226,7 @@ class Workshop extends Model
               ['fr' => "Pas vraiment", 'en' => 'Not really'],
               ['fr' => "Peut-être", 'en' => 'Maybe'],
               ['fr' => "Oui, cela m'intéresserait", 'en' => "Yes I'd be interested"],
-              ['fr' => "TOui, cela m'intéresserait beaucoup", 'en' => "Yes I'd be very interested"]
+              ['fr' => "Oui, cela m'intéresserait beaucoup", 'en' => "Yes I'd be very interested"]
           ],
           'required' => true
         ],
@@ -247,8 +248,8 @@ class Workshop extends Model
 
       $survey = Survey::create([
             'author_id' => $this->organiser_id,
-            'questions' => json_encode($questions),
-            'options' => json_encode($options),
+            'questions' => $questions,
+            'options' => $options,
             'workshop_id' => $this->id,
             'status' => 'closed'
         ]);

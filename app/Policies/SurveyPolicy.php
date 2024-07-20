@@ -21,7 +21,18 @@ class SurveyPolicy
      */
     public function view(User $user, Survey $survey): bool
     {
-        return ($user->hasRole('student') || $user->hasRole('teacher')) && $survey->status == 'open' || $survey->author_id == $user->id || $user->hasRole('admin');
+        if($survey->author_id == $user->id || $user->hasRole('admin') || $user->hasRole('hod')){
+            return true;
+        }
+        if($survey->answers()->where('user_id', $user->id)->exists() && $survey->status == 'open'){
+            return true;
+        }
+        return false;// ($user->hasRole('student') || $user->hasRole('teacher')) && $survey->status == 'open' || $survey->author_id == $user->id || $user->hasRole('admin');
+    }
+
+    public function submit(User $user, Survey $survey): bool
+    {
+        return $survey->answers()->where('user_id', $user->id)->exists() && $survey->status == 'open';
     }
 
     /**

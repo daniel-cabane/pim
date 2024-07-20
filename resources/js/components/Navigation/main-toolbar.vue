@@ -1,56 +1,57 @@
 <template>
-    <v-app-bar color="grey">
-      <div class="ml-4 d-none d-sm-flex">
-        <v-img max-width='80px' min-width='80px' src="/images/pim logo.png" contain/>
-      </div>
-      <v-spacer/>
-      <div>
-          <v-tabs centered :mandatory="false" v-model="navigationTab" v-if="isWindowXs">
-            <v-tab value="tab-1" to="/">
-                <v-icon size="x-large">mdi-home</v-icon>
-            </v-tab>
-            <v-tab value="tab-2" to="/workshops">
-                <v-icon size="x-large">mdi-puzzle</v-icon>
-            </v-tab>
-            <v-tab value="tab-3" to="/calendar">
-                  <v-icon size="x-large">mdi-calendar</v-icon>
-              </v-tab>
-          </v-tabs>
-          <v-tabs centered stacked v-model="navigationTab" exact :mandatory="false" v-else>
-            <v-tab value="tab-1" to="/">
-                <v-icon>mdi-home</v-icon>
-                {{ $t('home') }}
-            </v-tab>
-            <v-tab value="tab-2" to="/workshops">
-                <v-icon>mdi-puzzle</v-icon>
-                {{ $t('workshops') }}
-            </v-tab>
-            <v-tab value="tab-3" to="/calendar">
-                  <v-icon>mdi-calendar</v-icon>
-                  {{ $t('calendar') }}
-              </v-tab>
-          </v-tabs>
-      </div>
-      <v-spacer/>
+  <v-app-bar color="grey">
+    <div class="ml-4 d-none d-sm-flex">
+      <v-img max-width='80px' min-width='80px' src="/images/pim logo.png" contain />
+    </div>
+    <v-spacer />
+    <div>
+      <v-tabs centered :mandatory="false" v-model="navigationTab" v-if="isWindowXs">
+        <v-tab value="tab-1" to="/">
+          <v-icon size="x-large">mdi-home</v-icon>
+        </v-tab>
+        <v-tab value="tab-2" to="/workshops">
+          <v-icon size="x-large">mdi-puzzle</v-icon>
+        </v-tab>
+        <v-tab value="tab-3" to="/calendar">
+          <v-icon size="x-large">mdi-calendar</v-icon>
+        </v-tab>
+      </v-tabs>
+      <v-tabs centered stacked v-model="navigationTab" exact :mandatory="false" v-else>
+        <v-tab value="tab-1" to="/">
+          <v-icon>mdi-home</v-icon>
+          {{ $t('home') }}
+        </v-tab>
+        <v-tab value="tab-2" to="/workshops">
+          <v-icon>mdi-puzzle</v-icon>
+          {{ $t('workshops') }}
+        </v-tab>
+        <v-tab value="tab-3" to="/calendar">
+          <v-icon>mdi-calendar</v-icon>
+          {{ $t('calendar') }}
+        </v-tab>
+      </v-tabs>
+    </div>
+    <v-spacer />
 
-      <template v-slot:append>
-        <div style="white-space:nowrap;display:flex;align-items:center;" v-if="user">
-          <action-menu v-if="user.is.teacher || user.is.publisher"/>
-          <profile-menu/>
-        </div>
-        <div style="white-space:nowrap;display:flex;align-items:center;" v-else>
-          <signin-dialog/>
-          <v-menu :close-on-content-click="false">
-            <template v-slot:activator="{ props }">
-              <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
-            </template>
-            <v-list>
-              <theme-and-language-picker/>
-            </v-list>
-          </v-menu>
-        </div>
-      </template>
-    </v-app-bar>
+    <template v-slot:append>
+      <div style="white-space:nowrap;display:flex;align-items:center;" v-if="user">
+        <survey-menu :surveys="user.open_surveys" class="mr-2" v-if="user.open_surveys.length"/>
+        <action-menu v-if="user.is.teacher || user.is.publisher" />
+        <profile-menu />
+      </div>
+      <div style="white-space:nowrap;display:flex;align-items:center;" v-else>
+        <signin-dialog />
+        <v-menu :close-on-content-click="false">
+          <template v-slot:activator="{ props }">
+            <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+          </template>
+          <v-list>
+            <theme-and-language-picker />
+          </v-list>
+        </v-menu>
+      </div>
+    </template>
+  </v-app-bar>
 </template>
 <script setup>
   import { ref, computed, watch } from 'vue';

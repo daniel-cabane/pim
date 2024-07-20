@@ -44,7 +44,7 @@
                 </v-expansion-panel>
             </v-expansion-panels>
             <question-edit-form v-for="(question, index) in survey.questions" :question="question"
-                :language="survey.options.language" :index="index" @addOption="emit('addOption')"
+                :language="survey.options.language" :index="index" @addOption="emit('addOption', question)"
                 @deleteOption="emit('deleteOption')" />
         </v-card-text>
         <v-card-actions>

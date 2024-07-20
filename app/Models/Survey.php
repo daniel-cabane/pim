@@ -21,15 +21,23 @@ class Survey extends Model
         return $this->belongsTo(Workshop::class);
     }
 
+    public function answers()
+    {
+        return $this->belongsToMany(User::class)->withPivot('data')->withTimestamps();
+    }
+
+    protected $casts = ['options' => 'object', 'questions' => 'object'];
+
     public function format($includeWorkshopName = false)
     {
-        $options = json_decode($this->options);
-        $mainTitle = $options->language == 'fr' ? $options->title_fr : $options->title_en;
+        // $options = json_decode($this->options);
+        $mainTitle = $this->options->language == 'fr' ? $this->options->title_fr : $this->options->title_en;
         $formatted = [
             'id' => $this->id,
             'mainTitle' => $mainTitle,
-            'questions' => json_decode($this->questions),
-            'options' => $options,
+            // 'questions' => json_decode($this->questions),
+            'questions' => $this->questions,
+            'options' => $this->options,
             'status' => $this->status,
             'author' => [
                 'id' => $this->author_id,
@@ -43,5 +51,20 @@ class Survey extends Model
         }
 
         return $formatted;
+    }
+
+    public function send($dest = null)
+    {
+        $this->update(['status' => 'open']);
+        if($this->workshop_id){
+            $applicantEmails = [];
+            foreach($this->workshop->applicants as $applicant){
+                if($applicant->pivot->confirmed){
+                    $this->answers()->attach($applicant);
+                    $applicantEmails[] = $applicant->email;
+                }
+            }
+            logger('send email');
+        }
     }
 }

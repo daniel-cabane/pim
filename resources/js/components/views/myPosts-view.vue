@@ -1,6 +1,9 @@
 <template>
     <v-container>
-        <post-card v-for="post in myPosts" :key="post.id" :post="post"/>
+        <div class="pb-4">
+            <back-btn />
+        </div>
+        <post-card v-for="post in myPosts" :key="post.id" :post="post" />
     </v-container>
 </template>
 <script setup>

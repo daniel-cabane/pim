@@ -1,10 +1,10 @@
 <template>
     <v-container v-if="isReady">
-        <div class="pa-4">
+        <div class="pb-4">
             <back-btn />
         </div>
         <v-card>
-            <workshop-display :workshop="workshop" @editApplicantName="editApplicantName" />
+            <workshop-display :workshop="workshop" @editWorkshop="editWorkshop" />
             <div class="pa-4" style="overflow-y:hidden;transition:all .5s"
                 :style="`max-height:${showApplication ? 250 : 0}px;${!showApplication ? 'content-visibility:hidden;' : ''}`"
                 v-if='workshop.application'>
@@ -24,13 +24,6 @@
                 </div>
             </div>
             <div class="pa-4">
-                <div class="d-flex justify-end" v-if="workshop.editable">
-                    <span>
-                        <v-btn color="primary" append-icon="mdi-pencil" @click="editWorkshop">
-                            {{ $t('Edit') }}
-                        </v-btn>
-                    </span>
-                </div>
                 <div v-if="user && user.is && user.is.student">
                     <div class="d-flex justify-space-between" v-if="showApplication">
                         <v-btn variant="tonal" color="warning" :loading="applyLoading"
@@ -56,8 +49,8 @@
                             <v-chip label size="large" color="success" append-icon="mdi-check">
                                 {{ $t('Applied !') }}
                             </v-chip>
-                            <v-btn icon="mdi-eye" color="success" size="small" class="ml-3"
-                                variant="outlined" @click="showApplication = true" />
+                            <v-btn icon="mdi-eye" color="success" size="small" class="ml-3" variant="outlined"
+                                @click="showApplication = true" />
                         </div>
                     </div>
                     <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents">
@@ -90,7 +83,7 @@
     import { storeToRefs } from 'pinia';
     
     const workshopStore = useWorkshopStore();
-    const { getWorkshop, applyWorkshop, withdrawWorkshop, editApplicantName } = workshopStore;
+    const { getWorkshop, applyWorkshop, withdrawWorkshop } = workshopStore;
     const { workshop, isReady } = storeToRefs(workshopStore);
     
     const route = useRoute();
@@ -104,12 +97,9 @@
         router.push(`/workshops/${route.params.id}/edit`);
     }
 
-    // const applyDialog = ref(false);
     const showApplication = ref(false);
     const applyLoading = ref(false);
     const withdrawLoading = ref(false);
-    // const availability = ref(true);
-    // const comment = ref('');
     const handleApply = async () => {
         console.log(workshop.value);
         applyLoading.value = true;

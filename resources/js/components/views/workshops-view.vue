@@ -6,14 +6,16 @@
                 v-if="user && user.is.student"></v-tab>
             <v-tab prepend-icon="mdi-calendar-clock-outline" :text="$t('Past workshops')" value="past"></v-tab>
             <!-- <v-spacer /> -->
-            <v-chip :variant="filters.TKO ? 'flat' : 'tonal'" :color="filters.TKO ? '#FF0000' : 'black'" class="mr-1 ml-8"
-                @click="toggleTKO">
-                TKO
-            </v-chip>
-            <v-chip :variant="filters.BPR ? 'flat' : 'tonal'" :color="filters.BPR ? '#0017FF' : 'black'"
-                @click="toggleBPR">
-                BPR
-            </v-chip>
+             <span class="ml-8 mt-2">
+                 <v-chip :variant="filters.TKO ? 'flat' : 'tonal'" :color="filters.TKO ? '#FF0000' : 'secondary'" class="mr-1"
+                     @click="toggleTKO">
+                     TKO
+                 </v-chip>
+                 <v-chip :variant="filters.BPR ? 'flat' : 'tonal'" :color="filters.BPR ? '#0017FF' : 'secondary'"
+                     @click="toggleBPR">
+                     BPR
+                 </v-chip>
+             </span>
         </v-tabs>
 
         <v-tabs-window v-model="tab">

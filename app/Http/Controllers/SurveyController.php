@@ -30,10 +30,12 @@ class SurveyController extends Controller
             'required' => true
         ]];
 
+        $attrs['answerEditable'] = false;
+
         $survey = Survey::create([
             'author_id' => auth()->id(),
-            'questions' => json_encode($questions),
-            'options' => json_encode($attrs),
+            'questions' => $questions,
+            'options' => $attrs,
             'status' => 'closed'
         ]);
 
@@ -56,8 +58,8 @@ class SurveyController extends Controller
         ]);
 
         $survey->update([
-            'options' => json_encode($attrs['options']),
-            'questions' => json_encode($attrs['questions']),
+            'options' => $attrs['options'],
+            'questions' => $attrs['questions'],
             'status' => $attrs['status'],
             'workshop_id' => $attrs['workshopId']
         ]);
@@ -66,6 +68,45 @@ class SurveyController extends Controller
                 'survey' => $survey->format(),
                 'message' => [
                         'text' => 'Survey updated',
+                        'type' => 'success'
+                    ]
+            ]);
+    }
+
+    public function send(Survey $survey)
+    {
+        $survey->send();
+
+        return response()->json([
+                'survey' => $survey->format(),
+                'message' => [
+                        'text' => 'Survey sent',
+                        'type' => 'success'
+                    ]
+            ]);
+    }
+
+    public function view(Survey $survey)
+    {
+        return response()->json(['survey' => $survey->format()]);
+    }
+
+    public function submit(Survey $survey, Request $request)
+    {
+        $answers = $request->validate(['answers' => 'required|Array'])['answers'];
+
+        foreach($survey->questions as $i => $q){
+            if($q->required && ($answers[$i] === null || $answers[$i] === '')){
+                return response()->json(['message' => ['text' => 'Missing required answer', 'type' => 'error']]);
+            }
+        }
+
+        $survey->answers()->updateExistingPivot(auth()->id(), ['data' => json_encode($answers)]);
+
+        return response()->json([
+                'survey' => $survey,
+                'message' => [
+                        'text' => 'Answers submitted',
                         'type' => 'success'
                     ]
             ]);

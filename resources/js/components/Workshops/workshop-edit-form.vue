@@ -237,16 +237,8 @@
         posterLanguage.value = language;
         file.value.click();
     }
-    // const handleDeletePoster = (language) => {
-    //     emit('imageDeleted', language);
-    // }
-    // const posterUpdated = () => {
-    //     emit('imageUpdated', {language: posterLanguage.value, file: poster.value});       
-    // }
 
     const finalizeDialog = ref(false);
-    // const backUpSessions = [...workshop.value.sessions];
-    // const sessions = ref([]);
     const prepareFinalizeWorkshop = async () => {
         finalizeDialog.value = true;
         const info = await prepareLaunch();

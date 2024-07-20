@@ -62,13 +62,11 @@ class UserController extends Controller
 
   public function googleSigninRedirect()
   {
-    logger('redirect');
     return Socialite::driver('google')->redirect();
   }
 
   public function googleSigninCallback()
   {
-    logger('callback');
     $google_user = Socialite::driver('google')->user();
     $user = User::where('email', $google_user->getEmail())->first();
 

@@ -1,6 +1,9 @@
 <template>
     <v-container>
-        <post-display :post="post" v-if="isReady"/>
+        <div class="pb-4">
+            <back-btn />
+        </div>
+        <post-display :post="post" v-if="isReady" />
     </v-container>
 </template>
 <script setup>

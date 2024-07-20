@@ -77,7 +77,9 @@ class workshopSeeder extends Seeder
                 $themes[] = rand(1, 8);
             }
             $location = $locations[rand(0,1)];
-            $time = rand(8, 15);
+            $time = rand(8, 16);
+            $startTime = str_pad($time, 2, '0', STR_PAD_LEFT);
+            $finishTime = str_pad($time+1, 2, '0', STR_PAD_LEFT);
 
             $w = Workshop::create([
             'title_fr' => '',
@@ -93,7 +95,7 @@ class workshopSeeder extends Seeder
                 'nbSessions' => rand(4, 10),
                 'roomNb' => $location['room'],
                 'schedule' => [
-                    ['day' => $daysOfWeek[rand(0,6)], 'start' => $time.':'.['00', '30'][rand(0,1)], 'finish' => ($time+1).':'.['00', '30'][rand(0,1)]]
+                    ['day' => $daysOfWeek[rand(0,6)], 'start' => $startTime.':'.['00', '30'][rand(0,1)], 'finish' => $finishTime.':'.['00', '30'][rand(0,1)]]
                 ],
                 'maxStudents' => rand(10, 20)
             ]),

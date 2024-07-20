@@ -89,8 +89,17 @@ export const useWorkshopStore = defineStore({
             const res = await post(`/api/workshops/${this.workshop.id}/withdraw`);
             this.workshop = res.workshop;
         },
-        async editApplicantName(data){
-            await post(`/api/workshops/${this.workshop.id}/editApplicantName/${data.id}`, {name: data.name});
+        async editApplicant(data){
+            this.isLoading = true;
+            const res = await patch(`/api/workshops/${this.workshop.id}/applicants/${data.id}`, data);
+            this.workshop.applicants = this.workshop.applicants.map(a => a.id == res.applicant.id ? res.applicant : a);
+            this.isLoading = false;
+        },
+        async removeApplicant(data) {
+            this.isLoading = true;
+            const res = await del(`/api/workshops/${this.workshop.id}/applicants/${data.id}`);
+            this.workshop.applicants = this.workshop.applicants.filter(a => a.id != res.id);
+            this.isLoading = false;
         },
         async prepareLaunch(){
             this.isLoading = true;

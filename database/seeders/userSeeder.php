@@ -28,7 +28,7 @@ class userSeeder extends Seeder
         for($i=1 ; $i <= 2 ; $i++){
             $user = User::firstOrCreate([
                 'name'=>"tea$i",
-                'email'=>"tea$i",
+                'email'=>"tea$i@email.com",
                 'email_verified_at' => now(),
                 'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
                 'preferences' => ['notifications' => 'all', 'title' => 'M.']
@@ -39,7 +39,7 @@ class userSeeder extends Seeder
         for($i=1 ; $i <= 9 ; $i++){
             $user = User::firstOrCreate([
                 'name'=>"stu$i",
-                'email'=>"stu$i",
+                'email'=>"stu$i@email.com",
                 'email_verified_at' => now(),
                 'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
                 'preferences' => ['notifications' => 'all']

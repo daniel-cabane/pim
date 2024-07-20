@@ -55,8 +55,47 @@
                     <td class="text-center" style="cursor:pointer;" @click="navigateToWorkshop(item.workshopId)">
                         {{ item.workshopName ? item.workshopName : '--' }}
                     </td>
-                    <td class="pr-0 text-center">
-                        <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(item)">
+                    <td class="pr-0 text-center" style="width:50px;">
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                                <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item @click="showSendDialog(item)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-send" color="secondary" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Send
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="showPreviewDialog(item)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-eye" color="success" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Preview
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="showEditDialog(item)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-pencil" color="primary" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Edit
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="showDeleteDialog(item)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-delete" color="error" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Delete
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                        <!-- <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(item)">
                             mdi-eye
                         </v-icon>
                         <v-icon size="small" class="mr-3" color="primary" @click="showEditDialog(item)">
@@ -65,7 +104,7 @@
                         <v-icon size="small" color="error" @click="showDeleteDialog(item)"
                             v-if="item.workshop_id == null">
                             mdi-delete
-                        </v-icon>
+                        </v-icon> -->
                     </td>
                 </tr>
             </template>
@@ -76,8 +115,47 @@
                     <td>{{ survey.mainTitle }}</td>
                     <td>{{ survey.questions.length }} question<span v-if="survey.questions.length>1">s</span></td>
                     <td>{{ survey.status }}</td>
-                    <td style="width:120px;text-align:center;">
-                        <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(survey)">
+                    <td style="width:50px;text-align:center;">
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                                <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item @click="showSendDialog(survey)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-send" color="secondary" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Send
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="showPreviewDialog(survey)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-eye" color="success" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Preview
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="showEditDialog(survey)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-pencil" color="primary" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Edit
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="showDeleteDialog(survey)">
+                                    <template v-slot:prepend>
+                                        <v-icon icon="mdi-delete" color="error" />
+                                    </template>
+                                    <v-list-item-title>
+                                        Delete
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                        <!-- <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(survey)">
                             mdi-eye
                         </v-icon>
                         <v-icon size="small" class="mr-3" color="primary" @click="showEditDialog(survey)">
@@ -85,11 +163,15 @@
                         </v-icon>
                         <v-icon size="small" color="error" @click="showDeleteDialog(survey)">
                             mdi-delete
-                        </v-icon>
+                        </v-icon> -->
                     </td>
                 </tr>
             </tbody>
         </v-table>
+        <v-dialog width="300" v-model="sendDialog">
+            <survey-send-card :survey="focusedSurvey" :isLoading="isLoading" @closeDialog="sendDialog = false"
+                @sendSurvey="handleSend" />
+        </v-dialog>
         <v-dialog width="300" v-model="deleteDialog">
             <survey-delete-card :survey="focusedSurvey" :isLoading="isLoading" @closeDialog="deleteDialog = false"
                 @deleteSurvey="handleDelete" />
@@ -121,8 +203,8 @@
     const { t } = useI18n();
 
     const SurveyStore = useSurveyStore();
-    const { createSurvey, getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey } = SurveyStore;
-    const { survey, surveys, isLoading } = storeToRefs(SurveyStore);
+    const { createSurvey, getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey, sendSurvey } = SurveyStore;
+    const { surveys, isLoading } = storeToRefs(SurveyStore);
     if(props.workshopId){
         getWorkshopSurveys(props.workshopId)
     } else if(props.admin) {
@@ -200,5 +282,14 @@
     const showPreviewDialog = survey => {
         focusedSurvey.value = survey;
         previewDialog.value = true;
+    }
+    const sendDialog = ref(false);
+    const showSendDialog = survey => {
+        focusedSurvey.value = survey;
+        sendDialog.value = true;
+    }
+    const handleSend = async () => {
+        await sendSurvey(focusedSurvey.value);
+        sendDialog.value = false;
     }
 </script>

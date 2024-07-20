@@ -132,11 +132,13 @@ Route::group(['middleware'=>['can:view,workshop']], function(){
 Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::patch('/workshops/{workshop}', [WorkshopController::class, 'update']);
     Route::post('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'poster']);
-    Route::post('/workshops/{workshop}/editApplicantName/{user}', [WorkshopController::class, 'editApplicantName']);
     Route::delete('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'deletePoster']);
     Route::delete('/workshops/{workshop}/archive', [WorkshopController::class, 'archive']);
     Route::delete('/workshops/{workshop}', [WorkshopController::class, 'destroy']);
 
+    Route::patch('/workshops/{workshop}/applicants/{user}', [WorkshopController::class, 'editApplicant']);
+    Route::delete('/workshops/{workshop}/applicants/{user}', [WorkshopController::class, 'removeApplicant']);
+    
     Route::post('/workshops/{workshop}/session', [WorkshopController::class, 'createSession']);
     Route::patch('/workshops/{workshop}/sessions/{session}', [WorkshopController::class, 'updateSession']);
     Route::delete('/workshops/{workshop}/sessions/{session}', [WorkshopController::class, 'deleteSession']);
@@ -154,6 +156,15 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Survey']], f
 });
 
 Route::group(['middleware'=>['can:update,survey']], function(){
-    Route::patch('/survey/{survey}', [SurveyController::class, 'update']);
-    Route::delete('/survey/{survey}', [SurveyController::class, 'destroy']);
+    Route::post('/surveys/{survey}/send', [SurveyController::class, 'send']);
+    Route::patch('/surveys/{survey}', [SurveyController::class, 'update']);
+    Route::delete('/surveys/{survey}', [SurveyController::class, 'destroy']);
+});
+
+Route::group(['middleware'=>['can:view,survey']], function(){
+    Route::get('/surveys/{survey}', [SurveyController::class, 'view']);
+});
+
+Route::group(['middleware'=>['can:submit,survey']], function(){
+    Route::post('/surveys/{survey}/submit', [SurveyController::class, 'submit']);
 });

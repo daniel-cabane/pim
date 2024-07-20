@@ -101,6 +101,9 @@ export const useAuthStore = defineStore({
                 addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
+        },
+        removeSurvey(id) {
+            this.user.open_surveys = this.user.open_surveys.filter(s => s.id != id);
         }
     }
 });

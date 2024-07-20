@@ -41,7 +41,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'preferences' => 'object'
     ];
 
-    protected $appends = ['is'];
+    // protected $with = ['surveys'];
+
+    protected $appends = ['is', 'open_surveys'];
 
     public function getIsAttribute()
     {
@@ -74,6 +76,11 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->belongsToMany(Workshop::class)->withPivot(['comment', 'available', 'confirmed']);
     }
 
+    public function surveys()
+    {
+      return $this->belongsToMany(Survey::class)->withPivot('data')->withTimestamps();
+    }
+
     public function scopeTeachers($query)
     {
         return $query->whereHas("roles", function($q){ $q->where("name", "teacher"); });
@@ -102,5 +109,21 @@ class User extends Authenticatable implements MustVerifyEmail
       }
 
       return $name;
+    }
+
+    public function getOpenSurveysAttribute()
+    {
+      $surveys = [];
+      foreach($this->surveys as $survey){
+        if($survey->status == 'open' && $survey->pivot->data == null){
+          $mainTitle = $survey->options->language == 'fr' ? $survey->options->title_fr : $survey->options->title_en;
+          $surveys[] = [
+            'id' => $survey->id,
+            'title' => $mainTitle
+          ];
+        }
+      }
+      unset($this->surveys);
+      return $surveys;
     }
 }

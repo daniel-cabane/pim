@@ -264,18 +264,47 @@ class WorkshopController extends Controller
         ]);
     }
 
-    public function editApplicantName(Workshop $workshop, User $user, Request $request)
+    public function editApplicant(Workshop $workshop, User $user, Request $request)
     {
         $attrs = $request->validate([
-            'name' => 'required|max:50'
+            'name' => 'required|max:50',
+            'available' => 'required|Boolean',
+            'confirmed' => 'required|Boolean',
+            'comment' => 'sometimes|max:100',
         ]);
 
         $user->update(['name' => $attrs['name']]);
 
+        unset($attrs['name']);
+
+        $workshop->applicants()->updateExistingPivot($user->id, $attrs);
+
+        $applicant = $workshop->applicants()->where('user_id', $user->id)->first();
+
         return response()->json([
+            'applicant' => [
+                'id' => $applicant->id,
+                'name' => $applicant->name,
+                'available' => $applicant->pivot->available == 1,
+                'confirmed' => $applicant->pivot->confirmed == 1,
+                'comment' => $applicant->pivot->comment
+            ],
             'message' => [
-                    'text' => 'Applicant\'s name updated',
+                    'text' => 'Application updated',
                     'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function removeApplicant(Workshop $workshop, User $user, Request $request)
+    {
+        $workshop->applicants()->detach($user);
+
+        return response()->json([
+            'id' => $user->id,
+            'message' => [
+                    'text' => 'Application removed',
+                    'type' => 'info'
                 ]
         ]);
     }

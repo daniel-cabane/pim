@@ -8,7 +8,7 @@
                 {{ $t('By') }} {{ workshop.teacher }}
             </v-card-subtitle>
         </div>
-        <workshop-lcs :workshop="workshop"/>
+        <workshop-lcs :workshop="workshop" />
     </div>
     <v-card-text>
         <div v-html="description" />
@@ -63,44 +63,14 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-row v-if="user && user.is.teacher">
-                <v-col cols="12" class="text-h6 text-captionColor pb-0">
-                    {{ $t('Students enrolled') }} ({{ workshop.applicants.length }})
-                </v-col>
-                <v-col cols="12" class="pt=0">
-                    <v-data-table :headers="headers" :items="workshop.applicants" item-value="name">
-                        <template v-slot:item="{ item }">
-                            <tr>
-                                <td class="pr-0">
-                                    <v-icon class="mr-3" size="small" @click="seeApplicant(item)">
-                                        mdi-eye
-                                    </v-icon>
-                                </td>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.available ? 'Yes' : 'No' }}</td>
-                                <td>{{ item.confirmed ? 'Yes' : 'No' }}</td>
-                                <td>{{ item.comment }}</td>
-                            </tr>
-                        </template>
-                    </v-data-table>
-                </v-col>
+            <v-row class="d-flex justify-end mb-3" v-if="workshop.editable">
+                <span>
+                    <v-btn color="primary" append-icon="mdi-pencil" @click="emit('editWorkshop')">
+                        {{ $t('Edit') }}
+                    </v-btn>
+                </span>
             </v-row>
-            <v-dialog v-model="focusedApplicantDialog" width="400">
-                <v-card :title="focusedApplicant.name" :subtitle="focusedApplicant.email">
-                    <v-card-text>
-                        <v-text-field :label="$t('Name')" v-model="focusedApplicant.name" />
-                    </v-card-text>
-                    <div style="display:flex;justify-content:flex-end;" class="pa-3">
-                        <v-btn variant="tonal" class="mr-3" color="error" @click="focusedApplicantDialog = false">
-                            {{ $t('Cancel') }}
-                        </v-btn>
-                        <v-btn color="success"
-                            @click="emit('editApplicantName', { id: focusedApplicant.id, name: focusedApplicant.name }); focusedApplicantDialog = false;">
-                            {{ $t('Save') }}
-                        </v-btn>
-                    </div>
-                </v-card>
-            </v-dialog>
+            <workshop-teacher-tabs :workshop="workshop" v-if="user && user.is.teacher" />
         </v-container>
     </v-card-text>
 </template>
@@ -110,6 +80,7 @@
     import { useAuthStore } from '@/stores/useAuthStore';
 
     const props = defineProps({ workshop: Object });
+    const emit = defineEmits(['editWorkshop']);
 
     const { title, description } = usePickWorkshopLg(props.workshop);
 
@@ -125,20 +96,4 @@
 
         return 'Both'
     });
-
-    const headers = [
-        { title: '', sortable: false, width: 10 },
-        { title: 'Student', align: 'start', key: 'name' },
-        { title: 'Available', key: 'available' },
-        { title: 'Confirmed', key: 'confirmed' },
-        { title: 'Comment', key: 'comment' }
-    ];
-
-    const focusedApplicant = ref(null);
-    const focusedApplicantDialog = ref(false);
-    const seeApplicant = applicant => {
-        focusedApplicant.value = applicant;
-        focusedApplicantDialog.value = true;
-    }
-    const emit = defineEmits(['editApplicantName']);
 </script>

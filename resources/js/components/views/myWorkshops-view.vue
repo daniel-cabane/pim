@@ -1,5 +1,8 @@
 <template>
     <v-container>
+        <div class="pb-4">
+            <back-btn />
+        </div>
         <div class="text-h5 font-weight-thin text-grey mb-3">
             {{$t("Upcoming")}}
         </div>

@@ -52,8 +52,6 @@ class AdminController extends Controller
         //     $roles[] = 'hod';
         // }
 
-        logger($roles);
-
         if(!$user->hasRole('admin')){
             $user->syncRoles($roles);
         }
@@ -237,6 +235,13 @@ class AdminController extends Controller
                 'status' => $session['status']
             ]);
         }
+
+        foreach($workshop->applicants as $applicant){
+            if($applicant->pivot->available){
+                $workshop->applicants()->updateExistingPivot($applicant->id, ['confirmed' => 1]);
+            }
+        }
+        
         $workshop->update(['status' => 'launched']);
         $workshop->orderSessions();
 
