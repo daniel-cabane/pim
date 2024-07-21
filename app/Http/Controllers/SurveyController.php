@@ -36,7 +36,7 @@ class SurveyController extends Controller
             'author_id' => auth()->id(),
             'questions' => $questions,
             'options' => $attrs,
-            'status' => 'closed'
+            'status' => 'draft'
         ]);
 
         return response()->json([
@@ -53,14 +53,12 @@ class SurveyController extends Controller
         $attrs = $request->validate([
             'options' => 'required|Array',
             'questions' => 'required|Array',
-            'status' => 'required|String|min:3|max:10',
             'workshopId' => 'sometimes|Integer|min:1|nullable'
         ]);
 
         $survey->update([
             'options' => $attrs['options'],
             'questions' => $attrs['questions'],
-            'status' => $attrs['status'],
             'workshop_id' => $attrs['workshopId']
         ]);
 
@@ -81,6 +79,32 @@ class SurveyController extends Controller
                 'survey' => $survey->format(),
                 'message' => [
                         'text' => 'Survey sent',
+                        'type' => 'success'
+                    ]
+            ]);
+    }
+
+    public function open(Survey $survey)
+    {
+        $survey->update(['status' => 'open']);
+
+        return response()->json([
+                'survey' => $survey->format(),
+                'message' => [
+                        'text' => 'Survey reopened',
+                        'type' => 'success'
+                    ]
+            ]);
+    }
+
+    public function close(Survey $survey)
+    {
+        $survey->update(['status' => 'closed']);
+
+        return response()->json([
+                'survey' => $survey->format(),
+                'message' => [
+                        'text' => 'Survey closed',
                         'type' => 'success'
                     ]
             ]);

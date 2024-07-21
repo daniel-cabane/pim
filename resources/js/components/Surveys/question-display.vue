@@ -10,21 +10,21 @@
             {{ question[`q_${lg}`] }}
         </div>
         <div v-if="question.type == 'shortText'">
-            <v-text-field variant="outlined" v-model="textFieldValue" :label="$t('Answer')"
+            <v-text-field variant="outlined" v-model="textFieldValue" :label="$t('Answer')" :disabled="disabled"
                 @update:model-value="emit('answerUpdated', { value: textFieldValue, index })" />
         </div>
         <div v-if="question.type == 'longText'">
-            <v-textarea variant="outlined" :label="$t('Answer')" v-model="textAreaValue"
+            <v-textarea variant="outlined" :label="$t('Answer')" v-model="textAreaValue" :disabled="disabled"
                 @update:model-value="emit('answerUpdated', {value: textAreaValue, index})" />
         </div>
         <div v-if="question.type == 'radio'">
-            <v-radio-group v-model="radioValue"
+            <v-radio-group v-model="radioValue" :disabled="disabled"
                 @update:model-value="emit('answerUpdated', { value: radioValue, index })">
-                <v-radio v-for="(option, i) in question.options" :label="option[lg]" :value="i" />
+                <v-radio v-for="(option, i) in question.options" :label="option[lg]" :value="i+1" />
             </v-radio-group>
         </div>
         <div v-if="question.type == 'checkbox'">
-            <v-checkbox v-for="(option, i) in question.options" :label="option[lg]" :value="i" v-model="checkboxValue"
+            <v-checkbox v-for="(option, i) in question.options" :label="option[lg]" :value="i+1" v-model="checkboxValue" :disabled="disabled"
                 @update:model-value="emit('answerUpdated', { value: checkboxValue, index })" />
         </div>
     </v-card>
@@ -32,11 +32,11 @@
 <script setup>
     import { ref } from "vue";
 
-    const props = defineProps({ question: Object, lg: String, index: Number });
+    const props = defineProps({ question: Object, lg: String, index: Number, initialAnswer: [String, Number, Array, null], disabled: Boolean });
     const emit = defineEmits(['answerUpdated']);
 
-    const textFieldValue = ref('');
-    const textAreaValue = ref('');
-    const radioValue = ref(null);
-    const checkboxValue = ref(null);
+    const textFieldValue = props.initialAnswer ? ref(props.initialAnswer) : ref('');
+    const textAreaValue = props.initialAnswer ? ref(props.initialAnswer) : ref('');
+    const radioValue = props.initialAnswer ? ref(props.initialAnswer) : ref(null);
+    const checkboxValue = props.initialAnswer ? ref(props.initialAnswer) : ref(null);
 </script>

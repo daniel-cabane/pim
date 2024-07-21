@@ -242,7 +242,7 @@ class AdminController extends Controller
             }
         }
         
-        $workshop->update(['status' => 'launched']);
+        $workshop->update(['status' => 'launched', 'accepting_students' => 0]);
         $workshop->orderSessions();
 
         return response()->json([

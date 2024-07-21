@@ -300,5 +300,12 @@
     "Application removed": "Inscription retirée",
     "Answers submitted": "Réponses enregistrées",
     "Missing required answer": "Champs obligatoire manquant",
-    "Missing required answers": "Champs obligatoires manquants"
+    "Missing required answers": "Champs obligatoires manquants",
+    "Reopen": "Rouvrir",
+    "Survey reopened": "Questionnaire ouvert",
+    "Survey closed": "Questionnaire fermé",
+    "Availability": "Disponibilité",
+    "See answer": "Voir réponse",
+    "Answer|verb": "Répondre",
+    "Editable answers": "Réponses modifiables"
 }

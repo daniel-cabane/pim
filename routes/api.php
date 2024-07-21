@@ -157,6 +157,8 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Survey']], f
 
 Route::group(['middleware'=>['can:update,survey']], function(){
     Route::post('/surveys/{survey}/send', [SurveyController::class, 'send']);
+    Route::post('/surveys/{survey}/open', [SurveyController::class, 'open']);
+    Route::post('/surveys/{survey}/close', [SurveyController::class, 'close']);
     Route::patch('/surveys/{survey}', [SurveyController::class, 'update']);
     Route::delete('/surveys/{survey}', [SurveyController::class, 'destroy']);
 });

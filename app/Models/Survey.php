@@ -30,12 +30,10 @@ class Survey extends Model
 
     public function format($includeWorkshopName = false)
     {
-        // $options = json_decode($this->options);
         $mainTitle = $this->options->language == 'fr' ? $this->options->title_fr : $this->options->title_en;
         $formatted = [
             'id' => $this->id,
             'mainTitle' => $mainTitle,
-            // 'questions' => json_decode($this->questions),
             'questions' => $this->questions,
             'options' => $this->options,
             'status' => $this->status,
@@ -48,6 +46,11 @@ class Survey extends Model
         if($includeWorkshopName && $this->workshop){
             $workshopMainTitle = $this->workshop->language == 'fr' ? $this->workshop->title_fr : $this->workshop->title_en;
             $formatted['workshopName'] = $workshopMainTitle;
+        }
+        $user = auth()->user();
+        if($user->is['student']){
+            $answers = $this->answers()->where('user_id', $user->id)->first();
+            $formatted['answers'] = json_decode($answers->pivot->data);
         }
 
         return $formatted;

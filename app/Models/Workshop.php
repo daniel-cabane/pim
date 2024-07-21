@@ -251,7 +251,7 @@ class Workshop extends Model
             'questions' => $questions,
             'options' => $options,
             'workshop_id' => $this->id,
-            'status' => 'closed'
+            'status' => 'draft'
         ]);
     }
 }

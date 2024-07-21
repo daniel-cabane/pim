@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('workshop_id')->nullable();
             $table->json('questions');
             $table->json('options');
-            $table->string('status', 255)->default('closed');
+            $table->string('status', 255)->default('draft');
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');

@@ -71,6 +71,7 @@
                 </span>
             </v-row>
             <workshop-teacher-tabs :workshop="workshop" v-if="user && user.is.teacher" />
+            <survey-table-student :workshopId="workshop.id" v-if="user && user.is.student && workshop.application" />
         </v-container>
     </v-card-text>
 </template>

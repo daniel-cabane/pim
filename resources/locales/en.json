@@ -300,5 +300,12 @@
     "Application removed": "Application removed",
     "Answers submitted": "Answers submitted",
     "Missing required answer": "Missing required answer",
-    "Missing required answers": "Missing required answers"
+    "Missing required answers": "Missing required answers",
+    "Reopen": "Reopen",
+    "Survey reopened": "Survey reopened",
+    "Survey closed": "Survey closed",
+    "Availability": "Availability",
+    "See answer": "See answer",
+    "Answer|verb": "Answer",
+    "Editable answers": "Editable answers"
 }
