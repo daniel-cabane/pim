@@ -2,14 +2,20 @@
     <v-tabs v-model="tab">
         <v-tab value="applicants">{{ $t('Students enrolled') }} ({{ workshop.applicants.length }})</v-tab>
         <v-tab value="surveys">{{ $t('Surveys') }}</v-tab>
-        <v-tab value="emails">Emails</v-tab>
+        <!-- <v-tab value="emails">Emails</v-tab> -->
+        <v-spacer />
+        <v-dialog width="450" v-model="addDialog">
+            <template v-slot:activator="{ props: activatorProps }">
+                <v-btn class="mt-2" variant="outlined" size="small" color="primary" v-bind="activatorProps">
+                    {{ addButtonDetails.text }}
+                </v-btn>
+            </template>
+            <component :is="addButtonDetails.component" :workshopId="workshop.id" @closeDialog="addDialog = false" />
+        </v-dialog>
     </v-tabs>
     <v-tabs-window v-model="tab">
         <v-tabs-window-item value="applicants">
             <v-row>
-                <!-- <v-col cols="12" class="text-h6 text-captionColor pb-0">
-                    {{ $t('Students enrolled') }} ({{ workshop.applicants.length }})
-                </v-col> -->
                 <v-col cols="12" class="pt=0">
                     <v-data-table :headers="headers" :items="workshop.applicants" item-value="name">
                         <template v-slot:item="{ item }">
@@ -71,16 +77,16 @@
                 </v-card>
             </v-dialog>
         </v-tabs-window-item>
-        <v-tabs-window-item value="surveys">
+        <v-tabs-window-item value="surveys" class="px-4">
             <survey-table :workshopId="workshop.id" />
         </v-tabs-window-item>
-        <v-tabs-window-item value="emails">
+        <v-tabs-window-item value="emails" class="px-4">
             Emails
         </v-tabs-window-item>
     </v-tabs-window>
 </template>
 <script setup>
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
     import { useI18n } from 'vue-i18n';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { storeToRefs } from 'pinia';
@@ -127,6 +133,33 @@
     }
     const handleRemoveApplicant = async () => {
         await removeApplicant(focusedApplicant.value);
+        confirmRemoveApplicant.value = false;
         removeApplicantDialog.value = false;
+    }
+
+    const addButtonDetails = computed(() => {
+        switch (tab.value) {
+            case 'applicants':
+                return { text: 'Add student', component: 'add-student-card' }
+            case 'surveys':
+                return { text: 'New survey', component: 'add-survey-card' }
+            case 'emails':
+                return { text: 'New email', component: 'add-email-card' }
+        }
+    });
+
+    const addDialog = ref(false);
+    const temp = ref('');
+    const showStudentDialog = () => {
+        temp.value = 'student';
+        addDialog.value = true;
+    }
+    const showSurveyDialog = () => {
+        temp.value = 'survey';
+        addDialog.value = true;
+    }
+    const showEmailDialog = () => {
+        temp.value = 'email';
+        addDialog.value = true;
     }
 </script>

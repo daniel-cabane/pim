@@ -10,6 +10,7 @@ export const useWorkshopStore = defineStore({
         myWorkshops: [],
         themes: [],
         workshop: {},
+        students: [],
         isReady: false,
         isLoading: false,
         imageLoading: false
@@ -28,6 +29,7 @@ export const useWorkshopStore = defineStore({
         async getWorkshop(id){
             this.isReady = false;
             const res = await get(`/api/workshops/${id}`);
+            // console.log(res.workshop);
             this.workshop = res.workshop;
             this.isReady = true;
             return res.workshop;
@@ -137,6 +139,18 @@ export const useWorkshopStore = defineStore({
             this.workshop = res.workshop;
             this.isLoading = false;
         },
-
+        async searchStudent(name){
+            this.isLoading = true;
+            const res = await get(`/api/workshops/${this.workshop.id}/searchStudent?query=Laravel&name=${name}`);
+            this.students = res.students;
+            this.isLoading = false;
+        },
+        async addStudent(student) {
+            const res = await post(`/api/workshops/${this.workshop.id}/addStudent`, student);
+            this.students = this.students.filter(s => s.id != student.id);
+            if(res.workshop){
+                this.workshop = res.workshop;
+            }
+        }
     }
 });

@@ -39,7 +39,7 @@ class workshopSeeder extends Seeder
             'start_date' => (Carbon::now())->addWeek(1),
         ]);
         $w->themes()->attach([1,4]);
-        $w->createExitSurvey();
+        // $w->createExitSurvey();
 
         $w = Workshop::create([
             'title_fr' => 'Introduction au Mahjong',
@@ -63,7 +63,7 @@ class workshopSeeder extends Seeder
             'start_date' => (Carbon::now())->addWeek(1),
         ]);
         $w->themes()->attach([4,5]);
-        $w->createExitSurvey();
+        // $w->createExitSurvey();
 
         $faker = Faker::create();
         $locations = [
@@ -103,7 +103,7 @@ class workshopSeeder extends Seeder
             'start_date' => $faker->dateTimeBetween('2024-09-01', '2024-11-15')
         ]);
         $w->themes()->attach($themes);
-        $w->createExitSurvey();
+        // $w->createExitSurvey();
         }
 
         $locations = [

@@ -1,36 +1,14 @@
 <template>
     <div>
-        <div class="d-flex mb-3">
+        <div class="d-flex mb-3" v-if="admin">
             <v-dialog width="450" v-model="newSurveyDialog">
                 <template v-slot:activator="{ props: activatorProps }">
-                    <span class="text-caption text-captionColor" v-if="!admin">
-                        {{ $t('Surveys') }}
-                    </span>
                     <v-spacer />
-                    <v-btn color="primary" append-icon="mdi-plus" :size="admin ? 'default' : 'x-small'"
-                        v-bind="activatorProps">
-                        {{ $t('Add a survey') }}
+                    <v-btn color="primary" append-icon="mdi-plus" v-bind="activatorProps">
+                        {{ $t('New survey') }}
                     </v-btn>
                 </template>
-                <v-card :title="$t('Add a survey')">
-                    <v-card-text>
-                        <v-select variant="outlined" :items="languages" :label="$t('Languages')"
-                            v-model="newSurvey.language" />
-                        <v-text-field variant="outlined" label="Titre (fr)" v-model="newSurvey.title_fr"
-                            v-if="newSurvey.language != 'en'" />
-                        <v-text-field variant="outlined" label="Title (en)" v-model="newSurvey.title_en"
-                            v-if="newSurvey.language != 'fr'" />
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn color="error" variant="text" :disabled="isLoading" @click="newSurveyDialog = false">
-                            {{ $t('Cancel') }}
-                        </v-btn>
-                        <v-btn color="primary" variant="flat" :loading="isLoading" @click="handleNnewSurvey">
-                            {{ $t('Submit') }}
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
+                <add-survey-card @closeDialog="newSurveyDialog = false"/>
             </v-dialog>
         </div>
         <v-data-table hover :headers="headers" :items="surveys" item-value="name" items-per-page="25"
@@ -57,55 +35,6 @@
                     </td>
                     <td class="pr-0 text-center" style="width:50px;">
                         <survey-action-menu :survey="item" @surveyAction="surveyAction" />
-                        <!-- <v-menu>
-                            <template v-slot:activator="{ props }">
-                                <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
-                            </template>
-                            <v-list>
-                                <v-list-item @click="showSendDialog(item)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-send" color="secondary" />
-                                    </template>
-                                    <v-list-item-title>
-                                        Send
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showPreviewDialog(item)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-eye" color="success" />
-                                    </template>
-                                    <v-list-item-title>
-                                        Preview
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showEditDialog(item)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-pencil" color="primary" />
-                                    </template>
-                                    <v-list-item-title>
-                                        Edit
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showDeleteDialog(item)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-delete" color="error" />
-                                    </template>
-                                    <v-list-item-title>
-                                        Delete
-                                    </v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                        </v-menu> -->
-                        <!-- <v-icon size="small" class="mr-3" color="success" @click="showPreviewDialog(item)">
-                            mdi-eye
-                        </v-icon>
-                        <v-icon size="small" class="mr-3" color="primary" @click="showEditDialog(item)">
-                            mdi-pencil
-                        </v-icon>
-                        <v-icon size="small" color="error" @click="showDeleteDialog(item)"
-                            v-if="item.workshop_id == null">
-                            mdi-delete
-                        </v-icon> -->
                     </td>
                 </tr>
             </template>
@@ -118,61 +47,6 @@
                     <td>{{ survey.status }}</td>
                     <td style="width:50px;text-align:center;">
                         <survey-action-menu :survey="survey" @surveyAction="surveyAction" />
-                        <!-- <v-menu>
-                            <template v-slot:activator="{ props }">
-                                <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
-                            </template>
-                            <v-list>
-                                <v-list-item @click="showSendDialog(survey)" v-if="survey.status == 'draft'">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-send" color="success" />
-                                    </template>
-                                    <v-list-item-title>
-                                        {{ $t('Send') }}
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showSendDialog(survey)" v-if="survey.status == 'open'">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-close-box" color="error" />
-                                    </template>
-                                    <v-list-item-title>
-                                        {{ $t('Close') }}
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showSendDialog(survey)" v-if="survey.status == 'closed'">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-reload" color="success" />
-                                    </template>
-                                    <v-list-item-title>
-                                        {{ $t('Re-open') }}
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showPreviewDialog(survey)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-eye" color="secondary" />
-                                    </template>
-                                    <v-list-item-title>
-                                        {{ $t('Preview') }}
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showEditDialog(survey)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-pencil" color="primary" />
-                                    </template>
-                                    <v-list-item-title>
-                                        {{ $t('Edit') }}
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="showDeleteDialog(survey)">
-                                    <template v-slot:prepend>
-                                        <v-icon icon="mdi-delete" color="error" />
-                                    </template>
-                                    <v-list-item-title>
-                                        {{ $t('Delete') }}
-                                    </v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                        </v-menu> -->
                     </td>
                 </tr>
             </tbody>
@@ -212,7 +86,7 @@
     const { t } = useI18n();
 
     const SurveyStore = useSurveyStore();
-    const { createSurvey, getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey, sendSurvey, openSurvey, closeSurvey } = SurveyStore;
+    const { getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey, sendSurvey, openSurvey, closeSurvey } = SurveyStore;
     const { surveys, isLoading } = storeToRefs(SurveyStore);
     if(props.workshopId){
         getWorkshopSurveys(props.workshopId)
@@ -235,14 +109,14 @@
         { title: 'Français', value: 'fr' }, { title: 'English', value: 'en' }, { title: t('Both'), value: 'both' }
     ]);
     const newSurveyDialog = ref(false);
-    const newSurvey = reactive({ title_fr: '', title_en: '', language: 'fr' });
-    const handleNnewSurvey = async () => {
-        await createSurvey(newSurvey);
-        newSurveyDialog.value = false;
-        newSurvey.title_fr = '';
-        newSurvey.title_en = '';
-        newSurvey.language = 'fr';
-    }
+    // const newSurvey = reactive({ title_fr: '', title_en: '', language: 'fr' });
+    // const handleNnewSurvey = async () => {
+    //     await createSurvey(newSurvey);
+    //     newSurveyDialog.value = false;
+    //     newSurvey.title_fr = '';
+    //     newSurvey.title_en = '';
+    //     newSurvey.language = 'fr';
+    // }
 
     const surveyAction = data => {
         switch (data.action) {

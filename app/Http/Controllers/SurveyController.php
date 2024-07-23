@@ -10,6 +10,7 @@ class SurveyController extends Controller
     public function create(Request $request)
     {
         $attrs = $request->validate([
+            'workshopId' => 'sometimes|Integer|nullable',
             'language' => 'required|min:2|max:5',
             'title_fr' => 'sometimes|max:100',
             'title_en' => 'sometimes|max:100'
@@ -30,12 +31,16 @@ class SurveyController extends Controller
             'required' => true
         ]];
 
-        $attrs['answerEditable'] = false;
-
         $survey = Survey::create([
             'author_id' => auth()->id(),
             'questions' => $questions,
-            'options' => $attrs,
+            'workshop_id' => isset($attrs['workshopId']) ? $attrs['workshopId'] : null,
+            'options' => [
+                'language' => $attrs['language'],
+                'title_fr' => $attrs['title_fr'],
+                'title_en' => $attrs['title_en'],
+                'answerEditable' => true
+            ],
             'status' => 'draft'
         ]);
 

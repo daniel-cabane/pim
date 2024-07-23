@@ -14,7 +14,15 @@
         <div v-html="description" />
         <v-container fluid class="px-0">
             <v-row>
-                <v-col cols="12" sm="6" md="4" class="mb-4">
+                <v-col cols="12" class="mb-4" v-if="workshop.sessions.length">
+                    <div class="text-caption text-captionColor">
+                        {{ $t('Sessions') }}
+                    </div>
+                    <div>
+                        <v-chip class="ma-1" v-for="session in workshop.sessions">{{ formatSession(session) }}</v-chip>
+                    </div>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" class="mb-4" v-if="!workshop.sessions.length">
                     <div class="text-caption text-captionColor">
                         {{ $t('Sessions') }}
                     </div>
@@ -22,7 +30,7 @@
                         {{ $t(session.day) }} {{ $t('from') }} {{ session.start }} {{ $t('to') }} {{ session.finish }}
                     </div>
                 </v-col>
-                <v-col cols="12" sm="6" md="4" class="mb-4">
+                <v-col cols="12" sm="6" md="4" class="mb-4" v-if="!workshop.sessions.length">
                     <div class="text-caption text-captionColor">
                         {{ $t('Start date') }}
                     </div>
@@ -30,7 +38,7 @@
                         {{ workshop.startDate ? workshop.formatedStartDate : $t(workshop.formatedStartDate) }}
                     </div>
                 </v-col>
-                <v-col cols="12" sm="6" md="4" class="mb-4">
+                <v-col cols="12" sm="6" md="4" class="mb-4" v-if="!workshop.sessions.length">
                     <div class="text-caption text-captionColor">
                         {{ $t('Nb of sessions') }}
                     </div>
@@ -63,15 +71,18 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-row class="d-flex justify-end mb-3" v-if="workshop.editable">
-                <span>
+            <v-row class="mb-3">
+                <v-col cols="12" class="d-flex justify-end" v-if="workshop.editable">
                     <v-btn color="primary" append-icon="mdi-pencil" @click="emit('editWorkshop')">
                         {{ $t('Edit') }}
                     </v-btn>
-                </span>
+                </v-col>
+                <v-col cols="12">
+                    <workshop-teacher-tabs :workshop="workshop" v-if="user && user.is.teacher" />
+                    <survey-table-student :workshopId="workshop.id"
+                        v-if="user && user.is.student && workshop.application" />
+                </v-col>
             </v-row>
-            <workshop-teacher-tabs :workshop="workshop" v-if="user && user.is.teacher" />
-            <survey-table-student :workshopId="workshop.id" v-if="user && user.is.student && workshop.application" />
         </v-container>
     </v-card-text>
 </template>
@@ -97,4 +108,9 @@
 
         return 'Both'
     });
+
+    const formatSession = session => {
+        const dateParts = session.date.split('-');
+        return `${dateParts[2]}/${dateParts[1]} - ${session.start}`;
+    }
 </script>

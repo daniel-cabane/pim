@@ -95,7 +95,6 @@ class WorkshopController extends Controller
             $workshop->themes()->attach($theme);
         }
 
-        $workshop->createExitSurvey();
 
         return response()->json([
             'workshop' => $workshop->format(),
@@ -405,5 +404,46 @@ class WorkshopController extends Controller
         }
 
         return response()->json(['surveys' => $surveys]);
+    }
+
+    public function searchStudent(Workshop $workshop, Request $request)
+    {
+        $name = ($request->validate(['name' => 'required|String|min:3|max:100']))['name'];
+
+        $students = [];
+        foreach(User::role('student')->where('name', 'like', "%$name%")->get() as $student){
+            if(!$student->enrollements()->where('workshop_id', $workshop->id)->exists()){
+                $students[] = [
+                    'id' => $student->id,
+                    'name' => $student->name,
+                    'email' => $student->email,
+                    'available' => false,
+                    'confirmed' => false
+                ];
+            }
+            if(count($students) > 2) break;
+        }
+
+        return response()->json(['students' => $students]);
+    }
+
+    public function addStudent(Workshop $workshop, Request $request)
+    {
+        $attrs = $request->validate([
+            'id' => 'required|Integer',
+            'available' => 'required|Boolean',
+            'confirmed' => 'required|Boolean'
+        ]);
+
+        $workshop->applicants()->detach($attrs['id']);
+
+        $workshop->applicants()->attach($attrs['id'], ['available' => $attrs['available'], 'confirmed' => $attrs['confirmed'], 'comment' => '']);
+        return response()->json([
+            'workshop' => $workshop->format(),
+            'message' => [
+                    'text' => 'Student added',
+                    'type' => 'success'
+                ]
+        ]);
     }
 }

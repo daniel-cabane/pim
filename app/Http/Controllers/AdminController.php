@@ -245,6 +245,8 @@ class AdminController extends Controller
         $workshop->update(['status' => 'launched', 'accepting_students' => 0]);
         $workshop->orderSessions();
 
+        $workshop->createExitSurvey();
+
         return response()->json([
             'workshop' => $workshop->format(),
             'message' => [

@@ -13,17 +13,19 @@ return new class extends Migration
     {
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
-            $table->string('title_fr', 255)->nullable();
-            $table->string('title_en', 255)->nullable();
-            $table->json('data')->nullable();
-            $table->json('recipients')->nullable();
+            $table->string('subject_fr', 255)->nullable();
+            $table->string('subject_en', 255)->nullable();
             $table->string('language', 255)->default('fr');
+            $table->json('data')->nullable();
             $table->unsignedBigInteger('sender_id');
+            $table->unsignedBigInteger('workshop_id')->nullable();
+            $table->boolean('admin')->default(0);
             $table->boolean('sent')->default(0);
             $table->timestamp('schedule')->nullable();
             $table->timestamps();
 
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('workshop_id')->references('id')->on('workshops')->onDelete('cascade');
         });
     }
 

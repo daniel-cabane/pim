@@ -143,6 +143,9 @@ Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::patch('/workshops/{workshop}/sessions/{session}', [WorkshopController::class, 'updateSession']);
     Route::delete('/workshops/{workshop}/sessions/{session}', [WorkshopController::class, 'deleteSession']);
     Route::patch('/workshops/{workshop}/orderSessions', [WorkshopController::class, 'orderSessions']);
+
+    Route::get('/workshops/{workshop}/searchStudent', [WorkshopController::class, 'searchStudent']);
+    Route::post('/workshops/{workshop}/addStudent', [WorkshopController::class, 'addStudent']);
 });
 
 /*

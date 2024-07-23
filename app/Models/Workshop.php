@@ -36,6 +36,11 @@ class Workshop extends Model
       return $this->hasMany(Session::class);
     }
 
+    public function emails()
+    {
+      return $this->hasMany(Email::class);
+    }
+
     public function surveys()
     {
       return $this->hasMany(Survey::class);
@@ -76,10 +81,13 @@ class Workshop extends Model
           ];
         }
       }
-      // $surveys = [];
-      // foreach($this->surveys as $survey){
-      //   $surveys[] = $survey->format();
-      // }
+      $emails = [];
+      if($user && $user->hasRole('admin')){
+        $emails = $this->emails;
+      }
+      if($user && $user->hasRole('teacher')){
+        $emails = $this->emails()->where('admin', 0)->get();
+      }
       
       return [
         'id' => $this->id,
@@ -100,7 +108,7 @@ class Workshop extends Model
         'application' => $application,
         'applicants' => $applicants,
         'sessions' => $this->sessions()->orderBy('index')->get(),
-        // 'surveys' => $surveys
+        'emails' => $emails
       ];
     }
 
@@ -175,13 +183,15 @@ class Workshop extends Model
 
     public function createExitSurvey()
     {
+      $description_fr = "Vous avez récemment participé à l'atelier $this->title_fr. Pourriez-vous partager vos impressions ?";
+      $description_en = "You recently participated in the workshop $this->title_en. Can you share you thoughts ?";
       $options = [
         'language' => $this->language,
         'title_fr' => "Bilan atelier - $this->title_fr",
         'title_en' => "Workshop review - $this->title_en",
-        'description_fr' => "Vous avez récemment participé à l'atelier $this->title_fr. Pourriez-vous partager vos impressions ?",
-        'description_en' => "You recently participated in the workshop $this->title_en. Can you share you thoughts ?",
-        'answerEditable' => false
+        'description_fr' => $description_fr,
+        'description_en' => $description_en,
+        'answerEditable' => true
       ];
       $questions = [
         [
@@ -247,11 +257,28 @@ class Workshop extends Model
       ];
 
       $survey = Survey::create([
-            'author_id' => $this->organiser_id,
-            'questions' => $questions,
-            'options' => $options,
-            'workshop_id' => $this->id,
-            'status' => 'draft'
-        ]);
+        'author_id' => 1,
+        'questions' => $questions,
+        'options' => $options,
+        'workshop_id' => $this->id,
+        'status' => 'draft'
+      ]);
+
+      $lastSession = $this->sessions()->orderBy('date', 'desc')->first();
+      $email = Email::create([
+        'language' => $this->language,
+        'subject_fr' => "Bilan atelier - $this->title_fr",
+        'subject_en' => "Workshop review - $this->title_en",
+        'language' => $this->language == 'fr' ? 'fr' : 'en',
+        'data' => [
+            'body' => $this->language == 'fr' ? $description_fr : $description_en,
+            'buttonText' => $this->language == 'fr' ? 'Répondre' : 'Answer',
+            'url' => "https//pim.fis.edu.hk/surveys/$survey->id"
+        ],
+        'sender_id' => 1,
+        'schedule' => (Carbon::parse($lastSession->date))->addDay()->setTime(8,00)
+      ]);
+
+      $email->surveys()->attach($survey);
     }
 }

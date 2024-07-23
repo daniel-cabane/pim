@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 
 class Survey extends Model
 {
@@ -26,6 +27,11 @@ class Survey extends Model
         return $this->belongsToMany(User::class)->withPivot('data')->withTimestamps();
     }
 
+    public function emails()
+    {
+        return $this->belongsToMany(Email::class)->withTimestamps();
+    }
+
     protected $casts = ['options' => 'object', 'questions' => 'object'];
 
     public function format($includeWorkshopName = false)
@@ -41,7 +47,8 @@ class Survey extends Model
                 'id' => $this->author_id,
                 'name' => $this->author->formal_name
             ],
-            'workshopId' => $this->workshop_id
+            'workshopId' => $this->workshop_id,
+            'editable' => Gate::allows('update', $this)
         ];
         if($includeWorkshopName && $this->workshop){
             $workshopMainTitle = $this->workshop->language == 'fr' ? $this->workshop->title_fr : $this->workshop->title_en;
@@ -60,14 +67,12 @@ class Survey extends Model
     {
         $this->update(['status' => 'open']);
         if($this->workshop_id){
-            $applicantEmails = [];
             foreach($this->workshop->applicants as $applicant){
                 if($applicant->pivot->confirmed){
                     $this->answers()->attach($applicant);
-                    $applicantEmails[] = $applicant->email;
+                    $applicants[] = $applicant->id;
                 }
             }
-            logger('send email');
         }
     }
 }

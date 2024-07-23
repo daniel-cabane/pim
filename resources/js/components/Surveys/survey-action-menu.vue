@@ -1,5 +1,5 @@
 <template>
-    <v-menu>
+    <v-menu v-if="survey.editable">
         <template v-slot:activator="{ props }">
             <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
         </template>
@@ -54,6 +54,7 @@
             </v-list-item>
         </v-list>
     </v-menu>
+    <v-icon icon="mdi-eye" color="primary" @click="emit('surveyAction', { action: 'preview', survey })" v-else />
 </template>
 <script setup>
     const props = defineProps({ survey: Object });

@@ -155,7 +155,7 @@
     "Withdraw": "Se retirer",
     "Application recorded": "Application recorded",
     "Application withdrawn": "Application withdrawn",
-    "Students enrolled": "Elèves inscrits",
+    "Students enrolled": "Élèves inscrits",
     "Application updated": "Inscription mise à jour",
     "Applied !": "Candidature enregistrée",
     "I'm available": "Je suis disponible",
@@ -307,5 +307,9 @@
     "Availability": "Disponibilité",
     "See answer": "Voir réponse",
     "Answer|verb": "Répondre",
-    "Editable answers": "Réponses modifiables"
+    "Editable answers": "Réponses modifiables",
+    "New survey": "Nouveau questionnaire",
+    "New email": "Nouvel email",
+    "Add student": "Ajouter un élève",
+    "Student added": "Élève ajouté"
 }
