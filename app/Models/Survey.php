@@ -63,7 +63,7 @@ class Survey extends Model
         return $formatted;
     }
 
-    public function send($dest = null)
+    public function send($dest = null, $sendMail = true)
     {
         $this->update(['status' => 'open']);
         if($this->workshop_id){
@@ -74,5 +74,7 @@ class Survey extends Model
                 }
             }
         }
+        // add $dest to list
+        // send mail if $sendMail (implement this)
     }
 }

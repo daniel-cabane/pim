@@ -2,7 +2,7 @@
     <v-tabs v-model="tab">
         <v-tab value="applicants">{{ $t('Students enrolled') }} ({{ workshop.applicants.length }})</v-tab>
         <v-tab value="surveys">{{ $t('Surveys') }}</v-tab>
-        <!-- <v-tab value="emails">Emails</v-tab> -->
+        <v-tab value="emails">Emails</v-tab>
         <v-spacer />
         <v-dialog width="450" v-model="addDialog">
             <template v-slot:activator="{ props: activatorProps }">
@@ -81,7 +81,7 @@
             <survey-table :workshopId="workshop.id" />
         </v-tabs-window-item>
         <v-tabs-window-item value="emails" class="px-4">
-            Emails
+            <email-table :workshopId="workshop.id" />
         </v-tabs-window-item>
     </v-tabs-window>
 </template>

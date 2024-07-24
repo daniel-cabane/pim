@@ -446,4 +446,9 @@ class WorkshopController extends Controller
                 ]
         ]);
     }
+
+    public function emails(Workshop $workshop)
+    {
+        return response()->json(['emails' => $workshop->emails]);
+    }
 }

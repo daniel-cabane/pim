@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sender_id');
             $table->unsignedBigInteger('workshop_id')->nullable();
             $table->boolean('admin')->default(0);
+            $table->boolean('checked')->default(0);
             $table->boolean('sent')->default(0);
             $table->timestamp('schedule')->nullable();
             $table->timestamps();

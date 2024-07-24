@@ -70,7 +70,7 @@
     </div>
 </template>
 <script setup>
-    import { ref, reactive } from "vue";
+    import { ref } from "vue";
     import { useSurveyStore } from '@/stores/useSurveyStore';
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
@@ -109,14 +109,6 @@
         { title: 'Français', value: 'fr' }, { title: 'English', value: 'en' }, { title: t('Both'), value: 'both' }
     ]);
     const newSurveyDialog = ref(false);
-    // const newSurvey = reactive({ title_fr: '', title_en: '', language: 'fr' });
-    // const handleNnewSurvey = async () => {
-    //     await createSurvey(newSurvey);
-    //     newSurveyDialog.value = false;
-    //     newSurvey.title_fr = '';
-    //     newSurvey.title_en = '';
-    //     newSurvey.language = 'fr';
-    // }
 
     const surveyAction = data => {
         switch (data.action) {

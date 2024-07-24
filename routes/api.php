@@ -8,6 +8,7 @@ use App\Http\Controllers\WorkshopController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +147,8 @@ Route::group(['middleware'=>['can:update,workshop']], function(){
 
     Route::get('/workshops/{workshop}/searchStudent', [WorkshopController::class, 'searchStudent']);
     Route::post('/workshops/{workshop}/addStudent', [WorkshopController::class, 'addStudent']);
+
+    Route::get('/workshops/{workshop}/emails', [WorkshopController::class, 'emails']);
 });
 
 /*
@@ -172,4 +175,24 @@ Route::group(['middleware'=>['can:view,survey']], function(){
 
 Route::group(['middleware'=>['can:submit,survey']], function(){
     Route::post('/surveys/{survey}/submit', [SurveyController::class, 'submit']);
+});
+
+
+/*
+*
+*   EMAILS
+* 
+*/
+
+Route::group(['middleware'=>['can:view,email']], function(){
+    Route::get('/emails/{email}/preview', [EmailController::class, 'preview']);
+});
+
+Route::group(['middleware'=>['can:update,email']], function(){
+    Route::patch('/emails/{email}', [EmailController::class, 'update']);
+    Route::patch('/emails/{email}/schedule', [EmailController::class, 'updateSchedule']);
+});
+
+Route::group(['middleware'=>['can:delete,email']], function(){
+    Route::delete('/emails/{email}', [EmailController::class, 'destroy']);
 });

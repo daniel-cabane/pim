@@ -311,5 +311,20 @@
     "New survey": "Nouveau questionnaire",
     "New email": "Nouvel email",
     "Add student": "Ajouter un élève",
-    "Student added": "Élève ajouté"
+    "Student added": "Élève ajouté",
+    "Sent": "Envoyé",
+    "Scheduled for": "Programmé pour",
+    "Not scheduled": "Non programmé",
+    "Edit email": "Modifier l'email",
+    "Email updated": "Email modifié",
+    "Schedule|mail": "Programmer",
+    "Update schedule": "Modifier la programmation",
+    "Time": "Heure",
+    "Clear Schedule": "Annuler la programmation",
+    "Send now": "Envoyer maintenant",
+    "Schedule updated": "Programmation modifiée",
+    "Delete email": "Supprimer l'email",
+    "Are you sure you want to delete this email": "Voulez-vous vraiment supprimer cet email",
+    "Yes, delete it permanently": "Oui, je veux le supprimer",
+    "Preview email": "Apperçu de l'email"
 }

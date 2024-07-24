@@ -271,14 +271,18 @@ class Workshop extends Model
         'subject_en' => "Workshop review - $this->title_en",
         'language' => $this->language == 'fr' ? 'fr' : 'en',
         'data' => [
-            'body' => $this->language == 'fr' ? $description_fr : $description_en,
-            'buttonText' => $this->language == 'fr' ? 'Répondre' : 'Answer',
+            'body_fr' => $description_fr,
+            'body_en' => $description_en,
+            'buttonText_fr' => 'Répondre',
+            'buttonText_en' => 'Answer',
             'url' => "https//pim.fis.edu.hk/surveys/$survey->id"
         ],
         'sender_id' => 1,
+        'workshop_id' => $this->id,
         'schedule' => (Carbon::parse($lastSession->date))->addDay()->setTime(8,00)
       ]);
 
       $email->surveys()->attach($survey);
     }
 }
+
