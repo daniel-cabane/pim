@@ -42,7 +42,7 @@
     </div>
 </template>
 <script setup>
-    import { computed, defineEmits, ref } from 'vue';
+    import { computed, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
 
     const { t } = useI18n();

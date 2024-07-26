@@ -42,8 +42,14 @@ export const useEmailStore = defineStore({
         async previewMail(id) {
             this.isLoading = true;
             const res = await get(`/api/emails/${id}/preview`);
-            console.log(res.preview);
             this.preview = res.preview;
+            this.isLoading = false;
+        },
+        async sendEmail(id) {
+            console.log(id);
+            const res = await post(`/api/emails/${id}/send`);
+            console.log(res.email);
+            this.emails = this.emails.map(e => e.id == res.email.id ? res.email : e);
             this.isLoading = false;
         }
     }

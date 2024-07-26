@@ -312,7 +312,7 @@
     "New email": "New email",
     "Add student": "Add student",
     "Student added": "Student added",
-    "Sent": "Sent",
+    "Sent on": "Sent on",
     "Scheduled for": "Scheduled for",
     "Not scheduled": "Not scheduled",
     "Edit email": "Edit email",
@@ -326,5 +326,8 @@
     "Delete email": "Delete email",
     "Are you sure you want to delete this email": "Are you sure you want to delete this email",
     "Yes, delete it permanently": "Yes, delete it permanently",
-    "Preview email": "Preview email"
+    "Preview email": "Preview email",
+    "Are you sure the message is ready to be sent straight away": "Are you sure the message is ready to be sent straight away",
+    "Class": "Class",
+    "Email sent": "Email sent"
 }

@@ -21,8 +21,9 @@
                         <template v-slot:item="{ item }">
                             <tr>
                                 <td>{{ item.name }}</td>
-                                <td>{{ item.available ? $t('Yes') : $t('No') }}</td>
-                                <td>{{ item.confirmed ? $t('Yes') : $t('No') }}</td>
+                                <td class="text-center">{{ item.className }}</td>
+                                <td class="text-center">{{ item.available ? $t('Yes') : $t('No') }}</td>
+                                <td class="text-center">{{ item.confirmed ? $t('Yes') : $t('No') }}</td>
                                 <td>{{ item.comment }}</td>
                                 <td class="d-flex align-center">
                                     <v-icon icon="mdi-pencil" class="mr-2" color="primary"
@@ -104,9 +105,10 @@
 
     const headers = [
         { title: t('Student'), align: 'start', key: 'name' },
-        { title: t('Available'), key: 'available' },
-        { title: t('Confirmed'), key: 'confirmed' },
-        { title: t('Comment'), key: 'comment' },
+        { title: t('Class'), align: 'center', key: 'className' },
+        { title: t('Available'), align: 'center', key: 'available' },
+        { title: t('Confirmed'), align: 'center', key: 'confirmed' },
+        { title: t('Comment'), align: 'start', key: 'comment' },
         { title: '', sortable: false, width: 10 }
     ];
 

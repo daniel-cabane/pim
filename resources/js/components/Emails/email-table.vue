@@ -5,7 +5,7 @@
                 <td>{{ email[`subject_${email.language}`] }}</td>
                 <td>
                     <v-chip label variant="outlined" color="success" append-icon="mdi-check" v-if="email.sent">
-                        {{ $t('Sent') }}
+                        {{ $t('Sent on') }} {{ formatSchedule(email) }}
                     </v-chip>
                     <span v-else-if="email.schedule">
                         <v-chip label>
@@ -23,7 +23,7 @@
         </tbody>
         <v-dialog width="450" v-model="scheduleDialog">
             <email-schedule-card :email="focusedEmail" :isLoading="isLoading" @closeDialog="scheduleDialog = false"
-                @updateSchedule="handleSchedule" />
+                @updateSchedule="handleSchedule" @sendMail="handleSend" />
         </v-dialog>
         <v-dialog width="650" v-model="previewDialog">
             <email-preview-card :email="focusedEmail" @closeDialog="previewDialog = false" />
@@ -49,12 +49,12 @@
     const props = defineProps({ workshopId: { type: Number, nullable: true }, admin: { type: Boolean, default: false } });
 
     const EmailStore = useEmailStore();
-    const { getWorkshopEmails, updateEmail, updateEmailSchedule, deleteEmail } = EmailStore;
+    const { getWorkshopEmails, updateEmail, updateEmailSchedule, deleteEmail, sendEmail } = EmailStore;
     const { emails, isLoading, isReady } = storeToRefs(EmailStore);
     getWorkshopEmails(props.workshopId);
 
     const formatSchedule = email => {
-        return (new Date(email.schedule)).toLocaleString(locale, { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+        return (new Date(email.schedule)).toLocaleString(locale.value, { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
     }
 
     const focusedEmail = ref(null);
@@ -66,6 +66,10 @@
     const scheduleDialog = ref(false);
     const handleSchedule = async dateTime => {
         await updateEmailSchedule(focusedEmail.value.id, dateTime);
+        scheduleDialog.value = false;
+    }
+    const handleSend = async email => {
+        await sendEmail(email.id);
         scheduleDialog.value = false;
     }
     const deleteDialog = ref(false);

@@ -312,8 +312,8 @@
     "New email": "Nouvel email",
     "Add student": "Ajouter un élève",
     "Student added": "Élève ajouté",
-    "Sent": "Envoyé",
-    "Scheduled for": "Programmé pour",
+    "Sent on": "Envoyé le",
+    "Scheduled for": "Programmé pour le",
     "Not scheduled": "Non programmé",
     "Edit email": "Modifier l'email",
     "Email updated": "Email modifié",
@@ -326,5 +326,8 @@
     "Delete email": "Supprimer l'email",
     "Are you sure you want to delete this email": "Voulez-vous vraiment supprimer cet email",
     "Yes, delete it permanently": "Oui, je veux le supprimer",
-    "Preview email": "Apperçu de l'email"
+    "Preview email": "Apperçu de l'email",
+    "Are you sure the message is ready to be sent straight away": "Ètes-vous sûr que le message est prêt à être envoyé immédiatement",
+    "Class": "Classe",
+    "Email sent": "Email envoyé"
 }

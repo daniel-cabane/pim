@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Email;
+use App\Mail\WorkshopCommunication;
 
 class EmailController extends Controller
 {
@@ -44,7 +45,20 @@ class EmailController extends Controller
 
     public function preview(Email $email)
     {
-        return response()->json(['preview' => '<h1>preview</h1>']);
+        return response()->json(['preview' => (new WorkshopCommunication($email))->render()]);
+    }
+
+    public function send(Email $email)
+    {
+        $email->send();
+
+        return response()->json([
+            'email' => $email,
+            'message' => [
+                    'text' => 'Email sent',
+                    'type' => 'success'
+                ]
+        ]);
     }
 
     public function destroy(Email $email)

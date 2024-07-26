@@ -246,6 +246,7 @@ class AdminController extends Controller
         $workshop->orderSessions();
 
         $workshop->createExitSurvey();
+        $workshop->createEmails();
 
         return response()->json([
             'workshop' => $workshop->format(),

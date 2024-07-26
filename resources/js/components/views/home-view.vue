@@ -6,8 +6,7 @@
         </v-tabs>
         <v-tabs-window v-model="tab">
             <v-tabs-window-item value="posts">
-                <v-card flat color="surface" style="flex:1;box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);"
-                    class="mb-3 pa-4" v-if="isReady">
+                <v-card flat color="surface" style="flex:1;" class="mb-3 pa-4 insetCard" v-if="isReady">
                     <div class="d-flex align-start justify-end px-4">
                         <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog">
                             {{ $t('More') }}
@@ -25,8 +24,7 @@
                 </v-card>
             </v-tabs-window-item>
             <v-tabs-window-item value="workshops">
-                <v-card flat color="surface" style="flex:1;box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);"
-                    class="mb-3 pa-4">
+                <v-card flat color="surface" class="mb-3 pa-4 insetCard">
                     <div class="d-flex align-start justify-end px-1">
                         <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops">
                             {{ $t('More') }}
@@ -47,8 +45,7 @@
         </v-tabs-window>
     </v-container>
     <v-container style="display:flex;gap: 15px;" v-else>
-        <v-card flat color="surface" style="flex:1;box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);" class="mb-3 pa-4"
-            v-if="isReady">
+        <v-card flat color="surface" style="flex:1;" class="mb-3 pa-4 insetCard" v-if="isReady">
             <div class="d-flex align-start justify-space-between px-4">
                 <div class="pimTitleFont font-weight-thin text-captionColor" style="font-size:36px;">
                     {{ $t("Recent posts") }}
@@ -67,8 +64,7 @@
                 </v-btn>
             </div>
         </v-card>
-        <v-card flat width="350" color="surface" style="box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);"
-            class="mb-3 pa-4">
+        <v-card flat width="350" color="surface" class="mb-3 pa-4 insetCard">
             <div class="d-flex align-start justify-space-between px-1">
                 <div style="width:100%;font-size:36px;" class="pimTitleFont font-weight-thin text-captionColor">
                     {{ $t('Upcoming') }}
@@ -108,3 +104,9 @@
     const isWindowSmall = computed(() => name.value == 'xs' || name.value == 'sm');
     const tab = ref('posts');
 </script>
+<style scoped>
+    .insetCard {
+        background-color: red;
+        box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.1) inset, -10px -10px 10px white inset;
+    }
+</style>

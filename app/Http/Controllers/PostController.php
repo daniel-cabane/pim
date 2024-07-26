@@ -101,7 +101,7 @@ class PostController extends Controller
     {
         $attrs = $request->validate([
             'title' => 'required|min:8|max:150',
-            'description' => 'required|min:20|max:255',
+            'description' => 'required|min:5|max:255',
             'language' => 'required|min:2|max:2',
             'post' => 'required|max:5000',
             'cover' => 'required|max:5000'

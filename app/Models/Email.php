@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use App\Mail\WorkshopCommunication;
+use Illuminate\Support\Facades\Mail;
 
 class Email extends Model
 {
@@ -39,5 +41,22 @@ class Email extends Model
     public function getEditableAttribute()
     {
       return Gate::allows('update', $this);
+    }
+
+    public function send()
+    {
+      if($this->workshop_id){
+        if($this->admin){
+          $bcc = 'pim@g.lfis.edu.hk';
+          $cc = [];
+          $to = $this->data->to ? $this->data->to : 'ap@email.com';
+        } else {
+          $bcc = $this->workshop->applicants()->wherePivot('confirmed', 1)->pluck('email');
+          $cc = $this->workshop->organiser->email;
+          $to = 'pim@g.lfis.edu.hk';
+        }
+        Mail::to($to)->cc($cc)->bcc($bcc)->send(new WorkshopCommunication($this));
+        $this->update(['sent' => 1, 'schedule' => now()]);
+      }
     }
 }

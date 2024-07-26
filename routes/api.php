@@ -191,6 +191,7 @@ Route::group(['middleware'=>['can:view,email']], function(){
 Route::group(['middleware'=>['can:update,email']], function(){
     Route::patch('/emails/{email}', [EmailController::class, 'update']);
     Route::patch('/emails/{email}/schedule', [EmailController::class, 'updateSchedule']);
+    Route::post('/emails/{email}/send', [EmailController::class, 'send']);
 });
 
 Route::group(['middleware'=>['can:delete,email']], function(){

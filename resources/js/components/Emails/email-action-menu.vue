@@ -1,5 +1,5 @@
 <template>
-    <v-menu v-if="email.editable">
+    <v-menu v-if="email.editable && !email.sent">
         <template v-slot:activator="{ props }">
             <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
         </template>
@@ -38,7 +38,7 @@
             </v-list-item>
         </v-list>
     </v-menu>
-    <v-icon icon="mdi-eye" color="primary" @click="emit('emailAction', { action: 'preview', email })" v-else />
+    <v-icon icon="mdi-eye" :color="email.sent ? 'success' : 'secondary'" @click="emit('emailAction', { action: 'preview', email })" v-else />
 </template>
 <script setup>
     const props = defineProps({ email: Object });
