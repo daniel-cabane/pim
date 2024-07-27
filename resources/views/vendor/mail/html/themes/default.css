@@ -101,7 +101,7 @@ img {
 /* Header */
 
 .header {
-    padding: 25px 0;
+    padding: 15px 0;
     text-align: center;
 }
 
@@ -190,27 +190,36 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    margin: 30px auto;
-    width: 100%;
+    border-collapse: collapse;
+    margin: 0px auto 20px;
+    width: 90%;
 }
 
 .table th {
-    border-bottom: 1px solid #edeff2;
+    border: 1px solid #edeff2;
     margin: 0;
-    padding-bottom: 8px;
+    padding: 4px 8px;
+}
+.table th:nth-child(1) {
+    width: 80%;
+}
+
+.table th:nth-child(2) {
+    width: 20%;
 }
 
 .table td {
     color: #74787e;
+    border: 1px solid #edeff2;
+    padding: 4px 8px;
     font-size: 15px;
     line-height: 18px;
     margin: 0;
-    padding: 10px 0;
 }
 
 .content-cell {
     max-width: 100vw;
-    padding: 32px;
+    padding: 20px;
 }
 
 /* Buttons */

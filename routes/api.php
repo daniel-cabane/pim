@@ -186,6 +186,7 @@ Route::group(['middleware'=>['can:submit,survey']], function(){
 
 Route::group(['middleware'=>['can:view,email']], function(){
     Route::get('/emails/{email}/preview', [EmailController::class, 'preview']);
+    Route::get('/emails/{email}/sentTo', [EmailController::class, 'sentTo']);
 });
 
 Route::group(['middleware'=>['can:update,email']], function(){

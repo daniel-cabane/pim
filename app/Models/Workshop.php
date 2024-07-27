@@ -383,23 +383,16 @@ class Workshop extends Model
       }
       $ps_fr .= "</ul>";
       $ps_en = "";
-      $students = [];
+      $students = collect([]);
       foreach($this->applicants()->wherePivot('confirmed', 1)->get() as $student){
-        $student->lastName = (explode(' ', $student->name))[1];
-        $students[] = $student;
+        $students->push([
+          'id' => $student->id,
+          'name' => $student->name,
+          'className' => $student->className,
+          'lastName' => (explode(' ', $student->name))[1]
+        ]);
       }
-      usort($students, function($a, $b) {
-        if ($a->className !== $b->className) {
-            return strcmp($a->className, $b->className);
-        }
-        if ($a->lastName !== $b->lastName) {
-            return strcmp($a->lastName, $b->lastName);
-        }
-        if ($a->name !== $b->name) {
-            return strcmp($a->name, $b->name);
-        }
-        return 0;
-      });
+      $students = $students->sortBy([['className', 'asc'], ['lastName', 'asc'], ['name', 'asc']]);
 
       Email::create([
         'subject_fr' => "Atelier - $this->title_fr",
@@ -408,13 +401,15 @@ class Workshop extends Model
         'data' => [
             'body_fr' => $body_fr,
             'body_en' => $body_en,
-            'closing_fr' => "<p>Pourriez-vous porter ces cours sur Pronote s'il vous plait ?</p>Cordialement",
+            'closing_fr' => "<p>Pourriez-vous porter ces cours sur Pronote s'il vous plait ?</p><br>Cordialement",
             'closing_en' => "",
             'ps_fr' => $ps_fr,
             'ps_en' => "",
-            'students' => $students
+            'students' => $students->values()->toArray(),
+            'to' => $this->campus == 'BPR' ? 'dcabane@g.lfis.edu.hk' : 'dcabane@g.lfis.edu.hk' // Obviously, change this...
         ],
         'sender_id' => 1,
+        'admin' => 1,
         'workshop_id' => $this->id,
         'schedule' => (Carbon::today())->addDay()->setTime(8,00)
       ]);

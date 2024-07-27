@@ -151,17 +151,17 @@
     });
 
     const addDialog = ref(false);
-    const temp = ref('');
-    const showStudentDialog = () => {
-        temp.value = 'student';
-        addDialog.value = true;
-    }
-    const showSurveyDialog = () => {
-        temp.value = 'survey';
-        addDialog.value = true;
-    }
-    const showEmailDialog = () => {
-        temp.value = 'email';
-        addDialog.value = true;
-    }
+    // const temp = ref('');
+    // const showStudentDialog = () => {
+    //     temp.value = 'student';
+    //     addDialog.value = true;
+    // }
+    // const showSurveyDialog = () => {
+    //     temp.value = 'survey';
+    //     addDialog.value = true;
+    // }
+    // const showEmailDialog = () => {
+    //     temp.value = 'email';
+    //     addDialog.value = true;
+    // }
 </script>

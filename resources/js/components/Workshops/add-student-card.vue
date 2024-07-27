@@ -20,8 +20,8 @@
                             @click="handleAddStudent(student)" />
                     </div>
                     <div class="d-flex justify-space-around">
-                        <v-switch :label="$t('Available')" density="compact" hide-details v-model="student.available" />
-                        <v-switch :label="$t('Confirmed')" density="compact" hide-details v-model="student.confirmed" />
+                        <v-switch :label="$t('Available')" density="compact" hide-details v-model="student.available" color="primary"/>
+                        <v-switch :label="$t('Confirmed')" density="compact" hide-details v-model="student.confirmed" color="primary"/>
                     </div>
                 </v-card>
             </div>

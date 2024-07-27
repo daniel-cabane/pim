@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Email;
 use App\Mail\WorkshopCommunication;
+use App\Models\User;
 
 class EmailController extends Controller
 {
@@ -59,6 +60,22 @@ class EmailController extends Controller
                     'type' => 'success'
                 ]
         ]);
+    }
+
+    public function sentTo(Email $email)
+    {
+        $sentTo = [];
+        foreach($email->data->sentTo as $id){
+            $user = User::find($id);
+            $sentTo[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'className' => $user->className,
+                'email' => $user->email
+            ];
+        }
+
+        return response()->json(['sentTo' => $sentTo]);
     }
 
     public function destroy(Email $email)

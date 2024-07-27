@@ -449,6 +449,8 @@ class WorkshopController extends Controller
 
     public function emails(Workshop $workshop)
     {
-        return response()->json(['emails' => $workshop->emails]);
+        return response()->json([
+            'emails' => auth()->user()->is['admin'] ? $workshop->emails : $workshop->emails()->where('admin', 0)->get()
+        ]);
     }
 }

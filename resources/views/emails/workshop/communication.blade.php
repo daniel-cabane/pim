@@ -10,18 +10,19 @@
 @endif
 
 @if(isset($email->data->students))
+<x-mail::table>
 | Nom | Classe |
 | :--- | :---: |
 @foreach ($email->data->students as $student)
 | {{ $student->name }} | {{ $student->className }} |
 @endforeach
+</x-mail::table>
 @endif
 
-<br>
 {!! $email->language == 'fr' ? $email->data->closing_fr : $email->data->closing_en !!},<br>
 {{ config('app.name') }}
 <br>
-
+<div style="min-height:15px;"></div>
 @if(isset($email->data->ps_fr) || isset($email->data->ps_en))
 <b>PS : </b>{!! $email->language == 'fr' ? $email->data->ps_fr : $email->data->ps_en !!}
 @endif

@@ -4,7 +4,8 @@
             <tr v-for="email in emails">
                 <td>{{ email[`subject_${email.language}`] }}</td>
                 <td>
-                    <v-chip label variant="outlined" color="success" append-icon="mdi-check" v-if="email.sent">
+                    <v-chip label variant="outlined" color="success" append-icon="mdi-check" v-if="email.sent"
+                        @click="showSentToDialog(email)">
                         {{ $t('Sent on') }} {{ formatSchedule(email) }}
                     </v-chip>
                     <span v-else-if="email.schedule">
@@ -36,6 +37,25 @@
             <email-delete-card :email="focusedEmail" :isLoading="isLoading" @closeDialog="deleteDialog = false"
                 @deleteEmail="handleDelete" />
         </v-dialog>
+        <v-dialog width="350" v-model="sentToDialog">
+            <v-card :loading="isLoading" :title="focusedEmail.subject_fr" :subtitle="$t('Sent to')">
+                <v-card-text class="d-flex align-center flex-wrap">
+                    <v-card class="ma-1 pa-2" width="300" v-for="recipient in focusedEmail.sentTo">
+                        <div class="d-flex justify-space-between text-body text-subtitle-1">
+                            <span>
+                                {{ recipient.name }}
+                            </span>
+                            <span class="text-captionColor">
+                                {{ recipient.className }}
+                            </span>
+                        </div>
+                        <div class="text-caption text-captionColor">
+                            {{ recipient.email }}
+                        </div>
+                    </v-card>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-table>
 </template>
 <script setup>
@@ -49,7 +69,7 @@
     const props = defineProps({ workshopId: { type: Number, nullable: true }, admin: { type: Boolean, default: false } });
 
     const EmailStore = useEmailStore();
-    const { getWorkshopEmails, updateEmail, updateEmailSchedule, deleteEmail, sendEmail } = EmailStore;
+    const { getWorkshopEmails, updateEmail, updateEmailSchedule, deleteEmail, sendEmail, getEmailSentTo } = EmailStore;
     const { emails, isLoading, isReady } = storeToRefs(EmailStore);
     getWorkshopEmails(props.workshopId);
 
@@ -94,5 +114,13 @@
                 deleteDialog.value = true;
                 break;
         }
+    }
+    const sentToDialog = ref(false);
+    const showSentToDialog = email => {
+        focusedEmail.value = email;
+        if(!email.sentTo){
+            getEmailSentTo(email);
+        }
+        sentToDialog.value = true;
     }
 </script>

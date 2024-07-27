@@ -49,14 +49,19 @@ class Email extends Model
         if($this->admin){
           $bcc = 'pim@g.lfis.edu.hk';
           $cc = [];
-          $to = $this->data->to ? $this->data->to : 'ap@email.com';
+          $to = $this->data->to ? $this->data->to : 'dcabane@g.lfis.edu.hk'; //obviously change this...
+          $sentTo = [1];
         } else {
-          $bcc = $this->workshop->applicants()->wherePivot('confirmed', 1)->pluck('email');
+          $students = $this->workshop->applicants()->wherePivot('confirmed', 1)->get();
+          $bcc = 'pim@g.lfis.edu.hk';
           $cc = $this->workshop->organiser->email;
-          $to = 'pim@g.lfis.edu.hk';
+          $to = $students->pluck('email')->toArray();
+          $sentTo = $students->pluck('id')->toArray();
         }
         Mail::to($to)->cc($cc)->bcc($bcc)->send(new WorkshopCommunication($this));
-        $this->update(['sent' => 1, 'schedule' => now()]);
+        $data = $this->data;
+        $data->sentTo = $sentTo;
+        $this->update(['sent' => 1, 'schedule' => now(), 'data' => $data]);
       }
     }
 }
