@@ -72,8 +72,7 @@
                                 :disabled="workshop.status != 'confirmed'" />
                         </div>
                         <div class="d-flex justify-space-between align-center px-3 mb-3">
-                            <span class="text-subtitle-1"
-                                :class="theme.global.name.value == 'customDark' ? 'text-grey-lighten-2' : 'text-grey'">
+                            <span class="text-subtitle-1 text-captionColor">
                                 {{ $t('Schedule') }}
                             </span>
                             <v-btn color="secondary" size="small" :disabled="workshop.status == 'launched'"
@@ -157,7 +156,6 @@
 <script setup>
     import { ref, reactive, computed } from 'vue';
     import Editor from '@tinymce/tinymce-vue';
-    import { useTheme } from 'vuetify';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useI18n } from 'vue-i18n';
     import { useDisplay } from 'vuetify';
@@ -182,8 +180,6 @@
     }));
 
     const { smAndDown } = useDisplay()
-
-    const theme = useTheme();
 
     // const props = defineProps({ workshop: Object, availableThemes: Array, imageLoading: Boolean });
     // const emit = defineEmits(['imageUpdated', 'imageDeleted']);

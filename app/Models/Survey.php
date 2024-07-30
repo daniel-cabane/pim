@@ -10,7 +10,7 @@ class Survey extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['author_id', 'workshop_id', 'questions', 'options', 'status'];
+    protected $fillable = ['author_id', 'workshop_id', 'questions', 'options', 'status', 'scope'];
 
     public function author()
     {
@@ -24,7 +24,7 @@ class Survey extends Model
 
     public function answers()
     {
-        return $this->belongsToMany(User::class)->withPivot('data')->withTimestamps();
+        return $this->belongsToMany(User::class)->withPivot(['data', 'submitted'])->withTimestamps();
     }
 
     public function emails()
@@ -33,6 +33,11 @@ class Survey extends Model
     }
 
     protected $casts = ['options' => 'object', 'questions' => 'object'];
+
+    public function getNbAnswersAttribute()
+    {
+        return $this->answers()->where('submitted', 1)->count();
+    }
 
     public function format($includeWorkshopName = false)
     {
@@ -47,6 +52,7 @@ class Survey extends Model
                 'id' => $this->author_id,
                 'name' => $this->author->formal_name
             ],
+            'nbAnswers' => $this->nb_answers,
             'workshopId' => $this->workshop_id,
             'editable' => Gate::allows('update', $this)
         ];
@@ -57,7 +63,11 @@ class Survey extends Model
         $user = auth()->user();
         if($user->is['student']){
             $answers = $this->answers()->where('user_id', $user->id)->first();
-            $formatted['answers'] = json_decode($answers->pivot->data);
+            if($answers != null){
+                $formatted['answers'] = json_decode($answers->pivot->data);
+            } else if(Gate::allows('view', $this)){
+                $this->answers()->attach($user);
+            }
         }
 
         return $formatted;
@@ -74,7 +84,43 @@ class Survey extends Model
                 }
             }
         }
-        // add $dest to list
-        // send mail if $sendMail (implement this)
+    }
+
+    public function results()
+    {
+        $byQuestion = [];
+        foreach($this->questions as $question){
+            $data = [];
+            if($question->type == 'radio' || $question->type == 'checkbox'){
+                foreach($question->options as $option){
+                    $data[] = 0;
+                }
+            }
+            $byQuestion[] = [
+                'type' => $question->type,
+                'data' => $data
+            ];
+        }
+        $byStudent = [];
+        foreach($this->answers()->where('submitted', 1)->get() as $answer){
+            $data = json_decode($answer->pivot->data);
+            $byStudent[] = [
+                'id' => $answer->id,
+                'name' => $answer->name,
+                'data' => $data
+            ];
+            foreach($this->questions as $questionIndex => $question){
+                if($question->type == 'radio'){
+                    $byQuestion[$questionIndex]['data'][$data[$questionIndex]-1]++;
+                }
+                if($question->type == 'checkbox'){
+                    foreach($data[$questionIndex] as $answerIndex){
+                        $byQuestion[$questionIndex]['data'][$answerIndex-1]++;
+                    }
+                }
+            }
+        }
+
+        return ['byQuestion' => $byQuestion, 'byStudent' => $byStudent];
     }
 }

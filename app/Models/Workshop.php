@@ -394,9 +394,10 @@ class Workshop extends Model
       }
       $students = $students->sortBy([['className', 'asc'], ['lastName', 'asc'], ['name', 'asc']]);
 
+      $workshopTitle = $this->language == 'fr' ? $this->title_fr : $this->title_en;
       Email::create([
-        'subject_fr' => "Atelier - $this->title_fr",
-        'subject_en' => "Workshop - $this->title_en",
+        'subject_fr' => "Atelier - $workshopTitle",
+        'subject_en' => "Workshop - $workshopTitle",
         'language' => 'fr',
         'data' => [
             'body_fr' => $body_fr,

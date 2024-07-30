@@ -33,11 +33,24 @@ const customLight = {
 }
 const customDark = {
     dark: true,
+    // colors: {
+    //     background: '#4B4D4E',
+    //     surface: '#797b7c',
+    //     primary: '#2979FF',
+    //     'primary-darken-1': '#2962FF',
+    //     secondary: '#AEAEB2',
+    //     'secondary-darken-1': '#BDBDBD',
+    //     error: '#FF5252',
+    //     info: '#00B0FF',
+    //     success: '#66BB6A',
+    //     warning: '#FFA726',
+    //     captionColor: '#B0B0B0'
+    // }
     colors: {
-        background: '#18191A',
+        background: '#4B4D4E',
         surface: '#797b7c',
-        primary: '#003d7d',
-        'primary-darken-1': '#012953',
+        primary: '#2761a6',
+        'primary-darken-1': '#003d7d',
         secondary: '#919195',
         'secondary-darken-1': '#646469',
         error: '#e31b23',

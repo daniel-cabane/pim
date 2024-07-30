@@ -286,7 +286,8 @@
     "Edit user": "Modifier l'utilisateur",
     "User updated": "Utilisateur mis à jour",
     "Send": "Envoyer",
-    "Send this survey to students": "Envoyer ce questionnaire aux élèves",
+    "Open this survey": "Ouvrir ce questionnaire",
+    "Survey opened": "Questionnaire ouvert",
     "Survey sent": "Questionnaire envoyé",
     "Yes": "Oui",
     "No": "Non",
@@ -330,5 +331,10 @@
     "Are you sure the message is ready to be sent straight away": "Ètes-vous sûr que le message est prêt à être envoyé immédiatement",
     "Class": "Classe",
     "Email sent": "Email envoyé",
-    "Sent to": "Envoyé à"
+    "Sent to": "Envoyé à",
+    "Subject": "Sujet",
+    "Email created": "Email créé",
+    "Open": "Ouvrir",
+    "Results": "Résultats",
+    "Survey deleted": "Questionnaire supprimé"
 }

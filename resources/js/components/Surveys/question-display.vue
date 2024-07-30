@@ -25,7 +25,7 @@
         </div>
         <div v-if="question.type == 'checkbox'">
             <v-checkbox v-for="(option, i) in question.options" :label="option[lg]" :value="i+1" v-model="checkboxValue" :disabled="disabled"
-                @update:model-value="emit('answerUpdated', { value: checkboxValue, index })" />
+                @update:model-value="emit('answerUpdated', { value: checkboxValue, index, checkbox: true })" />
         </div>
     </v-card>
 </template>
@@ -38,5 +38,5 @@
     const textFieldValue = props.initialAnswer ? ref(props.initialAnswer) : ref('');
     const textAreaValue = props.initialAnswer ? ref(props.initialAnswer) : ref('');
     const radioValue = props.initialAnswer ? ref(props.initialAnswer) : ref(null);
-    const checkboxValue = props.initialAnswer ? ref(props.initialAnswer) : ref(null);
+    const checkboxValue = props.initialAnswer ? ref(props.initialAnswer) : ref([]);
 </script>

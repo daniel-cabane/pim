@@ -6,10 +6,10 @@
         <v-list>
             <v-list-item @click="emit('surveyAction', { action: 'send', survey})" v-if="survey.status == 'draft'">
                 <template v-slot:prepend>
-                    <v-icon icon="mdi-send" color="success" />
+                    <v-icon icon="mdi-play-box" color="success" />
                 </template>
                 <v-list-item-title>
-                    {{ $t('Send') }}
+                    {{ $t('Open') }}
                 </v-list-item-title>
             </v-list-item>
             <v-list-item @click="emit('surveyAction', { action: 'close', survey })" v-if="survey.status == 'open'">
@@ -22,7 +22,7 @@
             </v-list-item>
             <v-list-item @click="emit('surveyAction', { action: 'reopen', survey })" v-if="survey.status == 'closed'">
                 <template v-slot:prepend>
-                    <v-icon icon="mdi-reload" color="success" />
+                    <v-icon icon="mdi-play-box-multiple-outline" color="success" />
                 </template>
                 <v-list-item-title>
                     {{ $t('Reopen') }}
@@ -34,6 +34,14 @@
                 </template>
                 <v-list-item-title>
                     {{ $t('Preview') }}
+                </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="emit('surveyAction', { action: 'result', survey })" v-if="survey.nbAnswers >= 0">
+                <template v-slot:prepend>
+                    <v-icon icon="mdi-poll" color="success" />
+                </template>
+                <v-list-item-title>
+                    {{ $t('Results') }}
                 </v-list-item-title>
             </v-list-item>
             <v-list-item @click="emit('surveyAction', { action: 'edit', survey })">
@@ -54,7 +62,10 @@
             </v-list-item>
         </v-list>
     </v-menu>
-    <v-icon icon="mdi-eye" color="primary" @click="emit('surveyAction', { action: 'preview', survey })" v-else />
+    <span class="d-flex" v-else>
+        <v-icon icon="mdi-eye" color="primary" @click="emit('surveyAction', { action: 'preview', survey })" />
+        <v-icon icon="mdi-poll" color="success" @click="emit('surveyAction', { action: 'result', survey })" />
+    </span>
 </template>
 <script setup>
     const props = defineProps({ survey: Object });

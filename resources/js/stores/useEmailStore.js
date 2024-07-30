@@ -32,12 +32,10 @@ export const useEmailStore = defineStore({
             this.isLoading = false;
         },
         async deleteEmail(id) {
-            console.log(`uncomment and test ${id}`);
-            // <============================================================== UNCOMMENT AND TEST (ROUTE AND CONTROLLER METHOD DONE)
-            // this.isLoading = true;
-            // const res = await del(`/api/emails/${id}`);
-            // this.emails = this.emails.filter(e => e.id != res.email.id);
-            // this.isLoading = false;
+            this.isLoading = true;
+            const res = await del(`/api/emails/${id}`);
+            this.emails = this.emails.filter(e => e.id != res.id);
+            this.isLoading = false;
         },
         async previewMail(id) {
             this.isLoading = true;
@@ -54,6 +52,13 @@ export const useEmailStore = defineStore({
             this.isLoading = true;
             const res = await get(`/api/emails/${email.id}/sentTo`);
             email.sentTo = res.sentTo;
+            this.isLoading = false;
+        },
+        async addWorkshopEmail(workshopId, subject) {
+            this.isLoading = true;
+            const res = await post(`/api/workshops/${workshopId}/addEmail`, { subject });
+            console.log(this.workshop);
+            this.emails.push(res.email);
             this.isLoading = false;
         }
     }

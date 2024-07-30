@@ -18,6 +18,7 @@ return new class extends Migration
             $table->json('questions');
             $table->json('options');
             $table->string('status', 255)->default('draft');
+            $table->string('scope', 255)->default('workshop');
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');

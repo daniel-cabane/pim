@@ -45,7 +45,7 @@ class EmailPolicy
      */
     public function delete(User $user, Email $email): bool
     {
-        //
+        return $email->sender_id == $user->id || $user->hasRole('admin');
     }
 
     /**

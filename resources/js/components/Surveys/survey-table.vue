@@ -8,7 +8,7 @@
                         {{ $t('New survey') }}
                     </v-btn>
                 </template>
-                <add-survey-card @closeDialog="newSurveyDialog = false"/>
+                <add-survey-card @closeDialog="newSurveyDialog = false" />
             </v-dialog>
         </div>
         <v-data-table hover :headers="headers" :items="surveys" item-value="name" items-per-page="25"
@@ -45,6 +45,10 @@
                     <td>{{ survey.mainTitle }}</td>
                     <td>{{ survey.questions.length }} question<span v-if="survey.questions.length>1">s</span></td>
                     <td>{{ survey.status }}</td>
+                    <td>
+                        {{ survey.nbAnswers == 0 ? 'No' : survey.nbAnswers }}
+                        answer<span v-if="survey.nbAnswers > 1">s</span>
+                    </td>
                     <td style="width:50px;text-align:center;">
                         <survey-action-menu :survey="survey" @surveyAction="surveyAction" />
                     </td>
@@ -67,6 +71,9 @@
         <v-dialog v-model="previewDialog" transition="dialog-bottom-transition" fullscreen>
             <survey-display-card :survey="focusedSurvey" showCloseButton @closeDialog="previewDialog=false;" />
         </v-dialog>
+        <v-dialog fullscreen v-model="resultDialog">
+            <survey-result-card :survey="focusedSurvey" :isLoading="isLoading" @closeDialog="resultDialog = false" />
+        </v-dialog>
     </div>
 </template>
 <script setup>
@@ -86,7 +93,7 @@
     const { t } = useI18n();
 
     const SurveyStore = useSurveyStore();
-    const { getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey, sendSurvey, openSurvey, closeSurvey } = SurveyStore;
+    const { getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey, sendSurvey, openSurvey, closeSurvey, getResults } = SurveyStore;
     const { surveys, isLoading } = storeToRefs(SurveyStore);
     if(props.workshopId){
         getWorkshopSurveys(props.workshopId)
@@ -124,6 +131,9 @@
             case 'preview':
                 showPreviewDialog(data.survey);
                 break;
+            case 'result':
+                showResultDialog(data.survey);
+                break;
             case 'edit':
                 showEditDialog(data.survey);
                 break;
@@ -153,13 +163,12 @@
         deleteDialog.value = false;
     }
     const addQuestion = () => {
-        const question = focusedSurvey.value.options.language == 'fr' ? 'Nouvelle question' : 'New question'
         focusedSurvey.value.questions.push({
-            q_fr: 'Nouvelle question', q_en: 'New question', type: 'radio', options: [{ fr: 'option A', en: 'option A' }, { fr: 'option B', en: 'option B' }]
+            q_fr: 'Nouvelle question', q_en: 'New question', type: 'radio', required: false, options: [{ fr: 'Réponse A', en: 'Option A' }, { fr: 'Réponse B', en: 'Option B' }]
         });
     }
     const addOption = question => {
-        question.options.push({ fr: 'Nouvelle option', en: 'New option' });
+        question.options.push({ fr: 'Nouvelle réponse', en: 'New option' });
     }
     const deleteOption = data => {
         const options = [];
@@ -190,5 +199,13 @@
     const handleSend = async () => {
         await sendSurvey(focusedSurvey.value);
         sendDialog.value = false;
+    }
+    const resultDialog = ref(false);
+    const showResultDialog = survey => {
+        focusedSurvey.value = survey;
+        if(!survey.results){
+            getResults(survey);
+        }
+        resultDialog.value = true;
     }
 </script>

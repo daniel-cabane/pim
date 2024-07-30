@@ -1,13 +1,13 @@
 <template>
     <v-card :title="$t('Delete email')">
         <v-card-text>
-            <div class="text-h5 py-3 text-grey text-center">
+            <!-- <div class="text-h5 py-3 text-grey text-center">
                 Coming soon...
-            </div>
-            <!-- <div>
+            </div> -->
+            <div>
                 {{ $t('Are you sure you want to delete this email') }} ?
             </div>
-            <v-checkbox :label="$t('Yes, delete it permanently')" v-model="allowDelete" /> -->
+            <v-checkbox :label="$t('Yes, delete it permanently')" v-model="allowDelete" />
         </v-card-text>
         <v-card-actions>
             <v-spacer />

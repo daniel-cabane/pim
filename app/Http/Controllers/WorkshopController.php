@@ -10,6 +10,7 @@ use App\Models\Workshop;
 use App\Models\Theme;
 use App\Models\User;
 use App\Models\Session;
+use App\Models\Email;
 use Carbon\Carbon;
 
 class WorkshopController extends Controller
@@ -23,8 +24,10 @@ class WorkshopController extends Controller
         }
 
         $enrollements = [];
-        foreach($user->enrollements as $workshop){
-            $enrollements[] = $workshop->format();
+        if($user){
+            foreach($user->enrollements as $workshop){
+                $enrollements[] = $workshop->format();
+            }
         }
 
         $past = [];
@@ -451,6 +454,34 @@ class WorkshopController extends Controller
     {
         return response()->json([
             'emails' => auth()->user()->is['admin'] ? $workshop->emails : $workshop->emails()->where('admin', 0)->get()
+        ]);
+    }
+
+    public function addEmail(Workshop $workshop, Request $request)
+    {
+        $subject = ($request->validate(['subject' => 'required|String|min:3|max:100']))['subject'];
+
+        $email = Email::create([
+            'subject_fr' => $subject,
+            'subject_en' => $subject,
+            'language' => $workshop->language == 'fr' ? 'fr' : 'en',
+            'data' => [
+                'body_fr' => 'Saisir un message...',
+                'body_en' => 'Type your message',
+                'closing_fr' => "Cordialement",
+                'closing_en' => "Best regards",
+            ],
+            'sender_id' => auth()->id(),
+            'workshop_id' => $workshop->id,
+            'schedule' => null
+        ]);
+
+        return response()->json([
+            'email' => $email,
+            'message' => [
+                    'text' => 'Email created',
+                    'type' => 'success'
+                ]
         ]);
     }
 }

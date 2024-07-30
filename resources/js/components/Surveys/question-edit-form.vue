@@ -37,6 +37,6 @@
 
     const questionTypes = [
         { title: 'Single choice', value: 'radio' }, { title: 'Multiple choice', value: 'checkbox' },
-        { title: 'Short text', value: 'shortText' }, { title: 'Long text', value: 'longtext' }
+        { title: 'Short text', value: 'shortText' }, { title: 'Long text', value: 'longText' }
     ]
 </script>

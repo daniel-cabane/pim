@@ -38,7 +38,7 @@ export const useSurveyStore = defineStore({
         async deleteSurvey(survey) {
             this.isLoading = true;
             const res = await del(`/api/surveys/${survey.id}`);
-            this.surveys = res.surveys;
+            this.surveys = this.surveys.filter(s => s.id != res.id);
             this.isLoading = false;
         },
         async getWorkshopSurveys(id) {
@@ -82,6 +82,13 @@ export const useSurveyStore = defineStore({
             this.isLoading = true;
             await post(`/api/surveys/${this.survey.id}/submit`, {answers});
             this.loading = false;
+        },
+        async getResults(survey) {
+            this.isLoading = true;
+            const res = await get(`/api/surveys/${survey.id}/results`);
+            res.results.byQuestion.forEach(r => console.table(r.data));
+            survey.results = res.results;
+            this.isLoading = false;
         }
     }
 });

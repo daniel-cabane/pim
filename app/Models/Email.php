@@ -58,6 +58,11 @@ class Email extends Model
           $to = $students->pluck('email')->toArray();
           $sentTo = $students->pluck('id')->toArray();
         }
+        foreach($this->surveys as $survey){
+          if($survey->status == 'draft'){
+            $survey->send();
+          }
+        }
         Mail::to($to)->cc($cc)->bcc($bcc)->send(new WorkshopCommunication($this));
         $data = $this->data;
         $data->sentTo = $sentTo;

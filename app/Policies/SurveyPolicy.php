@@ -27,8 +27,16 @@ class SurveyPolicy
         if($user->hasRole('admin') && $survey->workshop->organiser_id == $user->id){
             return true;
         }
-        if($survey->answers()->where('user_id', $user->id)->exists() && $survey->status == 'open'){
-            return true;
+        if($survey->status == 'open'){
+            if($survey->answers()->where('user_id', $user->id)->exists()){
+                return true;
+            }
+            if($survey->workshop_id != null && $survey->workshop->applicants->contains($user)){
+                $application = $survey->workshop->applicants()->where('user_id', $user->id)->first();
+                if($application->pivot->confirmed){
+                    return true;
+                }
+            }
         }
         return false;
     }

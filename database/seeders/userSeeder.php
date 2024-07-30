@@ -16,7 +16,7 @@ class userSeeder extends Seeder
     {
         $hod = User::firstOrCreate([
             'name'=>'HOD',
-            'email'=>'hod',
+            'email'=>'hod@email.com',
             'email_verified_at' => now(),
             'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
             'preferences' => ['notifications' => 'all', 'title' => 'M.']

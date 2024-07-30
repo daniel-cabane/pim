@@ -4,7 +4,7 @@
         <v-btn icon="mdi-close" color="error" size="large" variant="text" style="position:absolute;top:5px;right:5px;"
             @click="emit('closeDialog')" v-if="showCloseButton" />
         <v-card-text class="d-flex justify-center">
-            <div style="min-width:350px;max-width:600px;">
+            <div style="min-width:350px;width:600px;max-width:600px;">
                 <question-display class="my-5" v-for="(question, index) in survey.questions" :question="question"
                     :style="missingRequired.includes(index) ? 'border:5px solid red' : ''" :lg="lg" :index="index"
                     :initialAnswer="survey.answers ? survey.answers[index] : null" :disabled="disableAnswers"

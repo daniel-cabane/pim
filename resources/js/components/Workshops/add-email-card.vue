@@ -1,9 +1,7 @@
 <template>
     <v-card :title="$t('New email')">
         <v-card-text>
-            <div class="d-flex justify-center text-subheading text-grey">
-                Coming soon...
-            </div>
+            <v-text-field :label="$t('Subject')" variant="outlined" v-model="subject"/>
         </v-card-text>
         <v-card-actions>
             <v-spacer />
@@ -18,17 +16,20 @@
 </template>
 <script setup>
     import { ref } from "vue";
-    import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { useEmailStore } from '@/stores/useEmailStore';
     import { storeToRefs } from 'pinia';
 
+    const props = defineProps({ workshopId: Number });
     const emit = defineEmits(['closeDialog']);
 
-    const name = ref('');
+    const EmailStore = useEmailStore();
+    const { addWorkshopEmail } = EmailStore;
+    const { isLoading } = storeToRefs(EmailStore);
 
-    const WorkshopStore = useWorkshopStore();
-    // const { newMail } = WorkshopStore;
-    const { isLoading } = storeToRefs(WorkshopStore);
+    const subject = ref('');
+
     const submitEmail = async () => {
+        await addWorkshopEmail(props.workshopId, subject.value);
         emit('closeDialog');
     }
 </script>

@@ -149,6 +149,7 @@ Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::post('/workshops/{workshop}/addStudent', [WorkshopController::class, 'addStudent']);
 
     Route::get('/workshops/{workshop}/emails', [WorkshopController::class, 'emails']);
+    Route::post('/workshops/{workshop}/addEmail', [WorkshopController::class, 'addEmail']);
 });
 
 /*
@@ -162,6 +163,7 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Survey']], f
 });
 
 Route::group(['middleware'=>['can:update,survey']], function(){
+    Route::get('/surveys/{survey}/results', [SurveyController::class, 'results']);
     Route::post('/surveys/{survey}/send', [SurveyController::class, 'send']);
     Route::post('/surveys/{survey}/open', [SurveyController::class, 'open']);
     Route::post('/surveys/{survey}/close', [SurveyController::class, 'close']);

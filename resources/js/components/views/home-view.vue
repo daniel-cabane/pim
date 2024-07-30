@@ -6,7 +6,8 @@
         </v-tabs>
         <v-tabs-window v-model="tab">
             <v-tabs-window-item value="posts">
-                <v-card flat color="surface" style="flex:1;" class="mb-3 pa-4 insetCard" v-if="isReady">
+                <v-card flat color="surface" style="flex:1;" class="mb-3 pa-4"
+                    :class="theme.global.name.value == 'customDark' ? 'neumorphismCardDark' : 'neumorphismCard'" v-if="isReady">
                     <div class="d-flex align-start justify-end px-4">
                         <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog">
                             {{ $t('More') }}
@@ -24,7 +25,8 @@
                 </v-card>
             </v-tabs-window-item>
             <v-tabs-window-item value="workshops">
-                <v-card flat color="surface" class="mb-3 pa-4 insetCard">
+                <v-card flat color="surface" class="mb-3 pa-4"
+                    :class="theme.global.name.value == 'customDark' ? 'neumorphismCardDark' : 'neumorphismCard'">
                     <div class="d-flex align-start justify-end px-1">
                         <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops">
                             {{ $t('More') }}
@@ -45,7 +47,8 @@
         </v-tabs-window>
     </v-container>
     <v-container style="display:flex;gap: 15px;" v-else>
-        <v-card flat color="surface" style="flex:1;" class="mb-3 pa-4 insetCard" v-if="isReady">
+        <div style="flex:1;" class="mb-3 pa-4"
+            :class="theme.global.name.value == 'customDark' ? 'neumorphismCardDark' : 'neumorphismCard'" v-if="isReady">
             <div class="d-flex align-start justify-space-between px-4">
                 <div class="pimTitleFont font-weight-thin text-captionColor" style="font-size:36px;">
                     {{ $t("Recent posts") }}
@@ -63,8 +66,9 @@
                     {{ $t('More') }}
                 </v-btn>
             </div>
-        </v-card>
-        <v-card flat width="350" color="surface" class="mb-3 pa-4 insetCard">
+        </div>
+        <div flat width="350" color="surface" class="mb-3 pa-4"
+            :class="theme.global.name.value == 'customDark' ? 'neumorphismCardDark' : 'neumorphismCard'">
             <div class="d-flex align-start justify-space-between px-1">
                 <div style="width:100%;font-size:36px;" class="pimTitleFont font-weight-thin text-captionColor">
                     {{ $t('Upcoming') }}
@@ -80,7 +84,7 @@
                     {{ $t('More') }}
                 </v-btn>
             </div>
-        </v-card>
+        </div>
     </v-container>
 </template>
 <script setup>
@@ -88,7 +92,7 @@
     import { usePostStore } from '@/stores/usePostStore';
     import { useEventStore } from '@/stores/useEventStore';
     import { storeToRefs } from 'pinia';
-    import { useDisplay } from 'vuetify';
+    import { useDisplay, useTheme } from 'vuetify';
 
     const postStore = usePostStore();
     const { getPublishedPosts } = postStore;
@@ -103,10 +107,19 @@
     const { name } = useDisplay();
     const isWindowSmall = computed(() => name.value == 'xs' || name.value == 'sm');
     const tab = ref('posts');
+
+    const theme = useTheme();
 </script>
 <style scoped>
-    .insetCard {
-        background-color: red;
-        box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.1) inset, -10px -10px 10px white inset;
+    .neumorphismCard {
+        border-radius: 12px;
+        background: #F3F3F3;
+        box-shadow: inset 6px 6px 18px #cccccc, inset -6px -6px 18px #ffffff;
+    }
+    .neumorphismCardDark {
+        border-radius: 12px;
+        background: #5f6263;
+        box-shadow: inset 6px 6px 22px #4f5152,
+            inset -6px -6px 22px #6f7374;
     }
 </style>

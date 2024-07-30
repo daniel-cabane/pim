@@ -83,7 +83,7 @@ class SurveyController extends Controller
         return response()->json([
                 'survey' => $survey->format(),
                 'message' => [
-                        'text' => 'Survey sent',
+                        'text' => 'Survey opened',
                         'type' => 'success'
                     ]
             ]);
@@ -117,6 +117,10 @@ class SurveyController extends Controller
 
     public function view(Survey $survey)
     {
+        $user = auth()->user();
+        if(!$survey->answers->contains($user)){
+            $survey->answers()->attach($user);
+        }
         return response()->json(['survey' => $survey->format()]);
     }
 
@@ -130,7 +134,7 @@ class SurveyController extends Controller
             }
         }
 
-        $survey->answers()->updateExistingPivot(auth()->id(), ['data' => json_encode($answers)]);
+        $survey->answers()->updateExistingPivot(auth()->id(), ['data' => json_encode($answers), 'submitted' => 1]);
 
         return response()->json([
                 'survey' => $survey,
@@ -141,14 +145,27 @@ class SurveyController extends Controller
             ]);
     }
 
+    public function results(Survey $survey)
+    {
+        return response()->json(['results' => $survey->results()]);
+    }
+
     public function destroy(Survey $survey)
     {
+        $id = $survey->id;
         $survey->delete();
 
         $surveys = [];
         foreach(Survey::orderBy('created_at', 'desc')->get() as $survey){
             $surveys[] = $survey->format();
         }
-        return response()->json(['surveys' => $surveys]);
+        return response()->json([
+            'id' => $id,
+            'message' => [
+                        'text' => 'Survey deleted',
+                        'type' => 'info'
+                    ]
+
+        ]);
     }
 }
