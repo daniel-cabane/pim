@@ -93,7 +93,7 @@ class Survey extends Model
             $data = [];
             if($question->type == 'radio' || $question->type == 'checkbox'){
                 foreach($question->options as $option){
-                    $data[] = 0;
+                    $data[] = [];
                 }
             }
             $byQuestion[] = [
@@ -111,12 +111,13 @@ class Survey extends Model
             ];
             foreach($this->questions as $questionIndex => $question){
                 if($question->type == 'radio'){
-                    $byQuestion[$questionIndex]['data'][$data[$questionIndex]-1]++;
-                }
-                if($question->type == 'checkbox'){
+                    $byQuestion[$questionIndex]['data'][$data[$questionIndex]-1][] = $answer->name;
+                } else if($question->type == 'checkbox'){
                     foreach($data[$questionIndex] as $answerIndex){
-                        $byQuestion[$questionIndex]['data'][$answerIndex-1]++;
+                        $byQuestion[$questionIndex]['data'][$answerIndex-1][] = $answer->name;
                     }
+                } else {
+                    $byQuestion[$questionIndex]['data'][] = ['name' => $answer->name , 'comment' => $data[$questionIndex]];
                 }
             }
         }

@@ -1,6 +1,19 @@
 <template>
-    <v-card :title="survey.options[`title_${lg}`]" :subtitle="survey.options[`description_${lg}`]"
-        style="position:relative;">
+    <v-card style="position:relative;">
+        <v-card-title class="d-flex justify-space-between align-center" v-if="!hideTitle">
+            <span class="text-truncate">
+                {{ survey.options[`title_${lg}`] }}
+            </span>
+            <v-chip color="secondary" v-if="disableAnswers">
+                {{ $t('Answers locked') }}
+            </v-chip>
+            <v-chip color="primary" v-else>
+                {{ $t('Answers editable') }}
+            </v-chip>
+        </v-card-title>
+        <v-card-subtitle v-if="!hideTitle">
+            {{ survey.options[`description_${lg}`] }}
+        </v-card-subtitle>
         <v-btn icon="mdi-close" color="error" size="large" variant="text" style="position:absolute;top:5px;right:5px;"
             @click="emit('closeDialog')" v-if="showCloseButton" />
         <v-card-text class="d-flex justify-center">
@@ -54,8 +67,10 @@
 
     const props = defineProps({ 
         survey: Object, 
-        showCloseButton: { type: Boolean, default: false }, 
+        hideTitle: { type: Boolean, default: false }, 
+        showCloseButton: { type: Boolean, default: false },
         showSubmitButton: { type: Boolean, default: false },
+        disableAnswers: { type: Boolean, default: false },
         isLoading: { type: Boolean, default: false }
     });
     const emit = defineEmits(['closeDialog', 'cancel', 'submitSurvey']);
@@ -80,7 +95,7 @@
             emit('submitSurvey', answers);
         }
     }
-    const disableAnswers = computed(() => props.survey.status != 'open' || props.survey.answers && !props.survey.options.answerEditable);
+    const disableAnswers = computed(() => props.disableAnswers || props.survey.status != 'open' || props.survey.answers && !props.survey.options.answerEditable);
 </script>
 
 <style scoped>

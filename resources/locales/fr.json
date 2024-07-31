@@ -336,5 +336,7 @@
     "Email created": "Email créé",
     "Open": "Ouvrir",
     "Results": "Résultats",
-    "Survey deleted": "Questionnaire supprimé"
+    "Survey deleted": "Questionnaire supprimé",
+    "Answers locked": "Réponses verrouillées",
+    "Answers editable": "Réponses modifiables"
 }
