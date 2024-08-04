@@ -196,8 +196,8 @@
         focusedSurvey.value = survey;
         sendDialog.value = true;
     }
-    const handleSend = async () => {
-        await sendSurvey(focusedSurvey.value);
+    const handleSend = async sendEmail => {
+        await sendSurvey(focusedSurvey.value, { sendEmail });
         sendDialog.value = false;
     }
     const resultDialog = ref(false);

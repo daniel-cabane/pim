@@ -30,8 +30,8 @@ export const useSurveyStore = defineStore({
         async updateSurvey(survey){
             this.isLoading = true;
             const res = await patch(`/api/surveys/${survey.id}`, survey);
-            if (res.survey) { //////////////////// WHY IS THE MAIN TITLE NOT UPDATING IN THE ADMIN TABLE ??
-                this.surveys = this.surveys.map(s => s.id == res.survey.id ? survey : s);
+            if (res.survey) {
+                this.surveys = this.surveys.map(s => s.id == res.survey.id ? res.survey : s);
             }
             this.isLoading = false;
         },
@@ -50,9 +50,8 @@ export const useSurveyStore = defineStore({
         async sendSurvey(survey, options) {
             this.isLoading = true;
             const res = await post(`/api/surveys/${survey.id}/send`, options);
-            if (res.survey) { //////////////////// WHY IS THE MAIN TITLE NOT UPDATING IN THE ADMIN TABLE ??
-                // this.surveys = this.surveys.map(s => s.id == res.survey.id ? survey : s);
-                survey = res.survey // <============================= TEST THAT
+            if (res.survey) {
+                this.surveys = this.surveys.map(s => s.id == res.survey.id ? res.survey : s);
             }
             this.isLoading = false;
         },

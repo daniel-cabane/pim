@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
 
 class Survey extends Model
 {
@@ -39,7 +40,7 @@ class Survey extends Model
         return $this->answers()->where('submitted', 1)->count();
     }
 
-    public function format($includeWorkshopName = false)
+    public function format()
     {
         $mainTitle = $this->options->language == 'fr' ? $this->options->title_fr : $this->options->title_en;
         $formatted = [
@@ -56,9 +57,10 @@ class Survey extends Model
             'workshopId' => $this->workshop_id,
             'editable' => Gate::allows('update', $this)
         ];
-        if($includeWorkshopName && $this->workshop){
-            $workshopMainTitle = $this->workshop->language == 'fr' ? $this->workshop->title_fr : $this->workshop->title_en;
-            $formatted['workshopName'] = $workshopMainTitle;
+        $workshop = $this->workshop;
+        if($workshop){
+            $formatted['workshopName'] = $workshop->language == 'fr' ? $workshop->title_fr : $workshop->title_en;
+            $formatted['nbRecipients'] = $workshop->applicants()->wherePivot('confirmed', 1)->count();
         }
         $user = auth()->user();
         if($user->is['student']){
@@ -73,15 +75,37 @@ class Survey extends Model
         return $formatted;
     }
 
-    public function send($dest = null, $sendMail = true)
+    public function send($dest = null, $sendEmail = true)
     {
         $this->update(['status' => 'open']);
         if($this->workshop_id){
             foreach($this->workshop->applicants as $applicant){
                 if($applicant->pivot->confirmed){
                     $this->answers()->attach($applicant);
-                    $applicants[] = $applicant->id;
                 }
+            }
+            if($sendEmail){
+                $body_fr = "Dans le cadre de l'atelier ".$this->workshop->link_fr.", ".$this->workshop->organiser->formal_name;
+                $body_fr .= " vous demande de bien vouloir répondre au questionnaire <b>".$this->options->title_fr."</b>.";
+                $body_en = "In the context of the workshop ".$this->workshop->link_en.", ".$this->workshop->organiser->formal_name;
+                $body_en .= " kindly asks you to respond to the survey <b>".$this->options->title_en."</b>.";
+                $email = Email::create([
+                    'subject_fr' => "Questionnaire - ".$this->options->title_fr,
+                    'subject_en' => "Survey - ".$this->options->title_en,
+                    'language' => $this->options->language == 'fr' ? 'fr' : 'en',
+                    'data' => [
+                        'body_fr' => $body_fr,
+                        'body_en' => $body_en,
+                        'buttonText_fr' => 'Répondre',
+                        'buttonText_en' => 'Answer',
+                        'closing_fr' => "Merci d'avance",
+                        'closing_en' => "Thanks in advance",
+                        'url' => "https://pim.fis.edu.hk/surveys/$this->id"
+                    ],
+                    'sender_id' => $this->author_id,
+                    'workshop_id' => $this->workshop_id,
+                    'schedule' => (Carbon::now())->subMinute()
+                  ]);
             }
         }
     }

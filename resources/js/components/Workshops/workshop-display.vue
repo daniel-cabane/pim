@@ -10,9 +10,9 @@
         </div>
         <workshop-lcs :workshop="workshop" />
     </div>
-    <v-card-text>
+    <v-card-text class="pb-0">
         <div v-html="description" />
-        <v-container fluid class="px-0">
+        <v-container fluid class="px-0 pb-0">
             <v-row>
                 <v-col cols="12" class="mb-4" v-if="workshop.sessions.length">
                     <div class="text-caption text-captionColor">

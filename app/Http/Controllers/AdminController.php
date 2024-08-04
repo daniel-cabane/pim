@@ -460,7 +460,7 @@ class AdminController extends Controller
     {
         $surveys = [];
         foreach(Survey::orderBy('created_at', 'desc')->get() as $survey){
-            $surveys[] = $survey->format(true);
+            $surveys[] = $survey->format();
         }
         return response()->json(['surveys' => $surveys]);
     }

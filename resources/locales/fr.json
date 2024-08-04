@@ -286,7 +286,7 @@
     "Edit user": "Modifier l'utilisateur",
     "User updated": "Utilisateur mis à jour",
     "Send": "Envoyer",
-    "Open this survey": "Ouvrir ce questionnaire",
+    "Do you want to open this survey for": "Voulez-vous ouvrir ce questionnaire pour",
     "Survey opened": "Questionnaire ouvert",
     "Survey sent": "Questionnaire envoyé",
     "Yes": "Oui",
@@ -338,5 +338,8 @@
     "Results": "Résultats",
     "Survey deleted": "Questionnaire supprimé",
     "Answers locked": "Réponses verrouillées",
-    "Answers editable": "Réponses modifiables"
+    "Answers editable": "Réponses modifiables",
+    "This survey has no recipient. It cannot be opened": "Ce questionnaire n'a pas de destinataire. Il ne peut pas être ouver.",
+    "Also notify recipients by email": "Prévenir les destinataire par mail",
+    "Recipient": "Destinataire"
 }

@@ -76,9 +76,10 @@ class SurveyController extends Controller
             ]);
     }
 
-    public function send(Survey $survey)
+    public function send(Survey $survey, Request $request)
     {
-        $survey->send();
+        $sendEmail = ($request->validate(['sendEmail' => 'required|Boolean']))['sendEmail'];
+        $survey->send($sendEmail);
 
         return response()->json([
                 'survey' => $survey->format(),

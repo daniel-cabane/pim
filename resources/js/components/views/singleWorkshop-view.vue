@@ -25,53 +25,51 @@
                     </div>
                 </div>
             </div>
-            <div class="pa-4">
-                <div v-if="user && user.is && user.is.student">
-                    <div class="d-flex justify-space-between" v-if="showApplication">
-                        <v-btn variant="tonal" color="warning" :loading="applyLoading"
-                            :disabled="applyLoading || !workshop.acceptingStudents" @click="handleWithdraw"
-                            v-if="workshop.application.submitted">
-                            {{ $t('Withdraw') }}
+            <div class="px-4 pb-3" v-if="user && user.is && user.is.student">
+                <div class="d-flex justify-space-between" v-if="showApplication">
+                    <v-btn variant="tonal" color="warning" :loading="applyLoading"
+                        :disabled="applyLoading || !workshop.acceptingStudents" @click="handleWithdraw"
+                        v-if="workshop.application.submitted">
+                        {{ $t('Withdraw') }}
+                    </v-btn>
+                    <span v-else />
+                    <span>
+                        <v-btn variant="tonal" class="mr-3" color="error"
+                            :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents"
+                            @click="showApplication = false">
+                            {{ $t('Cancel') }}
                         </v-btn>
-                        <span v-else />
-                        <span>
-                            <v-btn variant="tonal" class="mr-3" color="error"
-                                :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents"
-                                @click="showApplication = false">
-                                {{ $t('Cancel') }}
-                            </v-btn>
-                            <v-btn color="primary" :loading="applyLoading"
-                                :disabled="withdrawLoading || !workshop.acceptingStudents" @click="handleApply">
-                                {{ workshop.application.submitted ? $t('Update') : $t('Submit') }}
-                            </v-btn>
-                        </span>
-                    </div>
-                    <div class="d-flex justify-end" v-else-if="workshop.application.submitted">
-                        <div>
-                            <v-chip label size="large" variant="elevated" color="success" append-icon="mdi-check">
-                                {{ $t('Applied !') }}
-                            </v-chip>
-                            <v-btn icon="mdi-eye" color="success" class="ml-3" variant="text"
-                                @click="showApplication = true" v-if="workshop.acceptingStudents" />
-                        </div>
-                    </div>
-                    <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents">
-                        <v-btn color="primary" append-icon="mdi-human-greeting" @click="showApplication = true"
-                            v-if="!showApplication">
-                            {{ $t("I'm interested") }}
+                        <v-btn color="primary" :loading="applyLoading"
+                            :disabled="withdrawLoading || !workshop.acceptingStudents" @click="handleApply">
+                            {{ workshop.application.submitted ? $t('Update') : $t('Submit') }}
                         </v-btn>
+                    </span>
+                </div>
+                <div class="d-flex justify-end" v-else-if="workshop.application.submitted">
+                    <div>
+                        <v-chip label size="large" variant="elevated" color="success" append-icon="mdi-check">
+                            {{ $t('Applied !') }}
+                        </v-chip>
+                        <v-btn icon="mdi-eye" color="success" class="ml-3" variant="text"
+                            @click="showApplication = true" v-if="workshop.acceptingStudents" />
                     </div>
-                    <div class="d-flex justify-end" v-else>
-                        <v-tooltip :text="$t('This workshop is not accepting applications at this point')">
-                            <template v-slot:activator="{ props }">
-                                <span v-bind="props">
-                                    <v-btn append-icon="mdi-human-greeting" disabled>
-                                        {{ $t("I'm interested") }}
-                                    </v-btn>
-                                </span>
-                            </template>
-                        </v-tooltip>
-                    </div>
+                </div>
+                <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents">
+                    <v-btn color="primary" append-icon="mdi-human-greeting" @click="showApplication = true"
+                        v-if="!showApplication">
+                        {{ $t("I'm interested") }}
+                    </v-btn>
+                </div>
+                <div class="d-flex justify-end" v-else>
+                    <v-tooltip :text="$t('This workshop is not accepting applications at this point')">
+                        <template v-slot:activator="{ props }">
+                            <span v-bind="props">
+                                <v-btn append-icon="mdi-human-greeting" disabled>
+                                    {{ $t("I'm interested") }}
+                                </v-btn>
+                            </span>
+                        </template>
+                    </v-tooltip>
                 </div>
             </div>
         </v-card>

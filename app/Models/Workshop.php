@@ -43,12 +43,14 @@ class Workshop extends Model
 
     public function getLinkFrAttribute()
     {
-      return "<a href='https://pim.fis.edu.hk/workshops/$this->id'>$this->title_fr</a>";
+      $title = $this->title_fr == '' ? $this->title_en : $this->title_fr;
+      return "<a href='https://pim.fis.edu.hk/workshops/$this->id'>$title</a>";
     }
 
     public function getLinkEnAttribute()
     {
-      return "<a href='https://pim.fis.edu.hk/workshops/$this->id'>$this->title_en</a>";
+      $title = $this->title_en == '' ? $this->title_fr : $this->title_en;
+      return "<a href='https://pim.fis.edu.hk/workshops/$this->id'>$title</a>";
     }
 
     public function surveys()
@@ -194,8 +196,8 @@ class Workshop extends Model
 
     public function createExitSurvey()
     {
-      $description_fr = "Vous avez récemment participé à l'atelier $this->title_fr. Pourriez-vous prendre quelques minutes pour répondre au questionnaire ci-dessous et partager vos impressions ?";
-      $description_en = "You recently participated in the workshop $this->title_en. Could you take a few minutes to answer the survey below and share you thoughts ?";
+      $description_fr = "Vous avez récemment participé à l'atelier $this->link_fr. Pourriez-vous prendre quelques minutes pour répondre au questionnaire ci-dessous et partager vos impressions ?";
+      $description_en = "You recently participated in the workshop $this->link_en. Could you take a few minutes to answer the survey below and share you thoughts ?";
       $options = [
         'language' => $this->language,
         'title_fr' => "Bilan atelier - $this->title_fr",
@@ -291,7 +293,7 @@ class Workshop extends Model
             'buttonText_en' => 'Answer',
             'closing_fr' => "Merci d'avance",
             'closing_en' => "Thanks in advance",
-            'url' => "https//pim.fis.edu.hk/surveys/$survey->id"
+            'url' => "https://pim.fis.edu.hk/surveys/$survey->id"
         ],
         'sender_id' => 1,
         'workshop_id' => $this->id,

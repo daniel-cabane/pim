@@ -2,12 +2,12 @@
     <div>
         <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
-                <v-btn outline icon="mdi-account" v-bind="props" v-if="isWindowXs" />
-                <v-btn append-icon="mdi-menu-down" v-bind="props" v-else>
-                    {{ user.name }}
-                </v-btn>
+                <v-btn outline icon="mdi-account" v-bind="props"/>
             </template>
             <v-list>
+                <v-list-subheader>
+                    {{ user.name }}
+                </v-list-subheader>
                 <profile-dialog :user="user" :forceOpen="forceOpen" />
                 <v-divider />
                 <theme-and-language-picker />
@@ -65,7 +65,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
-                    <v-btn color="primary" variant="tonal" :loading="loading" @click="updatePreferences(initData)">
+                    <v-btn color="primary" style="width:150px;" variant="flat" :loading="loading" @click="updatePreferences(initData)">
                         {{ $t('Submit') }}
                     </v-btn>
                 </v-card-actions>
@@ -77,15 +77,11 @@
     import { ref, computed } from 'vue';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
-    import { useDisplay } from 'vuetify';
     import { useRouter } from 'vue-router';
 
     const authStore = useAuthStore();
     const { logout, updatePreferences } = authStore;
     const { user, loading } = storeToRefs(authStore);
-
-    const { name } = useDisplay();
-    const isWindowXs = computed(() => name.value == 'xs');
 
     const router = useRouter();
     const goToDashboard = () => {

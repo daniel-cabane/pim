@@ -13,13 +13,10 @@
         </v-card>
     </div>
     <div v-else>
-        <div v-for="(option, index) in question.options" class="d-flex">
-            <span>
-                {{ option[language] }}
-            </span>
-            <v-card class="ml-2" color="primary" style="height:20px;" :style="`width:${question.answers[index].length*20}px;`">
-            </v-card>
+        <div class="text-h6 text-grey pa-2 mb-3">
+            {{ question.q }}
         </div>
+        <question-bar-graph :question="question" :language="language"/>
     </div>
 </template>
 <script setup>

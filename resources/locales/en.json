@@ -286,7 +286,7 @@
     "Edit user": "Edit user",
     "User updated": "User updated",
     "Send": "Send",
-    "Open this survey": "Open this survey",
+    "Do you want to open this survey for": "Do you want to open this survey for",
     "Survey opened": "Survey opened",
     "Survey sent": "Survey sent",
     "Yes": "Yes",
@@ -338,5 +338,8 @@
     "Results": "Results",
     "Survey deleted": "Survey deleted",
     "Answers locked": "Answers locked",
-    "Answers editable": "Answers editable"
+    "Answers editable": "Answers editable",
+    "This survey has no recipient. It cannot be opened": "This survey has no recipient. It cannot be opened",
+    "Also notify recipients by email": "Also notify recipients by email",
+    "Recipient": "Recipient"
 }
