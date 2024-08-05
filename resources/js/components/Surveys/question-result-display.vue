@@ -13,13 +13,23 @@
         </v-card>
     </div>
     <div v-else>
-        <div class="text-h6 text-grey pa-2 mb-3">
-            {{ question.q }}
+        <div class="d-flex">
+            <div style="flex:1;" class="text-h6 text-grey pa-2 mb-3">
+                {{ question.q }}
+            </div>
+            <div class="d-flex align-center">
+                <v-icon icon="mdi-poll"/>
+                <v-switch hide-details class="mx-1" v-model="graphSwitch"/>
+                <v-icon icon="mdi-chart-pie-outline"/>
+            </div>
         </div>
-        <question-bar-graph :question="question" :language="language"/>
+        <question-result-graph :question="question" :language="language" :isPie="graphSwitch"/>
     </div>
 </template>
 <script setup>
+    import { ref } from "vue";
+    
     const props = defineProps({ question: Object, language: String });
-    console.log(props.question);
+
+    const graphSwitch = ref(false);
 </script>

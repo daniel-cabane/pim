@@ -85,7 +85,6 @@ export const useSurveyStore = defineStore({
         async getResults(survey) {
             this.isLoading = true;
             const res = await get(`/api/surveys/${survey.id}/results`);
-            console.log(res.results);
             survey.results = res.results;
             this.isLoading = false;
         }

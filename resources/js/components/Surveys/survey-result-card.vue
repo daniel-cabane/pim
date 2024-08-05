@@ -36,8 +36,6 @@
     const emit = defineEmits(['closeDialog']);
     const props = defineProps({ survey: Object, isLoading: Boolean });
 
-    console.log(props.survey);
-
     const tab = ref('question');
     const questionOptions = computed(() => {
         return props.survey.questions.map((q, i) => ({

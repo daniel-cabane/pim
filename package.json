@@ -21,8 +21,10 @@
         "@intlify/unplugin-vue-i18n": "^4.0.0",
         "@schedule-x/vue": "^1.43.6",
         "@tinymce/tinymce-vue": "^6.0.1",
+        "chart.js": "^4.4.3",
         "pinia": "^2.1.7",
         "tinymce": "^7.0.1",
+        "vue-chartjs": "^5.3.1",
         "vue-i18n": "^9.13.1",
         "vue-router": "^4.3.2",
         "vuetify": "^3.6.4"
