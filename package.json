@@ -19,7 +19,6 @@
     },
     "dependencies": {
         "@intlify/unplugin-vue-i18n": "^4.0.0",
-        "@schedule-x/vue": "^1.43.6",
         "@tinymce/tinymce-vue": "^6.0.1",
         "chart.js": "^4.4.3",
         "pinia": "^2.1.7",

@@ -66,7 +66,7 @@
         <v-dialog width="850" scrollable v-model="editDialog">
             <survey-edit-card :survey="focusedSurvey" :isLoading="isLoading" @closeDialog="editDialog = false"
                 @updateSurvey="handleEditSurvey" @addQuestion="addQuestion" @addOption="addOption"
-                @deleteOption="deleteOption" />
+                @deleteOption="deleteOption" @deleteQuestion="deleteQuestion"/>
         </v-dialog>
         <v-dialog v-model="previewDialog" transition="dialog-bottom-transition" fullscreen>
             <survey-display-card :survey="focusedSurvey" showCloseButton @closeDialog="previewDialog=false;" />
@@ -96,7 +96,7 @@
     const { getAdminSurveys, getWorkshopSurveys, deleteSurvey, updateSurvey, sendSurvey, openSurvey, closeSurvey, getResults } = SurveyStore;
     const { surveys, isLoading } = storeToRefs(SurveyStore);
     if(props.workshopId){
-        getWorkshopSurveys(props.workshopId)
+        getWorkshopSurveys(props.workshopId);
     } else if(props.admin) {
         getAdminSurveys();
     }
@@ -182,6 +182,9 @@
         } else {
             addNotification({ text: 'You need at least one option', type: 'warning' });
         }
+    }
+    const deleteQuestion = index => {
+        focusedSurvey.value.questions.splice(index, 1);
     }
     const navigateToWorkshop = id => {
         router.push(`/workshops/${id}`);

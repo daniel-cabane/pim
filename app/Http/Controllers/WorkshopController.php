@@ -470,6 +470,12 @@ class WorkshopController extends Controller
                 'body_en' => 'Type your message',
                 'closing_fr' => "Cordialement",
                 'closing_en' => "Best regards",
+                'actionButton' => [
+                    'value' => 'none',
+                    'text_fr' => '',
+                    'text_en' => '',
+                    'url' => ''
+                ]
             ],
             'sender_id' => auth()->id(),
             'workshop_id' => $workshop->id,

@@ -341,5 +341,12 @@
     "Answers editable": "Answers editable",
     "This survey has no recipient. It cannot be opened": "This survey has no recipient. It cannot be opened",
     "Also notify recipients by email": "Also notify recipients by email",
-    "Recipient": "Recipient"
+    "Recipient": "Recipient",
+    "Delete this question": "Delete this question",
+    "Call to action button": "Call to action button",
+    "No button": "No button",
+    "Custom url": "Custom url",
+    "Survey": "Survey",
+    "Email deleted": "Email deleted",
+    "Invalid URL": "Invalid URL"
 }

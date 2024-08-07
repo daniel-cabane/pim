@@ -3,9 +3,9 @@
 
 {!! $email->language == 'fr' ? $email->data->body_fr : $email->data->body_en !!}
 
-@if(isset($email->data->url))
-<x-mail::button :url="url($email->data->url)">
-{{ $email->language == 'fr' ? $email->data->buttonText_fr : $email->data->buttonText_en }}
+@if($email->data->actionButton->value != 'none'))
+<x-mail::button :url="url($email->data->actionButton->value == 'custom' ? $email->data->actionButton->url : 'https://pim.fis.edu.hk/surveys/'.$email->data->actionButton->value)">
+{{ $email->language == 'fr' ? $email->data->actionButton->text_fr : $email->data->actionButton->text_en }}
 </x-mail::button>
 @endif
 

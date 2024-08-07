@@ -35,8 +35,8 @@
         </v-card-title>
         <v-card-text class="pt-0">
             <question-edit-form v-for="(question, index) in survey.questions" :question="question"
-                :language="survey.options.language" :index="index" @addOption="emit('addOption', question)"
-                @deleteOption="emit('deleteOption', {question, index: index+1})" />
+                :language="survey.options.language" :isDraft="survey.status == 'draft'" :index="index" @addOption="emit('addOption', question)"
+                @deleteOption="emit('deleteOption', {question, index: index+1})" @deleteQuestion="emit('deleteQuestion', index)" />
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" variant="tonal" append-icon="mdi-plus" @click="emit('addQuestion')">
@@ -59,7 +59,7 @@
     const { t } = useI18n();
 
     const props = defineProps({ survey: Object,  isLoading: Boolean});
-    const emit = defineEmits(['closeDialog', 'updateSurvey', 'addQuestion', 'addOption', 'deleteOption']);
+    const emit = defineEmits(['closeDialog', 'updateSurvey', 'addQuestion', 'addOption', 'deleteOption', 'deleteQuestion']);
 
     const languages = ref([
         { title: 'Français', value: 'fr' }, { title: 'English', value: 'en' }, { title: t('Both'), value: 'both' }

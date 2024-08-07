@@ -17,8 +17,9 @@
             <v-window v-model="languageWindow">
                 <v-window-item :key="0" class="pt-2">
                     <v-text-field variant="outlined" label="Subject" v-model="email.subject_en" />
-                    <v-text-field variant="outlined" label="Button text" v-model="email.data.buttonText_en" />
-                    <v-text-field variant="outlined" label="Button link" v-model="email.data.url" />
+                    <v-select variant="outlined" label="Call to action button" :items="buttonOptions" item-props v-model="email.data.actionButton.value"/>
+                    <v-text-field variant="outlined" label="Button text" v-model="email.data.actionButton.text_en" v-if="email.data.actionButton.value && email.data.actionButton.value != 'none'"/>
+                    <v-text-field :rules="validUrl" variant="outlined" label="Button link (starting with https://)" v-model="email.data.actionButton.url" v-if="email.data.actionButton.value == 'custom'"/>
                     <div>
                         <div class="text-caption text-captionColor">
                             Body
@@ -30,15 +31,16 @@
                 </v-window-item>
                 <v-window-item :key="1" class="pt-2">
                     <v-text-field variant="outlined" label="Sujet" v-model="email.subject_fr" />
-                    <v-text-field variant="outlined" label="Texte boutton" v-model="email.data.buttonText_fr" />
-                    <v-text-field variant="outlined" label="Lien boutton" v-model="email.data.url" />
+                    <v-select variant="outlined" label="Bouton d'action" :items="buttonOptions" item-props v-model="email.data.actionButton.value"/>
+                    <v-text-field variant="outlined" label="Texte boutton" v-model="email.data.actionButton.text_fr" v-if="email.data.actionButton.value && email.data.actionButton.value != 'none'"/>
+                    <v-text-field :rules="validUrl" variant="outlined" label="Lien boutton (débutant par https://)" v-model="email.data.actionButton.url" v-if="email.data.actionButton.value == 'custom'"/>
                     <div>
                         <div class="text-caption text-captionColor">
                             Message
                         </div>
                         <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
                             plugins: 'lists link image table code help wordcount', height: 300, resize: false
-                        }" v-model="email.data.body_fr" />
+                        }" v-model="email.data.body_fr"/>
                     </div>
                 </v-window-item>
             </v-window>
@@ -48,18 +50,28 @@
             <v-btn variant="text" color="error" :disabled="isLoading" @click="emit('closeDialog')">
                 {{ $t('Cancel') }}
             </v-btn>
-            <v-btn variant="flat" color="success" :loading="isLoading" @click="emit('updateEmail', email)">
+            <v-btn variant="flat" color="success" :loading="isLoading" @click="emit('updateEmail', email);">
                 {{ $t('Submit') }}
             </v-btn>
         </v-card-actions>
     </v-card>
 </template>
 <script setup>
-    import { ref, reactive } from "vue";
+    import { ref, reactive, computed } from "vue";
     import Editor from '@tinymce/tinymce-vue';
+    import { useI18n } from 'vue-i18n';
 
-    const props = defineProps({ email: Object, isLoading: Boolean });
+    const { t } = useI18n();
+
+    const validUrl = [
+        value => {
+            const urlPattern = /^https:\/\/([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+            return urlPattern.test(value) ? true : t('Invalid URL');
+        }
+    ];
+    const props = defineProps({ email: Object, isLoading: Boolean, surveys: Array });
     const emit = defineEmits(['closeDialog', 'updateEmail']);
+    console.log(props.email);
 
     const email = reactive(props.email);
     const language = ref(props.email.language == 'fr');
@@ -68,4 +80,12 @@
         email.language = language.value ? 'fr' : 'en';
         languageWindow.value = language.value ? 1 : 0;
     }
+    const buttonOptions = computed(() => {
+        const options = [
+            { title: t('No button'), value: 'none' }
+        ];
+        props.surveys.forEach(s => options.push({ title: `${t('Survey')} - ${s.mainTitle}`, value: s.id }));
+        options.push({ title: t('Custom url'), value: 'custom' });
+        return options;
+    });
 </script>

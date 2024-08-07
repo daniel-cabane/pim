@@ -341,5 +341,12 @@
     "Answers editable": "Réponses modifiables",
     "This survey has no recipient. It cannot be opened": "Ce questionnaire n'a pas de destinataire. Il ne peut pas être ouver.",
     "Also notify recipients by email": "Prévenir les destinataire par mail",
-    "Recipient": "Destinataire"
+    "Recipient": "Destinataire",
+    "Delete this question": "Supprimer cette question",
+    "Call to action button": "Bouton d'action",
+    "No button": "Pas de boutton",
+    "Custom url": "URL personnalisée",
+    "Survey": "Questionnaire",
+    "Email deleted": "Email supprimé",
+    "Invalid URL": "Addresse non valide"
 }

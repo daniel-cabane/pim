@@ -289,11 +289,14 @@ class Workshop extends Model
         'data' => [
             'body_fr' => $body_fr,
             'body_en' => $body_en,
-            'buttonText_fr' => 'Répondre',
-            'buttonText_en' => 'Answer',
             'closing_fr' => "Merci d'avance",
             'closing_en' => "Thanks in advance",
-            'url' => "https://pim.fis.edu.hk/surveys/$survey->id"
+            'actionButton' => [
+                    'value' => $survey->id,
+                    'text_fr' => 'Répondre',
+                    'text_en' => 'Answer',
+                    'url' => ''
+                ]
         ],
         'sender_id' => 1,
         'workshop_id' => $this->id,
@@ -333,6 +336,12 @@ class Workshop extends Model
             'body_en' => $body_en,
             'closing_fr' => "Bon atelier",
             'closing_en' => "Have a good workshop",
+            'actionButton' => [
+                    'value' => 'none',
+                    'text_fr' => '',
+                    'text_en' => '',
+                    'url' => ''
+                ]
         ],
         'sender_id' => 1,
         'workshop_id' => $this->id,
@@ -356,6 +365,12 @@ class Workshop extends Model
             'body_en' => $body_en,
             'closing_fr' => "Bon atelier",
             'closing_en' => "Have a good workshop",
+            'actionButton' => [
+                    'value' => 'none',
+                    'text_fr' => '',
+                    'text_en' => '',
+                    'url' => ''
+                ]
         ],
         'sender_id' => 1,
         'workshop_id' => $this->id,
@@ -409,6 +424,12 @@ class Workshop extends Model
             'ps_fr' => $ps_fr,
             'ps_en' => "",
             'students' => $students->values()->toArray(),
+            'actionButton' => [
+                    'value' => 'none',
+                    'text_fr' => '',
+                    'text_en' => '',
+                    'url' => ''
+            ],
             'to' => $this->campus == 'BPR' ? 'dcabane@g.lfis.edu.hk' : 'dcabane@g.lfis.edu.hk' // Obviously, change this...
         ],
         'sender_id' => 1,

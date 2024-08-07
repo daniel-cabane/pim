@@ -29,9 +29,9 @@
         <v-dialog width="650" v-model="previewDialog">
             <email-preview-card :email="focusedEmail" @closeDialog="previewDialog = false" />
         </v-dialog>
-        <v-dialog width="650" v-model="editDialog">
+        <v-dialog width="750" v-model="editDialog">
             <email-edit-card :email="focusedEmail" :isLoading="isLoading" @closeDialog="editDialog = false"
-                @updateEmail="handleUpdate" />
+                :surveys="surveys" @updateEmail="handleUpdate" />
         </v-dialog>
         <v-dialog width="450" v-model="deleteDialog">
             <email-delete-card :email="focusedEmail" :isLoading="isLoading" @closeDialog="deleteDialog = false"
@@ -61,17 +61,23 @@
 <script setup>
     import { ref } from "vue";
     import { useEmailStore } from '@/stores/useEmailStore';
+    import { useSurveyStore } from '@/stores/useSurveyStore';
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
 
     const { locale } = useI18n();
 
-    const props = defineProps({ workshopId: { type: Number, nullable: true }, admin: { type: Boolean, default: false } });
+    const props = defineProps({ workshopId: { type: Number, nullable: true }, admin: { type: Boolean, default: false }, surveys: Array });
 
     const EmailStore = useEmailStore();
     const { getWorkshopEmails, updateEmail, updateEmailSchedule, deleteEmail, sendEmail, getEmailSentTo } = EmailStore;
     const { emails, isLoading, isReady } = storeToRefs(EmailStore);
     getWorkshopEmails(props.workshopId);
+
+    const SurveyStore = useSurveyStore();
+    const { getWorkshopSurveys } = SurveyStore;
+    const { surveys } = storeToRefs(SurveyStore);
+    getWorkshopSurveys(props.workshopId);
 
     const formatSchedule = email => {
         return (new Date(email.schedule)).toLocaleString(locale.value, { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
