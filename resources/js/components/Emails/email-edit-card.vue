@@ -25,7 +25,7 @@
                             Body
                         </div>
                         <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
-                    plugins: 'lists link image table code help wordcount', height: 300, resize: false
+                    menubar: false, plugins: 'link image', toolbar: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist| link unlink image | removeformat', height: 300, resize: false
                 }" v-model="email.data.body_en" />
                     </div>
                 </v-window-item>
@@ -39,7 +39,7 @@
                             Message
                         </div>
                         <Editor api-key="c6xujr454hv9o3u7uqat7dlla2v61j7n3syp29hhj0k4aeeu" :init="{
-                            plugins: 'lists link image table code help wordcount', height: 300, resize: false
+                            menubar: false, plugins: 'link image', toolbar: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist| link unlink image | removeformat', height: 300, resize: false
                         }" v-model="email.data.body_fr"/>
                     </div>
                 </v-window-item>
@@ -71,7 +71,6 @@
     ];
     const props = defineProps({ email: Object, isLoading: Boolean, surveys: Array });
     const emit = defineEmits(['closeDialog', 'updateEmail']);
-    console.log(props.email);
 
     const email = reactive(props.email);
     const language = ref(props.email.language == 'fr');
