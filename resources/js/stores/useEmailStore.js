@@ -44,6 +44,7 @@ export const useEmailStore = defineStore({
             this.isLoading = false;
         },
         async sendEmail(id) {
+            this.isLoading = true;
             const res = await post(`/api/emails/${id}/send`);
             this.emails = this.emails.map(e => e.id == res.email.id ? res.email : e);
             this.isLoading = false;

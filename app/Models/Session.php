@@ -24,6 +24,7 @@ class Session extends Model
         return [
             'title' => "$workshopTitle ($index)",
             'date' => $this->date,
+            'dayOfWeek' => (Carbon::parse($this->date))->dayOfWeek,
             'start' => $this->start,
             'end' => $this->finish,
             'color' => $colors[$this->workshop->campus],

@@ -52,6 +52,7 @@ class OpenDoor extends Model
         return [
             'title' => $this->type,
             'date' => $this->date,
+            'dayOfWeek' => (Carbon::parse($this->date))->dayOfWeek,
             'start' => $this->start,
             'end' => $this->finish,
             'color' => $colors[$this->campus][$type],
