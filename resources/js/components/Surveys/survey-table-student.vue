@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-caption text-captionColor">
+        <div class="text-caption text-captionColor" v-if="surveys.length > 0">
             {{ $t('Surveys') }}
         </div>
         <v-table>

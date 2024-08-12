@@ -1,6 +1,6 @@
 <template>
     <v-list-item>
-        <div class="text-caption text-grey">
+        <div class="text-caption text-captionColor">
             Language
         </div>
         <span style='display:flex;align-items:center;justify-content:center;'>
@@ -13,7 +13,7 @@
         </span>
     </v-list-item>
     <v-list-item>
-        <div class="text-caption text-grey">
+        <div class="text-caption text-captionColor">
             Theme
         </div>
         <span style='display:flex;align-items:center;justify-content:center;'>

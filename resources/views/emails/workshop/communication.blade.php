@@ -18,7 +18,7 @@
 @endforeach
 </x-mail::table>
 @endif
-
+<div style="min-height:15px;"></div>
 {!! $email->language == 'fr' ? $email->data->closing_fr : $email->data->closing_en !!},<br>
 {{ config('app.name') }}
 <br>

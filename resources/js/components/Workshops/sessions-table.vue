@@ -1,13 +1,9 @@
 <template>
     <div>
-        <div class="text-h5 text-grey d-flex align-center justify-space-between">
-            <span>
-                <span>
-                    {{ workshop.sessions.length }} {{ $t('Sessions') }}
-                </span>
-                <v-btn :disabled="isLoading" size="x-small" color="primary" class="ml-4" icon="mdi-plus"
-                    @click="emit('createSession');" />
-            </span>
+        <div class="text-h5 text-grey d-flex align-center justify-end">
+            <v-btn :disabled="isLoading" variant="outlined" color="primary" @click="emit('createSession');">
+                Add session
+            </v-btn>
             <!-- <v-btn :disabled="isLoading" size="small" color="primary" variant="tonal" @click="emit('orderSessions')">
                 {{ $t('Order sessions') }}
             </v-btn> -->

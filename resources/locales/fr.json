@@ -82,6 +82,8 @@
     "Schedule": "Horaire",
     "Add session": "Ajouter une session",
     "Day": "Jour",
+    "day": "jour",
+    "days": "jours",
     "Start": "Début",
     "End": "Fin",
     "Finish": "Fin",
@@ -348,5 +350,12 @@
     "Custom url": "URL personnalisée",
     "Survey": "Questionnaire",
     "Email deleted": "Email supprimé",
-    "Invalid URL": "Addresse non valide"
+    "Invalid URL": "Addresse non valide",
+    "Applicants": "Candidats",
+    "Confirm max applicants": "Confirmer max candidats",
+    "Next": "Suivant",
+    "Recap": "Récap",
+    "Starts on": "Commence le",
+    "PAST": "PASSÉ",
+    "unconfirmed": "non confirmé"
 }

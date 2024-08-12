@@ -23,7 +23,7 @@ class Workshop extends Model
 
     public function applicants()
     {
-      return $this->belongsToMany(User::class)->withPivot(['comment', 'available', 'confirmed']);
+      return $this->belongsToMany(User::class)->withPivot(['comment', 'available', 'confirmed'])->withTimestamps();
     }
 
     public function themes()
@@ -63,7 +63,7 @@ class Workshop extends Model
       $user = auth()->user();
       $applicants = [];
       if($user && $user->hasRole('teacher')){
-        foreach($this->applicants as $applicant){
+        foreach($this->applicants()->orderBy('pivot_created_at')->get() as $applicant){
           $applicants[] = [
             'id' => $applicant->id,
             'name' => $applicant->name,
@@ -104,6 +104,7 @@ class Workshop extends Model
       
       return [
         'id' => $this->id,
+        'mainTitle' => $this->language == 'fr' ? $this->title_fr : $this->title_en,
         'title' => ['fr' => $this->title_fr, 'en' => $this->title_en],
         'description' => json_decode($this->description),
         'language' => $this->language,
@@ -306,47 +307,79 @@ class Workshop extends Model
       $email->surveys()->attach($survey);
     }
 
-    public function createEmails()
+    public function createEmails($nofityApplicants)
     {
+      $teacherName = $this->organiser->formalName;
+      $details = json_decode($this->details);
       /**
        *  ENROLLMENT CONFIRMATION
        */
-      $firstSession = $this->sessions()->orderBy('date')->first();
-      $firstSessionDatetime = Carbon::parse("$firstSession->date $firstSession->start");
-      $teacherName = $this->organiser->formalName;
-      $details = json_decode($this->details);
-      $room = $details->roomNb;
+      if($nofityApplicants['confirmed']){
+        $firstSession = $this->sessions()->orderBy('date')->first();
+        $firstSessionDatetime = Carbon::parse("$firstSession->date $firstSession->start");
+        $room = $details->roomNb;
+  
+        $dateString_fr = $firstSessionDatetime->locale('fr')->translatedFormat('l j F \à\ H:i');
+        $dateString_en = $firstSessionDatetime->locale('en')->translatedFormat('l j F \a\t H:i');
+        $body_fr = "<p>Votre inscription à l'atelier $this->link_fr, animé par $teacherName, est <b>confirmée</b>.</p>";
+        $body_fr .= "<p>La première séance aura lieu en salle $room le</p>";
+        $body_fr .= "<p style='text-align: center;font-size:24px;'>$dateString_fr</p><br>";
+        $body_fr .= "<p>Cet atelier sera composé de 8 séances qui seront portées sur Pronote sous peu.<br>Votre présence à l'ensemble des séances est obligatoire. Merci de prévenir l'enseignant le plus tôt possible en cas d'impossibilité.</p>";
+        $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, is <b>confirmed</b></p>";
+        $body_en .= "<p>The first session will be held in room $room on</p>";
+        $body_en .= "<p style='text-align: center;font-size:24px;'>$dateString_en</p><br>";
+        $body_en .= "<p>This workshop will consist of 8 sessions which will be posted on Pronote shortly.<br>Your attendance to each session is mandatory. Please notify the teacher as soon as possible in case of unavailability.</p>";
+        Email::create([
+          'subject_fr' => "Inscription atelier - $this->title_fr",
+          'subject_en' => "Workshop enrollment - $this->title_en",
+          'language' => $this->language == 'fr' ? 'fr' : 'en',
+          'data' => [
+              'body_fr' => $body_fr,
+              'body_en' => $body_en,
+              'closing_fr' => "Bon atelier",
+              'closing_en' => "Have a good workshop",
+              'actionButton' => [
+                      'value' => 'none',
+                      'text_fr' => '',
+                      'text_en' => '',
+                      'url' => ''
+                  ]
+          ],
+          'sender_id' => 1,
+          'workshop_id' => $this->id,
+          'schedule' => (Carbon::today())->addDay()->setTime(8,00)
+        ]);
+      }
 
-      $dateString_fr = $firstSessionDatetime->locale('fr')->translatedFormat('l j F \à\ H:i');
-      $dateString_en = $firstSessionDatetime->locale('en')->translatedFormat('l j F \at\ H:i');
-      $body_fr = "<p>Votre inscription à l'atelier $this->link_fr, animé par $teacherName, est <b>confirmée</b>.</p>";
-      $body_fr .= "<p>La première séance aura lieu en salle $room le</p>";
-      $body_fr .= "<p style='text-align: center;font-size:24px;'>$dateString_fr</p><br>";
-      $body_fr .= "<p>Cet atelier sera composé de 8 séances qui seront portées sur Pronote sous peu.<br>Votre présence à l'ensemble des séances est obligatoire. Merci de prévenir l'enseignant le plus tôt possible en cas d'impossibilité.</p>";
-      $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, is <b>confirmed</b></p>";
-      $body_en .= "<p>The first session will be held in room $room on</p>";
-      $body_en .= "<p style='text-align: center;font-size:24px;'>$dateString_en</p><br>";
-      $body_en .= "<p>This workshop will consist of 8 sessions which will be posted on Pronote shortly.<br>Your attendance to each session is mandatory. Please notify the teacher as soon as possible in case of unavailability.</p>";
-      Email::create([
-        'subject_fr' => "Inscription atelier - $this->title_fr",
-        'subject_en' => "Workshop enrollment - $this->title_en",
-        'language' => $this->language == 'fr' ? 'fr' : 'en',
-        'data' => [
-            'body_fr' => $body_fr,
-            'body_en' => $body_en,
-            'closing_fr' => "Bon atelier",
-            'closing_en' => "Have a good workshop",
-            'actionButton' => [
-                    'value' => 'none',
-                    'text_fr' => '',
-                    'text_en' => '',
-                    'url' => ''
-                ]
-        ],
-        'sender_id' => 1,
-        'workshop_id' => $this->id,
-        'schedule' => (Carbon::today())->addDay()->setTime(8,00)
-      ]);
+      /**
+       *  UNCONFIRMED APPLICANTS
+       */
+      if($nofityApplicants['unconfirmed']){
+        $body_fr = "<p>Votre inscription à l'atelier $this->link_fr, animé par $teacherName, n'a pas pu être retenue. Nous en sommes désolés</p>";
+        $body_fr .= "<p>Nous vous tiendrons au courant si une nouvelle session venait à être organisée à l'avenir.</p>";
+        $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, could not be approved. We are sorry about that.</p>";
+        $body_en .= "<p>We will keep you informed if a new session were to be organized in the future.</p>";
+        Email::create([
+          'subject_fr' => "Inscription non retenue - $this->title_fr",
+          'subject_en' => "Enrollment not approved - $this->title_en",
+          'language' => $this->language == 'fr' ? 'fr' : 'en',
+          'data' => [
+              'body_fr' => $body_fr,
+              'body_en' => $body_en,
+              'closing_fr' => "Cordialement",
+              'closing_en' => "Best regards",
+              'actionButton' => [
+                      'value' => 'none',
+                      'text_fr' => '',
+                      'text_en' => '',
+                      'url' => ''
+                  ]
+          ],
+          'sender_id' => 1,
+          'workshop_id' => $this->id,
+          'schedule' => (Carbon::today())->addDay()->setTime(8,00)
+        ]);
+      }
 
       /**
        *  1ST SESSION REMINDER

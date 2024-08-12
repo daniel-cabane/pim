@@ -115,24 +115,48 @@
                 </v-window>
             </v-window-item>
             <v-window-item class="pt-2" value="sessions">
-                <v-dialog max-width="850" v-model="finalizeDialog">
+                <v-dialog scrollable max-width="850" v-model="finalizeDialog">
                     <template v-slot:default="{ isActive }">
-                        <v-card :title="t('Finalize workshop')" style="position:relative;">
+                        <v-card :title="`${t('Finalize workshop')} - ${workshop.mainTitle}`" style="position:relative;">
                             <v-progress-linear color="primary" indeterminate style="position:absolute;top:0px;"
                                 class="pa-0" v-if="isLoading && !isLaunching" />
                             <v-card-text>
-                                <sessions-table :workshop="workshop" :isLoading="isLoading"
-                                    @deleteSession="handleDeleteSession" @refreshSessions="prepareFinalizeWorkshop"
-                                    @createSession="handleCreateSession" @editSession="handleEditSession"
-                                    @orderSessions="orderSessions" />
+                                <v-tabs v-model="finalizeTab">
+                                    <v-tab value="0">
+                                        {{ $t('Sessions') }} ({{ workshop.sessions.length }})
+                                    </v-tab>
+                                    <v-tab value="1">
+                                        {{ $t('Applicants') }} ({{ applicantsCount}})
+                                    </v-tab>
+                                    <v-tab value="2">
+                                        {{ $t('Recap') }}
+                                    </v-tab>
+                                </v-tabs>
+                                <v-tabs-window v-model="finalizeTab">
+                                    <v-tabs-window-item value="0">
+                                        <sessions-table :workshop="workshop" :isLoading="isLoading"
+                                            @deleteSession="handleDeleteSession" @refreshSessions="prepareFinalizeWorkshop"
+                                            @createSession="handleCreateSession" @editSession="handleEditSession"
+                                            @orderSessions="orderSessions" />
+                                    </v-tabs-window-item>
+                                    <v-tabs-window-item value="1">
+                                        <applicants-table :applicants="workshop.applicants" @confirmMaxApplicants="confirmMaxApplicants"/>
+                                    </v-tabs-window-item>
+                                    <v-tabs-window-item value="2">
+                                        <workshop-recap :workshop="workshop" />
+                                    </v-tabs-window-item>
+                                </v-tabs-window>
                             </v-card-text>
                             <div style=" display:flex;justify-content:flex-end;" class="pa-3">
                                 <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
                                     @click="finalizeDialog = false">
                                     {{ $t('Cancel') }}
                                 </v-btn>
-                                <v-btn color="success" :disabled="isLoading && workshop.sessions.length == 0"
-                                    :loading="isLoading && isLaunching" @click="launchWorkshop">
+                                <v-btn color="primary" v-if="finalizeTab < 2" @click="finalizeTab++">
+                                    {{ $t('Next') }}
+                                </v-btn>
+                                <v-btn color="success" :disabled="isLoading || workshop.sessions.length == 0"
+                                    :loading="isLoading && isLaunching" @click="launchWorkshop" v-else>
                                     {{ $t('Launch') }}
                                 </v-btn>
                             </div>
@@ -236,6 +260,7 @@
 
     const finalizeDialog = ref(false);
     const prepareFinalizeWorkshop = async () => {
+        workshop.value.notifyApplicants = {confirmed: true, unconfirmed: true};
         finalizeDialog.value = true;
         const info = await prepareLaunch();
         workshop.value.sessions = info.sessions;
@@ -257,7 +282,7 @@
         } else { // TODO -> MAKE THIS SMARTER (NEXT SESSION NOT JUST NEXT WEEK)
             const lastSession = workshop.value.sessions[workshop.value.sessions.length-1];
             const lastSessionDate = new Date(lastSession.date)
-            const date = lastSessionDate.setDate(lastSessionDate.getDate() + 7);
+            const date = new Date(lastSessionDate.setDate(lastSessionDate.getDate() + 7));
             workshop.value.sessions.push({
                 date: date.toISOString().slice(0, 10), id: lastSession.id+1, start: lastSession.start, finish: lastSession.finish, status: 'confirmed'
             });
@@ -272,10 +297,23 @@
         }
     }
 
+    const finalizeTab = ref(0);
+    const applicantsCount = computed(() => {
+        const confirmed = workshop.value.applicants.filter(applicant => applicant.confirmed).length;
+        return `${confirmed}/${workshop.value.details.maxStudents}`
+    });
+    const confirmMaxApplicants = () => {
+        workshop.value.applicants.forEach(a => {
+            if(a.available && workshop.value.applicants.filter(applicant => applicant.confirmed).length < workshop.value.details.maxStudents) {
+                a.confirmed = true;
+            }
+        });
+    }
+    
     const isLaunching = ref(false);
     const launchWorkshop = async () => {
         isLaunching.value = true;
-        await launch({sessions: workshop.value.sessions});
+        await launch({sessions: workshop.value.sessions, applicants: workshop.value.applicants, notifyApplicants: workshop.value.notifyApplicants});
         finalizeDialog.value = false;
     }
 </script>

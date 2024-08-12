@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Http\Request;
 use App\Models\Workshop;
@@ -403,7 +404,9 @@ class WorkshopController extends Controller
     {
         $surveys = [];
         foreach($workshop->surveys as $survey){
-            $surveys[] = $survey->format();
+            if(Gate::allows('update', $survey) || $survey->status == 'open'){
+                $surveys[] = $survey->format();
+            }
         }
 
         return response()->json(['surveys' => $surveys]);

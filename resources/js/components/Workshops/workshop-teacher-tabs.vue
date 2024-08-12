@@ -17,13 +17,19 @@
         <v-tabs-window-item value="applicants">
             <v-row>
                 <v-col cols="12" class="pt=0">
-                    <v-data-table :headers="headers" :items="workshop.applicants" item-value="name">
+                    <v-data-table :headers="headers" :items-per-page-options="[10, 15, -1]" :items="workshop.applicants" item-value="name">
                         <template v-slot:item="{ item }">
                             <tr>
                                 <td>{{ item.name }}</td>
                                 <td class="text-center">{{ item.className }}</td>
-                                <td class="text-center">{{ item.available ? $t('Yes') : $t('No') }}</td>
-                                <td class="text-center">{{ item.confirmed ? $t('Yes') : $t('No') }}</td>
+                                <td class="text-center">
+                                    <v-icon icon="mdi-check" color="success" v-if="item.available"/>
+                                    <v-icon icon="mdi-window-close" color="error" v-else/>
+                                </td>
+                                <td class="text-center">
+                                    <v-icon icon="mdi-check" color="success" v-if="item.confirmed"/>
+                                    <v-icon icon="mdi-window-close" color="error" v-else/>
+                                </td>
                                 <td>{{ item.comment }}</td>
                                 <td class="d-flex align-center">
                                     <v-icon icon="mdi-pencil" class="mr-2" color="primary"

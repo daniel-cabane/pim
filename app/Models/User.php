@@ -73,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function enrollements()
     {
-      return $this->belongsToMany(Workshop::class)->withPivot(['comment', 'available', 'confirmed']);
+      return $this->belongsToMany(Workshop::class)->withPivot(['comment', 'available', 'confirmed'])->withTimestamps();
     }
 
     public function surveys()

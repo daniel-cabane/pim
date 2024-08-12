@@ -82,6 +82,8 @@
     "Schedule": "Schedule",
     "Add session": "Add session",
     "Day": "Day",
+    "day": "day",
+    "days": "days",
     "Start": "Start",
     "End": "End",
     "Finish": "Finish",
@@ -348,5 +350,12 @@
     "Custom url": "Custom url",
     "Survey": "Survey",
     "Email deleted": "Email deleted",
-    "Invalid URL": "Invalid URL"
+    "Invalid URL": "Invalid URL",
+    "Applicants": "Applicants",
+    "Confirm max applicants": "Confirm max applicants",
+    "Next": "Next",
+    "Recap": "Recap",
+    "Starts on": "Starts on",
+    "PAST": "PAST",
+    "unconfirmed": "unconfirmed"
 }

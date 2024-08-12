@@ -220,12 +220,14 @@ class AdminController extends Controller
 
     public function launchWorkshop(Workshop $workshop, Request $request)
     {
-        $sessions = $request->validate([
-            'sessions' => 'required|Array'
-        ])['sessions'];
+        $attrs = $request->validate([
+            'sessions' => 'required|Array',
+            'applicants' => 'required|Array',
+            'notifyApplicants' => 'required|Array',
+        ]);
 
         $index = 0;
-        foreach($sessions as $session){
+        foreach($attrs['sessions'] as $session){
             Session::create([
                 'workshop_id' => $workshop->id,
                 'index' => $index++,
@@ -236,9 +238,9 @@ class AdminController extends Controller
             ]);
         }
 
-        foreach($workshop->applicants as $applicant){
-            if($applicant->pivot->available){
-                $workshop->applicants()->updateExistingPivot($applicant->id, ['confirmed' => 1]);
+        foreach($attrs['applicants'] as $applicant){
+            if($applicant['confirmed']){
+                $workshop->applicants()->updateExistingPivot($applicant['id'], ['confirmed' => 1]);
             }
         }
         
@@ -246,7 +248,7 @@ class AdminController extends Controller
         $workshop->orderSessions();
 
         $workshop->createExitSurvey();
-        $workshop->createEmails();
+        $workshop->createEmails($attrs['notifyApplicants']);
 
         return response()->json([
             'workshop' => $workshop->format(),
