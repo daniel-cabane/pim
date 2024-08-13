@@ -153,6 +153,7 @@
     "from": "from",
     "to": "to",
     "This workshop is not accepting applications at this point": "This workshop is not accepting applications at this point",
+    "This workshop is not open for your class level": "This workshop is not open for your class level",
     "Confirm": "Confirm",
     "Withdraw": "Withdraw",
     "Application recorded": "Application recorded",
@@ -357,5 +358,7 @@
     "Recap": "Recap",
     "Starts on": "Starts on",
     "PAST": "PAST",
-    "unconfirmed": "unconfirmed"
+    "unconfirmed": "unconfirmed",
+    "Levels": "Levels",
+    "Notify by email": "Notify by email"
 }

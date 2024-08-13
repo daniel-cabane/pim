@@ -52,12 +52,13 @@
                             <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin"
                                 label="Teacher" variant="outlined" />
                         </div>
+                        <v-select :label="$t('Levels')" variant="outlined" :items="levels" multiple chips v-model="workshop.details.levels"/>
                         <div class="d-block d-sm-flex align-start" style="gap:5px;">
                             <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus"
                                 variant="outlined" />
                             <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb"
                                 :label="$t('Room')" variant="outlined" validate-on="blur" />
-                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1"
+                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1 mr-1"
                                 :disabled="workshop.campus != 'BPR'" />
                         </div>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
@@ -238,6 +239,8 @@
         { value: 'Saturday', title: t('Saturday') },
         { value: 'Sunday', title: t('Sunday') },
     ]);
+
+    const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
 
     const addSession = () => {
         workshop.value.details.schedule.push({day: 'Monday', start: '17:30', finish: '18:30'});

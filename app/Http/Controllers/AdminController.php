@@ -63,10 +63,11 @@ class AdminController extends Controller
     {
         $attrs = $request->validate([
             'name' => 'required|String|min:3|max:25',
-            'className' => 'required|String|min:2|max:6',
+            'className' => 'required|String|min:1|max:10',
+            'classLevel' => 'required|String|min:2|max:10'
         ]);
         
-        $user->update(['name' => $attrs['name'], 'className' => $attrs['className']]);
+        $user->update(['name' => $attrs['name'], 'level' => $attrs['classLevel'], 'section' => $attrs['className']]);
 
         return response()->json(['user' => $user, 'message' => ['text' => 'User updated', 'type' => 'success']]);
     }

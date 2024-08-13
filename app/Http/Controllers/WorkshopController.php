@@ -90,6 +90,7 @@ class WorkshopController extends Controller
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],
+                'levels' => [],
                 'maxStudents' => 15
             ]),
             'organiser_id' => auth()->id()

@@ -9,7 +9,7 @@
             <template v-slot:item="{ item }">
                 <tr>
                     <td>{{ item.name }}</td>
-                    <td class="text-center">{{ item.className }}</td>
+                    <td class="text-center">{{ item.class_name }}</td>
                     <td class="text-center">
                         <v-icon icon="mdi-check" color="success" v-if="item.available"/>
                         <v-icon icon="mdi-window-close" color="error" v-else/>
@@ -34,7 +34,7 @@
 
     const headers = [
         { title: t('Student'), align: 'start', key: 'name' },
-        { title: t('Class'), align: 'center', key: 'className' },
+        { title: t('Class'), align: 'center', key: 'class_name' },
         { title: t('Available'), align: 'center', key: 'available' },
         { title: t('Confirmed'), align: 'center', key: 'confirmed' },
         { title: t('Comment'), align: 'start', key: 'comment' },

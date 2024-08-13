@@ -153,6 +153,7 @@
     "from": "de",
     "to": "à",
     "This workshop is not accepting applications at this point": "Cet atelier n'est pas ouvert aux inscriptions pour l'instant",
+    "This workshop is not open for your class level": "Cet atelier n'est pas ouvert pour votre niveau",
     "Confirm": "Confirmer",
     "Withdraw": "Se retirer",
     "Application recorded": "Application recorded",
@@ -357,5 +358,7 @@
     "Recap": "Récap",
     "Starts on": "Commence le",
     "PAST": "PASSÉ",
-    "unconfirmed": "non confirmé"
+    "unconfirmed": "non confirmé",
+    "Levels": "Niveaux",
+    "Notify by email": "Envoyer un email de confirmation"
 }

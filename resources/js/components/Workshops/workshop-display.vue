@@ -1,7 +1,7 @@
 <template>
     <div style="display:flex;flex-wrap:nowrap;max-width:100%">
         <div style="flex:1;">
-            <v-card-title class="pb-1 pimSubtitleFont" style="text-overflow:ellipsis;font-size:48px;">
+            <v-card-title class="pb-1 pimSubtitleFont" style="font-size:48px;white-space:normal;line-height:60px;">
                 {{ title }}
             </v-card-title>
             <v-card-subtitle class="font-italic">
@@ -56,10 +56,10 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">
                     <div class="text-caption text-captionColor">
-                        {{ $t('Language') }}
+                        {{ $t('Levels') }}
                     </div>
                     <div>
-                        {{ $t(spellLanguage) }}
+                        {{ workshop.details.levels.join(', ') }}
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" class="mb-4">

@@ -33,6 +33,7 @@ class workshopSeeder extends Seeder
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],
+                'levels' => [],
                 'maxStudents' => 15
             ]),
             'organiser_id' => 1,
@@ -57,6 +58,7 @@ class workshopSeeder extends Seeder
                 'schedule' => [
                     ['day' => 'Tuesday', 'start' => '12:30', 'finish' => '13:30']
                 ],
+                'levels' => [],
                 'maxStudents' => 12
             ]),
             'organiser_id' => 2,
@@ -97,6 +99,7 @@ class workshopSeeder extends Seeder
                 'schedule' => [
                     ['day' => $daysOfWeek[rand(0,6)], 'start' => $startTime.':'.['00', '30'][rand(0,1)], 'finish' => $finishTime.':'.['00', '30'][rand(0,1)]]
                 ],
+                'levels' => [],
                 'maxStudents' => rand(10, 20)
             ]),
             'organiser_id' => rand(1, 4),

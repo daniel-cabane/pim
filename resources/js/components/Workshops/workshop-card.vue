@@ -14,22 +14,32 @@
         <v-card-text class="threelines" v-html="description" />
         <div class="px-4">
             <div>
-                <div class="text-caption text-grey">
+                <div class="text-caption text-captionColor">
                     {{ $t('Themes') }}
                 </div>
                 <workshop-themes-chips :themes="workshop.themes" />
             </div>
-            <div class="mb-2">
-                <div class="text-caption text-grey">
-                    {{ $t('Start date') }}
+            <div class="mb-2 d-flex text-caption">
+                <div style="flex:1">
+                    <div class="text-captionColor">
+                        {{ $t('Start date') }}
+                    </div>
+                    <div>
+                        {{ workshop.startDate ? workshop.formatedStartDate : $t(workshop.formatedStartDate) }}
+                    </div>
                 </div>
-                <div>
-                    {{ workshop.startDate ? workshop.formatedStartDate : $t(workshop.formatedStartDate) }}
+                <div style="flex:1">
+                    <div class="text-captionColor">
+                        {{ $t('Levels') }}
+                    </div>
+                    <div class="text-truncate">
+                        {{ workshop.details.levels.join(', ') }}
+                    </div>
                 </div>
             </div>
         </div>
-        <v-btn size="small" color="primary" icon="mdi-pencil" v-if="workshop.editable"
-            style="position:absolute;right:10px;bottom:10px;" @click.stop="editWorkshop" />
+        <!-- <v-btn size="small" color="primary" icon="mdi-pencil" v-if="workshop.editable"
+            style="position:absolute;right:10px;bottom:10px;" @click.stop="editWorkshop" /> -->
     </v-card>
 </template>
 <script setup>
@@ -44,9 +54,9 @@
     const seeWorkshop = () => {
         router.push(`/workshops/${props.workshop.id}`);
     }
-    const editWorkshop = () => {
-        router.push(`/workshops/${props.workshop.id}/edit`);
-    }
+    // const editWorkshop = () => {
+    //     router.push(`/workshops/${props.workshop.id}/edit`);
+    // }
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <template>
     <v-card class="pa-2" width="350">
         <v-card-title class="d-flex justify-space-between pb-0 text-truncate">
-            <span>{{ user.name }} ({{ user.className }})</span>
+            <span>{{ user.name }} ({{ user.class_name }})</span>
             <v-icon icon="mdi-pencil" size="small" color="primary" @click="editDialog=true" />
         </v-card-title>
         <v-card-subtitle class="pb-3">
@@ -29,7 +29,9 @@
             <v-card :title="$t('Edit user')">
                 <v-card-text>
                     <v-text-field variant="outlined" :label="$t('Name')" v-model="userName" />
-                    <v-text-field variant="outlined" :label="$t('Class name')" v-model="className" />
+                    <!-- <v-text-field variant="outlined" :label="$t('Class name')" v-model="className" /> -->
+                    <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
+                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']" v-model="className" />
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -55,11 +57,12 @@
 
     const userName = ref(props.user.name);
     const className = ref(props.user.className);
+    const classLevel = ref(props.user.classLevel);
     const editDialog = ref(false);
     const editLoading = ref(false);
     const updateUserNameAndClass = async () => {
         editLoading.value = true;
-        const res = await patch(`/api/admin/users/${props.user.id}/name`, {name: userName.value, className: className.value});
+        const res = await patch(`/api/admin/users/${props.user.id}/name`, {name: userName.value, className: className.value, classLevel: classLevel.value});
         emit('userNameUpdated', res.user);
         editLoading.value = false;
         editDialog.value = false;
@@ -80,4 +83,6 @@
         const res = await post(`/api/admin/users/${props.user.id}/updateRoles`, {teacher: teacher.value, hod: hod.value, publisher: publisher.value, student: student.value});
         loading.value = false;
     }
+
+    const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
 </script>

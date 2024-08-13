@@ -41,11 +41,11 @@
         <v-row v-if="workshop.notifyApplicants">
             <v-col cols="6">
                 {{ confirmedCount }} {{ $t('confirmed') }}
-                <v-checkbox density="compact" label="Notify by email" v-model="workshop.notifyApplicants.confirmed"/>
+                <v-checkbox density="compact" :label="$t('Notify by email')" v-model="workshop.notifyApplicants.confirmed"/>
             </v-col>
             <v-col cols="6">
                 {{ workshop.applicants.length - confirmedCount }} {{ $t('unconfirmed') }}
-                <v-checkbox density="compact" label="Notify by email" v-model="workshop.notifyApplicants.unconfirmed"/>
+                <v-checkbox density="compact" :label="$t('Notify by email')" v-model="workshop.notifyApplicants.unconfirmed"/>
             </v-col>
         </v-row>
     </v-container>

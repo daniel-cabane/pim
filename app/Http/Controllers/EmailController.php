@@ -70,7 +70,7 @@ class EmailController extends Controller
             $sentTo[] = [
                 'id' => $user->id,
                 'name' => $user->name,
-                'className' => $user->className,
+                'className' => $user->class_name,
                 'email' => $user->email
             ];
         }

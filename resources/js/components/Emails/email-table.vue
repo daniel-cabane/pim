@@ -46,7 +46,7 @@
                                 {{ recipient.name }}
                             </span>
                             <span class="text-captionColor">
-                                {{ recipient.className }}
+                                {{ recipient.class_name }}
                             </span>
                         </div>
                         <div class="text-caption text-captionColor">

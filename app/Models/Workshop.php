@@ -68,7 +68,7 @@ class Workshop extends Model
             'id' => $applicant->id,
             'name' => $applicant->name,
             'email' => $applicant->email,
-            'className' => $applicant->className,
+            'className' => $applicant->class_name,
             'available' => $applicant->pivot->available,
             'confirmed' => $applicant->pivot->confirmed,
             'comment' => $applicant->pivot->comment
@@ -94,13 +94,15 @@ class Workshop extends Model
           ];
         }
       }
-      $emails = [];
-      if($user && $user->hasRole('admin')){
-        $emails = $this->emails;
-      }
-      if($user && $user->hasRole('teacher')){
-        $emails = $this->emails()->where('admin', 0)->get();
-      }
+      // $emails = [];
+      // if($user && $user->hasRole('admin')){
+      //   $emails = $this->emails;
+      // }
+      // if($user && $user->hasRole('teacher')){
+      //   $emails = $this->emails()->where('admin', 0)->get();
+      // }
+
+      $details = json_decode($this->details);
       
       return [
         'id' => $this->id,
@@ -110,7 +112,7 @@ class Workshop extends Model
         'language' => $this->language,
         'term' => $this->term,
         'campus' => $this->campus,
-        'details' => json_decode($this->details),
+        'details' => $details,
         'teacherId' => $this->organiser_id,
         'teacher' => $this->organiser->formal_name,
         'themes' => $this->themes()->pluck('themes.id'),
@@ -122,7 +124,8 @@ class Workshop extends Model
         'application' => $application,
         'applicants' => $applicants,
         'sessions' => $this->sessions()->orderBy('index')->get(),
-        'emails' => $emails
+        'joinable' => $user && $user->hasRole('student') && in_array($user->level, $details->levels)
+        // 'emails' => $emails
       ];
     }
 
@@ -438,11 +441,13 @@ class Workshop extends Model
         $students->push([
           'id' => $student->id,
           'name' => $student->name,
-          'className' => $student->className,
-          'lastName' => (explode(' ', $student->name))[1]
+          'className' => $student->class_name,
+          'level' => $student->level,
+          'section' => $student->section,
+          'lastName' => isset((explode(' ', $student->name))[1]) ? (explode(' ', $student->name))[1] : $student->name
         ]);
       }
-      $students = $students->sortBy([['className', 'asc'], ['lastName', 'asc'], ['name', 'asc']]);
+      $students = $students->sortBy([['level', 'desc'], ['section', 'asc'], ['lastName', 'asc'], ['name', 'asc']]);
 
       $workshopTitle = $this->language == 'fr' ? $this->title_fr : $this->title_en;
       Email::create([

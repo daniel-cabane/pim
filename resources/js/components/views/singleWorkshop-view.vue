@@ -54,14 +54,14 @@
                             @click="showApplication = true" v-if="workshop.acceptingStudents" />
                     </div>
                 </div>
-                <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents">
+                <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents && workshop.joinable">
                     <v-btn color="primary" append-icon="mdi-human-greeting" @click="showApplication = true"
                         v-if="!showApplication">
                         {{ $t("I'm interested") }}
                     </v-btn>
                 </div>
                 <div class="d-flex justify-end" v-else>
-                    <v-tooltip :text="$t('This workshop is not accepting applications at this point')">
+                    <v-tooltip :text="$t(applyButtonTooltipText)">
                         <template v-slot:activator="{ props }">
                             <span v-bind="props">
                                 <v-btn append-icon="mdi-human-greeting" disabled>
@@ -76,7 +76,7 @@
     </v-container>
 </template>
 <script setup>
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
     import { useRoute, useRouter } from 'vue-router';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { useAuthStore } from '@/stores/useAuthStore';
@@ -101,7 +101,6 @@
     const applyLoading = ref(false);
     const withdrawLoading = ref(false);
     const handleApply = async () => {
-        console.log(workshop.value);
         applyLoading.value = true;
         await applyWorkshop({ availability: workshop.value.application.available, comment: workshop.value.application.comment});
         showApplication.value = false;
@@ -114,4 +113,5 @@
         showApplication.value = false;
         withdrawLoading.value = false;
     }
+    const applyButtonTooltipText = computed (() => workshop.value.joinable ? 'This workshop is not accepting applications at this point' : 'This workshop is not open for your class level');
 </script>

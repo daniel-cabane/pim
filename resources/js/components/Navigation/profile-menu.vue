@@ -6,7 +6,7 @@
             </template>
             <v-list>
                 <v-list-subheader>
-                    {{ user.name }}
+                    {{ user.name }} <span v-if="user.class_name">({{ user.class_name }})</span>
                 </v-list-subheader>
                 <profile-dialog :user="user" :forceOpen="forceOpen" />
                 <v-divider />

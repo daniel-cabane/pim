@@ -47,7 +47,11 @@ class UserController extends Controller
       $firstName = implode('-', explode(' ', ucwords(strtolower($attrs['firstName']))));
       $lastName = strtoupper($attrs['lastName']);
       if($user->is['student'] && isset($attrs['classLevel']) && isset($attrs['className'])){
-        $user->update(['name' => "$firstName $lastName", 'className' => $attrs['classLevel'].$attrs['className']]);
+        $user->update([
+          'name' => "$firstName $lastName",
+          'level' => $attrs['classLevel'],
+          'section' => $attrs['className']
+        ]);
       } else {
         $user->update(['name' => "$firstName $lastName"]);
       }

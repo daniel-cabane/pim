@@ -17,7 +17,7 @@
         <v-tabs-window-item value="applicants">
             <v-row>
                 <v-col cols="12" class="pt=0">
-                    <v-data-table :headers="headers" :items-per-page-options="[10, 15, -1]" :items="workshop.applicants" item-value="name">
+                    <v-data-table hover :headers="headers" :items-per-page-options="[10, 15, -1]" :items="workshop.applicants" item-value="name">
                         <template v-slot:item="{ item }">
                             <tr>
                                 <td>{{ item.name }}</td>
@@ -111,7 +111,7 @@
 
     const headers = [
         { title: t('Student'), align: 'start', key: 'name' },
-        { title: t('Class'), align: 'center', key: 'className' },
+        { title: t('Class'), align: 'center', key: 'class_name' },
         { title: t('Available'), align: 'center', key: 'available' },
         { title: t('Confirmed'), align: 'center', key: 'confirmed' },
         { title: t('Comment'), align: 'start', key: 'comment' },
