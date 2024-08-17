@@ -3,7 +3,7 @@
         <v-tabs v-model="tab">
             <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
             <v-tab value="surveys">{{ $t('Surveys') }}</v-tab>
-            <v-tab value="posts">{{ $t('Blog posts') }}</v-tab>
+            <v-tab value="posts">Blog</v-tab>
             <v-tab value="users">{{ $t('Users') }}</v-tab>
             <v-tab value="openDoors">{{ $t('Open doors') }}</v-tab>
             <v-tab value="holidays">{{ $t('Holidays') }}</v-tab>
@@ -11,10 +11,7 @@
         <div class="pa-4">
             <v-window v-model="tab">
                 <v-window-item value="workshops">
-                    <div class="d-flex flex-wrap " v-if="isReady">
-                        <workshop-card v-for="workshop in workshops" :workshop="workshop" class="ma-2"
-                            :key="workshop.id" />
-                    </div>
+                    <admin-workshops-tabs/>
                 </v-window-item>
                 <v-window-item value="surveys">
                     <survey-table admin />
@@ -47,13 +44,13 @@
     import { ref, reactive } from 'vue';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useRouter } from 'vue-router';
-    import { useWorkshopStore } from '@/stores/useWorkshopStore';
-    import { storeToRefs } from 'pinia';
+    // import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    // import { storeToRefs } from 'pinia';
 
-    const workshopStore = useWorkshopStore();
-    const { adminGetAllWorkshops } = workshopStore;
-    const { workshops, isReady } = storeToRefs(workshopStore);
-    adminGetAllWorkshops();
+    // const workshopStore = useWorkshopStore();
+    // const { adminGetAllWorkshops } = workshopStore;
+    // const { workshops, isReady } = storeToRefs(workshopStore);
+    // adminGetAllWorkshops();
 
     const authStore = useAuthStore();
     const { user } = authStore;

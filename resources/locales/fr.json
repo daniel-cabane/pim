@@ -360,5 +360,14 @@
     "PAST": "PASSÉ",
     "unconfirmed": "non confirmé",
     "Levels": "Niveaux",
-    "Notify by email": "Envoyer un email de confirmation"
+    "Notify by email": "Envoyer un email de confirmation",
+    "Theme updated": "Thème mis à jour",
+    "New theme": "Nouveau thème",
+    "Theme created": "Thème créé",
+    "For workshops": "Pour les ateliers",
+    "For posts": "Pour les articles",
+    "Dark image": "Image sombre",
+    "Bright image": "Image claire",
+    "Theme deleted": "Thème supprimé",
+    "Cannot delete used theme": "On ne peut pas supprimer un thème utilisé"
 }

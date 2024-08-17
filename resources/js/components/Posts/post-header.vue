@@ -11,14 +11,6 @@
         <v-chip :prepend-icon="chipDetails.icon" :color="chipDetails.color" label>
           {{ chipDetails.title }}
         </v-chip>
-        <!-- <div class="text-right" v-if="post.published_at">
-            <div class="text-caption">
-                {{ $t('Published on') }} {{ post.published_at_formated }}
-            </div>
-            <div class="text-caption font-italic" v-if="post.edited">
-                {{ $t('Edited on') }} {{ post.updated_at_formated }}
-            </div>
-        </div> -->
     </div>
 </template>
 <script setup>

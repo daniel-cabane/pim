@@ -1,6 +1,6 @@
 <template>
     <v-card :title="$t('Preview email')" :loading="isLoading">
-        <v-card-text>
+        <v-card-text style="color:black;">
             <div v-html="preview"/>
         </v-card-text>
         <v-card-actions>

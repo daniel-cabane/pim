@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Workshop;
+use App\Models\Theme;
 use App\Models\Holiday;
 use App\Models\Session;
 use App\Models\OpenDoor;
@@ -79,7 +80,80 @@ class AdminController extends Controller
         foreach(Workshop::orderBy('start_date', 'desc')->take(50)->get() as $workshop){
             $workshops[] = $workshop->format();
         }
-        return response()->json(['workshops' => $workshops]);
+        return response()->json([
+            'workshops' => $workshops,
+            'themes' => Theme::all()
+        ]);
+    }
+
+    public function themesWithStats()
+    {
+        return response()->json([
+                'themes' => Theme::all()->map(function ($theme) { return $theme->withStats(); })
+        ]);
+    }
+
+    public function updateTheme(Theme $theme, Request $request)
+    {
+        $attrs = $request->validate([
+            'title_en' => 'required|String|min:2|max:100',
+            'title_fr' => 'required|String|min:2|max:100',
+            'forWorkshop' => 'required|Boolean',
+            'forPost' => 'required|Boolean'
+        ]);
+
+        logger($attrs);
+
+        $theme->update($attrs);
+
+        return response()->json([
+            'theme' => $theme,
+            'message' => [
+                    'text' => 'Theme updated',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function createTheme(Request $request)
+    {
+        $attrs = $request->validate([
+            'title_en' => 'required|String|min:2|max:100',
+            'title_fr' => 'required|String|min:2|max:100'
+        ]);
+
+        $theme = Theme::create($attrs);
+
+        return response()->json([
+            'theme' => $theme->withStats(),
+            'message' => [
+                    'text' => 'Theme created',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function destroyTheme(Theme $theme)
+    {
+        if(count($theme->workshops) > 0 || count($theme->posts) > 0){
+            return response()->json([
+                'message' => [
+                        'text' => 'Cannot delete used theme',
+                        'type' => 'error'
+                    ]
+            ]);
+        }
+
+        $id = $theme->id;
+        $theme->delete();
+
+        return response()->json([
+            'id' => $id,
+            'message' => [
+                    'text' => 'Theme deleted',
+                    'type' => 'info'
+                ]
+        ]);
     }
     
     public function createHoliday(Request $request)

@@ -89,6 +89,7 @@
     import { useRouter } from 'vue-router';
     import { usePostStore } from '@/stores/usePostStore';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { useThemeStore } from '@/stores/useThemeStore';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
@@ -125,11 +126,14 @@
     }
 
     const workshopStore = useWorkshopStore();
-    const { createWorkshop, getThemes } = workshopStore;
-    const { themes } = storeToRefs(workshopStore);
+    const { createWorkshop } = workshopStore;
+    // const { themes } = storeToRefs(workshopStore);
 
+    const themeStore = useThemeStore();
+    const { getThemes, forWorkshop } = themeStore;
     getThemes();
-    const { locale, t } = useI18n();
+    const { locale } = useI18n();
+    const themes = forWorkshop;
     const availableThemes = computed(() => themes.value.map(theme => {
         return {
             title: locale == 'en' ? theme.title_en : theme.title_fr,

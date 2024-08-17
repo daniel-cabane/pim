@@ -21,6 +21,11 @@ class Post extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    public function themes()
+    {
+      return $this->belongsToMany(Theme::class);
+    }
+
     public function translation()
     {
         return $this->belongsTo(Post::class, 'translation_id');
@@ -31,6 +36,14 @@ class Post extends Model
         $author = $this->author;
         $publishDate = Carbon::create($this->published_at);
         $updateDate = Carbon::create($this->updated_at);
+        $themeTitles = [];
+        foreach($this->themes as $theme){
+            if($this->language == 'fr'){
+                $themeTitles[] = $theme->title_fr;
+            } else {
+                $themeTitles[] = $theme->title_en;
+            }
+        }
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -40,6 +53,8 @@ class Post extends Model
             'language' => $this->language,
             'post' => $this->post,
             'cover' => (json_decode($this->images))->cover,
+            'themes' => $this->themes()->pluck('themes.id'),
+            'themeTitles' => $themeTitles,
             'published_at' => $this->published_at,
             'published_at_formated' => $this->published_at ? $publishDate->format('d/m/Y') : 'Not published',
             'updated_at' => $this->updated_at,

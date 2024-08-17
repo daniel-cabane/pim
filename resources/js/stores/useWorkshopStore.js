@@ -8,7 +8,7 @@ export const useWorkshopStore = defineStore({
     state: () => ({
         workshops: [],
         myWorkshops: [],
-        themes: [],
+        // themes: [],
         workshop: {},
         students: [],
         isReady: false,
@@ -16,9 +16,9 @@ export const useWorkshopStore = defineStore({
         imageLoading: false
     }),
     actions: {
-        async getThemes() {
-            this.themes = await get('/api/workshops/themes');
-        },
+        // async getThemes() {
+        //     this.themes = await get('/api/workshops/themes');
+        // },
         async createWorkshop(newWorkshop) {
             this.isReady = false;
             const res = await post('/api/workshops', newWorkshop);
@@ -80,6 +80,7 @@ export const useWorkshopStore = defineStore({
             this.isReady = false;
             const res = await get(`/api/admin/workshops`);
             this.workshops = res.workshops;
+            this.themes = res.themes;
             this.isReady = true;
         },
         async applyWorkshop(data){
@@ -151,6 +152,17 @@ export const useWorkshopStore = defineStore({
             if(res.workshop){
                 this.workshop = res.workshop;
             }
-        }
+        },
+        // async updateTheme(theme){
+        //     this.isLoading = true;
+        //     const res = await patch(`/api/admin/themes/${theme.id}`, theme);
+        //     this.isLoading = false;
+        // },
+        // async createTheme(title_en, title_fr){
+        //     this.isLoading = true;
+        //     const res = await post(`/api/admin/themes`, {title_en, title_fr});
+        //     this.themes.push(res.theme);
+        //     this.isLoading = false;
+        // }
     }
 });

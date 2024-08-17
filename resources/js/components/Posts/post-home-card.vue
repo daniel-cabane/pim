@@ -16,15 +16,15 @@
             </span>
         </v-card-subtitle>
 
-        <v-card-text>
+        <v-card-text class="py-2">
             {{ post.description }}
         </v-card-text>
 
-        <!-- <v-card-actions>
-            <v-spacer />
-
-            <v-btn color="primary" icon="mdi-eye" />
-        </v-card-actions> -->
+        <div class="px-3 pb-3">
+            <v-chip size="small" label class="mr-2 mb-1" color="primary" v-for="theme in post.themeTitles">
+                #{{ theme }}
+            </v-chip>
+        </div>
     </v-card>
 </template>
 <script setup>

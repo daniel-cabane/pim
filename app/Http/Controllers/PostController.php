@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
+use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -104,7 +105,8 @@ class PostController extends Controller
             'description' => 'required|min:5|max:255',
             'language' => 'required|min:2|max:2',
             'post' => 'required|max:5000',
-            'cover' => 'required|max:5000'
+            'cover' => 'required|max:5000',
+            'themes' => 'sometimes|Array'
         ]);
 
         $images = json_decode($post->images);
@@ -117,6 +119,8 @@ class PostController extends Controller
             'post' => $attrs['post'],
             'images' => json_encode($images)
         ]);
+
+        $post->themes()->sync($attrs['themes']);
 
         return response()->json([
             'post' => $post->format(),
@@ -208,5 +212,15 @@ class PostController extends Controller
                 'type' => 'info'
             ]
         ]);
+    }
+
+    public function themes()
+    {
+        return response()->json(['themes' => Theme::all()]);
+    }
+
+    public function theme(Theme $theme)
+    {
+        return response()->json(['theme' => $theme]);
     }
 }

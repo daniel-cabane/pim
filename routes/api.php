@@ -52,6 +52,11 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::delete('/admin/term/{term}', [AdminController::class, 'deleteTerm']);
 
     Route::get('/admin/surveys', [AdminController::class, 'getSurveys']);
+
+    Route::get('/admin/themes', [AdminController::class, 'themesWithStats']);
+    Route::patch('/admin/themes/{theme}', [AdminController::class, 'updateTheme']);
+    Route::post('/admin/themes', [AdminController::class, 'createTheme']);
+    Route::delete('/admin/themes/{theme}', [AdminController::class, 'destroyTheme']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -68,11 +73,13 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 
 Route::get('/posts/published', [PostController::class, 'published']);
 Route::get('/posts/search', [PostController::class, 'search']);
+Route::get('/themes', [PostController::class, 'themes']);
+Route::get('/themes/{theme}', [PostController::class, 'theme']);
 
 Route::get('/terms', [EventController::class, 'getTerms']);
 
 Route::get('/workshops', [WorkshopController::class, 'index']);
-Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
+// Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
 Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
 
 Route::get('/events/upcoming', [EventController::class, 'upcoming']);

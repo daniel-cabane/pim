@@ -2,7 +2,7 @@
     <v-card class="d-flex" v-if="isReady">
         <v-tabs v-model="tab" color="primary" direction="vertical">
             <v-tab prepend-icon="mdi-file-eye" :text="$t('Submitted')" value="submitted" />
-            <v-tab prepend-icon="mdi-file-check" :text="$t('Published')" value="published"></v-tab>
+            <v-tab prepend-icon="mdi-file-check" :text="$t('Published')" value="published"></v-tab> 
         </v-tabs>
 
         <v-tabs-window style="flex:1" v-model="tab">

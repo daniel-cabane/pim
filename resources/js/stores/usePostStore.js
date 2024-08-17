@@ -9,6 +9,7 @@ export const usePostStore = defineStore({
         posts: [],
         myPosts: [],
         post: {},
+        // themes: [],
         totalNbPosts: 0,
         isReady: false,
         isLoading: false,
@@ -85,6 +86,10 @@ export const usePostStore = defineStore({
         async deletePost(slug) {
             const res = await del(`/api/posts/${slug}`, true);
             return res;
-        }
+        },
+        // async getThemes() {
+        //     const res = await get('/api/posts/themes');
+        //     this.themes = res.themes;
+        // },
     }
 });

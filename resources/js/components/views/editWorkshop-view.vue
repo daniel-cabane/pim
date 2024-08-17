@@ -2,8 +2,6 @@
     <v-container>
         <v-card>
             <div>
-                <!-- <workshop-edit-form :workshop="workshop" :availableThemes="availableThemes" @image-updated="updateImage"
-                    @image-deleted="deleteImage" :imageLoading="imageLoading" /> -->
                 <workshop-edit-form />
             </div>
             <div class="d-flex justify-space-between align-center px-4 py-2">
@@ -58,32 +56,14 @@
 <script setup>
     import { ref } from 'vue';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
-    // import { storeToRefs } from 'pinia';
     import { useRouter } from 'vue-router';
-    // import { useRoute } from 'vue-router';
-    // import { useI18n } from 'vue-i18n';
 
     let loading = ref(false);
     const archiveDialog = ref(false);
     const archiveLoading = ref(false);
 
     const workshopStore = useWorkshopStore();
-    // const { getWorkshop, updateWorkshop, getThemes, updateImage, deleteImage, archiveWorkshop } = workshopStore;
-    // const { workshop, isReady, themes, imageLoading } = storeToRefs(workshopStore);
     const { updateWorkshop, archiveWorkshop } = workshopStore;
-    // const { isReady } = storeToRefs(workshopStore);
-
-    // const route = useRoute();
-    // getWorkshop(route.params.id);
-
-    // getThemes();
-    // const { locale, t } = useI18n();
-    // const availableThemes = computed(() => themes.value.map(theme => {
-    //     return {
-    //         title: locale == 'en' ? theme.title_en : theme.title_fr,
-    //         value: theme.id
-    //     }
-    // }));
 
     const quitDialog = ref(false);
     const router = useRouter();

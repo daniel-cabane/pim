@@ -58,7 +58,7 @@
                             </transition>
                         </router-view> -->
                     </v-main>
-                    <div style="position:fixed;top:75px;left:12.5vw">
+                    <div style="position:fixed;top:75px;left:12.5vw;z-index:9999">
                         <notification-center></notification-center>
                     </div>
                 </v-container>

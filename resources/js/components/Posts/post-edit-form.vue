@@ -3,14 +3,14 @@
         <div style="flex:1">
             <v-container class="pa-0">
                 <v-row>
-                    <v-col xs="12" sm="12" md="8">
+                    <v-col class="pb-0" xs="12" sm="12" md="8">
                         <v-text-field :rules="[rules.required, rules.minLengthTitle]" max="100" v-model="post.title"
                             :label="$t('Title')" variant="outlined" validate-on="blur" :disabled="!post.editable" />
                     </v-col>
                     <v-col xs="12" sm="12" md="4" class="text-h5 font-weight-bold d-flex align-center">
                         <v-card flat :theme="isDarkColor(post.cover.titleColor) ? 'customLight' : 'customDark'"
                             class="mb-5 py-2 px-4" :style="`color:${post.cover.titleColor};`">
-                            {{ $t('Title color') }}
+                            {{ $t('Title') }}
                             <v-menu>
                                 <template v-slot:activator="{ props }">
                                     <v-btn size="small" :color="post.cover.titleColor" class="ml-2" base-color="black"
@@ -19,12 +19,12 @@
                                 <v-list>
                                     <v-list-item @click="post.cover.titleColor = '#8A8C8D'">
                                         <v-list-item-title>
-                                            {{ $t('Dark') }}
+                                            {{ $t('Dark image') }}
                                         </v-list-item-title>
                                     </v-list-item>
                                     <v-list-item @click="post.cover.titleColor = '#F3F3F3'">
                                         <v-list-item-title>
-                                            {{ $t('Bright') }}
+                                            {{ $t('Bright image') }}
                                         </v-list-item-title>
                                     </v-list-item>
                                     <v-dialog width="300">
@@ -55,6 +55,8 @@
             </v-container>
             <v-textarea no-resize rows="3" :rules="[rules.required, rules.minLengthDescription]" max="255" v-model="post.description"
                 :label="$t('Description')" variant="outlined" validate-on="blur" :disabled="!post.editable" />
+            <v-select v-model="post.themes" :items="availableThemes" :label="$t('Themes')" multiple chips
+            variant="outlined" />
         </div>
         <div style="width:320px">
             <v-file-input accept="image/png, image/jpeg, image/jpg" v-model="coverImageFile" ref="coverImageFileInput"
@@ -111,9 +113,11 @@
         }" v-model="post.post" />
 </template>
 <script setup>
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
     import { usePostStore } from '@/stores/usePostStore';
+    import { useThemeStore } from '@/stores/useThemeStore';
     import { storeToRefs } from 'pinia';
+    import { useI18n } from 'vue-i18n';
     import Editor from '@tinymce/tinymce-vue';
 
     const props = defineProps({ post: Object });
@@ -121,6 +125,17 @@
     const postStore = usePostStore();
     const { uploadPostImage, updateCoverImage } = postStore;
     const { imageLoading } = storeToRefs(postStore);
+
+    const { forPost } = storeToRefs(useThemeStore());
+
+    // getThemes();
+    const { locale } = useI18n();
+    const availableThemes = computed(() => forPost.value.map(theme => {
+        return {
+            title: locale == 'en' ? theme.title_en : theme.title_fr,
+            value: theme.id
+        }
+    }));
     
     const rules = {
         required: value => !!value || 'Required.',

@@ -360,5 +360,14 @@
     "PAST": "PAST",
     "unconfirmed": "unconfirmed",
     "Levels": "Levels",
-    "Notify by email": "Notify by email"
+    "Notify by email": "Notify by email",
+    "Theme updated": "Theme updated",
+    "New theme": "New theme",
+    "Theme created": "Theme created",
+    "For workshops": "For workshops",
+    "For posts": "For posts",
+    "Dark image": "Dark image",
+    "Bright image": "Bright image",
+    "Theme deleted": "Theme deleted",
+    "Cannot delete used theme": "Cannot delete used theme"
 }

@@ -10,33 +10,29 @@
         >
             {{ theme }}
         </v-chip>
-        <v-chip label color="secondary" v-if="workshopThemes.length == 0">{{ t('None') }}</v-chip>
+        <v-chip label color="secondary" v-if="workshopThemes.length == 0">
+            {{ t('None') }}
+        </v-chip>
     </span>
 </template>
 <script setup>
     import { computed } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { useThemeStore } from '@/stores/useThemeStore';
     import { storeToRefs } from 'pinia';
 
     const { t } = useI18n();
 
-    const workshopStore = useWorkshopStore();
-    const { getThemes } = workshopStore;
-    const { themes } = storeToRefs(workshopStore);
-
-    getThemes();
+    const themeStore = useThemeStore();
+    const { getThemeById } = themeStore;
 
     const props = defineProps({themes: Array, size: {type: String, default: 'default'}});
 
     const { locale } = useI18n();
     const workshopThemes = computed(() => {
-        const themeTitles = [];
-        themes.value.forEach(th => {
-            if(props.themes.indexOf(th.id) >= 0){
-                themeTitles.push(locale == 'en' ? th.title_en : th.title_fr);
-            }
+        return props.themes.map(id => {
+            const th = getThemeById(id);
+            return locale === 'fr' ? th.title_fr : th.title_en;
         });
-        return themeTitles;
     });
 </script>

@@ -22,7 +22,7 @@
                                 @click="addHolidayDialog=false">
                                 {{ $t('Cancel') }}
                             </v-btn>
-                            <v-btn color="success":loading="isLoading" @click="handleAddHoliday">
+                            <v-btn color="success" :loading="isLoading" @click="handleAddHoliday">
                                 {{ $t('Add') }}
                             </v-btn>
                         </div>

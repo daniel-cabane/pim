@@ -47,7 +47,7 @@
                 <v-form :disabled="workshop.status == 'launched'">
                     <div style='position:relative'>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
-                            <v-select v-model="workshop.themes" :items="availableThemes" label="Themes" multiple chips
+                            <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple chips
                                 variant="outlined" />
                             <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin"
                                 label="Teacher" variant="outlined" />
@@ -185,29 +185,30 @@
     import { useI18n } from 'vue-i18n';
     import { useDisplay } from 'vuetify';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { useThemeStore } from '@/stores/useThemeStore';
     import { storeToRefs } from 'pinia';
     import { useRoute } from 'vue-router';
 
     const workshopStore = useWorkshopStore();
-    const { prepareLaunch, launch, getWorkshop, getThemes, updateImage, deleteImage, deleteSession, createSession, updateSession, orderSessions } = workshopStore;
-    const { workshop, isReady, themes, imageLoading, isLoading } = storeToRefs(workshopStore);
+    const { prepareLaunch, launch, getWorkshop, updateImage, deleteImage, deleteSession, createSession, updateSession, orderSessions } = workshopStore;
+    const { workshop, isReady, imageLoading, isLoading } = storeToRefs(workshopStore);
 
     const route = useRoute();
     getWorkshop(route.params.id);
 
-    getThemes();
+
+    const { forWorkshop } = storeToRefs(useThemeStore());
+
+    // getThemes();
     const { locale, t } = useI18n();
-    const availableThemes = computed(() => themes.value.map(theme => {
+    const availableThemes = computed(() => forWorkshop.value.map(theme => {
         return {
             title: locale == 'en' ? theme.title_en : theme.title_fr,
             value: theme.id
         }
     }));
 
-    const { smAndDown } = useDisplay()
-
-    // const props = defineProps({ workshop: Object, availableThemes: Array, imageLoading: Boolean });
-    // const emit = defineEmits(['imageUpdated', 'imageDeleted']);
+    const { smAndDown } = useDisplay();
 
     const tab = ref('t-d');
 

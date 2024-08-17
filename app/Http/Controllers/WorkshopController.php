@@ -59,7 +59,7 @@ class WorkshopController extends Controller
     
     public function themes()
     {
-        return response()->json(Theme::all());
+        return response()->json(Theme::where('forWorkshop', 1)->get());
     }
 
 

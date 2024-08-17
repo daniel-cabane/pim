@@ -2,10 +2,24 @@
     <v-card width="100%" class="pa-3">
         <div class="d-flex justify-space-between">
             <div>
-                <div class="pimSubtitleFont font-weight-bold mb-1" style="font-size:48px;">
+                <div class="pimSubtitleFont font-weight-bold" style="font-size:48px;line-height:60px;">
                     {{ post.title }}
                 </div>
-                <div v-if="post.published_at">
+                <div v-if="post.published_at">                   
+    
+                </div>
+                <div class="font-italic" v-if="post.author">
+                    {{ $t('By') }} {{ post.author.name }}
+                </div>
+                <div class="pt-4">
+                    <v-chip size="small" label class="mr-2 mb-2" color="primary" v-for="theme in post.themeTitles">
+                        #{{ theme }}
+                    </v-chip>
+                </div>
+            </div>
+            <div style="min-width:250px;max-width:250px;">
+                <v-img class="align-end text-white" min-width="250" max-width="250" aspect-ratio="16/9" cover :src="post.cover.url" />
+                <div class="d-flex justify-end" style="white-space:nowrap;" v-if="post.published_at">
                     <span class="text-caption">
                         {{ $t('Published on') }} {{ post.published_at_formated }}
                     </span>
@@ -13,11 +27,7 @@
                         ({{ $t('Edited on') }} {{ post.updated_at_formated }})
                     </span>
                 </div>
-                <div class="font-italic" v-if="post.author">
-                    {{ $t('By') }} {{ post.author.name }}
-                </div>
             </div>
-            <v-img class="align-end text-white" max-width="240" max-height="135" aspect-ratio="16/9" cover :src="post.cover.url" />
         </div>
         <v-divider class="my-2" />
         <div class="mt-4" v-html="post.post" />
