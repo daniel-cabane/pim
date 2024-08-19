@@ -5,7 +5,6 @@
             <v-tab prepend-icon="mdi-puzzle" :text="$t('My workshops')" value="enrollements"
                 v-if="user && user.is.student"></v-tab>
             <v-tab prepend-icon="mdi-calendar-clock-outline" :text="$t('Past workshops')" value="past"></v-tab>
-            <!-- <v-spacer /> -->
              <span class="ml-8 mt-2">
                  <v-chip :variant="filters.TKO ? 'flat' : 'tonal'" :color="filters.TKO ? '#FF0000' : 'secondary'" class="mr-1"
                      @click="toggleTKO">
