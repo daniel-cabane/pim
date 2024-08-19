@@ -7,6 +7,7 @@ export const useAuthStore = defineStore({
     id: 'user',
     state: () => ({
         user: null,
+        messages: [],
         loading: false
     }),
     actions: {
@@ -104,6 +105,72 @@ export const useAuthStore = defineStore({
         },
         removeSurvey(id) {
             this.user.open_surveys = this.user.open_surveys.filter(s => s.id != id);
+        },
+        async msgToAdmin(msg) {
+            this.loading = true;
+            try {
+                const res = await axios.post('/api/adminmsg', { msg: msg });
+                this.loading = false;
+                addNotification({ text: res.data.message, type: 'success' });
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
+        },
+        async getMessages() {
+            this.loading = true;
+            try {
+                const res = await axios.get('/api/admin/messages');
+                this.messages = res.data.messages;
+                this.loading = false;
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
+        },
+        async updateMessageStatus(id, status) {
+            this.loading = true;
+            try {
+                const res = await axios.patch(`/api/admin/msg/${id}/status`, { status: status });
+                if(res.data.msg){
+                    this.messages = this.messages.map(m => m.id == res.data.msg.id ? res.data.msg : m);
+                    this.user.unread_messages = this.user.unread_messages.map(m => m.id == res.data.msg.id ? res.data.msg : m);
+                    if(res.data.msg.status == 'read'){
+                        this.user.unread_messages = this.user.unread_messages.filter(m => m.id != res.data.msg.id);
+                    }
+                }
+                this.loading = false;
+                addNotification({ text: res.data.message, type: 'success' });
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
+        },
+        async deleteMessage(id) {
+            this.loading = true;
+            try {
+                const res = await axios.delete(`/api/admin/msg/${id}`);
+                if(res.data.id){
+                    this.messages = this.messages.filter(m => m.id != res.data.id);
+                    this.user.unread_messages = this.user.unread_messages.filter(m => m.id != res.data.id);
+                }
+                this.loading = false;
+                addNotification({ text: res.data.message, type: 'info' });
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
+        },
+        async updateDetails(details) {
+            this.loading = true;
+            try {
+                const res = await axios.patch('/api/userinfo/details', details);
+                addNotification({ text: res.data.message, type: 'success' });
+                this.loading = false;
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+                this.loading = false;
+            }
         }
     }
 });

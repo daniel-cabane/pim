@@ -14,6 +14,7 @@ use App\Models\OpenDoor;
 use App\Models\Post;
 use App\Models\Term;
 use App\Models\Survey;
+use App\Models\Message;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -540,6 +541,37 @@ class AdminController extends Controller
             $surveys[] = $survey->format();
         }
         return response()->json(['surveys' => $surveys]);
+    }
+
+    public function updateMessageStatus(Message $message, Request $request)
+    {
+        $status = $request->validate(['status' => 'required|String|max:10'])['status'];
+
+        $message->update(['status' => $status]);
+
+        return response()->json([
+            'msg' => $message->format(),
+            'message' => 'Message updated'
+        ]);
+    }
+
+    public function getMessages()
+    {
+        $messages = [];
+        foreach(Message::all() as $message){
+            $messages[] = $message->format();
+        }
+        return response()->json(['messages' => $messages]);
+    }
+
+    public function deleteMessage(Message $message)
+    {
+        $id = $message->id;
+        $message->delete();
+        return response()->json([
+            'id' => $id,
+            'message' => 'Message deleted'
+        ]);
     }
 
 }

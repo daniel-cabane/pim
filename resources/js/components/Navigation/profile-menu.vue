@@ -12,6 +12,7 @@
                 <v-divider />
                 <theme-and-language-picker />
                 <v-divider />
+                <message-admin-dialog/>
                 <v-list-item @click="goToDashboard" v-if="user.is.admin">
                     <template v-slot:prepend>
                         <v-icon icon="mdi-security"></v-icon>

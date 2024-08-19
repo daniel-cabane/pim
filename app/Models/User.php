@@ -43,7 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // protected $with = ['surveys'];
 
-    protected $appends = ['is', 'open_surveys', 'class_name'];
+    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages'];
 
     public function getIsAttribute()
     {
@@ -135,5 +135,15 @@ class User extends Authenticatable implements MustVerifyEmail
       }
       unset($this->surveys);
       return $surveys;
+    }
+
+    public function getUnreadMessagesAttribute()
+    {
+      $messages = [];
+      foreach(Message::where('to', $this->id)->where('status', '!=', 'read')->get() as $message){
+        $messages[] = $message->format();
+      }
+
+      return $messages;
     }
 }

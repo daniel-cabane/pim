@@ -7,6 +7,7 @@
             <v-tab value="users">{{ $t('Users') }}</v-tab>
             <v-tab value="openDoors">{{ $t('Open doors') }}</v-tab>
             <v-tab value="holidays">{{ $t('Holidays') }}</v-tab>
+            <v-tab value="messages">Messages</v-tab>
         </v-tabs>
         <div class="pa-4">
             <v-window v-model="tab">
@@ -36,6 +37,9 @@
                         <admin-terms-display />
                     </div>
                 </v-window-item>
+                <v-window-item value="messages">
+                    <admin-messages-center />
+                </v-window-item>
             </v-window>
         </div>
     </v-container>
@@ -44,13 +48,6 @@
     import { ref, reactive } from 'vue';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useRouter } from 'vue-router';
-    // import { useWorkshopStore } from '@/stores/useWorkshopStore';
-    // import { storeToRefs } from 'pinia';
-
-    // const workshopStore = useWorkshopStore();
-    // const { adminGetAllWorkshops } = workshopStore;
-    // const { workshops, isReady } = storeToRefs(workshopStore);
-    // adminGetAllWorkshops();
 
     const authStore = useAuthStore();
     const { user } = authStore;

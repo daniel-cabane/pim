@@ -369,5 +369,10 @@
     "Dark image": "Dark image",
     "Bright image": "Bright image",
     "Theme deleted": "Theme deleted",
-    "Cannot delete used theme": "Cannot delete used theme"
+    "Cannot delete used theme": "Cannot delete used theme",
+    "Contact admin": "Contact admin",
+    "Message sent": "Message sent",
+    "Message updated": "Message updated",
+    "Message deleted": "Message deleted",
+    "Details updated": "Details updated"
 }

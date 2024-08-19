@@ -64,6 +64,27 @@ class UserController extends Controller
     return response()->json(['user' => $user]);
   }
 
+  public function updateDetails(Request $request)
+  {
+    $attrs = $request->validate([
+      'title' => 'sometimes|String|Nullable|max:16',
+      'name' => 'sometimes|String|Nullable|max:50',
+      'language' => ['required', Rule::in(['fr', 'en', 'both'])],
+      'campus' => ['required', Rule::in(['BPR', 'TKO', 'both'])]
+    ]);
+    $user = auth()->user();
+    $preferences = $user->preferences;
+    if($user->is['teacher']){
+      $preferences->title = $attrs['title'];
+      $user->update(['name' => $attrs['name']]);
+    }
+    $preferences->language = $attrs['language'];
+    $preferences->campus = $attrs['campus'];
+    $user->update(['preferences' => $preferences]);
+
+    return response()->json(['message' => 'Details updated']);
+  }
+
   public function googleSigninRedirect()
   {
     return Socialite::driver('google')->redirect();

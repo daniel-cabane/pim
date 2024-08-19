@@ -369,5 +369,10 @@
     "Dark image": "Image sombre",
     "Bright image": "Image claire",
     "Theme deleted": "Thème supprimé",
-    "Cannot delete used theme": "On ne peut pas supprimer un thème utilisé"
+    "Cannot delete used theme": "On ne peut pas supprimer un thème utilisé",
+    "Contact admin": "Contacter l'admin",
+    "Message sent": "Message envoyé",
+    "Message updated": "Message mis à jour",
+    "Message deleted": "Message supprimé",
+    "Details updated": "Details mis à jour"
 }

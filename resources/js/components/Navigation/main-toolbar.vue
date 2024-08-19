@@ -35,6 +35,7 @@
 
     <template v-slot:append>
       <div style="white-space:nowrap;display:flex;align-items:center;" v-if="user">
+        <messages-dialog :messages="user.unread_messages" class="mr-2" v-if="user.unread_messages.length"/>
         <survey-menu :surveys="user.open_surveys" class="mr-2" v-if="user.open_surveys.length"/>
         <action-menu v-if="user.is.teacher || user.is.publisher" />
         <profile-menu />

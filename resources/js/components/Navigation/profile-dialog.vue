@@ -8,12 +8,7 @@
                 <v-list-item-title>{{ $t("See profile") }}</v-list-item-title>
             </v-list-item>
         </template>
-        <v-card>
-            <v-card-title class="d-flex align-center">
-                <span>
-                    Profile
-                </span>
-            </v-card-title>
+        <v-card title="Profile">
             <v-card-text>
                 <div class="text-caption text-grey">
                     {{ $t('Email') }}
@@ -28,7 +23,7 @@
                 </div>
                 <div v-else>
                     <div class="text-caption text-captionColor">{{ $t('Name') }}</div>
-                    <div class="text-subtitle-1">{{ user.name }}</div>
+                    <div class="text-subtitle-1 mb-4">{{ user.name }}</div>
                 </div>
                 <div class="d-flex">
                     <div style="flex:1">
@@ -51,25 +46,42 @@
             </v-card-text>
             <div class="d-flex pa-2">
                 <v-spacer />
-                <v-btn variant="text" class="mr-2" min-width="150" color="error" @click="closeDialog">
+                <v-btn variant="text" class="mr-2" min-width="150" color="error" @click="dialog=false">
                     {{ $t('Close') }}
                 </v-btn>
-                <v-btn color="primary" min-width="150" @click="submit">{{ $t('Submit') }}</v-btn>
+                <v-btn color="primary" min-width="150" @click="handleupdateDetails">
+                    {{ $t('Submit') }}
+                </v-btn>
             </div>
         </v-card>
     </v-dialog>
 </template>
 <script setup>
     import { ref } from 'vue';
+    import { useAuthStore } from '@/stores/useAuthStore';
+
+    const { updateDetails } = useAuthStore();
 
     const props = defineProps({ user: Object });
 
     const dialog = ref(false);
 
-    const submit = () => {
-        console.log(props.user);
-    }
-    const closeDialog = () => {
+    const handleupdateDetails = async () => {
+        let details = {};
+        if(props.user.is.teacher){
+            details = {
+                title: props.user.preferences.title,
+                name: props.user.name,
+                language: props.user.preferences.language,
+                campus: props.user.preferences.campus
+            }
+        } else {
+            details = {
+                language: props.user.preferences.language,
+                campus: props.user.preferences.campus
+            }
+        }
+        await updateDetails(details);
         dialog.value = false;
     }
 </script>

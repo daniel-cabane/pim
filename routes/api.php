@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,12 +58,19 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::patch('/admin/themes/{theme}', [AdminController::class, 'updateTheme']);
     Route::post('/admin/themes', [AdminController::class, 'createTheme']);
     Route::delete('/admin/themes/{theme}', [AdminController::class, 'destroyTheme']);
+
+    Route::get('/admin/messages', [AdminController::class, 'getMessages']);
+    Route::patch('/admin/msg/{message}/status', [AdminController::class, 'updateMessageStatus']);
+    Route::delete('/admin/msg/{message}', [AdminController::class, 'deleteMessage']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::get('/userinfo', [UserController::class, 'info']);
     Route::get('/userinfo/teachers', [UserController::class, 'teachers']);
     Route::patch('/userinfo/preferences', [UserController::class, 'updatePreferences']);
+    Route::patch('/userinfo/details', [UserController::class, 'updateDetails']);
+
+    Route::post('/adminmsg', [MessageController::class, 'sendToAdmin']);
 });
 
 /*
@@ -88,6 +96,10 @@ Route::get('/openDoors', [EventController::class, 'openDoors']);
 
 Route::get('/calendar/getMonths', [EventController::class, 'getCalendarMonths']);
 // Route::get('/calendar/adjacentMonths', [EventController::class, 'getAdjacentMonths']);
+
+// Route::group(['middleware'=>['auth:sanctum']], function(){
+//     Route::post('/adminmsg', [MessageController::class, 'sendToAdmin']);
+// });
 
 /*
 *
