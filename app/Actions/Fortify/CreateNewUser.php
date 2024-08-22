@@ -56,12 +56,12 @@ class CreateNewUser implements CreatesNewUsers
                 $user->assignRole('publisher');
                 $user->update([
                     'name' => $teacherEmails[$emailParts[0]]['name'],
-                    'prefrences' => json_encode([
+                    'preferences' => [
                         'notifications' => 'all',
                         'title' => 'M.',
                         'campus' => $teacherEmails[$emailParts[0]]['campus'],
                         'language' => $teacherEmails[$emailParts[0]]['language']
-                        ])
+                        ]
                 ]);
             } else if(is_numeric(substr($emailParts[0], -1))){
                 $user->assignRole('student');
