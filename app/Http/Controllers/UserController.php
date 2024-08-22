@@ -37,7 +37,7 @@ class UserController extends Controller
     ]);
 
     $user = auth()->user();
-    $preferences = isset($user->preferences) ? $user->preferences : new stdClass();
+    $preferences = isset($user->preferences) ? $user->preferences : (object)[];
     $preferences->language = $attrs['language'];
     $preferences->campus = $attrs['campus'];
     if($attrs['init']){
