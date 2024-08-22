@@ -7,12 +7,20 @@
       </v-btn>
     </template>
     <v-card class="pa-4">
-      <div class="mb-4 text-center">
+      <div class="text-center">
         <a href="/auth/google">
           <v-img max-width='90%' min-width='90%' style="margin-left:5%;cursor:pointer;" src="/images/google signin.png"/>
         </a>
       </div>
-      <v-tabs v-model="tab" color="primary" align-tabs="center">
+      <div class="py-5 text-caption text-captionColor text-center">
+        <span v-if="locale == 'en'">
+          @g.lfis.edu.hk accounts only
+        </span>
+        <span v-else>
+          Comptes @g.lfis.edu.hk uniquement
+        </span>
+      </div>
+      <!-- <v-tabs v-model="tab" color="primary" align-tabs="center">
         <v-tab :value="1">Sign in</v-tab>
         <v-tab :value="2">Register</v-tab>
       </v-tabs>
@@ -103,7 +111,7 @@
             <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="resetPassword(form)">Reset password</v-btn>
           </div>
         </v-window-item>
-      </v-window>
+      </v-window> -->
     </v-card>
   </v-dialog>
 </template>
@@ -113,7 +121,7 @@
   import { storeToRefs } from 'pinia';
   import { useDisplay } from 'vuetify';
   import { useI18n } from 'vue-i18n';
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const authStore = useAuthStore();
   const { login, register, resetPassword } = authStore;
