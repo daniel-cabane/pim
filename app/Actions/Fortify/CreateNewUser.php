@@ -56,7 +56,7 @@ class CreateNewUser implements CreatesNewUsers
                 $user->assignRole('publisher');
                 $user->update([
                     'name' => $teacherEmails[$emailParts[0]]['name'],
-                    'prefrence' => json_encode([
+                    'prefrences' => json_encode([
                         'notifications' => 'all',
                         'title' => 'M.',
                         'campus' => $teacherEmails[$emailParts[0]]['campus'],
