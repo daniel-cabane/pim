@@ -182,7 +182,7 @@ class WorkshopController extends Controller
         $workshop->deletePoster($language);
         $posterLanguage = $language == 'fr' ? 'poster_fr' : 'poster_en';
         $details = json_decode($workshop->details);
-        $details->{$posterLanguage} = "/images/workshops/$fileName";
+        $details->{$posterLanguage} = "/storage/images/workshops/$fileName";
         $workshop->update([
             'details' => json_encode($details),
         ]);
