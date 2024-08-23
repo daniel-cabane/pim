@@ -70,7 +70,7 @@
 
   const themeStore = useThemeStore();
   // const { themes } = storeToRefs(authStore);
-  const { getThemes } = authStore;
+  const { getThemes } = themeStore;
   getThemes();
   
   const props = defineProps({ user: Object });
