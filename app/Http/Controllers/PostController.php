@@ -165,7 +165,7 @@ class PostController extends Controller
         if($postImages->cover->url != '/images/post default cover.png'){
             Storage::delete('/public/'.$postImages->cover->url);
         }
-        $postImages->cover->url = "/images/posts/$filename";
+        $postImages->cover->url = "/storage/images/posts/$filename";
         $post->update(['images' => json_encode($postImages)]);
 
         return response()->json([

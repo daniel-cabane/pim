@@ -28,7 +28,7 @@
                             </v-btn>
                         </template>
                         <template v-slot:default="{ isActive }">
-                            <v-card :title="t('Delete workshop')">
+                            <v-card :title="$t('Delete workshop')">
                                 <v-card-text>
                                     {{ $t('Are you sure you wish to archive this workshop ?') }}
                                 </v-card-text>

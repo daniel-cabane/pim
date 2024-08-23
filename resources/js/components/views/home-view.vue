@@ -73,7 +73,7 @@
                 <div style="width:100%;font-size:36px;" class="pimTitleFont font-weight-thin text-captionColor">
                     {{ $t('Upcoming') }}
                 </div>
-                <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops">
+                <v-btn variant="text" size='large' class="mt-2 ml-2" append-icon="mdi-open-in-new" to="/workshops">
                     {{ $t('More') }}
                 </v-btn>
             </div>

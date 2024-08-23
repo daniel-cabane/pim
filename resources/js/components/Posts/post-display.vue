@@ -19,11 +19,11 @@
             </div>
             <div style="min-width:250px;max-width:250px;">
                 <v-img class="align-end text-white" min-width="250" max-width="250" aspect-ratio="16/9" cover :src="post.cover.url" />
-                <div class="d-flex justify-end" style="white-space:nowrap;" v-if="post.published_at">
+                <div class="d-flex justify-end mt-1" style="white-space:nowrap;" v-if="post.published_at">
                     <span class="text-caption">
                         {{ $t('Published on') }} {{ post.published_at_formated }}
                     </span>
-                    <span class="text-caption font-italic" v-if="post.edited">
+                    <span class="text-caption font-italic ml-1" v-if="post.edited">
                         ({{ $t('Edited on') }} {{ post.updated_at_formated }})
                     </span>
                 </div>
