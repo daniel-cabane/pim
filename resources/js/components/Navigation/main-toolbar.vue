@@ -57,6 +57,7 @@
 <script setup>
   import { ref, computed, watch } from 'vue';
   import { useAuthStore } from '@/stores/useAuthStore';
+  import { useThemeStore } from '@/stores/useThemeStore';
   import { storeToRefs } from 'pinia';
   import { useDisplay } from 'vuetify';
   import { useRoute } from 'vue-router';
@@ -66,6 +67,11 @@
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
   const { defineUser } = authStore;
+
+  const themeStore = useThemeStore();
+  // const { themes } = storeToRefs(authStore);
+  const { getThemes } = authStore;
+  getThemes();
   
   const props = defineProps({ user: Object });
   if(props.user){

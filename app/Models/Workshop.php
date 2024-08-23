@@ -113,6 +113,10 @@ class Workshop extends Model
         'term' => $this->term,
         'campus' => $this->campus,
         'details' => $details,
+        'posters' => [
+          'en' => isset($details->poster_en) ? url($details->poster_en) : null,
+          'fr' => isset($details->poster_fr) ? url($details->poster_fr) : null,
+        ],
         'teacherId' => $this->organiser_id,
         'teacher' => $this->organiser->formal_name,
         'themes' => $this->themes()->pluck('themes.id'),

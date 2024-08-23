@@ -49,7 +49,7 @@
 
     const deleteDialog=ref(false);
 
-    const props = defineProps({ language: String, details: Object, pickingPoster: Boolean, imageLoading: Boolean });
+    const props = defineProps({ language: String, details: Object, posters: Object, pickingPoster: Boolean, imageLoading: Boolean });
     const texts = computed(() => {
         if(props.language == 'fr'){
             return {
@@ -61,6 +61,7 @@
         }
     });
     const poster = computed(() => {
+        return props.posters[props.language] ? props.posters[props.language] : null;
         return props.details[`poster_${props.language}`] ? props.details[`poster_${props.language}`] : null;
     });
 

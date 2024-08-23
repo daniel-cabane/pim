@@ -40,19 +40,20 @@
                         plugins: 'lists link image table code help wordcount', height: 300, resize: false
                     }" v-model="workshop.description.en" v-if="workshop.language != 'fr'" />
                 </div>
-                <v-divider class="my-6"/>
-                <survey-table :workshopId="workshop.id"/>
+                <v-divider class="my-6" />
+                <survey-table :workshopId="workshop.id" />
             </v-window-item>
             <v-window-item class="pt-2" value="details">
                 <v-form :disabled="workshop.status == 'launched'">
                     <div style='position:relative'>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
-                            <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple chips
-                                variant="outlined" />
+                            <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple
+                                chips variant="outlined" />
                             <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin"
                                 label="Teacher" variant="outlined" />
                         </div>
-                        <v-select :label="$t('Levels')" variant="outlined" :items="levels" multiple chips v-model="workshop.details.levels"/>
+                        <v-select :label="$t('Levels')" variant="outlined" :items="levels" multiple chips
+                            v-model="workshop.details.levels" />
                         <div class="d-block d-sm-flex align-start" style="gap:5px;">
                             <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus"
                                 variant="outlined" />
@@ -105,13 +106,13 @@
                 <v-file-input accept="image/png, image/jpeg, image/jpg" v-model="poster" ref="file"
                     @update:modelValue="updateImage({ language: posterLanguage, file: poster })"
                     style='display:none;' />
-                <poster-picker :language="workshop.language" :details="workshop.details" :imageLoading="imageLoading"
-                    @pickPoster="handlePickPoster(workshop.language)" @deletePoster="deleteImage"
-                    v-if="workshop.language != 'both'" />
+                <poster-picker :language="workshop.language" :details="workshop.details" :posters="workshop.posters"
+                    :imageLoading="imageLoading" @pickPoster="handlePickPoster(workshop.language)"
+                    @deletePoster="deleteImage" v-if="workshop.language != 'both'" />
                 <v-window show-arrows="hover" v-else>
                     <v-window-item v-for="lg in ['fr', 'en']" :key="lg">
-                        <poster-picker :language="lg" :details="workshop.details" :imageLoading="imageLoading"
-                            @pickPoster="handlePickPoster(lg)" />
+                        <poster-picker :language="lg" :details="workshop.details" :posters="workshop.posters"
+                            :imageLoading="imageLoading" @pickPoster="handlePickPoster(lg)" />
                     </v-window-item>
                 </v-window>
             </v-window-item>
@@ -136,12 +137,14 @@
                                 <v-tabs-window v-model="finalizeTab">
                                     <v-tabs-window-item value="0">
                                         <sessions-table :workshop="workshop" :isLoading="isLoading"
-                                            @deleteSession="handleDeleteSession" @refreshSessions="prepareFinalizeWorkshop"
+                                            @deleteSession="handleDeleteSession"
+                                            @refreshSessions="prepareFinalizeWorkshop"
                                             @createSession="handleCreateSession" @editSession="handleEditSession"
                                             @orderSessions="orderSessions" />
                                     </v-tabs-window-item>
                                     <v-tabs-window-item value="1">
-                                        <applicants-table :applicants="workshop.applicants" @confirmMaxApplicants="confirmMaxApplicants"/>
+                                        <applicants-table :applicants="workshop.applicants"
+                                            @confirmMaxApplicants="confirmMaxApplicants" />
                                     </v-tabs-window-item>
                                     <v-tabs-window-item value="2">
                                         <workshop-recap :workshop="workshop" />
