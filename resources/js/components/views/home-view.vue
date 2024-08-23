@@ -104,6 +104,7 @@
     const { events } = storeToRefs(eventStore);
     getUpcomingEvents();
 
+    // For small screens
     const { name } = useDisplay();
     const isWindowSmall = computed(() => name.value == 'xs' || name.value == 'sm');
     const tab = ref('posts');
