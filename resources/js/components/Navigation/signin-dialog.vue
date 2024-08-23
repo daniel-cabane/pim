@@ -1,15 +1,16 @@
 <template>
   <v-dialog v-model="dialog" width="380" @keydown.enter="submit">
     <template v-slot:activator="{ props }">
-      <v-btn variant="outlined" icon="mdi-account" class="d-md-none" v-bind="props" v-if="isWindowXs"/>
+      <v-btn variant="outlined" icon="mdi-account" class="d-md-none" v-bind="props" v-if="isWindowXs" />
       <v-btn variant="outlined" append-icon="mdi-account" v-bind="props" v-else>
-          {{ $t("Sign in") }} / {{ $t("Register") }}
+        {{ $t("Sign in") }} / {{ $t("Register") }}
       </v-btn>
     </template>
     <v-card class="pa-4">
       <div class="text-center">
         <a href="/auth/google">
-          <v-img max-width='90%' min-width='90%' style="margin-left:5%;cursor:pointer;" src="/images/google signin.png"/>
+          <v-img max-width='90%' min-width='90%' style="margin-left:5%;cursor:pointer;"
+            src="/images/google signin.png" />
         </a>
       </div>
       <div class="py-5 text-caption text-captionColor text-center">
@@ -20,7 +21,7 @@
           Comptes @g.lfis.edu.hk uniquement
         </span>
       </div>
-      <!-- <v-tabs v-model="tab" color="primary" align-tabs="center">
+      <v-tabs v-model="tab" color="primary" align-tabs="center" v-if="localEnv">
         <v-tab :value="1">Sign in</v-tab>
         <v-tab :value="2">Register</v-tab>
       </v-tabs>
@@ -28,90 +29,60 @@
         <v-window-item :value="1" :key="1">
           <v-form v-model="validSignin">
             <div>
-              <v-text-field 
-                :rules="[rules.required, rules.email]"
-                v-model="form.email"
-                label="Email"
-                variant="outlined"
-                validate-on="blur"
-              />
-              <v-text-field
-                class="mt-2"
-                :rules="[rules.required]"
-                type="password"
-                v-model="form.password"
-                :label="$t('Password')" 
-                variant="outlined"
-                validate-on="blur"
-              />
-              <v-checkbox :label="$t('Remember me')" density="compact" hide-details v-model="form.remember"/>
+              <v-text-field :rules="[rules.required, rules.email]" v-model="form.email" label="Email" variant="outlined"
+                validate-on="blur" />
+              <v-text-field class="mt-2" :rules="[rules.required]" type="password" v-model="form.password"
+                :label="$t('Password')" variant="outlined" validate-on="blur" />
+              <v-checkbox :label="$t('Remember me')" density="compact" hide-details v-model="form.remember" />
             </div>
             <div class="text-caption text-right text-primary mb-4" style="cursor:pointer;" @click="tab=3">
               Forgot your password ?
             </div>
           </v-form>
           <div class="d-flex pa-2">
-            <v-spacer/>
-            <v-btn variant="text" class="mr-2" min-width="150" :disabled="AuthLoading" color="error" @click="closeDialog">Close</v-btn>
-            <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="login({email, password} = form)">Sign in</v-btn>
+            <v-spacer />
+            <v-btn variant="text" class="mr-2" min-width="150" :disabled="AuthLoading" color="error"
+              @click="closeDialog">Close</v-btn>
+            <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="login({email, password} = form)">Sign
+              in</v-btn>
           </div>
         </v-window-item>
         <v-window-item :value="2" :key="2">
           <v-form v-model="validRegister">
             <div>
-                <v-text-field 
-                  :rules="[rules.required, rules.email]"
-                  v-model="form.email"
-                  label="Email"
-                  variant="outlined"
-                  validate-on="blur"
-                />
-                <v-text-field
-                  class="mt-2"
-                  :rules="[rules.required, rules.minLength]"
-                  type="password"
-                  v-model="form.password"
-                  :label="$t('Password')" 
-                  variant="outlined"
-                  validate-on="blur"
-                />
-                <v-text-field
-                    class="mt-2"
-                    :rules="[rules.matchPassword]"
-                    type="password"
-                    v-model="form.password_confirmation"
-                    :label="$t('Confirm password')"
-                    variant="outlined"
-                    validate-on="blur"
-                  />
-              </div>
-            </v-form>
-            <div class="d-flex pa-2">
-              <v-spacer/>
-              <v-btn variant="text" class="mr-2" min-width="150" :disabled="AuthLoading" color="error" @click="closeDialog">Close</v-btn>
-              <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="register(form)">Register</v-btn>
+              <v-text-field :rules="[rules.required, rules.email]" v-model="form.email" label="Email" variant="outlined"
+                validate-on="blur" />
+              <v-text-field class="mt-2" :rules="[rules.required, rules.minLength]" type="password"
+                v-model="form.password" :label="$t('Password')" variant="outlined" validate-on="blur" />
+              <v-text-field class="mt-2" :rules="[rules.matchPassword]" type="password"
+                v-model="form.password_confirmation" :label="$t('Confirm password')" variant="outlined"
+                validate-on="blur" />
             </div>
+          </v-form>
+          <div class="d-flex pa-2">
+            <v-spacer />
+            <v-btn variant="text" class="mr-2" min-width="150" :disabled="AuthLoading" color="error"
+              @click="closeDialog">Close</v-btn>
+            <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="register(form)">Register</v-btn>
+          </div>
         </v-window-item>
         <v-window-item :value="3" :key="3">
           <div class="title mb-2">
             {{ $t("Request password reset") }}
           </div>
           <div>
-            <v-text-field 
-                :rules="[rules.required, rules.email]"
-                v-model="form.email"
-                label="Email"
-                variant="outlined"
-                validate-on="blur"
-              />
+            <v-text-field :rules="[rules.required, rules.email]" v-model="form.email" label="Email" variant="outlined"
+              validate-on="blur" />
           </div>
           <div class="d-flex pa-2">
-            <v-spacer/>
-            <v-btn variant="text" class="mr-2" min-width="150" :disabled="AuthLoading" color="error" @click="tab=1">Cancel</v-btn>
-            <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="resetPassword(form)">Reset password</v-btn>
+            <v-spacer />
+            <v-btn variant="text" class="mr-2" min-width="150" :disabled="AuthLoading" color="error"
+              @click="tab=1">Cancel</v-btn>
+            <v-btn color="primary" min-width="150" :loading="AuthLoading" @click="resetPassword(form)">Reset
+              password</v-btn>
           </div>
         </v-window-item>
-      </v-window> -->
+      </v-window>
     </v-card>
   </v-dialog>
 </template>
@@ -162,4 +133,6 @@
 
   const { name } = useDisplay();
   const isWindowXs = computed(() => name.value == 'xs');
+
+  const localEnv = computed(() => window.Laravel.env == 'local');
 </script>

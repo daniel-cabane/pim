@@ -102,8 +102,39 @@ class UserController extends Controller
         'google_id' => $google_user->getId(),
         'email_verified_at' => Carbon::now(),
         'password' => Hash::make(Str::password()),
-        'prefrences' => json_encode(['notifications' => 'all'])
+        'preferences' => ['notifications' => 'all']
       ]);
+
+      $teacherEmails = [
+            'adelettrez' => ['name' => 'Antoine Delettrez', 'campus' => 'BPR', 'language' => 'both'],
+            'bbarre' => ['name' => 'Benjamin Barre', 'campus' => 'both', 'language' => 'both'],
+            'jcabrit' => ['name' => 'Jose Cabrit', 'campus' => 'BPR', 'language' => 'both'],
+            'ngouez' => ['name' => 'Nicolas Gouez', 'campus' => 'BPR', 'language' => 'both'],
+            'dcabane' => ['name' => 'Daniel Cabane', 'campus' => 'both', 'language' => 'both'],
+            'rdelpuech' => ['name' => 'Rémi Delpuech', 'campus' => 'both', 'language' => 'both'],
+            'sparis' => ['name' => 'Sébastien Paris', 'campus' => 'both', 'language' => 'both'],
+            'ghenry' => ['name' => 'Guillaume Henry', 'campus' => 'both', 'language' => 'both'],
+            'tbelmekki' => ['name' => 'Tarik Belmekki', 'campus' => 'both', 'language' => 'both']
+        ];
+        $emailParts = explode('@', $user->email);
+
+        if($user->google_id != null && $emailParts[1] == 'g.lfis.edu.hk'){
+          if(isset($teacherEmails[$emailParts[0]])){
+            $user->assignRole('teacher');
+            $user->assignRole('publisher');
+            $user->update([
+                'name' => $teacherEmails[$emailParts[0]]['name'],
+                'preferences' => [
+                  'notifications' => 'all',
+                  'title' => 'M.',
+                  'campus' => $teacherEmails[$emailParts[0]]['campus'],
+                  'language' => $teacherEmails[$emailParts[0]]['language']
+                ]
+            ]);
+          } else if(is_numeric(substr($emailParts[0], -1))){
+            $user->assignRole('student');
+          }
+        }
     }
 
     Auth::login($user);

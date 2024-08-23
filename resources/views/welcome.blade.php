@@ -43,6 +43,9 @@
                 opacity: 0;
             }
         </style> -->
+        <script>
+            window.Laravel = { env: '{{ app()->environment() }}' };
+        </script>
     </head>
     <body>
         <div id="app">

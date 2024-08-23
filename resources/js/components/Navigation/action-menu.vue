@@ -68,8 +68,8 @@
                             variant="outlined" />
                         <v-select :label="$t('Term')" variant="outlined" validate-on="blur" :items="[1, 2, 3]"
                             v-model="workshopTerm" />
-                        <v-select v-model="workshopThemes" :items="availableThemes" label="Themes" multiple chips
-                            variant="outlined" />
+                        <!-- <v-select v-model="workshopThemes" :items="availableThemes" label="Themes" multiple chips
+                            variant="outlined" /> -->
                     </v-card-text>
                     <div class="d-flex pa-2">
                         <v-spacer />
@@ -129,17 +129,18 @@
     const { createWorkshop } = workshopStore;
     // const { themes } = storeToRefs(workshopStore);
 
-    const themeStore = useThemeStore();
-    const { getThemes, forWorkshop } = themeStore;
-    getThemes();
-    const { locale } = useI18n();
-    const themes = forWorkshop;
-    const availableThemes = computed(() => themes.value.map(theme => {
-        return {
-            title: locale == 'en' ? theme.title_en : theme.title_fr,
-            value: theme.id
-        }
-    }));
+    // const themeStore = useThemeStore();
+    // const { getThemes, forWorkshop } = themeStore;
+    // getThemes();
+    // const { locale } = useI18n();
+    // const themes = forWorkshop;
+    // console.log(themes);
+    // const availableThemes = computed(() => themes.value.map(theme => {
+    //     return {
+    //         title: locale == 'en' ? theme.title_en : theme.title_fr,
+    //         value: theme.id
+    //     }
+    // }));
 
     const availableLanguages = [{ value: 'fr', title: 'Français' }, { value: 'en', title: 'English' }, { value: 'both', title: 'Les deux / Both' }];
 
