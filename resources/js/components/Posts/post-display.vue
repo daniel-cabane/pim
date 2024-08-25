@@ -8,7 +8,7 @@
                 <div v-if="post.published_at">                   
     
                 </div>
-                <div class="font-italic" v-if="post.author">
+                <div class="font-italic mt-3" v-if="post.author">
                     {{ $t('By') }} {{ post.author.name }}
                 </div>
                 <div class="pt-4">

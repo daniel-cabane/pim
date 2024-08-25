@@ -9,7 +9,8 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
 // Vuetify
-import '@mdi/font/css/materialdesignicons.css';
+// import '@mdi/font/css/materialdesignicons.css';
+import '../css/icons.css';
 import 'vuetify/styles';
 import { createVuetify, useTheme } from 'vuetify';
 import * as components from 'vuetify/components';

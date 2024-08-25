@@ -8,7 +8,7 @@
                 <v-dialog v-model="quitDialog" width="350">
                     <template v-slot:activator="{ props }">
                         <v-btn variant="tonal" color="error" rounded="xl" style="width:120px" :disabled="loading"
-                            prepend-icon="mdi-arrow-left-bold-hexagon-outline" v-bind="props">
+                            prepend-icon="mdi-arrow-left-bold-circle-outline" v-bind="props">
                             {{ $t('Quit') }}
                         </v-btn>
                     </template>

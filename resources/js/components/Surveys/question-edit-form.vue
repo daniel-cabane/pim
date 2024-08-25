@@ -32,9 +32,9 @@
         </div>
         <Transition name="swipe-down">
             <div class="deleteOverlay" v-if="showOverlay">
-                <v-card width="350" class="text-center pa-4 text-h5">
+                <v-card width="360" class="text-center pa-4 text-h5">
                     <div class="d-flex align-center justify-center mb-3">
-                        <v-icon class="mr-2" icon="mdi-alert" color="error" size="small"/>
+                        <v-icon class="mr-2" icon="mdi-alert-box" color="error" size="small"/>
                         <span>
                             {{ $t('Delete this question') }} ?
                         </span>

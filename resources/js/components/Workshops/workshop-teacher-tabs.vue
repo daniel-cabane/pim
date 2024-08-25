@@ -34,7 +34,7 @@
                                 <td class="d-flex align-center">
                                     <v-icon icon="mdi-pencil" class="mr-2" color="primary"
                                         @click="showEditApplicantDialog(item)" />
-                                    <v-icon icon="mdi-close-octagon" color="error"
+                                    <v-icon icon="mdi-close-octagon-outline" color="error"
                                         @click="showremoveApplicantDialog(item)" />
                                 </td>
                             </tr>

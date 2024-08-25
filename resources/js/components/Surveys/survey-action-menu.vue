@@ -22,7 +22,7 @@
             </v-list-item>
             <v-list-item @click="emit('surveyAction', { action: 'reopen', survey })" v-if="survey.status == 'closed'">
                 <template v-slot:prepend>
-                    <v-icon icon="mdi-play-box-multiple-outline" color="success" />
+                    <v-icon icon="mdi-play-box" color="success" />
                 </template>
                 <v-list-item-title>
                     {{ $t('Reopen') }}

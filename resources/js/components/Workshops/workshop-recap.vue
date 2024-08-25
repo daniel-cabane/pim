@@ -14,7 +14,7 @@
                     {{ $t('Starts on') }}
                 </div>
                 <div>
-                    <v-icon icon="mdi-alert" color="error" size="x-small" v-if="daysUntilStart<0"/>
+                    <v-icon icon="mdi-alert-box" color="error" size="x-small" v-if="daysUntilStart<0"/>
                     {{ workshop.startDate }} ({{ daysUntilStart < 0 ? $t('PAST') : `${daysUntilStart} ${daysUntilStart > 1 ? $t('days') : $t('day')}` }})
                 </div>
             </v-col>

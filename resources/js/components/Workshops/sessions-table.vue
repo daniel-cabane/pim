@@ -23,8 +23,7 @@
                     </td>
                     <td class="text-center">
                         <v-icon  size="large" :color="item.status == 'confirmed' ? 'success' : 'warning'">
-                            {{ item.status == 'confirmed' ? 'mdi-check' :
-                            'mdi-close-circle-outline' }}
+                            {{ item.status == 'confirmed' ? 'mdi-check' : 'mdi-close-octagon-outline' }}
                         </v-icon>
                     </td>
                     <td class="pr-0 text-center">
