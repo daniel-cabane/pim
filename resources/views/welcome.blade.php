@@ -5,15 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Sue+Ellen+Francisco&display=swap');
+            /* @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap'); */
+            @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+            /* @import url('https://fonts.googleapis.com/css2?family=Sue+Ellen+Francisco&display=swap'); */
+            @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
             .pimTitleFont {
-                font-family: "Shrikhand", serif;
+                /* font-family: "Shrikhand", serif; */
+                font-family: "Bubblegum Sans", sans-serif;
                 font-weight: 400;
                 font-style: normal;
             }
             .pimSubtitleFont {
-                font-family: "Sue Ellen Francisco", cursive;
+                /* font-family: "Sue Ellen Francisco", cursive; */
+                font-family: "Handlee", cursive;
                 font-weight: 400;
                 font-style: normal;
             }

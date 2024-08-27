@@ -1,7 +1,12 @@
 <template>
     <v-card class="pa-2" width="350">
         <v-card-title class="d-flex justify-space-between pb-0 text-truncate">
-            <span>{{ user.name }} ({{ user.class_name }})</span>
+            <span>{{ user.name }}
+                (
+                <span v-if="user.is.teacher">{{ user.preferences.title }}</span>
+                <span v-else>{{ user.class_name }}</span>
+                )
+            </span>
             <v-icon icon="mdi-pencil" size="small" color="primary" @click="editDialog=true" />
         </v-card-title>
         <v-card-subtitle class="pb-3">
@@ -29,9 +34,14 @@
             <v-card :title="$t('Edit user')">
                 <v-card-text>
                     <v-text-field variant="outlined" :label="$t('Name')" v-model="userName" />
-                    <!-- <v-text-field variant="outlined" :label="$t('Class name')" v-model="className" /> -->
-                    <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
-                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']" v-model="className" />
+                    <div v-if="user.is.teacher">
+                        <v-text-field variant="outlined" :label="$t('Title')" v-model="userTitle" />
+                    </div>
+                    <div v-else>
+                        <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
+                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']"
+                            v-model="className" />
+                    </div>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -56,13 +66,14 @@
     const emit = defineEmits(['userNameUpdated']);
 
     const userName = ref(props.user.name);
+    const userTitle = ref(props.user.preferences.title);
     const className = ref(props.user.className);
     const classLevel = ref(props.user.classLevel);
     const editDialog = ref(false);
     const editLoading = ref(false);
     const updateUserNameAndClass = async () => {
         editLoading.value = true;
-        const res = await patch(`/api/admin/users/${props.user.id}/name`, {name: userName.value, className: className.value, classLevel: classLevel.value});
+        const res = await patch(`/api/admin/users/${props.user.id}/name`, {name: userName.value, title: userTitle.value, section: className.value, level: classLevel.value});
         emit('userNameUpdated', res.user);
         editLoading.value = false;
         editDialog.value = false;

@@ -6,10 +6,13 @@
         <v-card>
             <workshop-display :workshop="workshop" @editWorkshop="editWorkshop" />
             <div style="overflow-y:hidden;transition:all .5s"
-                :style="`max-height:${showApplication ? 250 : 0}px;${!showApplication ? 'content-visibility:hidden;' : ''}`"
+                :style="`max-height:${showApplication ? 320 : 0}px;${!showApplication ? 'content-visibility:hidden;' : ''}`"
                 v-if='workshop.application'>
                 <div class="pa-4">
                     <v-divider color="black" class="py-2" />
+                    <v-alert type="info" class="mb-3">
+                        {{ $t('Be sure thate you are available for the sessions. Lessons ALWAYS take precedence over workshops !') }}
+                    </v-alert>
                     <div class="text-caption text-captionColor">
                         {{ $t('Availability') }}
                     </div>

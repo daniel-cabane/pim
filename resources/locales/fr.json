@@ -370,9 +370,10 @@
     "Bright image": "Image claire",
     "Theme deleted": "Thème supprimé",
     "Cannot delete used theme": "On ne peut pas supprimer un thème utilisé",
-    "Contact admin": "Contacter l'admin",
+    "Contact PIM": "Contacter le PIM",
     "Message sent": "Message envoyé",
     "Message updated": "Message mis à jour",
     "Message deleted": "Message supprimé",
-    "Details updated": "Details mis à jour"
+    "Details updated": "Details mis à jour",
+    "Be sure thate you are available for the sessions. Lessons ALWAYS take precedence over workshops !": "Assurez-vous que d'être disponible pour les sessions. Les cours sont TOUJOURS prioritaires sur les ateliers !"
 }

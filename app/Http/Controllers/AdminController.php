@@ -64,12 +64,19 @@ class AdminController extends Controller
     public function updateUserName(User $user, Request $request)
     {
         $attrs = $request->validate([
-            'name' => 'required|String|min:3|max:25',
-            'className' => 'required|String|min:1|max:10',
-            'classLevel' => 'required|String|min:2|max:10'
+            'name' => 'required|String|min:3|max:35',
+            'title' => 'sometimes|String|min:1|max:10',
+            'level' => 'sometimes|String|min:2|max:10',
+            'section' => 'sometimes|String|min:1|max:10',
         ]);
         
-        $user->update(['name' => $attrs['name'], 'level' => $attrs['classLevel'], 'section' => $attrs['className']]);
+        $user->update($attrs);
+
+        if(isset($attrs['title'])){
+            $prefs = $user->preferences;
+            $prefs->title = $attrs['title'];
+            $user->update(['preferences' => $prefs]);
+        }
 
         return response()->json(['user' => $user, 'message' => ['text' => 'User updated', 'type' => 'success']]);
     }

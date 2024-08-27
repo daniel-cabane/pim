@@ -1,18 +1,18 @@
 <template>
     <v-card width="350" :to="`/posts/${props.post.slug}`">
         <v-img class="align-end text-white" aspect-ratio="16/9" max-height="197" :src="post.cover.url" cover>
-            <v-card-title class="pimSubtitleFont py-0" style="font-weight:bold;font-size:28px;" :style="`color:${post.cover.titleColor};`">
+            <v-card-title class="pimSubtitleFont py-0" style="font-weight:bold;font-size:24px;line-height:1.2;" :style="`color:${post.cover.titleColor};`">
                 {{ post.title }}
             </v-card-title>
         </v-img>
 
-        <v-card-subtitle class="pt-4 d-flex justify-space-between">
-            <span>
-                <v-icon icon="mdi-draw-pen" />
+        <v-card-subtitle class="pt-1 d-flex justify-space-between align-center">
+            <span class="d-flex align-baseline">
+                <v-icon icon="mdi-account-edit" class="mr-1"/>
                 {{ post.author.name }}
             </span>
             <span class="text-caption">
-                {{ $t('Published on') }} {{ post.published_at_formated }}
+                {{ post.published_at_formated }}
             </span>
         </v-card-subtitle>
 

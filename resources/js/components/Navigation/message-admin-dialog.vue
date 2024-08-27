@@ -5,10 +5,10 @@
                 <template v-slot:prepend>
                     <v-icon icon="mdi-message"></v-icon>
                 </template>
-                <v-list-item-title>{{ $t("Contact admin") }}</v-list-item-title>
+                <v-list-item-title>{{ $t("Contact PIM") }}</v-list-item-title>
             </v-list-item>
         </template>
-        <v-card :title="$t('Contact admin')">
+        <v-card :title="$t('Contact PIM')">
             <v-card-text>
                 <v-textarea label="Message" variant="outlined" v-model="message" maxlength="500" counter/>
             </v-card-text>

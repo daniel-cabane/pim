@@ -9,8 +9,8 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
 // Vuetify
-// import '@mdi/font/css/materialdesignicons.css';
-import '../css/icons.css';
+import '@mdi/font/css/materialdesignicons.css';
+// import '../css/icons.css';
 import 'vuetify/styles';
 import { createVuetify, useTheme } from 'vuetify';
 import * as components from 'vuetify/components';
@@ -23,8 +23,8 @@ const customLight = {
         surface: '#F3F3F3',
         primary: '#003d7d',
         'primary-darken-1': '#012953',
-        secondary: '#919195',
-        'secondary-darken-1': '#646469',
+        secondary: '#00579c',
+        'secondary-darken-1': '#004c8a',
         error: '#e31b23',
         info: '#007dc3',
         success: '#4CAF50',
@@ -52,8 +52,8 @@ const customDark = {
         surface: '#797b7c',
         primary: '#2761a6',
         'primary-darken-1': '#003d7d',
-        secondary: '#919195',
-        'secondary-darken-1': '#646469',
+        secondary: '#2a4faf',
+        'secondary-darken-1': '#22428f',
         error: '#e31b23',
         info: '#007dc3',
         success: '#4CAF50',

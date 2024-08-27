@@ -2,7 +2,7 @@
     <v-card width="320" style="position:relative" @click="seeWorkshop">
         <div style="display:flex;flex-wrap:nowrap;max-width:100%">
             <div style="flex:1;max-width:220px;">
-                <v-card-title class="pb-0 twolines pimSubtitleFont" style="font-size:24px;line-height:33px;">
+                <v-card-title class="pb-0 pt-4 twolines pimSubtitleFont" style="font-size:20px;line-height:1.2;">
                     {{ title }}
                 </v-card-title>
                 <v-card-subtitle class="font-italic">

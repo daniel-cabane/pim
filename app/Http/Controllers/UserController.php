@@ -114,7 +114,13 @@ class UserController extends Controller
             'rdelpuech' => ['name' => 'Rémi Delpuech', 'campus' => 'both', 'language' => 'both'],
             'sparis' => ['name' => 'Sébastien Paris', 'campus' => 'both', 'language' => 'both'],
             'ghenry' => ['name' => 'Guillaume Henry', 'campus' => 'both', 'language' => 'both'],
-            'tbelmekki' => ['name' => 'Tarik Belmekki', 'campus' => 'both', 'language' => 'both']
+            'tbelmekki' => ['name' => 'Tarik Belmekki', 'campus' => 'both', 'language' => 'both'],
+            'fmarmounier' => ['name' => 'Florent Marmounier', 'campus' => 'both', 'language' => 'both'],
+            'hwright' => ['name' => 'Hannah Wright', 'campus' => 'BPR', 'language' => 'en'],
+            'mechevarria' => ['name' => 'Mikel Echevarria', 'campus' => 'BPR', 'language' => 'en'],
+            'slai' => ['name' => 'Sylvia Lai', 'campus' => 'BPR', 'language' => 'en'],
+            'jhamilton' => ['name' => 'Jonathan Hamilton', 'campus' => 'BPR', 'language' => 'en'],
+            'tmaclean' => ['name' => 'Timothy Maclean', 'campus' => 'BPR', 'language' => 'en']
         ];
         $emailParts = explode('@', $user->email);
 
