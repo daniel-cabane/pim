@@ -93,12 +93,11 @@ class UserController extends Controller
   public function googleSigninCallback()
   {
     $google_user = Socialite::driver('google')->user();
-    $email = $google_user->getEmail();
-    $user = User::where('email', $email)->first();
+    $user = User::where('email', $google_user->getEmail())->first();
 
     if(!$user){
       $user = User::create([
-        'name' => (explode('@', $email))[0],
+        'name' => $google_user->getName(),
         'email' => $google_user->getEmail(),
         'google_id' => $google_user->getId(),
         'email_verified_at' => Carbon::now(),
