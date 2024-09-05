@@ -30,7 +30,7 @@ class Email extends Model
 
     public function workshop()
     {
-      return $this->belongsTo(workshop::class);
+      return $this->belongsTo(Workshop::class);
     }
 
     public function surveys()
