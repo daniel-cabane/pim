@@ -112,7 +112,6 @@ class WorkshopController extends Controller
 
     public function show(Workshop $workshop)
     {
-        logger('show workshop');
         $user = auth()->user();
         return response()->json(['workshop' => $workshop->format(), 'teachers' => $user ? $user->teachers : null]);
     }
