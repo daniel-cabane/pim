@@ -49,7 +49,7 @@ class Email extends Model
         if($this->admin){
           $bcc = 'pim@g.lfis.edu.hk';
           $cc = [];
-          $to = $this->data->to ? $this->data->to : 'dcabane@g.lfis.edu.hk'; //obviously change this...
+          $to = $this->data->to ? $this->data->to : 'dcabane@g.lfis.edu.hk'; //obviously change this <====================================
           $sentTo = [1];
         } else {
           $students = $this->workshop->applicants()->wherePivot('confirmed', 1)->get();
