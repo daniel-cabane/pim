@@ -67,7 +67,7 @@
                         {{ $t('Themes') }}
                     </div>
                     <div>
-                        <workshop-themes-chips :themes="workshop.themes" size="small" />
+                        <workshop-themes-chips :themeTitles="workshop.themeTitles" size="small" />
                     </div>
                 </v-col>
             </v-row>

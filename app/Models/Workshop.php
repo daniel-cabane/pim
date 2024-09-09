@@ -94,13 +94,17 @@ class Workshop extends Model
           ];
         }
       }
-      // $emails = [];
-      // if($user && $user->hasRole('admin')){
-      //   $emails = $this->emails;
-      // }
-      // if($user && $user->hasRole('teacher')){
-      //   $emails = $this->emails()->where('admin', 0)->get();
-      // }
+
+      $themeTitles = [];
+      $themes = [];
+      foreach($this->themes as $theme){
+        $themes[] = $theme->id;
+        if($this->language == 'fr'){
+          $themeTitles[] = $theme->title_fr;
+        } else {
+          $themeTitles[] = $theme->title_en;
+        }
+      }
 
       $details = json_decode($this->details);
       
@@ -119,7 +123,8 @@ class Workshop extends Model
         ],
         'teacherId' => $this->organiser_id,
         'teacher' => $this->organiser->formal_name,
-        'themes' => $this->themes()->pluck('themes.id'),
+        'themes' => $themes,
+        'themeTitles' => $themeTitles,
         'startDate' => $this->start_date,
         'formatedStartDate' => $this->start_date ? date_format(date_create($this->start_date) ,"d-m-y") : "Term $this->term",
         'status' => $this->status,

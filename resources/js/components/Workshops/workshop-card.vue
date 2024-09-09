@@ -17,7 +17,7 @@
                 <div class="text-caption text-captionColor">
                     {{ $t('Themes') }}
                 </div>
-                <workshop-themes-chips :themes="workshop.themes" />
+                <workshop-themes-chips :themeTitles="workshop.themeTitles" />
             </div>
             <div class="mb-2 d-flex text-caption">
                 <div style="flex:1">

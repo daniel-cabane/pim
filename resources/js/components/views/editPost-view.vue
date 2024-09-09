@@ -2,11 +2,11 @@
     <v-card width="100%" class="pa-3" v-if="isReady">
         <div class="mb-4 d-flex justify-space-between align-center">
             <span class="d-flex">
-                <v-img max-width='30px' min-width='30px' class='mr-4' src="/images/flag fr.png" contain />
+                <v-img max-width='30px' min-width='30px' class="mr-4" src="/images/flag en.png" contain />
                 <v-switch density="compact" hide-details v-model='lgSwitch'
                     @change="post.language = lgSwitch ? 'fr' : 'en'">
                 </v-switch>
-                <v-img max-width='30px' min-width='30px' class="ml-4" src="/images/flag en.png" contain />
+                <v-img max-width='30px' min-width='30px' class='ml-4' src="/images/flag fr.png" contain />
             </span>
             <span>
                 <v-chip color="success" variant="flat" append-icon="mdi-file-check" v-if="post.status == 'published' && !user.is.admin">
