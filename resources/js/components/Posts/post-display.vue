@@ -12,7 +12,7 @@
                     {{ $t('By') }} {{ post.author.name }}
                 </div>
                 <div class="pt-4">
-                    <v-chip size="small" label class="mr-2 mb-2" color="primary" v-for="theme in post.themeTitles">
+                    <v-chip size="small" label class="mr-2 mb-2" color="fis" v-for="theme in post.themeTitles">
                         #{{ theme }}
                     </v-chip>
                 </div>

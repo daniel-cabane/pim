@@ -21,7 +21,7 @@
         </v-card-text>
 
         <div class="px-3 pb-3">
-            <v-chip size="small" label class="mr-2 mb-1" color="primary" v-for="theme in post.themeTitles">
+            <v-chip size="small" label class="mr-2 mb-1" color="fis" v-for="theme in post.themeTitles">
                 #{{ theme }}
             </v-chip>
         </div>

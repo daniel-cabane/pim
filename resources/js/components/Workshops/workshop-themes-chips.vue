@@ -2,7 +2,8 @@
     <span>
         <v-chip 
             class="mr-2 mb-2"
-            color="primary" 
+            color="fis" 
+            variant="outlined"
             label 
             :size="size"
             v-for="(theme, index) in workshopThemes" 

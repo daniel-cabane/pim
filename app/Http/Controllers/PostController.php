@@ -104,7 +104,7 @@ class PostController extends Controller
             'title' => 'required|min:8|max:150',
             'description' => 'required|min:5|max:255',
             'language' => 'required|min:2|max:2',
-            'post' => 'required|max:5000',
+            'post' => 'required|max:50000',
             'cover' => 'required|max:5000',
             'themes' => 'sometimes|Array'
         ]);
