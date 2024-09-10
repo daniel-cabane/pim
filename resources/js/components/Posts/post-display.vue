@@ -48,6 +48,5 @@
 
     const formattedPost = props.post.post
                                 .split('<ul').join('<ul class="pl-5"')
-                                .split('<ol').join('<ol class="pl-5"')
-                                .split('<img').join('<img style="max-width:100%"');
+                                .split('<ol').join('<ol class="pl-5"');
 </script>
