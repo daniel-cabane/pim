@@ -196,10 +196,10 @@ class Workshop extends Model
       } 
     }
 
-    public function scopeUpcoming($query)
+    public function scopeUpcoming($query) // FIX THIS <========================================================
     {
-      $today = Carbon::now();/////////////////// LINE BELOW CHANGE (2) TO (1) !!!!!!!!!!!!! ///////////////////////////////////////
-      $terms = Term::whereDate('start_date', '<=', $today->addMonth(2))->whereDate('finish_date', '>=', $today)->pluck('nb');
+      $today = Carbon::now();
+      $terms = Term::whereDate('start_date', '<=', $today->addMonth(1))->whereDate('finish_date', '>=', $today)->pluck('nb');
       return $query->whereIn('status', ['confirmed', 'launched'])
                   ->where(function($q) use ($today, $terms) {
                         $q->where('start_date', '>=', $today)

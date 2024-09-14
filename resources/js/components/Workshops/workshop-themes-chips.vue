@@ -12,7 +12,7 @@
             {{ theme }}
         </v-chip>
         <v-chip label color="secondary" v-if="themeTitles.length == 0">
-            {{ t('None') }}
+            {{ $t('None') }}
         </v-chip>
     </span>
 </template>

@@ -30,7 +30,7 @@
             </div>
         </div>
         <v-divider class="my-2" />
-        <div class="mt-4" v-html="formattedPost" />
+        <div class="mt-4 postWrapper" v-html="formattedPost" />
         <div class="d-flex align-center mt-4">
             <back-btn />
             <v-spacer />
@@ -50,3 +50,9 @@
                                 .split('<ul').join('<ul class="pl-5"')
                                 .split('<ol').join('<ol class="pl-5"');
 </script>
+<style>
+    .postWrapper img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>

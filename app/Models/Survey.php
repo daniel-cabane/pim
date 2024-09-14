@@ -96,11 +96,14 @@ class Survey extends Model
                     'data' => [
                         'body_fr' => $body_fr,
                         'body_en' => $body_en,
-                        'buttonText_fr' => 'Répondre',
-                        'buttonText_en' => 'Answer',
                         'closing_fr' => "Merci d'avance",
                         'closing_en' => "Thanks in advance",
-                        'url' => "https://pim.fis.edu.hk/surveys/$this->id"
+                        'actionButton' => [
+                            'value' => $this->id,
+                            'text_fr' => 'Répondre',
+                            'text_en' => 'Answer',
+                            'url' => ''
+                        ]
                     ],
                     'sender_id' => $this->author_id,
                     'workshop_id' => $this->workshop_id,

@@ -330,7 +330,7 @@ class AdminController extends Controller
         $workshop->update(['status' => 'launched', 'accepting_students' => 0]);
         $workshop->orderSessions();
 
-        $workshop->createExitSurvey();
+        $workshop->createExitSurvey(null, false);
         $workshop->createEmails($attrs['notifyApplicants']);
 
         return response()->json([
