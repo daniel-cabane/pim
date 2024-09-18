@@ -1,12 +1,12 @@
 <template>
     <transition :name="isWeekend ? 'slide-fade-right' : 'slide-fade-left'">
-        <v-card width="225" class="infoBox pa-2 text-left" :style="isWeekend ? 'left:-200px;' : 'right:-200px;'" v-show="showInfo" :ripple="false">
+        <v-card width="250" class="infoBox pa-2 text-left" :style="isWeekend ? 'left:-200px;' : 'right:-200px;'" v-show="showInfo" :ripple="false">
             <div class="d-flex justify-space-between align-center">
                 <v-chip variant="flat" class="py-0" :color="event.color">{{ event.campus }}</v-chip>
                 <v-btn variant="flat" size="x-small" icon="mdi-close" @click.stop.prevent="emit('hideMe')" />
             </div>
             <div class="mb-1 text-center text-h6" style="white-space:wrap;">
-                {{ event.title }}
+                {{ $t(event.title) }}
             </div>
             <event-details :event="event" />
         </v-card>

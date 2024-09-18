@@ -1,24 +1,24 @@
 <template>
     <div>
-        <div class="d-flex justify-space-between">
-            <span>
-                <div class="text-caption text-white-darken-2">
+        <div class="d-flex justify-space-between mt-2">
+            <span style="max-width:50%">
+                <div class="text-caption text-captionColor">
                     {{ $t('Teacher') }}
                 </div>
-                <div>
+                <div class="text-truncate">
                     {{ event.teacher.name }}
                 </div>
             </span>
-            <span>
-                <div class="text-caption text-white-darken-2">
+            <span style="max-width:50%">
+                <div class="text-caption text-captionColor text-right">
                     {{ $t('Room nb') }}
                 </div>
-                <div>
+                <div class="text-right">
                     {{ event.roomNb }}
                 </div>
             </span>
         </div>
-        <div class="text-caption text-white-darken-2">
+        <div class="text-caption text-captionColor mt-2">
             {{ $t('Schedule') }}
         </div>
         <div class="d-flex justify-space-around">
