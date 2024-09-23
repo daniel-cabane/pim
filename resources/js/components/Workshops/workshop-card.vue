@@ -5,7 +5,7 @@
                 <v-card-title class="pb-0 pt-4 twolines pimSubtitleFont" style="font-size:20px;line-height:1.2;">
                     {{ title }}
                 </v-card-title>
-                <v-card-subtitle class="font-italic">
+                <v-card-subtitle class="font-italic pt-1">
                     {{ $t('By') }} {{ workshop.teacher }}
                 </v-card-subtitle>
             </div>
@@ -64,18 +64,20 @@
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
+        line-clamp: 2;
         -webkit-line-clamp: 2; 
         white-space: pre-wrap;
-        min-height: 78px;
-        max-height: 78px;
+        min-height: 60px;
+        max-height: 60px;
     }
     .threelines {
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
+        line-clamp: 3;
         -webkit-line-clamp: 3;
         white-space: pre-wrap;
-        min-height: 78px;
-        max-height: 78px;
+        min-height: 60px;
+        max-height: 60px;
     }
 </style>

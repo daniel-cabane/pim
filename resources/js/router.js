@@ -11,6 +11,7 @@ import editWorkshop from "./components/views/editWorkshop-view.vue";
 import singleWorkshop from "./components/views/singleWorkshop-view.vue";
 import Admin from "./components/views/admin-view.vue";
 import singleSurvey from "./components/views/singleSurvey-view.vue";
+import openDoorsBPR from "./components/views/open-doors-bpr-view.vue";
 
 const routes = [
     {
@@ -72,6 +73,11 @@ const routes = [
         path: "/surveys/:id",
         name: "Survey",
         component: singleSurvey,
+    },
+    {
+        path: "/opendoorsbpr",
+        name: "Open Doors BPR",
+        component: openDoorsBPR,
     },
 ];
 
