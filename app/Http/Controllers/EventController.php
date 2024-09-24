@@ -104,6 +104,9 @@ class EventController extends Controller
             for ($i = 0; $i < 7; $i++) {
                 $date = $startDate->format('Y-m-d');
                 $weekEvents = $events->where('date', $date)->values()->toArray();
+                usort($weekEvents, function($a, $b) {
+                    return strtotime($a['start']) - strtotime($b['start']);
+                });
                 $days[] = [
                     'date' => $date,
                     'events' => $weekEvents,
