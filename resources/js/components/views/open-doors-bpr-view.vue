@@ -3,19 +3,17 @@
         <div class="fullscreen">
             <div style="position:absolute;top:0px;left:0px;">
                 <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
+                <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
             </div>
-            <div v-if="message.length">
-                Message : {{ message }}
-            </div>
-            <div v-if="serialNumber.length">
-                Serial : {{ serialNumber }}
-            </div>
+            <pre>
+               {{ tagContent }}
+            </pre>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
             </v-btn>
-            <div v-if="error.length">
-                Error : {{ error }}
-            </div>
+            <pre>
+                {{ error }}
+            </pre>
         </div>
     </v-container>
 </template>
@@ -23,15 +21,15 @@
     import { ref, reactive } from "vue";
 
     const loading = ref(false);
-    const message = ref('');
-    const serialNumber = ref('');
+    const tagContent = ref('');
+    const errorLed = ref(false);
     const error = ref('');
 
-    let leds = reactive([false, false, false, false]);
+    let leds = reactive([false, false, false]);
 
 
     const scanTag = async () => {
-        leds = [false, false, false, false];
+        leds = [false, false, false];
         leds[0] = true;
         loading.value = true;
         try {
@@ -43,14 +41,13 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", ({ msg, serial }) => {
-                message.value = msg;
-                serialNumber.value = serial;
+            ndef.addEventListener("reading", tag => {
+                tagContent.value = tag;
                 leds[2] = true;
             });
             loading.value = false;
         } catch (err) {
-            leds[3] = true;
+            errorLed.value = true;
             console.error(err);
             error.value = err;
             loading.value = false;
@@ -61,6 +58,7 @@
     .fullscreen {
         height: calc(100vh - 128px);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         position: relative;

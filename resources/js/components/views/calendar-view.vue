@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container style="max-width:1168px;">
         <div class="d-flex justify-space-between align-center">
             <span class="d-flex align-center" style="gap:10px;">
                 <v-btn variant="outlined" @click="displayToday">
