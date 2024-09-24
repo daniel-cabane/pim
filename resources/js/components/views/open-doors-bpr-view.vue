@@ -6,10 +6,10 @@
                 <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
             </div>
             <pre>
-               {{ message }}
+               {{ msg }}
             </pre>
             <pre>
-               {{ serialNumber }}
+               {{ serial }}
             </pre>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
@@ -24,8 +24,8 @@
     import { ref, reactive } from "vue";
 
     const loading = ref(false);
-    const message = ref('');
-    const serialNumber = ref('');
+    const msg = ref('');
+    const serial = ref('');
     const errorLed = ref(false);
     const error = ref('');
 
@@ -45,9 +45,9 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", ({ msg, serial }) => {
-                message.value = msg;
-                serialNumber.value = serial;
+            ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                msg.value = message;
+                serial.value = serialNumber;
                 leds[2] = true;
             });
             loading.value = false;
