@@ -6,7 +6,7 @@
                 <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
             </div>
             <pre>
-               {{ records }}
+               {{ tagRecords }}
             </pre>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
@@ -21,7 +21,7 @@
     import { ref, reactive } from "vue";
 
     const loading = ref(false);
-    const records = ref('');
+    const tagRecords = ref('');
     const errorLed = ref(false);
     const error = ref('');
 
@@ -32,25 +32,25 @@
         leds = [false, false, false];
         leds[0] = true;
         loading.value = true;
-         try {
-            const ndef = new NDEFReader();
-            leds[1] = true;
+        //  try {
+        //     const ndef = new NDEFReader();
+        //     leds[1] = true;
 
-            await ndef.scan();
-            const tag = await ndef.read();
+        //     await ndef.scan();
+        //     const tag = await ndef.read();
 
-            records.value = tag.message.records;
-            leds[2] = true;
-        } catch (err) {
-            errorLed.value = true;
-            console.error(err);
-            error.value = err;
-            loading.value = false;
-        }
+        //     records.value = tag.message.records;
+        //     leds[2] = true;
+        // } catch (err) {
+        //     errorLed.value = true;
+        //     console.error(err);
+        //     error.value = err;
+        //     loading.value = false;
+        // }
 
 
 
-        /*try {
+        try {
             const ndef = new NDEFReader();
             leds[1] = true;
             await ndef.scan();
@@ -59,8 +59,8 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", ({ serialNumber }) => {
-                serial.value = serialNumber;
+            ndef.addEventListener("reading", ({ records }) => {
+                tagRecords.value = records;
                 leds[2] = true;
             });
             loading.value = false;
@@ -69,7 +69,7 @@
             console.error(err);
             error.value = err;
             loading.value = false;
-        }*/
+        }
     }
 </script>
 <style scoped>
