@@ -8,6 +8,9 @@
             <pre v-for="record in tagRecords">
                {{ record }}
             </pre>
+            <div>
+                {{ strRecord }}
+            </div>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
             </v-btn>
@@ -22,6 +25,7 @@
 
     const loading = ref(false);
     const tagRecords = ref('');
+    const strRecord = ref('');
     const errorLed = ref(false);
     const error = ref('');
 
@@ -63,13 +67,13 @@
                 tagRecords.value = message.records;
 
                 for (const record of message.records) {
-                    console.log(`Record type: ${record.recordType}, Data: ${record.data}`);
+                    strRecord.value += `Record type: ${record.recordType}, Data: ${record.data}`;
                     
                     // Handle text records
                     if (record.recordType === 'text') {
                         const decoder = new TextDecoder(record.encoding);
                         const textData = decoder.decode(record.data);
-                        console.log(`Text data: ${textData}`);
+                        strRecord.value +=`Text data: ${textData}`;
                     }
                 }
                 leds[2] = true;
