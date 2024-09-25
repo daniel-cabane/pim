@@ -59,8 +59,8 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", ({ records }) => {
-                tagRecords.value = records;
+            ndef.addEventListener("reading", ({ message }) => {
+                tagRecords.value = message.records;
                 leds[2] = true;
             });
             loading.value = false;
