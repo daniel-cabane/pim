@@ -69,11 +69,15 @@
                 for (const record of message.records) {
                     strRecord.value += `Record type: ${record.recordType}, Data: ${record.data}`;
                     
-                    // Handle text records
                     if (record.recordType === 'text') {
                         const decoder = new TextDecoder(record.encoding);
                         const textData = decoder.decode(record.data);
-                        strRecord.value +=`Text data: ${textData}`;
+                        strRecord.value += `Text data: ${textData}`;
+                    }
+                    if (record.data) {
+                        const decoder = new TextDecoder(record.encoding);
+                        const textData = decoder.decode(record.data);
+                        strRecord.value += `Decoded data: ${textData}`;
                     }
                 }
                 leds[2] = true;
