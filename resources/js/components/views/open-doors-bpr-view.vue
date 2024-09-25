@@ -5,8 +5,8 @@
                 <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
                 <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
             </div>
-            <pre>
-               {{ tagRecords }}
+            <pre v-for="record in tagRecords">
+               {{ record }}
             </pre>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
