@@ -147,4 +147,10 @@ class UserController extends Controller
 
     return redirect()->intended('/');
   }
+
+  public function pobpr(Request $request)
+  {
+    logger("********** READ TAG **********");
+    logger($request);
+  }
 }

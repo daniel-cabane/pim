@@ -36,23 +36,6 @@
         leds = [false, false, false];
         leds[0] = true;
         loading.value = true;
-        //  try {
-        //     const ndef = new NDEFReader();
-        //     leds[1] = true;
-
-        //     await ndef.scan();
-        //     const tag = await ndef.read();
-
-        //     records.value = tag.message.records;
-        //     leds[2] = true;
-        // } catch (err) {
-        //     errorLed.value = true;
-        //     console.error(err);
-        //     error.value = err;
-        //     loading.value = false;
-        // }
-
-
 
         try {
             const ndef = new NDEFReader();
@@ -63,23 +46,9 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", ({ message }) => {
-                tagRecords.value = message.records;
-
-                for (const record of message.records) {
-                    strRecord.value += `Record type: ${record.recordType}, Data: ${record.data}`;
-                    
-                    if (record.recordType === 'text') {
-                        const decoder = new TextDecoder(record.encoding);
-                        const textData = decoder.decode(record.data);
-                        strRecord.value += `Text data: ${textData}`;
-                    }
-                    if (record.data) {
-                        const decoder = new TextDecoder(record.encoding);
-                        const textData = decoder.decode(record.data);
-                        strRecord.value += `Decoded data: ${textData}`;
-                    }
-                }
+            ndef.addEventListener("reading", event => {
+                axios.post('/api/pobpr', event);
+                tagRecords.value = event.message.records;
                 leds[2] = true;
             });
             loading.value = false;

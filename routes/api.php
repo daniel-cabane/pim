@@ -78,6 +78,7 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 *   GUESTS
 * 
 */
+Route::post('/pobpr', [UserController::class, 'pobpr']);
 
 Route::get('/posts/published', [PostController::class, 'published']);
 Route::get('/posts/search', [PostController::class, 'search']);
