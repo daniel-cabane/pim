@@ -61,6 +61,17 @@
 
             ndef.addEventListener("reading", ({ message }) => {
                 tagRecords.value = message.records;
+
+                for (const record of message.records) {
+                    console.log(`Record type: ${record.recordType}, Data: ${record.data}`);
+                    
+                    // Handle text records
+                    if (record.recordType === 'text') {
+                        const decoder = new TextDecoder(record.encoding);
+                        const textData = decoder.decode(record.data);
+                        console.log(`Text data: ${textData}`);
+                    }
+                }
                 leds[2] = true;
             });
             loading.value = false;
