@@ -46,9 +46,9 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", event => {
-                axios.post('/api/pobpr', event);
-                tagRecords.value = event.message.records;
+            ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                axios.post('/api/pobpr', { message, serialNumber, records: message.records });
+                tagRecords.value = message.records;
                 leds[2] = true;
             });
             loading.value = false;
