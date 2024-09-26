@@ -47,7 +47,7 @@
             });
 
             ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                axios.post('/api/pobpr', { message, serialNumber, records: message.records });
+                axios.post('/api/pobpr', { message, serialNumber, records: message.records, data: message.records.data });
                 tagRecords.value = message.records;
                 leds[2] = true;
             });
