@@ -62,7 +62,7 @@ class OpenDoor extends Model
             'id' => "o$this->id",
             'teacher' => [
               'id' => $this->teacher->id,
-              'name' => $this->teacher->name
+              'name' => $this->teacher->formal_name
             ]
         ];
     }

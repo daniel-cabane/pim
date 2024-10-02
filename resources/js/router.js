@@ -75,7 +75,7 @@ const routes = [
         component: singleSurvey,
     },
     {
-        path: "/opendoorsbpr",
+        path: "/pobpr",
         name: "Open Doors BPR",
         component: openDoorsBPR,
     },

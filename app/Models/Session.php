@@ -36,7 +36,7 @@ class Session extends Model
             'url' => "/workshops/".$this->workshop->id,
             'teacher' => [
               'id' => $this->workshop->organiser->id,
-              'name' => $this->workshop->organiser->name
+              'name' => $this->workshop->organiser->formal_name
             ]
         ];
     }

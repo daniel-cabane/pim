@@ -16,5 +16,5 @@
     const { getPost } = postStore;
     const { post, isReady } = storeToRefs(postStore)
 
-    getPost(route.params.slug);
+    getPost(route.params.slug, true);
 </script>

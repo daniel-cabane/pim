@@ -88,8 +88,12 @@ class PostController extends Controller
     /**
      * Display the full post
      */
-    public function show(Post $post)
+    public function show(Post $post, Request $request)
     {
+        $read = $request->validate(['read' => 'required|boolean'])['read'];
+        if($read){
+            $post->inscreaseReadCounter();
+        }
         return response()->json([
             'post' => $post->format()
         ]);

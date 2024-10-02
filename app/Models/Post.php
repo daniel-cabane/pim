@@ -10,7 +10,9 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'images', 'author_id', 'published_at', 'translation_id'];
+    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'stats', 'images', 'author_id', 'published_at', 'translation_id'];
+
+    protected $casts = ['stats' => 'object'];
 
     public function getRouteKeyName(){
         return 'slug';
@@ -29,6 +31,11 @@ class Post extends Model
     public function translation()
     {
         return $this->belongsTo(Post::class, 'translation_id');
+    }
+
+    public function likes()
+    {
+      return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     public function format()
@@ -52,6 +59,7 @@ class Post extends Model
             'status' => $this->status,
             'language' => $this->language,
             'post' => $this->post,
+            'stats' => $this->stats,
             'cover' => (json_decode($this->images))->cover,
             'themes' => $this->themes()->pluck('themes.id'),
             'themeTitles' => $themeTitles,
@@ -66,5 +74,19 @@ class Post extends Model
                 'name' => $author->formal_name
             ]
         ];
+    }
+
+    public function inscreaseReadCounter()
+    {
+        $stats = $this->stats;
+        if($stats == null) {
+            $this->update(['stats' => ['reads' => 1]]);
+        } else if(isset($stats->reads)){
+            $stats->reads = $stats->reads + 1;
+            $this->update(['stats' => $stats]);
+        } else {
+            $stats->reads = 1;
+            $this->update(['stats' => $stats]);
+        }
     }
 }

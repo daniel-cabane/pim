@@ -5,9 +5,9 @@
                 <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
                 <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
             </div>
-            <pre v-for="record in tagRecords">
+            <!-- <pre v-for="record in tagRecords">
                {{ record }}
-            </pre>
+            </pre> -->
             <div>
                 {{ strRecord }}
             </div>
@@ -24,7 +24,7 @@
     import { ref, reactive } from "vue";
 
     const loading = ref(false);
-    const tagRecords = ref('');
+    // const tagRecords = ref('');
     const strRecord = ref('');
     const errorLed = ref(false);
     const error = ref('');
@@ -47,8 +47,12 @@
             });
 
             ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                axios.post('/api/pobpr', { message, serialNumber, records: message.records, data: message.records.data });
-                tagRecords.value = message.records;
+                axios.post('/api/pobpr', { message, serialNumber, records: message.records });
+                // tagRecords.value = message.records;
+                for (const record of message.records) {
+                    strRecord += `|Record Type: ${record.recordType}`;
+                    strRecord += `Data: ${new TextDecoder().decode(record.data)}|`;
+                }
                 leds[2] = true;
             });
             loading.value = false;

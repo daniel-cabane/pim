@@ -45,9 +45,9 @@ export const usePostStore = defineStore({
             const res = await get(`/api/posts/search?query=Laravel&text=${text}`, true);
             this.posts = res.posts;
         },
-        async getPost(slug) {
+        async getPost(slug, read = false) {
             this.isReady = false;
-            const res = await get(`/api/posts/${slug}`, true);
+            const res = await get(`/api/posts/${slug}?query=Laravel&read=${read ? 1 :0}`, true);
             this.post = res.post;
             this.isReady = true;
             return res.post;
