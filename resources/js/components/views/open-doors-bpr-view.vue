@@ -47,12 +47,12 @@
             });
 
             ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                axios.post('/api/pobpr', { message, serialNumber, records: message.records });
-                // tagRecords.value = message.records;
                 for (const record of message.records) {
-                    strRecord += `|Record Type: ${record.recordType}`;
-                    strRecord += `Data: ${new TextDecoder().decode(record.data)}|`;
+                    strRecord.value += `|Record Type: ${record.recordType}`;
+                    strRecord.value += `Data: ${new TextDecoder().decode(record.data)}|`;
                 }
+                axios.post('/api/pobpr', { message, serialNumber, records: message.records, str: strRecord.value });
+                // tagRecords.value = message.records;
                 leds[2] = true;
             });
             loading.value = false;
