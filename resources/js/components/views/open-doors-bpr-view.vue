@@ -47,12 +47,7 @@
             });
 
             ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                for (const record of message.records) {
-                    strRecord.value += `|Record Type: ${record.recordType}`;
-                    strRecord.value += `Data: ${new TextDecoder().decode(record.data)}|`;
-                }
-                axios.post('/api/pobpr', { message, serialNumber, records: message.records, str: strRecord.value });
-                // tagRecords.value = message.records;
+                axios.post('/api/pobpr', { message, serialNumber, records: message.records });
                 leds[2] = true;
             });
             loading.value = false;
