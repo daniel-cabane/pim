@@ -477,7 +477,7 @@ class Workshop extends Model
                     'text_en' => '',
                     'url' => ''
             ],
-            'to' => $this->campus == 'BPR' ? 'dcabane@g.lfis.edu.hk' : 'dcabane@g.lfis.edu.hk' // Obviously, change this...
+            'to' => $this->campus == 'BPR' ? 'ogazeau@g.lfis.edu.hk' : 'cchartrain@g.lfis.edu.hk'
         ],
         'sender_id' => 1,
         'admin' => 1,

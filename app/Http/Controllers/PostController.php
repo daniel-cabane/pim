@@ -74,7 +74,7 @@ class PostController extends Controller
             'description' => $attrs['description'],
             'slug' => Str::slug($attrs['title']),
             'images' => json_encode(['cover' => ['url' => '/images/post default cover.png', 'titleColor' => '#000000'], 'post' => []]),
-            'stats' => ['read' => 0],
+            'stats' => ['reads' => 0],
             'author_id' => auth()->id()
         ]);
         return response()->json([
