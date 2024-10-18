@@ -27,7 +27,10 @@ class sendEmails implements ShouldQueue
     public function handle(): void
     {
         foreach(Email::where('sent', false)->where('schedule', '<=', now())->get() as $email){
-            logger("email ($email->id) sent");
+            logger("======== sending email ($email->id)");
+            $email = env('MAIL_USERNAME', 'no email');
+            $pwd = env('MAIL_PASSWORD', 'no pwd');
+            logger("Email : $email || Pwd : $pwd");
             $email->send();
         }
     }
