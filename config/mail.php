@@ -1,5 +1,8 @@
 <?php
 
+logger("++++++++++++++++++++++++++++++".env('MAIL_USERNAME'));
+logger("++++++++++++++++++++++++++++++".env('MAIL_PASSWORD'));
+
 return [
 
     /*
