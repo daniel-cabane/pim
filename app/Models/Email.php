@@ -45,10 +45,6 @@ class Email extends Model
 
     public function send()
     {
-      $envEmail = env('MAIL_USERNAME', 'no email');
-      $envPwd = env('MAIL_PASSWORD', 'no pwd');
-      $envAppname = env('APP_NAME', 'no name');
-      logger("-*-*-*-*-*-*- Email : $envEmail || Pwd : $envPwd || App name : $envAppname");
       if($this->workshop_id){
         if($this->admin){
           $bcc = 'pim@g.lfis.edu.hk';
