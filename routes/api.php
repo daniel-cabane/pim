@@ -78,7 +78,7 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 *   GUESTS
 * 
 */
-Route::post('/pobpr', [UserController::class, 'pobpr']);
+// Route::post('/pobpr', [UserController::class, 'pobpr']);
 
 Route::get('/posts/published', [PostController::class, 'published']);
 Route::get('/posts/search', [PostController::class, 'search']);
@@ -88,6 +88,8 @@ Route::get('/themes/{theme}', [PostController::class, 'theme']);
 Route::get('/terms', [EventController::class, 'getTerms']);
 
 Route::get('/workshops', [WorkshopController::class, 'index']);
+Route::get('/workshops/currentTerm', [WorkshopController::class, 'currentTermWorkshops']);
+Route::get('/workshops/complete/{nb}', [WorkshopController::class, 'completeWorkshops']);
 // Route::get('/workshops/themes', [WorkshopController::class, 'themes']);
 Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
 

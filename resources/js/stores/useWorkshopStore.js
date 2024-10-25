@@ -7,8 +7,9 @@ export const useWorkshopStore = defineStore({
     id: 'workshop',
     state: () => ({
         workshops: [],
+        workshopsByTerm: [[], [], []],
+        currentTerm: 1,
         myWorkshops: [],
-        // themes: [],
         workshop: {},
         students: [],
         isReady: false,
@@ -29,16 +30,30 @@ export const useWorkshopStore = defineStore({
         async getWorkshop(id){
             this.isReady = false;
             const res = await get(`/api/workshops/${id}`);
-            // console.log(res.workshop);
             this.workshop = res.workshop;
             this.isReady = true;
             return res.workshop;
         },
         async getWorkshops() {
             this.isReady = false;
-            const res = await get(`/api/workshops`, true);
-            this.workshops = res.workshops;
+            this.workshopsByTerm = [[], [], []];
+            const res = await get(`/api/workshops/currentTerm`, true);
+            this.currentTerm = res.termNb;
+            for(let i=0 ; i<=2 ; i++){
+                if(i+1 == res.termNb){
+                    this.workshopsByTerm[i] = res.workshops;
+                }
+            }
             this.isReady = true;
+            const res2 = await get(`/api/workshops/complete/${res.termNb}`, true);
+            res2.workshopsByTerm.forEach(w => {
+                for (let i = 0; i <= 2; i++) {
+                    if (i + 1 == w.termNb) {
+                        this.workshopsByTerm[i] = w.workshops;
+                    }
+                }
+            });
+            console.log(this.workshopsByTerm);
         },
         async updateWorkshop() {
             const res = await patch(`/api/workshops/${this.workshop.id}`, this.workshop);

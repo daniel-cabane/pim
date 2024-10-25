@@ -6,9 +6,13 @@
                 {{ workshop.campus }}
             </v-chip>
         </div>
-        <v-chip label :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'" class="mt-1"
+        <v-chip 
+            label
+            :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'"
+            class="mt-1"
             :color="statusDetails[workshop.status].color" :text="$t(statusDetails[workshop.status].text)"
-            v-if="workshop.editable || ['progress', 'finished'].includes(workshop.status)" />
+            v-if="workshop.editable || ['progress', 'finished'].includes(workshop.status)"
+        />
     </div>
 </template>
 <script setup>

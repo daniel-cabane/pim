@@ -12,6 +12,7 @@ use App\Models\Theme;
 use App\Models\User;
 use App\Models\Session;
 use App\Models\Email;
+use App\Models\Term;
 use Carbon\Carbon;
 
 class WorkshopController extends Controller
@@ -36,6 +37,73 @@ class WorkshopController extends Controller
             $past[] = $workshop->format();
         }
         return response()->json(['workshops' => ['upcoming' => $upcoming, 'enrollements' => $enrollements, 'past' => $past]]);
+    }
+
+    public function currentTermWorkshops()
+    {
+        $today = Carbon::today();
+        $currentTerm = Term::where('start_date', '<=', $today)->where('finish_date', '>=', $today)->first();
+        $workshops = [
+            'confirmed' => [],
+            'progress' => [],
+            'finished' => []
+        ];
+        foreach(Workshop::where('term', $currentTerm->nb)->whereIn('status', ['confirmed', 'launched', 'progress', 'finished'])->orderBy('start_date')->get() as $workshop){
+            switch ($workshop->status) {
+                case 'finished':
+                    $workshops['finished'][] = $workshop->format();
+                    break;
+                case 'progress':
+                    $workshops['progress'][] = $workshop->format();
+                    break;
+                default:
+                    $workshops['confirmed'][] = $workshop->format();
+                    break;
+            }
+        }
+
+        return response()->json(['workshops' => $workshops, 'termNb' => $currentTerm->nb]);
+    }
+
+    public function completeWorkshops(int $nb)
+    {
+        $user = auth()->user();
+        $enrollements = [];
+        if($user){
+            foreach($user->enrollements as $workshop){
+                $enrollements[] = $workshop->format();
+            }
+        }
+
+        $workshopsByTerm = [];
+        for($i=1 ; $i<=3 ; $i++){
+            if($i != $nb){
+                $workshops = [
+                    'confirmed' => [],
+                    'progress' => [],
+                    'finished' => []
+                ];
+                foreach(Workshop::where('term', $i)->whereIn('status', ['confirmed', 'launched', 'progress', 'finished'])->orderBy('start_date')->get() as $workshop){
+                    switch ($workshop->status) {
+                        case 'finished':
+                            $workshops['finished'][] = $workshop->format();
+                            break;
+                        case 'progress':
+                            $workshops['progress'][] = $workshop->format();
+                            break;
+                        default:
+                            $workshops['confirmed'][] = $workshop->format();
+                            break;
+                    }
+                }
+                $workshopsByTerm[] = [
+                    'termNb' => $i,
+                    'workshops' => $workshops
+                ];
+            }
+        }
+
+        return response()->json(['workshopsByTerm' => $workshopsByTerm, 'enrollements' => $enrollements]);
     }
 
     public function myWorkshops ()

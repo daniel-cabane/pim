@@ -110,8 +110,6 @@ class AdminController extends Controller
             'forPost' => 'required|Boolean'
         ]);
 
-        logger($attrs);
-
         $theme->update($attrs);
 
         return response()->json([
