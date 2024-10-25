@@ -77,10 +77,11 @@
                         {{ $t('Edit') }}
                     </v-btn>
                 </v-col>
-                <v-col cols="12">
-                    <workshop-teacher-tabs :workshop="workshop" v-if="user && user.is.teacher" />
-                    <survey-table-student :workshopId="workshop.id"
-                        v-if="user && user.is.student && workshop.application" />
+                <v-col cols="12" v-if="user && user.is.teacher">
+                    <workshop-teacher-tabs :workshop="workshop" />
+                </v-col>
+                <v-col cols="12" v-if="user && user.is.student && workshop.application">
+                    <survey-table-student :workshopId="workshop.id" />
                 </v-col>
             </v-row>
         </v-container>

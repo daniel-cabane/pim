@@ -13,7 +13,7 @@
             src="/images/google signin.png" />
         </a>
       </div>
-      <div class="py-5 text-caption text-captionColor text-center">
+      <div class="py-3 text-caption text-captionColor text-center">
         <span v-if="locale == 'en'">
           @g.lfis.edu.hk accounts only
         </span>

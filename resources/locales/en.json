@@ -375,7 +375,10 @@
     "Message updated": "Message updated",
     "Message deleted": "Message deleted",
     "Details updated": "Details updated",
-    "Be sure thate you are available for the sessions. Lessons ALWAYS take precedence over workshops !": "Be sure thate you are available for the sessions. Lessons ALWAYS take precedence over workshops !",
+    "Be sure that you are available for the sessions. Lessons ALWAYS take precedence over workshops !": "Be sure that you are available for the sessions. Lessons ALWAYS take precedence over workshops !",
     "Finished": "Finished",
-    "In progress": "In progress"
+    "In progress": "In progress",
+    "You need to be signed in to express interest": "You need to be signed in to express interest",
+    "Comment (optional)": "Comment (optional)",
+    "Registered": "Registered"
 }

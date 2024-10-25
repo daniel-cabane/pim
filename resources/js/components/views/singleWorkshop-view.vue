@@ -5,7 +5,92 @@
         </div>
         <v-card>
             <workshop-display :workshop="workshop" @editWorkshop="editWorkshop" />
-            <div style="overflow-y:hidden;transition:all .5s"
+            <!-- ////////////////////////////////////////////////// -->
+             <div v-if="user && user.is && user.is.teacher"/>
+             <div class="px-3 pb-3 d-flex justify-end" v-else-if="workshop.status == 'confirmed'">
+                 <v-dialog v-model="showApplication" max-width="500" v-if="workshop.acceptingStudents">
+                     <template v-slot:activator="{ props: activatorProps }">
+                        <v-btn color="success" append-icon="mdi-check-bold" v-bind="activatorProps" v-if="workshop.application && workshop.application.submitted">
+                            {{ $t("Registered") }}
+                        </v-btn>
+                         <v-btn color="primary" append-icon="mdi-human-greeting" v-bind="activatorProps" v-else>
+                             {{ $t("I'm interested") }}
+                         </v-btn>
+                     </template>
+     
+                     <template v-slot:default="{ isActive }">
+                         <v-card :title="$t(`I'm interested`)">
+                            <v-card-text v-if="!user">
+                                <div>
+                                    {{ $t('You need to be signed in to express interest') }}
+                                </div>
+                                <div class="text-center">
+                                    <a href="/auth/google">
+                                    <v-img max-width='350px' min-width='350px' style="margin:auto;cursor:pointer;"
+                                        src="/images/google signin.png" />
+                                    </a>
+                                </div>
+                                <div class="py-2 text-caption text-captionColor text-center">
+                                    <span v-if="locale == 'en'">
+                                    @g.lfis.edu.hk accounts only
+                                    </span>
+                                    <span v-else>
+                                    Comptes @g.lfis.edu.hk uniquement
+                                    </span>
+                                </div>
+                            </v-card-text>
+                            <v-card-text v-else-if="user.is && user.is.student">
+                                <v-alert type="info" class="mb-3">
+                                    {{ $t('Be sure that you are available for the sessions. Lessons ALWAYS take precedence over workshops !') }}
+                                </v-alert>
+                                <div class="text-caption text-captionColor">
+                                    {{ $t('Availability') }}
+                                </div>
+                                <div>
+                                    <v-radio-group 
+                                        v-model="workshop.application.available"
+                                        :disabled="applyLoading || withdrawLoading"
+                                    >
+                                        <v-radio :label="$t('I\'m available')" :value="true" />
+                                        <v-radio :label="$t('I\'m interested but not available at the time specified')" :value="false" />
+                                    </v-radio-group>
+                                    <v-textarea
+                                        :label="$t('Comment (optional)')" v-model="workshop.application.comment"
+                                        :disabled="applyLoading || withdrawLoading" 
+                                        :resize="false"
+                                    />
+                                </div>
+                            </v-card-text>
+        
+                            <v-card-actions>
+                                <v-btn 
+                                    variant="tonal" color="warning" 
+                                    :loading="withdrawLoading"
+                                    :disabled="applyLoading" @click="handleWithdraw"
+                                    v-if="workshop.application && workshop.application.submitted"
+                                >
+                                    {{ $t('Withdraw') }}
+                                </v-btn>
+                                <v-spacer/>
+                                <v-btn color="error" :text="$t('Close')" :disabled="applyLoading" @click="isActive.value = false"/>
+                                <v-btn color="primary" variant="elevated" :text="$t('Update')" :loading="applyLoading" @click="handleApply" v-if="workshop.application && workshop.application.submitted"/>
+                                <v-btn color="primary" variant="elevated" :text="$t('Submit')" :loading="applyLoading" @click="handleApply" v-else-if="user"/>
+                            </v-card-actions>
+                         </v-card>
+                     </template>
+                 </v-dialog>
+                 <v-tooltip :text="$t('This workshop is not accepting applications at this point')" v-else>
+                        <template v-slot:activator="{ props }">
+                            <span v-bind="props">
+                                <v-btn append-icon="mdi-human-greeting" disabled>
+                                    {{ $t("I'm interested") }}
+                                </v-btn>
+                            </span>
+                        </template>
+                    </v-tooltip>
+             </div>
+            <!-- ////////////////////////////////////////////////// -->
+            <!-- <div style="overflow-y:hidden;transition:all .5s"
                 :style="`max-height:${showApplication ? 320 : 0}px;${!showApplication ? 'content-visibility:hidden;' : ''}`"
                 v-if='workshop.application'>
                 <div class="pa-4">
@@ -28,11 +113,11 @@
                     </div>
                 </div>
             </div>
-            <div class="px-4 pb-3" v-if="user && user.is && user.is.student">
+            <div class="px-4 pb-3">
                 <div class="d-flex justify-space-between" v-if="showApplication">
                     <v-btn variant="tonal" color="warning" :loading="applyLoading"
                         :disabled="applyLoading || !workshop.acceptingStudents" @click="handleWithdraw"
-                        v-if="workshop.application.submitted">
+                        v-if="workshop.application && workshop.application.submitted">
                         {{ $t('Withdraw') }}
                     </v-btn>
                     <span v-else />
@@ -48,7 +133,7 @@
                         </v-btn>
                     </span>
                 </div>
-                <div class="d-flex justify-end" v-else-if="workshop.application.submitted">
+                <div class="d-flex justify-end" v-else-if="workshop.application && workshop.application.submitted">
                     <div>
                         <v-chip label size="large" variant="elevated" color="success" append-icon="mdi-check">
                             {{ $t('Applied !') }}
@@ -74,7 +159,7 @@
                         </template>
                     </v-tooltip>
                 </div>
-            </div>
+            </div> -->
         </v-card>
     </v-container>
 </template>
@@ -84,6 +169,8 @@
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
+    import { useI18n } from 'vue-i18n';
+    const { locale } = useI18n();
     
     const workshopStore = useWorkshopStore();
     const { getWorkshop, applyWorkshop, withdrawWorkshop } = workshopStore;
@@ -100,6 +187,7 @@
         router.push(`/workshops/${route.params.id}/edit`);
     }
 
+    
     const showApplication = ref(false);
     const applyLoading = ref(false);
     const withdrawLoading = ref(false);
