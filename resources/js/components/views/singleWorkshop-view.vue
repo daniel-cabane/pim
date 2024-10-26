@@ -39,7 +39,7 @@
                                     </span>
                                 </div>
                             </v-card-text>
-                            <v-card-text v-else-if="user.is && user.is.student">
+                            <v-card-text v-else-if="user.is && user.is.student && workshop.joinable">
                                 <v-alert type="info" class="mb-3">
                                     {{ $t('Be sure that you are available for the sessions. Lessons ALWAYS take precedence over workshops !') }}
                                 </v-alert>
@@ -61,7 +61,19 @@
                                     />
                                 </div>
                             </v-card-text>
-        
+                            <v-card-text v-else>
+                                <v-alert type="warning" class="mb-3">
+                                    {{ $t('This workshop is not open for students of your level') }}
+                                </v-alert>
+                                <div class="text-caption text-captionColor">
+                                    {{ $t('Contact PIM') }}
+                                </div>
+                                <v-textarea
+                                    label="Message" v-model="messageToPim"
+                                    :disabled="applyLoading || withdrawLoading" 
+                                    :resize="false"
+                                />
+                            </v-card-text>
                             <v-card-actions>
                                 <v-btn 
                                     variant="tonal" color="warning" 
@@ -72,8 +84,9 @@
                                     {{ $t('Withdraw') }}
                                 </v-btn>
                                 <v-spacer/>
-                                <v-btn color="error" :text="$t('Close')" :disabled="applyLoading" @click="isActive.value = false"/>
+                                <v-btn color="error" :text="$t('Close')" :disabled="applyLoading || messageSending || withdrawLoading" @click="isActive.value = false"/>
                                 <v-btn color="primary" variant="elevated" :text="$t('Update')" :loading="applyLoading" @click="handleApply" v-if="workshop.application && workshop.application.submitted"/>
+                                <v-btn color="primary" variant="elevated" style="width:100px" :text="$t('Send')" :loading="messageSending" @click="sendMessageToPim" v-else-if="!workshop.joinable"/>
                                 <v-btn color="primary" variant="elevated" :text="$t('Submit')" :loading="applyLoading" @click="handleApply" v-else-if="user"/>
                             </v-card-actions>
                          </v-card>
@@ -164,7 +177,7 @@
     </v-container>
 </template>
 <script setup>
-    import { ref, computed } from "vue";
+    import { ref } from "vue";
     import { useRoute, useRouter } from 'vue-router';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
     import { useAuthStore } from '@/stores/useAuthStore';
@@ -180,7 +193,7 @@
     getWorkshop(route.params.id);
 
     const authStore = useAuthStore();
-    const { user } = authStore;
+    const { user, msgToAdmin } = authStore;
 
     const router = useRouter();
     const editWorkshop = () => {
@@ -204,5 +217,15 @@
         showApplication.value = false;
         withdrawLoading.value = false;
     }
-    const applyButtonTooltipText = computed (() => workshop.value.joinable ? 'This workshop is not accepting applications at this point' : 'This workshop is not open for your class level');
+    // const applyButtonTooltipText = computed (() => workshop.value.joinable ? 'This workshop is not accepting applications at this point' : 'This workshop is not open for your class level');
+
+    const messageToPim = ref('');
+    const messageSending = ref(false);
+    const sendMessageToPim = async () => {
+        messageSending.value = true;
+        await msgToAdmin(`About ${workshop.value.mainTitle} : ${messageToPim.value}`);
+        messageSending.value = false;
+        messageToPim.value = '';
+        showApplication.value = false;
+    }
 </script>
