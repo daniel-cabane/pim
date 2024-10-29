@@ -151,6 +151,7 @@
         automatic_uploads: true,
         image_dimensions: false,
         image_title: false,
+        image_advtab: true,
         file_picker_types: 'image',
         file_picker_callback: (cb, value, meta) => {
             const input = document.createElement('input');

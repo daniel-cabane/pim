@@ -33,10 +33,10 @@ export const usePostStore = defineStore({
             this.myPosts = res.posts;
             this.isReady = true;
         },
-        async getPublishedPosts(skip = 0, take = 6) {
+        async getPublishedPosts(locale = null, skip = 0, take = 6) {
             this.isReady = false;
-            this.posts = [];
-            const res = await get(`/api/posts/published?query=Laravel&skip=${skip}&take=${take}`, true);
+            // this.posts = [];
+            const res = await get(`/api/posts/published?query=Laravel&skip=${skip}&take=${take}&locale=${locale}`, true);
             this.posts = res.posts;
             this.totalNbPosts = res.total;
             this.isReady = true;
@@ -87,6 +87,20 @@ export const usePostStore = defineStore({
             const res = await del(`/api/posts/${slug}`, true);
             return res;
         },
+        async createTranslation(title){
+            this.isLoading = true;
+            const res = await post(`/api/posts/${this.post.slug}/translation`, { title });
+            this.post.translationId = res.post.id;
+            this.isLoading = false;
+            // return res.post;
+        },
+        async findTranslation(){
+            this.isLoading = true;
+            const res = await get(`/api/posts/${this.post.slug}/translation`);
+            this.post = res.post;
+            this.isLoading = false;
+            return res.post;
+        }
         // async getThemes() {
         //     const res = await get('/api/posts/themes');
         //     this.themes = res.themes;

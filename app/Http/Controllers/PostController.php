@@ -18,12 +18,25 @@ class PostController extends Controller
     public function published(Request $request)
     {
         $attrs = $request->validate([
+            'locale' => 'sometimes|max:5',
             'skip' => 'required|Integer|min:0|max:1000',
             'take' => 'required|Integer|min:1|max:100'
         ]);
         $posts = [];
-        foreach(Post::where('status', 'published')->orderBy('published_at', 'desc')->skip($attrs['skip'])->take($attrs['take'])->get() as $post){
-            $posts[] = $post->format();
+        $postIds = [];
+        $preferedLanguage = $attrs['locale'];
+        $user = auth()->user();
+        if($user && $user->preferences->language != 'both'){
+            $preferedLanguage = $user->preferences->language;
+        }
+        foreach(Post::where('status', 'published')->where('isTranslation', 0)->orderBy('published_at', 'desc')->skip($attrs['skip'])->take($attrs['take']*2)->get() as $post){
+            if($preferedLanguage && $post->language != $preferedLanguage && $post->translation_id && $post->translation->status == 'published'){
+                $post = $post->translation;
+            }
+            if(!in_array($post->id, $postIds) && count($postIds) < $attrs['take']){
+                $posts[] = $post->format();
+                $postIds[] = $post->id;
+            }
         }
         return response()->json([
             'posts' => $posts, 'total' => Post::where('status', 'published')->count()
@@ -92,7 +105,7 @@ class PostController extends Controller
     public function show(Post $post, Request $request)
     {
         $read = $request->validate(['read' => 'required|boolean'])['read'];
-        if($read){
+        if($read && $post->status == 'published'){
             $post->inscreaseReadCounter();
         }
         return response()->json([
@@ -203,6 +216,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if($post->translation_id){
+            $translationPost = Post::find($post->translation_id);
+            $translationPost->update(['translation_id' => null, 'isTranslation' => 0]);
+        }
         $images = json_decode($post->images);
         foreach($images->post as $image){
             Storage::delete($image);
@@ -217,6 +234,53 @@ class PostController extends Controller
                 'type' => 'info'
             ]
         ]);
+    }
+
+    public function createTranslation(Post $post, Request $request)
+    {
+        $title = $request->validate(['title' => 'required|min:8|max:150',])['title'];
+
+        $translationPost = Post::create([
+            'title' => $title,
+            'language' => $post->language == 'en' ? 'fr' : 'en',
+            'description' => "*** $post->description",
+            'slug' => Str::slug($title),
+            'images' => $post->images,
+            'post' => "*** $post->post",
+            'stats' => ['reads' => 0],
+            'author_id' => $post->author_id,
+            'translation_id' => $post->id,
+            'isTranslation' => 1
+        ]);
+
+        $translationPost->themes()->sync($post->themes);
+
+        $post->update(['translation_id' => $translationPost->id]);
+
+        return response()->json([
+            'post' => $translationPost->format(),
+            'message' => [
+                'text' => 'Translation created',
+                'type' => 'success'
+            ]
+        ]);
+    }
+
+    public function findTranslation(Post $post)
+    {
+        if($post->translation_id == null){
+            return response()->json([
+            'post' => null,
+            'message' => [
+                'text' => 'No translation found',
+                'type' => 'error'
+            ]
+        ]);
+        }
+
+        $translationPost = Post::find($post->translation_id);
+
+        return response()->json(['post' => $translationPost->format()]);
     }
 
     public function themes()

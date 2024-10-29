@@ -10,7 +10,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'stats', 'images', 'author_id', 'published_at', 'translation_id'];
+    protected $fillable = ['title', 'description', 'slug', 'language', 'status', 'post', 'stats', 'images', 'author_id', 'published_at', 'translation_id', 'isTranslation'];
 
     protected $casts = ['stats' => 'object'];
 
@@ -63,6 +63,7 @@ class Post extends Model
             'cover' => (json_decode($this->images))->cover,
             'themes' => $this->themes()->pluck('themes.id'),
             'themeTitles' => $themeTitles,
+            'translationId' => $this->translation_id,
             'published_at' => $this->published_at,
             'published_at_formated' => $this->published_at ? $publishDate->format('d/m/Y') : 'Not published',
             'updated_at' => $this->updated_at,

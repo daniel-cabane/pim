@@ -15,11 +15,14 @@
     import { ref, computed } from "vue";
     import { usePostStore } from '@/stores/usePostStore';
     import { storeToRefs } from 'pinia';
+    import { useI18n } from 'vue-i18n';
+
+    const { locale } = useI18n();
 
     const postStore = usePostStore();
     const { getPublishedPosts, searchPosts } = postStore;
     const { posts, totalNbPosts, isReady } = storeToRefs(postStore);
-    getPublishedPosts(0, 12);
+    getPublishedPosts(locale.value, 0, 12);
     
     const paginationLength = computed(() => Math.ceil(totalNbPosts.value / 12));
     const page = ref(1);

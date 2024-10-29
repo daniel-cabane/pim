@@ -128,6 +128,9 @@ Route::group(['middleware'=>['auth:sanctum', 'can:update,post']], function(){
     Route::patch('/posts/{post}/status', [PostController::class, 'updateStatus']);
     Route::post('/posts/{post}/cover', [PostController::class, 'updateCoverImage']);
     Route::post('/posts/{post}/image', [PostController::class, 'uploadImage']);
+
+    Route::post('/posts/{post}/translation', [PostController::class, 'createTranslation']);
+    Route::get('/posts/{post}/translation', [PostController::class, 'findTranslation']);
 });
 
 Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){

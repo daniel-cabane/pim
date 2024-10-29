@@ -9,13 +9,42 @@
                 <v-img max-width='30px' min-width='30px' class='ml-4' src="/images/flag fr.png" contain />
             </span>
             <span>
+                <v-dialog max-width="500">
+                    <template v-slot:activator="{ props: activatorProps }">
+                        <v-btn class="mr-2" v-bind="activatorProps" :text="$t('Translation')" rounded="xl" color="primary"/>
+                    </template>
+                    <template v-slot:default="{ isActive }">
+                        <v-card :title="$t('Translation')" :subtitle="post.title">
+                        <v-card-text v-if="post.translationId">
+                            <div>
+                                {{ $t('This post has a translation') }}
+                            </div>
+                            <div class="d-flex justify-center pa-2 mt-2">
+                                <v-btn :text="$t('See translation')" color="primary" @click="goToTranslation"/>
+                            </div>
+                        </v-card-text>
+                        <v-card-text v-else>
+                            <div>
+                                {{ $t('This post does not have a translation') }}
+                            </div>
+                            <div class="d-flex flex-column align-center pa-2 mt-2">
+                                <v-text-field variant="outlined" :label="$t('Translation title')" v-model="translationTitle" style="width:400px;"/>
+                                <v-btn :text="$t('Create translation')" :disabled="translationTitle.length < 8" color="primary" :loading="isLoading" @click="createTranslationAndGo"/>
+                            </div>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="error" :text="$t('Close')" @click="isActive.value = false"/>
+                        </v-card-actions>
+                        </v-card>
+                    </template>
+                </v-dialog>
                 <v-chip color="success" variant="flat" append-icon="mdi-file-check" v-if="post.status == 'published' && !user.is.admin">
                     {{ $t('Published') }}
                 </v-chip>
                 <v-menu v-else>
                     <template v-slot:activator="{ props }">
-                        <v-btn :color="statusButton.color" rounded="xl" :append-icon="statusButton.icon" v-bind="props"
-                            :disabled="statusLoading">
+                        <v-btn :color="statusButton.color" rounded="xl" :append-icon="statusButton.icon" v-bind="props" :disabled="statusLoading">
                             {{ $t(statusButton.status) }}
                         </v-btn>
                     </template>
@@ -35,8 +64,14 @@
         <div class="d-flex align-center mt-4">
             <v-dialog v-model="quitDialog" width="350">
                 <template v-slot:activator="{ props }">
-                    <v-btn variant="tonal" color="error" rounded="xl" style="width:120px" :disabled="loading"
-                        prepend-icon="mdi-arrow-left-bold-circle-outline" v-bind="props">
+                    <v-btn 
+                        variant="tonal"
+                        color="error"
+                        rounded="xl"
+                        style="width:120px"
+                        :disabled="loading"
+                        prepend-icon="mdi-arrow-left-bold-circle-outline" v-bind="props"
+                    >
                         {{ $t('Quit') }}
                     </v-btn>
                 </template>
@@ -72,7 +107,7 @@
     const route = useRoute();
     const router = useRouter();
     const postStore = usePostStore();
-    const { getPost, updatePost, updatePostStatus } = postStore;
+    const { getPost, updatePost, updatePostStatus, createTranslation, findTranslation } = postStore;
     const { post, isReady, isLoading, statusLoading } = storeToRefs(postStore);
 
     getPost(route.params.slug);
@@ -98,4 +133,20 @@
     const statusList = computed(() => {
         return statusButtonDetails.filter(b => b.status != post.value.status);
     });
+
+    const translationTitle = ref('');
+    const createTranslationAndGo = async () => {
+        await createTranslation(translationTitle.value);
+        // router.push(`/posts/${newPost.slug}`);
+        // getPost(newPost.slug);
+        // lgSwitch.value = newPost.language == 'fr';
+    }
+    const goToTranslation = async () => {
+        const newPost = await findTranslation();
+        if(newPost){
+            router.push(`/posts/${newPost.slug}/edit`);
+            getPost(newPost.slug);
+            lgSwitch.value = newPost.language == 'fr';
+        }
+    }
 </script>

@@ -11,8 +11,11 @@
                 <v-icon icon="mdi-account-edit" class="mr-1"/>
                 {{ post.author.name }}
             </span>
-            <span class="text-caption">
-                {{ post.published_at_formated }}
+            <span class="text-caption d-flex align-center">
+                <span>
+                    {{ post.published_at_formated }}
+                </span>
+                <v-img :src="`/images/flag ${post.language}.png`" :width="25" class="ml-2 " />
             </span>
         </v-card-subtitle>
 

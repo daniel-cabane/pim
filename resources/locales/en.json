@@ -381,5 +381,13 @@
     "You need to be signed in to express interest": "You need to be signed in to express interest",
     "Comment (optional)": "Comment (optional)",
     "Registered": "Registered",
-    "This workshop is not open for students of your level": "This workshop is not open for students of your level"
+    "This workshop is not open for students of your level": "This workshop is not open for students of your level",
+    "Translation": "Translation",
+    "This post has a translation": "This post has a translation",
+    "See translation": "See translation",
+    "This post does not have a translation": "This post does not have a translation",
+    "Create translation": "Create translation",
+    "Translation title": "Translation title",
+    "Translation created": "Translation created",
+    "No translation found": "No translation found"
 }

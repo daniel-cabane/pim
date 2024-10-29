@@ -381,5 +381,13 @@
     "You need to be signed in to express interest": "Vous devez vous connecter pour exprimer votre intérêt",
     "Comment (optional)": "Commentaire (facultatif)",
     "Registered": "Enregistré",
-    "This workshop is not open for students of your level": "Cet atelier n'est pas destiné aux élèves de votre niveau"
+    "This workshop is not open for students of your level": "Cet atelier n'est pas destiné aux élèves de votre niveau",
+    "Translation": "Traduction",
+    "This post has a translation": "Cet article a une traduction",
+    "See translation": "Voir la traduction",
+    "This post does not have a translation": "Cet article n'a pas de traduction",
+    "Create translation": "Créer une traduction",
+    "Translation title": "Titre de la traduction",
+    "Translation created": "Traduction créée",
+    "No translation found": "Aucune traduction trouvée"
 }
