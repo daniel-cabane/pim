@@ -85,7 +85,7 @@ class AdminController extends Controller
     public function allWorkshops()
     {
         $workshops = [];
-        foreach(Workshop::orderBy('start_date', 'desc')->take(50)->get() as $workshop){
+        foreach(Workshop::orderBy('start_date', 'desc')->where('archived', 0)->take(50)->get() as $workshop){
             $workshops[] = $workshop->format();
         }
         return response()->json([

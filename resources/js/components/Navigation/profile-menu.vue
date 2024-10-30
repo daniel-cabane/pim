@@ -19,6 +19,12 @@
                     </template>
                     <v-list-item-title>Admin</v-list-item-title>
                 </v-list-item>
+                <v-list-item @click="goToHod" v-if="user.is.admin || user.is.hod">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-account-supervisor-circle-outline"></v-icon>
+                    </template>
+                    <v-list-item-title>HoD</v-list-item-title>
+                </v-list-item>
                 <v-list-item @click="logout">
                     <template v-slot:prepend>
                         <v-icon icon="mdi-logout"></v-icon>
@@ -87,6 +93,9 @@
     const router = useRouter();
     const goToDashboard = () => {
         router.push('/admin');
+    }
+    const goToHod = () => {
+        router.push('/hod');
     }
 
     const initPrefsDialog = ref(true);

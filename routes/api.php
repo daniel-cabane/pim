@@ -10,6 +10,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\HodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,17 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::patch('/userinfo/details', [UserController::class, 'updateDetails']);
 
     Route::post('/adminmsg', [MessageController::class, 'sendToAdmin']);
+});
+
+
+/*
+*
+*   HOD
+* 
+*/
+
+Route::group(['middleware'=>['role:admin|hod']], function(){
+    Route::get('/hod/index/', [HodController::class, 'index']);
 });
 
 /*

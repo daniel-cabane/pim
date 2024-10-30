@@ -77,8 +77,7 @@
                 </v-card>
             </v-dialog>
             <div>
-                <v-data-table hover :headers="headers" :items="openDoors" item-value="name" items-per-page="25"
-                    :items-per-page-options="ipp">
+                <v-data-table hover :headers="headers" :items="openDoors" item-value="name" items-per-page="25" :items-per-page-options="ipp">
                     <template v-slot:item="{ item }">
                         <tr>
                             <td class="text-center">

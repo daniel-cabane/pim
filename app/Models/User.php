@@ -48,11 +48,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsAttribute()
     {
       return [
-          'student' => $this->email_verified_at != null && $this->hasRole('student'),
-          'publisher' => $this->email_verified_at != null && $this->hasRole('publisher'),
-          'teacher' => $this->email_verified_at != null && $this->hasRole('teacher'),
-          'hod' => $this->email_verified_at != null && $this->hasRole('hod'),
-          'admin' => $this->email_verified_at != null && $this->hasRole('admin')
+          'student' => $this->hasRole('student'),
+          'publisher' => $this->hasRole('publisher'),
+          'teacher' => $this->hasRole('teacher'),
+          'hod' => $this->hasRole('hod'),
+          'admin' => $this->hasRole('admin')
       ];
     }
 

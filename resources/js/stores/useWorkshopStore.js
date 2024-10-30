@@ -30,7 +30,7 @@ export const useWorkshopStore = defineStore({
         async getWorkshop(id){
             this.isReady = false;
             const res = await get(`/api/workshops/${id}`);
-            console.log(res.workshop);
+            // console.log(res.workshop);
             this.workshop = res.workshop;
             this.isReady = true;
             return res.workshop;
