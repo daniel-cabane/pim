@@ -172,7 +172,10 @@ class UserController extends Controller
           'hoursDone' => $hoursDone[$term->nb-1]
         ];
     }
-    return response()->json(['terms' => $terms, 'hoursPerWeek' => floatval($user->preferences->hoursDuePerWeek)]);
+    return response()->json([
+      'terms' => $terms,
+      'hoursPerWeek' => isset($user->preferences->hoursDuePerWeek) ? floatval($user->preferences->hoursDuePerWeek) : 0
+    ]);
   }
 
   public function pobpr(Request $request)
