@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Carbon\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -151,5 +152,36 @@ class User extends Authenticatable implements MustVerifyEmail
       }
 
       return $messages;
+    }
+
+    public function hoursPerTerm()
+    {
+      if(!$this->hasRole('teacher')){
+        return null;
+      }
+      $hours = [];
+      foreach(Term::orderBy('nb')->get() as $term){
+          $openDoorSessions = 0;
+          foreach(OpenDoor::whereBetween('date', [$term->start_date, $term->finish_date])->where('teacher_id', $this->id)->get() as $session){
+              $openDoorSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
+          }
+          $start = Carbon::parse($term->start_date);
+          $finish = Carbon::parse($term->finish_date);
+          $workshopSessions = 0;
+          foreach($this->workshops as $workshop){
+              foreach($workshop->sessions as $session){
+                  if((Carbon::parse($session->date))->between($start, $finish)){
+                      $workshopSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
+                  }
+              }
+          }
+          $hours[] = [
+              'openDoorSessions' => $openDoorSessions,
+              'workshopSessions' => $workshopSessions,
+              'hoursDone' => 0.5*$openDoorSessions + $workshopSessions
+          ];
+      }
+
+      return $hours;
     }
 }

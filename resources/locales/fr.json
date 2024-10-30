@@ -392,6 +392,11 @@
     "No translation found": "Aucune traduction trouvée",
     "Teachers": "Enseignants",
     "weeks": "semaines",
-    "Workshop sessions": "Sessions d'atelier",
-    "Hours done": "Heures effectuées"
+    "Workshop sessions": "Séances d'atelier",
+    "Open doors sessions": "Séances de portes ouvertes",
+    "Hours done": "Heures effectuées",
+    "Hours due per week": "Heures dues par semaine",
+    "Hours due updated": "Heures dues mises à jour",
+    "My hours": "Mes heures",
+    "per week": "par semaine"
 }

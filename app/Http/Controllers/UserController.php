@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\Term;
+use App\Models\Holiday;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -146,6 +148,31 @@ class UserController extends Controller
     Auth::login($user);
 
     return redirect()->intended('/');
+  }
+
+  public function myHours()
+  {
+    $user = auth()->user();
+    $terms = [];
+    $hoursDone = $user->hoursPerTerm();
+    foreach(Term::orderBy('nb')->get() as $term){
+        $weeksHoliday = 0;
+        foreach(Holiday::whereBetween('start', [$term->start_date, $term->finish_date])->get() as $holiday){
+            $holidayLength = (Carbon::parse($holiday->start))->diffInDays($holiday->finish);
+            if($holidayLength >= 5){
+                $weeksHoliday++;
+            }
+            if($holidayLength >= 10){
+                $weeksHoliday++;
+            }
+        }
+        $terms[] = [
+          'nb' => $term->nb,
+          'nbWeeks' => (Carbon::parse($term->start_date))->diffInWeeks($term->finish_date) - $weeksHoliday,
+          'hoursDone' => $hoursDone[$term->nb-1]
+        ];
+    }
+    return response()->json(['terms' => $terms, 'hoursPerWeek' => floatval($user->preferences->hoursDuePerWeek)]);
   }
 
   public function pobpr(Request $request)

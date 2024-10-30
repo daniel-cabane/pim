@@ -171,6 +171,15 @@ export const useAuthStore = defineStore({
                 addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;
             }
+        },
+        async fetchMyHours() {
+            try {
+                const res = await axios.get('/api/userinfo/hours');
+                console.log(res.data);
+                return res.data;
+            } catch (err) {
+                addNotification({ text: err.response.data.message, type: 'error' });
+            }
         }
     }
 });

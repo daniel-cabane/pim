@@ -37,32 +37,25 @@ class HodController extends Controller
 
         $teachers = [];
         foreach(User::role('teacher')->get() as $teacher){
-            $stats = [];
-            foreach(Term::orderBy('nb')->get() as $term){
-                $openDoorSessions = 0;
-                foreach(OpenDoor::whereBetween('date', [$term->start_date, $term->finish_date])->where('teacher_id', $teacher->id)->get() as $session){
-                    $openDoorSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
-                }
-                $start = Carbon::parse($term->start_date);
-                $finish = Carbon::parse($term->finish_date);
-                $workshopSessions = 0;
-                foreach($teacher->workshops as $workshop){
-                    foreach($workshop->sessions as $session){
-                        if((Carbon::parse($session->date))->between($start, $finish)){
-                            $workshopSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
-                        }
-                    }
-                }
-                $stats[] = [
-                    'openDoorSessions' => $openDoorSessions,
-                    'workshopSessions' => $workshopSessions,
-                    'hoursDone' => 0.5*$openDoorSessions + $workshopSessions
-                ];
-            }
-            $teacher->stats = $stats;
+            $teacher->hoursDone = $teacher->hoursPerTerm();
             $teachers[] = $teacher;
         }
 
         return response()->json(['workshops' => $workshops, 'teachers' => $teachers, 'terms' => $terms]);
+    }
+
+    public function teacherHours(Request $request)
+    {
+        $teachers = $request->validate(['teachers' => 'required|array'])['teachers'];
+        foreach($teachers as $teacherData){
+            $teacher = User::find(intval($teacherData['id']));
+            if(isset($teacherData['hours'])){
+                $prefs = $teacher->preferences;
+                $prefs->hoursDuePerWeek = floatval($teacherData['hours']);
+                $teacher->update(['preferences' => $prefs]);
+            }
+        }
+
+        return response()->json(['message' => ['text' => 'Hours due updated', 'type' => 'success']]);
     }
 }

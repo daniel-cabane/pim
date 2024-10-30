@@ -19,9 +19,15 @@ export const useHodStore = defineStore({
             const res = await get(`/api/hod/index`, true);
             this.workshops = res.workshops;
             this.teachers = res.teachers;
+            console.log(res);
             this.terms = res.terms;
             this.isLoading = false;
             this.isReady = true;
+        },
+        async updateTeachersHours() {
+            this.isLoading = true;
+            await post(`/api/hod/teacherHours`, { teachers: this.teachers.map(t => ({ id: t.id, hours: t.preferences.hoursDuePerWeek }))});
+            this.isLoading = false;
         }
     }
 });

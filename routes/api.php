@@ -70,6 +70,7 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::get('/userinfo/teachers', [UserController::class, 'teachers']);
     Route::patch('/userinfo/preferences', [UserController::class, 'updatePreferences']);
     Route::patch('/userinfo/details', [UserController::class, 'updateDetails']);
+    Route::get('/userinfo/hours', [UserController::class, 'myHours']);
 
     Route::post('/adminmsg', [MessageController::class, 'sendToAdmin']);
 });
@@ -83,6 +84,7 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 
 Route::group(['middleware'=>['role:admin|hod']], function(){
     Route::get('/hod/index/', [HodController::class, 'index']);
+    Route::post('/hod/teacherHours/', [HodController::class, 'teacherHours']);
 });
 
 /*
