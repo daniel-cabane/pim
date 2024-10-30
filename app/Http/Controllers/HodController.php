@@ -43,10 +43,14 @@ class HodController extends Controller
                 foreach(OpenDoor::whereBetween('date', [$term->start_date, $term->finish_date])->where('teacher_id', $teacher->id)->get() as $session){
                     $openDoorSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
                 }
+                $start = Carbon::parse($term->start_date);
+                $finish = Carbon::parse($term->finish_date);
                 $workshopSessions = 0;
-                foreach($teacher->workshops()->where('term', $term->nb)->get() as $workshop){
+                foreach($teacher->workshops as $workshop){
                     foreach($workshop->sessions as $session){
-                        $workshopSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
+                        if((Carbon::parse($session->date))->between($start, $finish)){
+                            $workshopSessions += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
+                        }
                     }
                 }
                 $stats[] = [
