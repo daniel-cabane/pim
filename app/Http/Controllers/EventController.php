@@ -67,8 +67,8 @@ class EventController extends Controller
             $weekNumbers = [];
     
             while ($weekStart <= $weekEnd) {
-                $weekNumbers[] = ['nb' => $weekStart->weekOfYear, 'year' => $weekEnd->format('Y')];
-                $globalWeekNbs[] = ['nb' => $weekStart->weekOfYear, 'year' => $weekEnd->format('Y')];
+                $weekNumbers[] = ['nb' => $weekStart->weekOfYear, 'year' => $weekStart->copy()->endOfWeek()->format('Y')];
+                $globalWeekNbs[] = ['nb' => $weekStart->weekOfYear, 'year' => $weekStart->copy()->endOfWeek()->format('Y')];
                 $weekStart->addWeek();
             }
     
