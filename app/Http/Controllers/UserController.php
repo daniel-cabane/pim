@@ -94,7 +94,7 @@ class UserController extends Controller
 
   public function googleSigninCallback(Request $request)
   {
-    logger($request);
+    logger($request->query('workshop'));
     $attrs = $request->validate(['workshop' => 'sometimes|integer']);
     logger("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
     logger($attrs);
