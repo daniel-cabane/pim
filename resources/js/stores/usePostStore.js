@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import useAPI from '@/composables/useAPI';
 
-const { get, post, patch, del } = useAPI();
+const { get, post, patch, del, isLoading } = useAPI();
 
 export const usePostStore = defineStore({
     id: 'post',
@@ -12,7 +12,7 @@ export const usePostStore = defineStore({
         // themes: [],
         totalNbPosts: 0,
         isReady: false,
-        isLoading: false,
+        // isLoading: false,
         statusLoading: false,
         imageLoading: false
     }),
@@ -70,11 +70,11 @@ export const usePostStore = defineStore({
             return await post(`/api/posts/${this.post.slug}/image`, formData);
         },
         async updatePost() {
-            this.isLoading = true;
+            // this.isLoading = true;
             const res = await patch(`/api/posts/${this.post.slug}`, this.post, false);
             this.post = res.post;
             window.history.replaceState({}, '', `/posts/${res.post.slug}/edit`);
-            this.isLoading = false;
+            // this.isLoading = false;
             return res.post;
         },
         async updatePostStatus(status) {
@@ -88,22 +88,27 @@ export const usePostStore = defineStore({
             return res;
         },
         async createTranslation(title){
-            this.isLoading = true;
+            // this.isLoading = true;
             const res = await post(`/api/posts/${this.post.slug}/translation`, { title });
             this.post.translationId = res.post.id;
-            this.isLoading = false;
+            // this.isLoading = false;
             // return res.post;
         },
         async findTranslation(){
-            this.isLoading = true;
+            // this.isLoading = true;
             const res = await get(`/api/posts/${this.post.slug}/translation`);
             this.post = res.post;
-            this.isLoading = false;
+            // this.isLoading = false;
             return res.post;
         }
         // async getThemes() {
         //     const res = await get('/api/posts/themes');
         //     this.themes = res.themes;
         // },
+    },
+    getters: {
+        isLoading: () => {
+            return isLoading.value;
+        },
     }
 });

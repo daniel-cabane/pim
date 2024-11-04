@@ -24,7 +24,7 @@ class PostController extends Controller
         ]);
         $posts = [];
         $postIds = [];
-        $preferedLanguage = $attrs['locale'];
+        $preferedLanguage = isset($attrs['locale']) ? $attrs['locale'] : 'en';
         $user = auth()->user();
         if($user && $user->preferences->language != 'both'){
             $preferedLanguage = $user->preferences->language;

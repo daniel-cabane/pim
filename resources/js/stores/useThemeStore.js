@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import useAPI from '@/composables/useAPI';
 
-const { get, post, patch, del } = useAPI();
+const { get, post, patch, del, isLoading } = useAPI();
 
 export const useThemeStore = defineStore({
     id: 'theme',
@@ -9,7 +9,7 @@ export const useThemeStore = defineStore({
         themes: [],
         theme: {},
         isReady: false,
-        isLoading: false
+        // isLoading: false
     }),
     actions: {
         async getThemes() {
@@ -35,26 +35,29 @@ export const useThemeStore = defineStore({
             return {id, title_en: 'Unknown theme', title_fr: 'Thème inconnu', forWorkshop: true, forPost: true}
         },
         async updateTheme(theme){
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await patch(`/api/admin/themes/${theme.id}`, theme);
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async createTheme(title_en, title_fr){
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await post(`/api/admin/themes`, {title_en, title_fr});
             this.themes.push(res.theme);
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async deleteTheme(theme){
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await del(`/api/admin/themes/${theme.id}`);
             if(res.id){
                 this.themes = this.themes.filter(t => t.id != res.id);
             }
-            this.isLoading = false;
+            //this.isLoading = false;
         }
     },
     getters: {
+        isLoading: () => {
+            return isLoading.value;
+        },
         forWorkshop() {
             return this.themes.filter(t => t.forWorkshop);
         },

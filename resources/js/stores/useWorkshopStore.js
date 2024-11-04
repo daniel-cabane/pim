@@ -13,7 +13,7 @@ export const useWorkshopStore = defineStore({
         workshop: {},
         students: [],
         isReady: false,
-        isLoading: false,
+        // isLoading: false,
         imageLoading: false
     }),
     actions: {
@@ -108,59 +108,59 @@ export const useWorkshopStore = defineStore({
             this.workshop = res.workshop;
         },
         async editApplicant(data){
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await patch(`/api/workshops/${this.workshop.id}/applicants/${data.id}`, data);
             this.workshop.applicants = this.workshop.applicants.map(a => a.id == res.applicant.id ? res.applicant : a);
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async removeApplicant(data) {
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await del(`/api/workshops/${this.workshop.id}/applicants/${data.id}`);
             this.workshop.applicants = this.workshop.applicants.filter(a => a.id != res.id);
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async prepareLaunch(){
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await get(`/api/admin/workshops/${this.workshop.id}/prepare`);
-            this.isLoading = false;
+            //this.isLoading = false;
             return res.info;
         },
         async launch(data) {
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await post(`/api/admin/workshops/${this.workshop.id}/launch`, data);
             this.workshop = res.workshop;
-            this.isLoading = false;
+            //this.isLoading = false;
             return res.workshop;
         },
         async createSession() {
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await post(`/api/workshops/${this.workshop.id}/session`);
             this.workshop = res.workshop;
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async updateSession(session) {
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await patch(`/api/workshops/${this.workshop.id}/sessions/${session.id}`, session);
             this.workshop = res.workshop;
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async deleteSession(id) {
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await del(`/api/workshops/${this.workshop.id}/sessions/${id}`);
             this.workshop = res.workshop;
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async orderSessions() {
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await patch(`/api/workshops/${this.workshop.id}/orderSessions`);
             this.workshop = res.workshop;
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async searchStudent(name){
-            this.isLoading = true;
+            //this.isLoading = true;
             const res = await get(`/api/workshops/${this.workshop.id}/searchStudent?query=Laravel&name=${name}`);
             this.students = res.students;
-            this.isLoading = false;
+            //this.isLoading = false;
         },
         async addStudent(student) {
             const res = await post(`/api/workshops/${this.workshop.id}/addStudent`, student);
@@ -170,15 +170,20 @@ export const useWorkshopStore = defineStore({
             }
         },
         // async updateTheme(theme){
-        //     this.isLoading = true;
+        //     //this.isLoading = true;
         //     const res = await patch(`/api/admin/themes/${theme.id}`, theme);
-        //     this.isLoading = false;
+        //     //this.isLoading = false;
         // },
         // async createTheme(title_en, title_fr){
-        //     this.isLoading = true;
+        //     //this.isLoading = true;
         //     const res = await post(`/api/admin/themes`, {title_en, title_fr});
         //     this.themes.push(res.theme);
-        //     this.isLoading = false;
+        //     //this.isLoading = false;
         // }
+    },
+    getters: {
+        isLoading: () => {
+            return isLoading.value;
+        },
     }
 });

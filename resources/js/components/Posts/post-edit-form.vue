@@ -148,6 +148,8 @@
     const options = {
         image_title: true,
         height: 800,
+        convert_urls: false,
+        link_assume_external_targets: 'https',
         automatic_uploads: true,
         image_dimensions: false,
         image_title: false,
@@ -172,7 +174,8 @@
                 selector: 'img',
                 styles: {
                     float: 'left',
-                    margin: '0 10px 0 10px'
+                    margin: '0 10px 0 10px',
+                    'max-width': '50%'
                 }
             },
             {
@@ -180,7 +183,8 @@
                 selector: 'img',
                 styles: {
                     float: 'right',
-                    margin: '0 10px 0 10px'
+                    margin: '0 10px 0 10px',
+                    'max-width': '50%'
                 }
             }
         ]
