@@ -25,7 +25,7 @@
                                     {{ $t('You need to be signed in to express interest') }}
                                 </div>
                                 <div class="text-center">
-                                    <a href="/auth/google?query=Laravel&workshop=5">
+                                    <a href="/auth/google">
                                     <v-img max-width='350px' min-width='350px' style="margin:auto;cursor:pointer;"
                                         src="/images/google signin.png" />
                                     </a>

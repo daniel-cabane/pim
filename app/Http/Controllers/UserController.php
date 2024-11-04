@@ -92,13 +92,8 @@ class UserController extends Controller
     return Socialite::driver('google')->redirect();
   }
 
-  public function googleSigninCallback(Request $request)
+  public function googleSigninCallback()
   {
-    logger($request->query('workshop'));
-    $attrs = $request->validate(['workshop' => 'sometimes|integer']);
-    logger("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-    logger($attrs);
-
     $google_user = Socialite::driver('google')->user();
     $user = User::where('email', $google_user->getEmail())->first();
 
