@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import useAPI from '@/composables/useAPI';
 
-const { get, post, patch, del } = useAPI();
+const { get, post, patch, del, isLoading } = useAPI();
 
 export const useWorkshopStore = defineStore({
     id: 'workshop',

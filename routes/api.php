@@ -112,6 +112,8 @@ Route::get('/holidays', [EventController::class, 'holidays']);
 Route::get('/openDoors', [EventController::class, 'openDoors']);
 
 Route::get('/calendar/getMonths', [EventController::class, 'getCalendarMonths']);
+
+Route::post('/session/currentRoute', [UserController::class, 'setCurrentRoute']);
 // Route::get('/calendar/adjacentMonths', [EventController::class, 'getAdjacentMonths']);
 
 // Route::group(['middleware'=>['auth:sanctum']], function(){

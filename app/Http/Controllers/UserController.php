@@ -147,6 +147,11 @@ class UserController extends Controller
 
     Auth::login($user);
 
+    logger(session('route'));
+    if(session('route')){
+      return redirect()->intended(session('route'));
+    }
+
     return redirect()->intended('/');
   }
 
@@ -178,9 +183,17 @@ class UserController extends Controller
     ]);
   }
 
+  public function setCurrentRoute(Request $request)
+  {
+    $route = $request->validate(['route' => 'required|max:100'])['route'];
+    $request->session()->put('route', $route);
+
+    return response()->json('OK');
+  }
+
   public function pobpr(Request $request)
   {
-    logger("********** READ TAG **********");
-    logger($request);
+    // logger("********** READ TAG **********");
+    // logger($request);
   }
 }
