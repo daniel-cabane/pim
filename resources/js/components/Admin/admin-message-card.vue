@@ -12,6 +12,15 @@
             {{ message.sender.email }}
             </div>
         </div>
+        <div>
+            <div class="text-caption text-captionColor">
+            Date
+            </div>
+            <div>
+                {{ $d(message.sentOn) }}
+            </div>
+            <div style="height:20px;"></div>
+        </div>
         <v-menu>
             <template v-slot:activator="{ props }">
               <v-btn :icon="currentOption.icon" :color="currentOption.color" variant="text" v-bind="props"></v-btn>

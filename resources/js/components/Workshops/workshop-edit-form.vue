@@ -3,13 +3,18 @@
         <v-tab value="t-d">{{ $t('Title and description') }}</v-tab>
         <v-tab value="details">{{ $t('Details') }}</v-tab>
         <v-tab value="poster">{{ $t('Poster') }}</v-tab>
-        <v-tab value="sessions" v-if="user.is.admin || workshop.status == 'launched'">{{ $t('Sessions') }}</v-tab>
+        <v-tab value="sessions" v-if="user.is.admin || ['launched', 'progress', 'finished'].includes(workshop.status)">{{ $t('Sessions') }}</v-tab>
         <v-spacer />
         <v-chip label size="large" color="success" class="ma-2" v-if="workshop.status == 'launched'">
             {{ $t('Launched') }}
         </v-chip>
-        <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions"
-            v-model="workshop.status" v-else />
+        <v-chip label size="large" color="success" variant="elevated" class="ma-2" v-else-if="workshop.status == 'progress'">
+            {{ $t('In progress') }}
+        </v-chip>
+        <v-chip label size="large" color="grey" class="ma-2" v-else-if="workshop.status == 'finished'">
+            {{ $t('Finished') }}
+        </v-chip>
+        <v-select variant="plain" flat :label="$t('Status')" :disabled="statusMenuDisabled" :items="statusOptions" v-model="workshop.status" v-else />
     </v-tabs>
     <v-card-text v-if="isReady">
         <v-window v-model="tab">
@@ -120,8 +125,7 @@
                 <v-dialog scrollable max-width="850" v-model="finalizeDialog">
                     <template v-slot:default="{ isActive }">
                         <v-card :title="`${t('Finalize workshop')} - ${workshop.mainTitle}`" style="position:relative;">
-                            <v-progress-linear color="primary" indeterminate style="position:absolute;top:0px;"
-                                class="pa-0" v-if="isLoading && !isLaunching" />
+                            <v-progress-linear color="primary" indeterminate style="position:absolute;top:0px;" class="pa-0" v-if="isLoading && !isLaunching" />
                             <v-card-text>
                                 <v-tabs v-model="finalizeTab">
                                     <v-tab value="0">
@@ -172,7 +176,7 @@
                         {{ $t('Finalize workshop') }}
                     </v-btn>
                 </div>
-                <div v-if="workshop.status == 'launched'">
+                <div v-if="['launched', 'progress', 'finished'].includes(workshop.status)">
                     <sessions-table :workshop="workshop" :isLoading="isLoading" @deleteSession="handleDeleteSession"
                         @refreshSessions="refreshSessions" @createSession="handleCreateSession"
                         @editSession="handleEditSession" @orderSessions="orderSessions" />
