@@ -119,6 +119,10 @@ export const useEventStore = defineStore({
             this.terms = res.terms;
             //this.isLoading = false;
         },
+        async editTerm(data) {
+            const res = await patch(`/api/admin/term/${data.id}`, {start: data.start_date, finish: data.finish_date});
+            this.terms = res.terms;
+        },
         async deleteTerm(id) {
             //this.isLoading = true;
             const res = await del(`/api/admin/term/${id}`);

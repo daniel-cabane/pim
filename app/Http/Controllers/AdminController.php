@@ -485,6 +485,24 @@ class AdminController extends Controller
         ]);
     }
 
+    public function editTerm(Term $term, Request $request)
+    {
+        $attrs = $request->validate(['start' => 'required|date', 'finish' => 'required|date']);
+
+        $term->update(['start_date' => $attrs['start'], 'finish_date' => $attrs['finish'],]);
+
+        $startDate = Carbon::create(Carbon::now()->subYear()->format('Y'), 8, 1, 0, 0, 0);
+        $endDate = Carbon::create(Carbon::now()->addYear()->format('Y'), 7, 31, 23, 59, 59);
+
+        return response()->json([
+            'terms' => Term::whereBetween('start_date', [$startDate, $endDate])->get(),
+            'message' => [
+                    'text' => 'Term updated',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
     public function deleteTerm(Term $term)
     {
         $term->delete();

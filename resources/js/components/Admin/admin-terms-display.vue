@@ -5,9 +5,14 @@
                 <span>
                     {{ $t('Term') + ' ' + term.nb }}
                 </span>
-                <v-icon size="x-small" color="error" @click="prepareDeleteTerm(term.id)">
-                    mdi-delete
-                </v-icon>
+                <span>
+                    <v-icon size="x-small" color="primary" @click="showEditTermDialog(term)">
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon size="x-small" color="error" @click="prepareDeleteTerm(term.id)">
+                        mdi-delete
+                    </v-icon>
+                </span>
             </v-card-title>
             <v-card-text>
                 {{ formatDate(term.start_date) }}
@@ -22,10 +27,8 @@
             <v-card width="350" :title="$t('New term')">
                 <v-card-text class="pt-3">
                     <v-select v-model="nb" :items="[1,2,3]" variant="outlined" label="Nb" />
-                    <v-text-field v-model="startDate" type="date" :label="$t('Start date')" variant="outlined"
-                        :disabled="isLoading" />
-                    <v-text-field v-model="finishDate" type="date" :label="$t('Finish date')" variant="outlined"
-                        :disabled="isLoading" />
+                    <v-text-field v-model="startDate" type="date" :label="$t('Start date')" variant="outlined" :disabled="isLoading" />
+                    <v-text-field v-model="finishDate" type="date" :label="$t('Finish date')" variant="outlined" :disabled="isLoading" />
                 </v-card-text>
                 <div class="px-4 d-flex pb-3">
                     <v-spacer />
@@ -39,13 +42,24 @@
             </v-card>
         </v-dialog>
         <v-dialog width="350" v-model="deleteDialog">
-            <v-card width="350" prepend-icon="mdi-delete" text="Are you sure you want to delete this term"
-                title="Delete Term">
+            <v-card width="350" prepend-icon="mdi-delete" text="Are you sure you want to delete this term" title="Delete Term">
                 <template v-slot:actions>
                     <v-spacer />
-                    <v-btn color="primary" variant="tonal" :disabled="isLoading" text="No"
-                        @click="deleteDialog = false" />
-                    <v-btn color="error" variant="flat" text="Yes" :loading="isLoading" @click="handleDeleteTerm" />
+                    <v-btn color="primary" variant="tonal" :disabled="isLoading" :text="$t('No')" @click="deleteDialog = false" />
+                    <v-btn color="error" variant="flat" :text="$t('Yes')" :loading="isLoading" @click="handleDeleteTerm" />
+                </template>
+            </v-card>
+        </v-dialog>
+        <v-dialog width="350" v-model="editDialog">
+            <v-card width="350" title="Edit Term">
+                <v-card-text>
+                    <v-text-field v-model="focusedTerm.start_date" type="date" :label="$t('Start date')" variant="outlined" :disabled="isLoading" />
+                    <v-text-field v-model="focusedTerm.finish_date" type="date" :label="$t('Finish date')" variant="outlined" :disabled="isLoading" />
+                </v-card-text>
+                <template v-slot:actions>
+                    <v-spacer />
+                    <v-btn color="error" variant="tonal" :disabled="isLoading" :text="$t('Cancel')" @click="editDialog = false" />
+                    <v-btn color="primary" variant="flat" :text="$t('Confirm')" :loading="isLoading" @click="handleEditTerm" />
                 </template>
             </v-card>
         </v-dialog>
@@ -57,7 +71,7 @@
     import { storeToRefs } from 'pinia';
 
     const eventStore = useEventStore();
-    const { getTerms, createTerm, deleteTerm } = eventStore;
+    const { getTerms, createTerm, deleteTerm, editTerm } = eventStore;
     const { terms, isLoading } = storeToRefs(eventStore);
     getTerms();
 
@@ -85,6 +99,8 @@
     }
     const addDialog = ref(false);
     const deleteDialog = ref(false);
+    const editDialog = ref(false);
+    const focusedTerm = ref(null);
     const focusedId = ref(null);
     const prepareDeleteTerm = id => {
         focusedId.value = id;
@@ -94,5 +110,13 @@
         await deleteTerm(focusedId.value);
         focusedId.value = null;
         deleteDialog.value = false;
+    }
+    const showEditTermDialog = term => {
+        focusedTerm.value = term;
+        editDialog.value = true;
+    }
+    const handleEditTerm = async () => {
+        await editTerm(focusedTerm.value);
+        editDialog.value = false;
     }
 </script>

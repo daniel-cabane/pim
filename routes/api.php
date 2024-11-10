@@ -51,6 +51,7 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/morePosts/', [AdminController::class, 'getMorePosts']);
 
     Route::post('/admin/term', [AdminController::class, 'createTerm']);
+    Route::patch('/admin/term/{term}', [AdminController::class, 'editTerm']);
     Route::delete('/admin/term/{term}', [AdminController::class, 'deleteTerm']);
 
     Route::get('/admin/surveys', [AdminController::class, 'getSurveys']);
