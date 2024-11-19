@@ -22,7 +22,7 @@
             <div class="mb-2 d-flex text-caption">
                 <div style="flex:1;max-width:50%">
                     <div class="text-captionColor">
-                        {{ $t('Start date') }}
+                        {{ workshop.startDate ? $t('Start date') : $t('Period') }}
                     </div>
                     <div>
                         {{ workshop.startDate ? workshop.formatedStartDate : $t(workshop.formatedStartDate) }}

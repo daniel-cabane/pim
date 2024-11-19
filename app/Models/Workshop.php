@@ -340,7 +340,7 @@ class Workshop extends Model
         $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, is <b>confirmed</b></p>";
         $body_en .= "<p>The first session will be held in room $room on</p>";
         $body_en .= "<p style='text-align: center;font-size:24px;'>$dateString_en</p><br>";
-        $body_en .= "<p>This workshop will consist of 8 sessions which will be posted on Pronote shortly.<br>Your attendance to each session is mandatory. Please notify the teacher as soon as possible in case of unavailability.</p>";
+        $body_en .= "<p>This workshop will consist of ".count($this->sessions)." sessions which will be posted on Pronote shortly.<br>Your attendance to each session is mandatory. Please notify the teacher as soon as possible in case of unavailability.</p>";
         Email::create([
           'subject_fr' => "Inscription atelier - $this->title_fr",
           'subject_en' => "Workshop enrollment - $this->title_en",

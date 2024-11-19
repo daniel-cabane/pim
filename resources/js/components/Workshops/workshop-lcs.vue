@@ -8,23 +8,67 @@
         </div>
         <v-chip 
             label
-            :variant="workshop.status == 'draft' ? 'tonal' : 'elevated'"
+            size="small"
+            :variant="details.type"
             class="mt-1"
-            :color="statusDetails[workshop.status].color" :text="$t(statusDetails[workshop.status].text)"
-            v-if="workshop.editable || ['progress', 'finished'].includes(workshop.status)"
+            :color="details.color" 
+            :text="$t(details.text)"
+            style="width:100%;display:flex;justify-content:center;"
+            v-if="workshop.editable || !['draft', 'submitted'].includes(workshop.status)"
         />
     </div>
 </template>
 <script setup>
-    defineProps({ workshop: Object });
+    import { computed } from 'vue';
+    import { useAuthStore } from '@/stores/useAuthStore';
+    const props = defineProps({ workshop: Object });
+    console.log(props.workshop)
 
-    const statusDetails = {
-        draft: { color: 'secondary', text: 'Draft' },
-        submitted: { color: 'warning', text: 'Submitted' },
-        confirmed: { color: 'primary', text: 'Confirmed' },
-        launched: { color: 'success', text: 'Confirmed' },
-        progress: { color: 'success', text: 'In progress' },
-        finished: { color: 'grey', text: 'Finished' }
-    }
+    const { user } = useAuthStore();
+
+    const details = computed(() => {
+        if(user && user.is.student){
+            switch(props.workshop.status){
+                case 'confirmed': 
+                    if(props.workshop.acceptingStudents){
+                        return {text: 'Open|adj', type: 'elevated', color: 'success'}
+                    }
+                    return {text: 'In preparation', type: 'tonal', color: 'primary'}
+                    break;
+                case 'launched':
+                    return {text: 'Open|adj', type: 'elevated', color: 'success'}
+                    break;
+                case 'progress':
+                    return {text: 'In progress', type: 'flat', color: 'primary'}
+                    break;
+                case 'finished':
+                    return {text: 'Finished', type: 'tonal', color: 'grey'}
+                    break;
+            }
+        }
+        switch(props.workshop.status){
+                case 'draft':
+                    return {text: 'Draft', type: 'tonal', color: 'secondary'}
+                    break;
+                case 'submitted':
+                    return {text: 'Submitted', type: 'tonal', color: 'warning'}
+                    break;    
+                case 'confirmed': 
+                    if(props.workshop.acceptingStudents){
+                        return {text: 'Confirmed', type: 'elevated', color: 'primary'}
+                    }
+                    return {text: 'Confirmed', type: 'tonal', color: 'primary'}
+                    break;
+                case 'launched':
+                    return {text: 'Launched', type: 'elevated', color: 'success'}
+                    break;
+                case 'progress':
+                    return {text: 'In progress', type: 'flat', color: 'primary'}
+                    break;
+                case 'finished':
+                    return {text: 'Finished', type: 'tonal', color: 'grey'}
+                    break;
+            } 
+    });
 
 </script>
