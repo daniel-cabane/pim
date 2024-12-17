@@ -8,26 +8,31 @@
                             :label="$t('Title')" variant="outlined" validate-on="blur" :disabled="!post.editable" />
                     </v-col>
                     <v-col xs="12" sm="12" md="4" class="text-h5 font-weight-bold d-flex align-center">
-                        <v-card flat :theme="isDarkColor(post.cover.titleColor) ? 'customLight' : 'customDark'"
-                            class="mb-5 py-2 px-4" :style="`color:${post.cover.titleColor};`">
+                        <v-card flat class="mb-5 py-2 px-4" :color="post.cover.titleColor == 'black' ? 'white' : 'black'">
                             {{ $t('Title') }}
                             <v-menu>
                                 <template v-slot:activator="{ props }">
-                                    <v-btn size="small" :color="post.cover.titleColor" class="ml-2" base-color="black"
-                                        variant="tonal" icon="mdi-palette" v-bind="props" />
+                                    <v-btn 
+                                        size="small"
+                                        :color="post.cover.titleColor"
+                                        class="ml-2"
+                                        :base-color="post.cover.titleColor == 'black' ? 'white' : 'black'"
+                                        variant="tonal" icon="mdi-palette" v-bind="props" 
+                                        dark
+                                    />
                                 </template>
                                 <v-list>
-                                    <v-list-item @click="post.cover.titleColor = '#8A8C8D'">
+                                    <v-list-item @click="post.cover.titleColor = 'white'">
                                         <v-list-item-title>
                                             {{ $t('Dark image') }}
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item @click="post.cover.titleColor = '#F3F3F3'">
+                                    <v-list-item @click="post.cover.titleColor = 'black'">
                                         <v-list-item-title>
                                             {{ $t('Bright image') }}
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-dialog width="300">
+                                    <!-- <v-dialog width="300">
                                         <template v-slot:activator="{ props: activatorProps }">
                                             <v-list-item v-bind="activatorProps">
                                                 <v-list-item-title>{{ $t('Pick a color') }}...</v-list-item-title>
@@ -46,7 +51,7 @@
                                                 </div>
                                             </v-card>
                                         </template>
-                                    </v-dialog>
+                                    </v-dialog> -->
                                 </v-list>
                             </v-menu>
                         </v-card>
@@ -88,7 +93,13 @@
                     </template>
                 </v-dialog>
             </div>
-            <v-hover>
+            <div style="position:relative">
+                <post-cover :post="post" @click="pickCoverFile"/>
+                <v-btn size="small" color="primary" block :text="$t('Update cover')" :disabled="imageLoading"/>
+                <div class="overlay" v-if="imageLoading" />
+                <v-progress-linear indeterminate color="primary" height="2" style="position:absolute;top:0;" v-if="imageLoading" />
+            </div>
+            <!-- <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <div style="position:relative" v-bind="props">
                         <v-img :src="post.cover.url" aspect-ratio="16/9" max-width="320" min-width="320" max-height="180" min-height="180" cover/>
@@ -97,12 +108,9 @@
                             @click="pickCoverFile">
                             {{ $t('Update cover') }}
                         </v-btn>
-                        <div class="overlay" v-if="imageLoading" />
-                        <v-progress-linear indeterminate color="primary" height="2" style="position:absolute;top:0;"
-                            v-if="imageLoading" />
                     </div>
                 </template>
-            </v-hover>
+            </v-hover> -->
         </div>
     </div>
     <div class="text-captionColor text-caption">

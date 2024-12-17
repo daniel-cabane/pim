@@ -119,7 +119,7 @@ class SurveyController extends Controller
     public function view(Survey $survey)
     {
         $user = auth()->user();
-        if(!$survey->answers->contains($user)){
+        if(!$survey->answers->contains($user) && $user->hasRole('student')){
             $survey->answers()->attach($user);
         }
         return response()->json(['survey' => $survey->format()]);
@@ -127,23 +127,33 @@ class SurveyController extends Controller
 
     public function submit(Survey $survey, Request $request)
     {
-        $answers = $request->validate(['answers' => 'required|Array'])['answers'];
+        $user = auth()->user();
+        if($survey->answers->contains($user)){
+            $answers = $request->validate(['answers' => 'required|Array'])['answers'];
 
-        foreach($survey->questions as $i => $q){
-            if($q->required && ($answers[$i] === null || $answers[$i] === '')){
-                return response()->json(['message' => ['text' => 'Missing required answer', 'type' => 'error']]);
+            foreach($survey->questions as $i => $q){
+                if($q->required && ($answers[$i] === null || $answers[$i] === '')){
+                    return response()->json(['message' => ['text' => 'Missing required answer', 'type' => 'error']]);
+                }
             }
+
+            $survey->answers()->updateExistingPivot(auth()->id(), ['data' => json_encode($answers), 'submitted' => 1]);
+
+            return response()->json([
+                    'survey' => $survey,
+                    'message' => [
+                            'text' => 'Answers submitted',
+                            'type' => 'success'
+                        ]
+                ]);
         }
-
-        $survey->answers()->updateExistingPivot(auth()->id(), ['data' => json_encode($answers), 'submitted' => 1]);
-
         return response()->json([
-                'survey' => $survey,
-                'message' => [
-                        'text' => 'Answers submitted',
-                        'type' => 'success'
-                    ]
-            ]);
+                    'survey' => $survey,
+                    'message' => [
+                            'text' => 'You cannot submit an answer to this survey',
+                            'type' => 'error'
+                        ]
+                ]);
     }
 
     public function results(Survey $survey)

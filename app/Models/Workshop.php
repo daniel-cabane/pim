@@ -194,6 +194,13 @@ class Workshop extends Model
           'archived' => true
         ]);
       } 
+      $this->applicants()->sync([]);
+      foreach($this->emails as $email){
+        $email->delete();
+      }
+      foreach($this->surveys as $survey){
+        $survey->delete();
+      }
     }
 
     public function scopeUpcoming($query) // FIX THIS <========================================================
@@ -302,8 +309,8 @@ class Workshop extends Model
         'data' => [
             'body_fr' => $body_fr,
             'body_en' => $body_en,
-            'closing_fr' => "Merci d'avance",
-            'closing_en' => "Thanks in advance",
+            'closing_fr' => "<p><b>Note :</b> Vous devez être connecté pour répondre à ce questionnaire</p><p>Merci d'avance</p>",
+            'closing_en' => "<p><b>Note :</b> You have to be logged in to access the survey</p><p>Thanks in advance</p>",
             'actionButton' => [
                     'value' => $survey->id,
                     'text_fr' => 'Répondre',
@@ -323,13 +330,13 @@ class Workshop extends Model
     {
       $teacherName = $this->organiser->formalName;
       $details = json_decode($this->details);
+      $firstSession = $this->sessions()->orderBy('date')->first();
+      $firstSessionDatetime = Carbon::parse("$firstSession->date $firstSession->start");
+      $room = $details->roomNb;
       /**
        *  ENROLLMENT CONFIRMATION
        */
       if($nofityApplicants['confirmed']){
-        $firstSession = $this->sessions()->orderBy('date')->first();
-        $firstSessionDatetime = Carbon::parse("$firstSession->date $firstSession->start");
-        $room = $details->roomNb;
   
         $dateString_fr = $firstSessionDatetime->locale('fr')->translatedFormat('l j F \à\ H:i');
         $dateString_en = $firstSessionDatetime->locale('en')->translatedFormat('l j F \a\t H:i');
@@ -371,11 +378,13 @@ class Workshop extends Model
         $body_fr .= "<p>Nous vous tiendrons au courant si une nouvelle session venait à être organisée à l'avenir.</p>";
         $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, could not be approved. We are sorry about that.</p>";
         $body_en .= "<p>We will keep you informed if a new session were to be organized in the future.</p>";
+        $students = $this->where('confirmed', 0)->get();
         Email::create([
           'subject_fr' => "Inscription non retenue - $this->title_fr",
           'subject_en' => "Enrollment not approved - $this->title_en",
           'language' => $this->language == 'fr' ? 'fr' : 'en',
           'data' => [
+              'to' => $students->pluck('email')->toArray(),
               'body_fr' => $body_fr,
               'body_en' => $body_en,
               'closing_fr' => "Cordialement",

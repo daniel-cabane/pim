@@ -21,7 +21,7 @@ class EventController extends Controller
         }
 
         $workshops = [];
-        foreach(Workshop::whereIn('status', ['confirmed', 'launched'])->whereIn('campus', $campus)->orderBy('start_date')->take(6)->get() as $workshop){
+        foreach(Workshop::where('archived', 0)->whereIn('status', ['confirmed', 'launched'])->whereIn('campus', $campus)->orderBy('start_date')->take(6)->get() as $workshop){
             $workshops[] = $workshop->format();
         }
         return response()->json(['events' => $workshops]);

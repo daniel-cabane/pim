@@ -401,5 +401,10 @@
     "per week": "per week",
     "Period": "Period",
     "In preparation": "In preparation",
-    "Open|adj": "Open"
+    "Open|adj": "Open",
+    "Login required": "Login required",
+    "You need to be signed in to answer this survey": "You need to be signed in to answer this survey",
+    "Go back": "Go back",
+    "You cannot submit an answer to this survey": "You cannot submit an answer to this survey",
+    "Title format": "Title format"
 }

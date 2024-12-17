@@ -55,12 +55,12 @@ class Email extends Model
           $students = $this->workshop->applicants()->wherePivot('confirmed', 1)->get();
           $bcc = 'pim@g.lfis.edu.hk';
           $cc = $this->workshop->organiser->email;
-          $to = $students->pluck('email')->toArray();
+          $to = $this->data->to ? $this->data->to : $students->pluck('email')->toArray();
           $sentTo = $students->pluck('id')->toArray();
         }
         foreach($this->surveys as $survey){
           if($survey->status == 'draft'){
-            $survey->send();
+            $survey->send(null, false);
           }
         }
         Mail::to($to)->cc($cc)->bcc($bcc)->send(new WorkshopCommunication($this));

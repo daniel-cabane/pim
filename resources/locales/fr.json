@@ -401,5 +401,10 @@
     "per week": "par semaine",
     "Period": "Période",
     "In preparation": "En préparation",
-    "Open|adj": "Ouvert"
+    "Open|adj": "Ouvert",
+    "Login required": "Connection obligatoire",
+    "You need to be signed in to answer this survey": "Vous devez vous connecter pour répondre à ce questionnaire",
+    "Go back": "Retour",
+    "You cannot submit an answer to this survey": "Vous ne pouvez pas répondre à ce questionnaire",
+    "Title format": "Format du titre"
 }

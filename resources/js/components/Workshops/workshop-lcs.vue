@@ -22,7 +22,6 @@
     import { computed } from 'vue';
     import { useAuthStore } from '@/stores/useAuthStore';
     const props = defineProps({ workshop: Object });
-    console.log(props.workshop)
 
     const { user } = useAuthStore();
 
