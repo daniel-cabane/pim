@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-img class="align-end text-white" aspect-ratio="16/9" max-width="350" min-width="350" :src="post.cover.url">
+        <v-img class="align-end text-white" aspect-ratio="16/9" max-height="197" min-height="197" cover :src="post.cover.url">
             <v-card-title 
                 class="pimSubtitleFont pb-0 pt-6"
                 style="font-weight:bold;font-size:24px;line-height:1.2;"
