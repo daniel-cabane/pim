@@ -11,17 +11,18 @@
                 {{ $t('Answers editable') }}
             </v-chip>
         </v-card-title>
-        <v-card-subtitle v-if="!hideTitle">
-            {{ survey.options[`description_${lg}`] }}
-        </v-card-subtitle>
-        <v-btn icon="mdi-close" color="error" size="large" variant="text" style="position:absolute;top:5px;right:5px;"
-            @click="emit('closeDialog')" v-if="showCloseButton" />
+        <v-card-subtitle v-if="!hideTitle" v-html="survey.options[`description_${lg}`]"/>
+        <v-btn icon="mdi-close" color="error" size="large" variant="text" style="position:absolute;top:5px;right:5px;" @click="emit('closeDialog')" v-if="showCloseButton" />
         <v-card-text class="d-flex justify-center">
             <div style="min-width:350px;width:600px;max-width:600px;">
-                <question-display class="my-5" v-for="(question, index) in survey.questions" :question="question"
+                <question-display 
+                    class="my-5"
+                    v-for="(question, index) in survey.questions"
+                    :question="question"
                     :style="missingRequired.includes(index) ? 'border:5px solid red' : ''" :lg="lg" :index="index"
                     :initialAnswer="survey.answers ? survey.answers[index] : null" :disabled="disableAnswers"
-                    @answerUpdated="answerUpdated" />
+                    @answerUpdated="answerUpdated" 
+                />
                 <div class="d-flex justify-end pa-2" v-if="showCloseButton">
                     <v-btn variant="tonal" color="error" @click="emit('closeDialog')">
                         Close

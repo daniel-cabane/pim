@@ -31,14 +31,14 @@
 
     const confirmed = computed(() => {
         const campus = Object.keys(props.filters).filter(key => props.filters[key]);
-        return props.workshops.confirmed.filter(w => campus.includes(w.campus));
+        return props.workshops.confirmed ? props.workshops.confirmed.filter(w => campus.includes(w.campus)) : [];
     });
     const progress = computed(() => {
         const campus = Object.keys(props.filters).filter(key => props.filters[key]);
-        return props.workshops.progress.filter(w => campus.includes(w.campus));
+        return props.workshops.progress ? props.workshops.progress.filter(w => campus.includes(w.campus)) : [];
     });
     const finished = computed(() => {
         const campus = Object.keys(props.filters).filter(key => props.filters[key]);
-        return props.workshops.finished.filter(w => campus.includes(w.campus));
+        return props.workshops.finished ? props.workshops.finished.filter(w => campus.includes(w.campus)) : [];
     });
 </script>

@@ -82,8 +82,7 @@
                             <span class="text-subtitle-1 text-captionColor">
                                 {{ $t('Schedule') }}
                             </span>
-                            <v-btn color="secondary" size="small" :disabled="workshop.status == 'launched'"
-                                @click="addSession">
+                            <v-btn color="secondary" size="small" :disabled="workshop.status == 'launched'" @click="addSession">
                                 {{ $t('Add session') }}
                             </v-btn>
                         </div>
@@ -140,15 +139,18 @@
                                 </v-tabs>
                                 <v-tabs-window v-model="finalizeTab">
                                     <v-tabs-window-item value="0">
-                                        <sessions-table :workshop="workshop" :isLoading="isLoading"
+                                        <sessions-table 
+                                            :workshop="workshop"
+                                            :isLoading="isLoading"
                                             @deleteSession="handleDeleteSession"
                                             @refreshSessions="prepareFinalizeWorkshop"
-                                            @createSession="handleCreateSession" @editSession="handleEditSession"
-                                            @orderSessions="orderSessions" />
+                                            @createSession="handleCreateSession" 
+                                            @editSession="handleEditSession"
+                                            @orderSessions="orderSessions" 
+                                        />
                                     </v-tabs-window-item>
                                     <v-tabs-window-item value="1">
-                                        <applicants-table :applicants="workshop.applicants"
-                                            @confirmMaxApplicants="confirmMaxApplicants" />
+                                        <applicants-table :applicants="workshop.applicants" @confirmMaxApplicants="confirmMaxApplicants" />
                                     </v-tabs-window-item>
                                     <v-tabs-window-item value="2">
                                         <workshop-recap :workshop="workshop" />
@@ -156,15 +158,13 @@
                                 </v-tabs-window>
                             </v-card-text>
                             <div style=" display:flex;justify-content:flex-end;" class="pa-3">
-                                <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading"
-                                    @click="finalizeDialog = false">
+                                <v-btn variant="tonal" class="mr-3" color="error" :disabled="isLoading" @click="finalizeDialog = false">
                                     {{ $t('Cancel') }}
                                 </v-btn>
                                 <v-btn color="primary" v-if="finalizeTab < 2" @click="finalizeTab++">
                                     {{ $t('Next') }}
                                 </v-btn>
-                                <v-btn color="success" :disabled="isLoading || workshop.sessions.length == 0"
-                                    :loading="isLoading && isLaunching" @click="launchWorkshop" v-else>
+                                <v-btn color="success" :disabled="isLoading || workshop.sessions.length == 0" :loading="isLoading && isLaunching" @click="launchWorkshop" v-else>
                                     {{ $t('Launch') }}
                                 </v-btn>
                             </div>
@@ -177,9 +177,15 @@
                     </v-btn>
                 </div>
                 <div v-if="['launched', 'progress', 'finished'].includes(workshop.status)">
-                    <sessions-table :workshop="workshop" :isLoading="isLoading" @deleteSession="handleDeleteSession"
-                        @refreshSessions="refreshSessions" @createSession="handleCreateSession"
-                        @editSession="handleEditSession" @orderSessions="orderSessions" />
+                    <sessions-table
+                        :workshop="workshop"
+                        :isLoading="isLoading"
+                        @deleteSession="handleDeleteSession"
+                        @refreshSessions="refreshSessions"
+                        @createSession="handleCreateSession"
+                        @editSession="handleEditSession"
+                        @orderSessions="orderSessions" 
+                    />
                 </div>
             </v-window-item>
         </v-window>
@@ -281,14 +287,14 @@
         // workshop.value.sessions = backUpSessions; <------------------------------------------------ FIX THAT
     }
     const handleDeleteSession = id => {
-        if(workshop.value.status == 'launched'){
+        if(['launched', 'progress', 'finished'].includes(workshop.value.status)){
             deleteSession(id);
         } else {
             workshop.value.sessions = workshop.value.sessions.filter(s => s.id != id);
         }
     }
     const handleCreateSession = () => { 
-        if (workshop.value.status == 'launched') {
+        if (['launched', 'progress', 'finished'].includes(workshop.value.status)) {
             createSession();
         } else { // TODO -> MAKE THIS SMARTER (NEXT SESSION NOT JUST NEXT WEEK)
             const lastSession = workshop.value.sessions[workshop.value.sessions.length-1];
@@ -301,7 +307,7 @@
     }
 
     const handleEditSession = session => {
-        if (workshop.value.status == 'launched') {
+        if (['launched', 'progress', 'finished'].includes(workshop.value.status)) {
             updateSession(session);
         } else {
             workshop.value.sessions = workshop.value.sessions.map(s => s.id == session.id ? session : s);

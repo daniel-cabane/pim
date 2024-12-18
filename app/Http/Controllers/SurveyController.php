@@ -122,6 +122,9 @@ class SurveyController extends Controller
         if(!$survey->answers->contains($user) && $user->hasRole('student')){
             $survey->answers()->attach($user);
         }
+        if($user->hasRole('teacher')){
+            $survey->answers()->detach($user);
+        }
         return response()->json(['survey' => $survey->format()]);
     }
 
