@@ -185,12 +185,14 @@ class Workshop extends Model
       if(isset($this->title_fr)){
         $this->update([
           'title_fr' => "ARCHIVED|O|$this->title_fr",
+          'status' => 'archived',
           'archived' => true
         ]);
       }
       if(isset($this->title_en)){
         $this->update([
           'title_en' => "ARCHIVED|O|$this->title_en",
+          'status' => 'archived',
           'archived' => true
         ]);
       } 
@@ -207,11 +209,67 @@ class Workshop extends Model
     {
       $today = Carbon::now();
       $terms = Term::whereDate('start_date', '<=', $today->addMonth(1))->whereDate('finish_date', '>=', $today)->pluck('nb');
-      return $query->whereIn('status', ['confirmed', 'launched'])
+      return $query->whereIn('status', ['confirmed', 'launched', 'progress'])
+                  ->where('archived', 0)
                   ->where(function($q) use ($today, $terms) {
                         $q->where('start_date', '>=', $today)
                         ->orWhereIn('term', $terms);
                   });
+    }
+
+    public function sendApplicationEmail()
+    {
+      $details = json_decode($this->details);
+      $nbSessions = $details->nbSessions;
+      $teacherName = $this->organiser->formalName;
+      $daysToFrench = ['Monday' => 'Lundi', 'Tuesday' => 'Mardi', 'Wednesday' => 'Mercredi', 'Thursday' => 'Jeudi', 'Friday' => 'Vendredi', 'Saturday' => 'Samedi', 'Sunday' => 'Dimanche'];
+      Carbon::setLocale('fr');
+      $body_fr = "<p>Nous avons reçu votre candidature pour l'atelier $this->title_fr, animé par $teacherName.</p>";
+      $body_fr .= "<p>Il sera composé de $nbSessions séances qui seront le :</p><ul>";
+      foreach($details->schedule as $slot){
+        $jour = $daysToFrench[$slot->day];
+        $body_fr .= "<li>$jour de $slot->start à $slot->finish</li>";
+      }
+      if($this->start_date){
+        $date = (Carbon::parse($this->start_date))->formatLocalized('%d %B');
+        $body_fr .= "</ul><p>L'atelier commencera le <b>$date</b></p>";
+      } else {
+        $body_fr .= "</ul><p>La date de début de l'atelier <b>n'est pas encore fixée</b>. Elle sera annoncée ultérieurement.</p>";
+      }
+      Carbon::setLocale('en');
+      $body_en = "<p>We received your application for the workshop $this->title_fr, led by $teacherName.</p>";
+      $body_en .= "<p>It will consist of $nbSessions sessions which will be on :</p><ul>";
+      foreach($details->schedule as $slot){
+        $body_en .= "<li>$slot->day from $slot->start to $slot->finish</li>";
+      }
+      if($this->start_date){
+        $date = (Carbon::parse($this->start_date))->formatLocalized('%B %d');
+        $body_en .= "</ul><p>The workshop will start on <b>$date</b></p>";
+      } else {
+        $body_en .= "</ul><p>The start date for this workshop <b>has not been decided yet</b>. It will be announced later.</p>";
+      }
+      Email::create([
+          'subject_fr' => "Candidature à l'atelier - $this->title_fr",
+          'subject_en' => "Workshop application - $this->title_en",
+          'language' => $this->language == 'fr' ? 'fr' : 'en',
+          'data' => [
+              'body_fr' => $body_fr,
+              'body_en' => $body_en,
+              'closing_fr' => "A bientôt",
+              'closing_en' => "See you soon",
+              'actionButton' => 
+              [
+                'value' => 'none',
+                'text_fr' => '',
+                'text_en' => '',
+                'url' => ''
+              ],
+              'to' => (auth()->user())->email
+          ],
+          'sender_id' => 1,
+          'workshop_id' => $this->id,
+          'schedule' => Carbon::now()
+        ]);
     }
 
     public function createExitSurvey()

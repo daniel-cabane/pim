@@ -48,7 +48,7 @@ class WorkshopController extends Controller
             'progress' => [],
             'finished' => []
         ];
-        foreach(Workshop::where('term', $currentTerm->nb)->whereIn('status', ['confirmed', 'launched', 'progress', 'finished'])->orderBy('start_date')->get() as $workshop){
+        foreach(Workshop::where('term', $currentTerm->nb)->where('archived', 0)->whereIn('status', ['confirmed', 'launched', 'progress', 'finished'])->orderBy('start_date')->get() as $workshop){
             switch ($workshop->status) {
                 case 'finished':
                     $workshops['finished'][] = $workshop->format();
@@ -83,7 +83,7 @@ class WorkshopController extends Controller
                     'progress' => [],
                     'finished' => []
                 ];
-                foreach(Workshop::where('term', $i)->whereIn('status', ['confirmed', 'launched', 'progress', 'finished'])->orderBy('start_date')->get() as $workshop){
+                foreach(Workshop::where('term', $i)->where('archived', 0)->whereIn('status', ['confirmed', 'launched', 'progress', 'finished'])->orderBy('start_date')->get() as $workshop){
                     switch ($workshop->status) {
                         case 'finished':
                             $workshops['finished'][] = $workshop->format();
@@ -314,6 +314,9 @@ class WorkshopController extends Controller
         $workshop->applicants()->detach(auth()->id());
 
         $workshop->applicants()->attach(auth()->id(), ['available' => $attrs['availability'], 'comment' => $attrs['comment']]);
+
+        $workshop->sendApplicationEmail();
+
         return response()->json([
             'workshop' => $workshop->format(),
             'message' => [

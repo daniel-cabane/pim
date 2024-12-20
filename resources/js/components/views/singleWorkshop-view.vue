@@ -25,10 +25,6 @@
                                     {{ $t('You need to be signed in to express interest') }}
                                 </div>
                                 <div class="text-center">
-                                    <!-- <a href="/auth/google">
-                                    <v-img max-width='350px' min-width='350px' style="margin:auto;cursor:pointer;"
-                                        src="/images/google signin.png" />
-                                    </a> -->
                                     <google-button />
                                 </div>
                                 <div class="py-2 text-caption text-captionColor text-center">
@@ -103,77 +99,6 @@
                         </template>
                     </v-tooltip>
              </div>
-            <!-- ////////////////////////////////////////////////// -->
-            <!-- <div style="overflow-y:hidden;transition:all .5s"
-                :style="`max-height:${showApplication ? 320 : 0}px;${!showApplication ? 'content-visibility:hidden;' : ''}`"
-                v-if='workshop.application'>
-                <div class="pa-4">
-                    <v-divider color="black" class="py-2" />
-                    <v-alert type="info" class="mb-3">
-                        {{ $t('Be sure thate you are available for the sessions. Lessons ALWAYS take precedence over workshops !') }}
-                    </v-alert>
-                    <div class="text-caption text-captionColor">
-                        {{ $t('Availability') }}
-                    </div>
-                    <div>
-                        <v-radio-group v-model="workshop.application.available"
-                            :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents">
-                            <v-radio :label="$t('I\'m available')" :value="true" />
-                            <v-radio :label="$t('I\'m interested but not available at the time specified')"
-                                :value="false" />
-                        </v-radio-group>
-                        <v-text-field label="Comment (optional)" v-model="workshop.application.comment"
-                            :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents" />
-                    </div>
-                </div>
-            </div>
-            <div class="px-4 pb-3">
-                <div class="d-flex justify-space-between" v-if="showApplication">
-                    <v-btn variant="tonal" color="warning" :loading="applyLoading"
-                        :disabled="applyLoading || !workshop.acceptingStudents" @click="handleWithdraw"
-                        v-if="workshop.application && workshop.application.submitted">
-                        {{ $t('Withdraw') }}
-                    </v-btn>
-                    <span v-else />
-                    <span>
-                        <v-btn variant="tonal" class="mr-3" color="error"
-                            :disabled="applyLoading || withdrawLoading || !workshop.acceptingStudents"
-                            @click="showApplication = false">
-                            {{ $t('Cancel') }}
-                        </v-btn>
-                        <v-btn color="primary" :loading="applyLoading"
-                            :disabled="withdrawLoading || !workshop.acceptingStudents" @click="handleApply">
-                            {{ workshop.application.submitted ? $t('Update') : $t('Submit') }}
-                        </v-btn>
-                    </span>
-                </div>
-                <div class="d-flex justify-end" v-else-if="workshop.application && workshop.application.submitted">
-                    <div>
-                        <v-chip label size="large" variant="elevated" color="success" append-icon="mdi-check">
-                            {{ $t('Applied !') }}
-                        </v-chip>
-                        <v-btn icon="mdi-eye" color="success" class="ml-3" variant="text"
-                            @click="showApplication = true" v-if="workshop.acceptingStudents" />
-                    </div>
-                </div>
-                <div class="d-flex justify-end" v-else-if="workshop.acceptingStudents && workshop.joinable">
-                    <v-btn color="primary" append-icon="mdi-human-greeting" @click="showApplication = true"
-                        v-if="!showApplication">
-                        {{ $t("I'm interested") }}
-                    </v-btn>
-                </div>
-                <div class="d-flex justify-end" v-else>
-                    <v-tooltip :text="$t(applyButtonTooltipText)">
-                        <template v-slot:activator="{ props }">
-                            <span v-bind="props">
-                                <v-btn append-icon="mdi-human-greeting" disabled>
-                                    {{ $t("I'm interested") }}
-                                </v-btn>
-                            </span>
-                        </template>
-                    </v-tooltip>
-                </div>
-            </div> -->
         </v-card>
     </v-container>
 </template>
