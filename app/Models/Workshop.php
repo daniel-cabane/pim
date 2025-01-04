@@ -200,6 +200,9 @@ class Workshop extends Model
       foreach($this->emails as $email){
         $email->delete();
       }
+      foreach($this->sessions as $session){
+        $session->delete();
+      }
       foreach($this->surveys as $survey){
         $survey->delete();
       }
@@ -395,7 +398,6 @@ class Workshop extends Model
        *  ENROLLMENT CONFIRMATION
        */
       if($nofityApplicants['confirmed']){
-  
         $dateString_fr = $firstSessionDatetime->locale('fr')->translatedFormat('l j F \à\ H:i');
         $dateString_en = $firstSessionDatetime->locale('en')->translatedFormat('l j F \a\t H:i');
         $body_fr = "<p>Votre inscription à l'atelier $this->link_fr, animé par $teacherName, est <b>confirmée</b>.</p>";
@@ -436,28 +438,30 @@ class Workshop extends Model
         $body_fr .= "<p>Nous vous tiendrons au courant si une nouvelle session venait à être organisée à l'avenir.</p>";
         $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, could not be approved. We are sorry about that.</p>";
         $body_en .= "<p>We will keep you informed if a new session were to be organized in the future.</p>";
-        $students = $this->where('confirmed', 0)->get();
-        Email::create([
-          'subject_fr' => "Inscription non retenue - $this->title_fr",
-          'subject_en' => "Enrollment not approved - $this->title_en",
-          'language' => $this->language == 'fr' ? 'fr' : 'en',
-          'data' => [
-              'to' => $students->pluck('email')->toArray(),
-              'body_fr' => $body_fr,
-              'body_en' => $body_en,
-              'closing_fr' => "Cordialement",
-              'closing_en' => "Best regards",
-              'actionButton' => [
-                      'value' => 'none',
-                      'text_fr' => '',
-                      'text_en' => '',
-                      'url' => ''
-                  ]
-          ],
-          'sender_id' => 1,
-          'workshop_id' => $this->id,
-          'schedule' => (Carbon::today())->addDay()->setTime(8,00)
-        ]);
+        $students = $this->applicants()->where('confirmed', 0)->get();
+        if(count($students) > 0){
+          Email::create([
+            'subject_fr' => "Inscription non retenue - $this->title_fr",
+            'subject_en' => "Enrollment not approved - $this->title_en",
+            'language' => $this->language == 'fr' ? 'fr' : 'en',
+            'data' => [
+                'to' => $students->pluck('email')->toArray(),
+                'body_fr' => $body_fr,
+                'body_en' => $body_en,
+                'closing_fr' => "Cordialement",
+                'closing_en' => "Best regards",
+                'actionButton' => [
+                        'value' => 'none',
+                        'text_fr' => '',
+                        'text_en' => '',
+                        'url' => ''
+                    ]
+            ],
+            'sender_id' => 1,
+            'workshop_id' => $this->id,
+            'schedule' => (Carbon::today())->addDay()->setTime(8,00)
+          ]);
+        }
       }
 
       /**

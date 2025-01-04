@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="d-flex align-center">
-            <div v-for="i in 7" class="topBox text-captionColor text-body-2">
+            <div v-for="i in 7" class="topBox text-captionColor text-body-2 text-truncate">
                 <span>
                     {{ $t(daysOfWeek[i-1]) }}
                 </span>

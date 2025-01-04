@@ -30,7 +30,10 @@ const customLight = {
         success: '#4CAF50',
         warning: '#fbaf5c',
         captionColor: '#9E9E9E',
-        fis: '#1c4581'
+        fis: '#1c4581',
+        openDoors: '#6ac46a',
+        inclusiveWorkshop: '#5d8abf',
+        exclusiveWorkshop: '#e37d58'
     }
 }
 const customDark = {
@@ -60,7 +63,10 @@ const customDark = {
         success: '#4CAF50',
         warning: '#fbaf5c',
         captionColor: '#CDCECE',
-        fis: '#7dbdf7'
+        fis: '#7dbdf7',
+        openDoors: '#357f38',
+        inclusiveWorkshop: '#156baf',
+        exclusiveWorkshop: '#bd3e16'
     }
 }
 

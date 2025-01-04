@@ -36,6 +36,10 @@
                 <v-chip :variant="filters.BPR ? 'flat' : 'tonal'" :color="filters.BPR ? '#0017FF' : 'black'" @click="toggleBPR">
                     BPR
                 </v-chip>
+                <v-btn rounded="xl" class="ml-3" append-icon="mdi-chevron-right" to="/calendar/pi">
+                    {{ $t('Room') }}
+                    <v-icon icon="mdi-pi"/>
+                </v-btn>
             </span>
         </div>
         <div class="mb-16" v-if="isReady">

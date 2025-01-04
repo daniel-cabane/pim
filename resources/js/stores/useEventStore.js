@@ -126,13 +126,19 @@ export const useEventStore = defineStore({
         async deleteTerm(id) {
             //this.isLoading = true;
             const res = await del(`/api/admin/term/${id}`);
-            console.log(res.terms);
             this.terms = res.terms;
             //this.isLoading = false;
         },
         async getUpcomingEvents() {
             const res = await get(`/api/events/upcoming`,true);
             this.events = res.events;
+        },
+        async getPiRoomEvents() {
+            this.isReady = false;
+            const res = await get('/api/events/piRoom', true);
+            // console.log(res.weeks);
+            this.weeks = res.weeks;
+            this.isReady = true;
         }
     },
     getters: {

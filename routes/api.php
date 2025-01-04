@@ -109,6 +109,7 @@ Route::get('/workshops/complete/{nb}', [WorkshopController::class, 'completeWork
 Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
 
 Route::get('/events/upcoming', [EventController::class, 'upcoming']);
+Route::get('/events/piRoom', [EventController::class, 'piRoom']);
 Route::get('/holidays', [EventController::class, 'holidays']);
 Route::get('/openDoors', [EventController::class, 'openDoors']);
 

@@ -42,6 +42,10 @@ Route::get('/surveys/{id}', function () {
     return view('welcome');
 });
 
+Route::get('/calendar/pi', function () {
+    return view('welcome');
+});
+
 Route::get('/auth/reset-password', function () {
     return view('password-reset');
 })->name('password.reset');

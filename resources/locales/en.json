@@ -208,6 +208,7 @@
     "Sessions ordered": "Sessions ordered",
     "End of school": "End of school",
     "Open doors": "Open doors",
+    "Open Doors": "Open Doors",
     "Open doors session": "Open doors session",
     "Add a session": "Add a session",
     "Type": "Type",
@@ -406,5 +407,7 @@
     "You need to be signed in to answer this survey": "You need to be signed in to answer this survey",
     "Go back": "Go back",
     "You cannot submit an answer to this survey": "You cannot submit an answer to this survey",
-    "Title format": "Title format"
+    "Title format": "Title format",
+    "Allow silent games": "Allow silent games",
+    "π room schedule": "π room schedule"
 }

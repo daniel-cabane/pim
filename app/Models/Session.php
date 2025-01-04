@@ -22,6 +22,7 @@ class Session extends Model
         $colors = ['BPR' => '#0000FF', 'TKO' => '#FF0000'];
         $workshopTitle = $this->workshop->language == 'fr' ? $this->workshop->title_fr : $this->workshop->title_en;
         $index = $this->index + 1;
+        $details = json_decode($this->workshop->details);
         return [
             'title' => "$workshopTitle ($index)",
             'date' => $this->date,
@@ -31,7 +32,8 @@ class Session extends Model
             'color' => $colors[$this->workshop->campus],
             'eventType' => 'session',
             'campus' => $this->workshop->campus,
-            'roomNb' => json_decode($this->workshop->details)->roomNb,
+            'roomNb' => $details->roomNb,
+            'allowSilentGames' => isset($details->allowSilentGames) ? $details->allowSilentGames : false,
             'id' => "s$this->id",
             'url' => "/workshops/".$this->workshop->id,
             'teacher' => [

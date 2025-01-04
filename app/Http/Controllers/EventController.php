@@ -145,4 +145,43 @@ class EventController extends Controller
 
         return response()->json(['terms' => Term::whereBetween('start_date', [$startDate, $endDate])->get()]);
     }
+
+    public function piRoom()
+    {
+        $current = Carbon::today()->startOfWeek();
+        $end = Carbon::today()->addWeek(3)->endOfWeek();
+        $holidays = Holiday::all();
+        $openDoors = OpenDoor::whereBetween('date', [$current, $end])->where('roomNb', 'π (314 BPR)')->get();
+        $sessions = collect([]);
+        foreach(Session::whereBetween('date', [$current, $end])->get() as $session){
+            $details = json_decode($session->workshop->details);
+            if($details->roomNb == 'π (314 BPR)'){
+                $sessions->push($session);
+            }
+        }
+        $days = collect([]);
+        while($current <= $end){
+            if($current->isoFormat('E') < 6){
+                $dateData = ['dayOfTheWeek' => $current->englishDayOfWeek, 'dayNumber' => $current->day,'monthName' => $current->englishMonth];
+                if($holidays->where('start', '<=', $current)->where('finish', '>=', $current)->first()){
+                    $days->push(['date' => $current->format('Y-m-d'), 'dateData' => $dateData, 'isHoliday' => true, 'events' => []]);
+                } else {
+                    $events = [];
+                    foreach($openDoors->where('date', $current->format('Y-m-d')) as $openDoor){
+                        $events[] = $openDoor->formatForCalendar();
+                    }
+                    foreach($sessions->where('date', $current->format('Y-m-d')) as $session){
+                        $events[] = $session->formatForCalendar();
+                    }
+                    $days->push(['date' => $current->format('Y-m-d'), 'dateData' => $dateData, 'isHoliday' => false, 'events' => $events]);
+                }
+            }
+            $current->addDay();
+        }
+        $weeks = $days->groupBy(function ($item) {
+            $date = Carbon::createFromFormat('Y-m-d', $item['date']);
+            return $date->isoWeekYear  . '-' . $date->isoWeek;
+        });
+        return response()->json(['weeks' => $weeks]);
+    }
 }

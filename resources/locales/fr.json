@@ -208,6 +208,7 @@
     "Sessions ordered": "Sessions ordonnées",
     "End of school": "Fin des cours",
     "Open doors": "Portes ouvertes",
+    "Open Doors": "Portes ouvertes",
     "Open doors session": "Séance de portes ouvertes",
     "Add a session": "Ajouter une séance",
     "Type": "Type",
@@ -406,5 +407,7 @@
     "You need to be signed in to answer this survey": "Vous devez vous connecter pour répondre à ce questionnaire",
     "Go back": "Retour",
     "You cannot submit an answer to this survey": "Vous ne pouvez pas répondre à ce questionnaire",
-    "Title format": "Format du titre"
+    "Title format": "Format du titre",
+    "Allow silent games": "Autoriser les jeux silencieux",
+    "π room schedule": "Emploi du temps salle π"
 }

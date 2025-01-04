@@ -52,31 +52,22 @@
                 <v-form :disabled="workshop.status == 'launched'">
                     <div style='position:relative'>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
-                            <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple
-                                chips variant="outlined" />
-                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin"
-                                label="Teacher" variant="outlined" />
+                            <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple chips variant="outlined" />
+                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin" label="Teacher" variant="outlined" />
                         </div>
-                        <v-select :label="$t('Levels')" variant="outlined" :items="levels" multiple chips
-                            v-model="workshop.details.levels" />
+                        <div class="d-block d-sm-flex align-center" style="gap:25px;">
+                            <v-select :label="$t('Levels')" variant="outlined" :items="levels" multiple chips v-model="workshop.details.levels" />
+                            <v-switch :label="$t('Allow silent games')" color="primary" v-model="workshop.details.allowSilentGames"  class="mr-4"/>
+                        </div>
                         <div class="d-block d-sm-flex align-start" style="gap:5px;">
-                            <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus"
-                                variant="outlined" />
-                            <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb"
-                                :label="$t('Room')" variant="outlined" validate-on="blur" />
-                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1 mr-1"
-                                :disabled="workshop.campus != 'BPR'" />
+                            <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus" variant="outlined" />
+                            <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb" :label="$t('Room')" variant="outlined" validate-on="blur" />
+                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1 mr-1" :disabled="workshop.campus != 'BPR'" />
                         </div>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
-                            <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
-                                v-model="workshop.details.nbSessions" :label="$t('Nb sessions')" variant="outlined"
-                                validate-on="blur" style="flex:1" />
-                            <v-text-field :rules="[rules.required]" type="number" min="1" max="99"
-                                v-model="workshop.details.maxStudents" :label="$t('Nb students max')" variant="outlined"
-                                validate-on="blur" style="flex:1" />
-                            <v-switch :label="$t('Registration open')" color="primary"
-                                v-model="workshop.acceptingStudents" style="flex:1"
-                                :disabled="workshop.status != 'confirmed'" />
+                            <v-text-field :rules="[rules.required]" type="number" min="1" max="99" v-model="workshop.details.nbSessions" :label="$t('Nb sessions')" variant="outlined" validate-on="blur" style="flex:1" />
+                            <v-text-field :rules="[rules.required]" type="number" min="1" max="99" v-model="workshop.details.maxStudents" :label="$t('Nb students max')" variant="outlined" validate-on="blur" style="flex:1" />
+                            <v-switch :label="$t('Registration open')" color="primary" v-model="workshop.acceptingStudents" style="flex:1" :disabled="workshop.status != 'confirmed'" />
                         </div>
                         <div class="d-flex justify-space-between align-center px-3 mb-3">
                             <span class="text-subtitle-1 text-captionColor">

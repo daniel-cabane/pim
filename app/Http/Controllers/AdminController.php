@@ -303,39 +303,48 @@ class AdminController extends Controller
     {
         $attrs = $request->validate([
             'sessions' => 'required|Array',
-            'applicants' => 'required|Array',
+            'applicants' => 'sometimes|Array',
             'notifyApplicants' => 'required|Array',
         ]);
 
-        $index = 0;
-        foreach($attrs['sessions'] as $session){
-            Session::create([
-                'workshop_id' => $workshop->id,
-                'index' => $index++,
-                'date' => $session['date'],
-                'start' => $session['start'],
-                'finish' => $session['finish'],
-                'status' => $session['status']
+        if($workshop->status == 'confirmed'){
+            $index = 0;
+            foreach($attrs['sessions'] as $session){
+                Session::create([
+                    'workshop_id' => $workshop->id,
+                    'index' => $index++,
+                    'date' => $session['date'],
+                    'start' => $session['start'],
+                    'finish' => $session['finish'],
+                    'status' => $session['status']
+                ]);
+            }
+    
+            foreach($attrs['applicants'] as $applicant){
+                if($applicant['confirmed']){
+                    $workshop->applicants()->updateExistingPivot($applicant['id'], ['confirmed' => 1]);
+                }
+            }
+            
+            $workshop->update(['status' => 'launched', 'accepting_students' => 0]);
+            $workshop->orderSessions();
+    
+            $workshop->createExitSurvey(null, false);
+            $workshop->createEmails($attrs['notifyApplicants']);
+    
+            return response()->json([
+                'workshop' => $workshop->format(),
+                'message' => [
+                        'text' => 'Workshop launched !',
+                        'type' => 'success'
+                    ]
             ]);
         }
-
-        foreach($attrs['applicants'] as $applicant){
-            if($applicant['confirmed']){
-                $workshop->applicants()->updateExistingPivot($applicant['id'], ['confirmed' => 1]);
-            }
-        }
-        
-        $workshop->update(['status' => 'launched', 'accepting_students' => 0]);
-        $workshop->orderSessions();
-
-        $workshop->createExitSurvey(null, false);
-        $workshop->createEmails($attrs['notifyApplicants']);
-
         return response()->json([
             'workshop' => $workshop->format(),
             'message' => [
-                    'text' => 'Workshop launched !',
-                    'type' => 'success'
+                    'text' => 'Workshop has already been launched...',
+                    'type' => 'warning'
                 ]
         ]);
     }

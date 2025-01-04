@@ -155,6 +155,7 @@ class WorkshopController extends Controller
             'details' => json_encode([
                 'nbSessions' => 6,
                 'roomNb' => 'π (314 BPR)',
+                'allowSilentGames' => false,
                 'schedule' => [
                     ['day' => 'Monday', 'start' => '17:30', 'finish' => '18:30']
                 ],

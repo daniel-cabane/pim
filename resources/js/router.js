@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "./components/views/home-view.vue";
 import Workshops from "./components/views/workshops-view.vue";
 import Calendar from "./components/views/calendar-view.vue";
+import CalendarPi from "./components/views/calendar-pi-view.vue";
 import Blog from "./components/views/blog-view.vue";
 import myPosts from "./components/views/myPosts-view.vue";
 import editPost from "./components/views/editPost-view.vue";
@@ -29,6 +30,11 @@ const routes = [
         path: "/calendar",
         name: "Calendar",
         component: Calendar,
+    },
+    {
+        path: "/calendar/pi",
+        name: "Calendar-pi",
+        component: CalendarPi,
     },
     {
         path: "/myPosts",
