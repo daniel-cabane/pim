@@ -19,7 +19,7 @@
         </div>
         <div style="display:flex;flex:1;">
             <div v-for="day in week" style="min-width:19%;max-width:19%;">
-                <div class="topBox text-center">
+                <div class="topBox text-center" v-if="day.dateData">
                     <div class="text-captionColor">
                         {{ name == 'xs' ? ($t(day.dateData.dayOfTheWeek)).substring(0,3)+'.' : $t(day.dateData.dayOfTheWeek) }}
                     </div>
