@@ -25,15 +25,15 @@
 
     const hours = [null, null];
     
-    [['11:30', '11:35'], ['12:30', '12:35']].forEach(startTime => {
+    [['11:30', '11:35'], ['12:30', '12:35']].forEach((startTime, index) => {
         let hourDetails = props.day.events.find(e => startTime.includes(e.start));
         if(hourDetails){
             if(hourDetails.eventType == "openDoor"){
-                hours[0] = { title: 'Open Doors', subtitle: '', bg: theme.global.current.value.colors.openDoors }
+                hours[index] = { title: 'Open Doors', subtitle: '', bg: theme.global.current.value.colors.openDoors }
             } else if(hourDetails.allowSilentGames) {
-                hours[0] = { title: 'Workshop', subtitle: hourDetails.title, bg: theme.global.current.value.colors.inclusiveWorkshop }
+                hours[index] = { title: 'Workshop', subtitle: hourDetails.title, bg: theme.global.current.value.colors.inclusiveWorkshop }
             } else {
-                hours[0] = { title: 'Workshop', subtitle: hourDetails.title, bg: theme.global.current.value.colors.exclusiveWorkshop }
+                hours[index] = { title: 'Workshop', subtitle: hourDetails.title, bg: theme.global.current.value.colors.exclusiveWorkshop }
             }
         }
     });
