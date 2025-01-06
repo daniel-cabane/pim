@@ -49,7 +49,7 @@
                 <survey-table :workshopId="workshop.id" />
             </v-window-item>
             <v-window-item class="pt-2" value="details">
-                <v-form :disabled="workshop.status == 'launched'">
+                <v-form :disabled="['launched', 'progress', 'finished'].includes(workshop.status) && !user.is.admin">
                     <div style='position:relative'>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
                             <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple chips variant="outlined" />
@@ -62,7 +62,7 @@
                         <div class="d-block d-sm-flex align-start" style="gap:5px;">
                             <v-select label="Campus" :items="['BPR', 'TKO']" v-model="workshop.campus" variant="outlined" />
                             <v-text-field :rules="[rules.required]" v-model="workshop.details.roomNb" :label="$t('Room')" variant="outlined" validate-on="blur" />
-                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1 mr-1" :disabled="workshop.campus != 'BPR'" />
+                            <v-btn icon="mdi-pi" @click='initRoomNb' class="mt-1 mr-1" :disabled="workshop.campus != 'BPR' || ['launched', 'progress', 'finished'].includes(workshop.status)" />
                         </div>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
                             <v-text-field :rules="[rules.required]" type="number" min="1" max="99" v-model="workshop.details.nbSessions" :label="$t('Nb sessions')" variant="outlined" validate-on="blur" style="flex:1" />
