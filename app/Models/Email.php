@@ -49,13 +49,13 @@ class Email extends Model
         if($this->admin){
           $bcc = 'pim@g.lfis.edu.hk';
           $cc = [];
-          $to = $this->data->to ? $this->data->to : 'ogazeau@g.lfis.edu.hk';
+          $to = isset($this->data->to) ? $this->data->to : 'ogazeau@g.lfis.edu.hk';
           $sentTo = [1];
         } else {
           $students = $this->workshop->applicants()->wherePivot('confirmed', 1)->get();
           $bcc = 'pim@g.lfis.edu.hk';
           $cc = $this->workshop->organiser->email;
-          $to = $this->data->to ? $this->data->to : $students->pluck('email')->toArray();
+          $to = isset($this->data->to) ? $this->data->to : $students->pluck('email')->toArray();
           $sentTo = $students->pluck('id')->toArray();
         }
         foreach($this->surveys as $survey){
