@@ -270,7 +270,7 @@ class Workshop extends Model
               'to' => (auth()->user())->email
           ],
           'sender_id' => 1,
-          'workshop_id' => $this->id,
+          'workshop_id' => null,
           'schedule' => Carbon::now()
         ]);
     }
