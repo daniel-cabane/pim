@@ -67,6 +67,13 @@ class Email extends Model
         $data = $this->data;
         $data->sentTo = $sentTo;
         $this->update(['sent' => 1, 'schedule' => now(), 'data' => $data]);
+      } elseif(isset($this->data->to)) {
+          $bcc = 'pim@g.lfis.edu.hk';
+          $cc = isset($this->data->cc) ? $this->data->cc : '';
+          Mail::to($this->data->to)->cc($cc)->bcc($bcc)->send(new WorkshopCommunication($this));
+          $data = $this->data;
+          $data->sentTo = $this->data->to;
+          $this->update(['sent' => 1, 'schedule' => now(), 'data' => $data]);
       }
     }
 }

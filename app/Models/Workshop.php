@@ -267,7 +267,8 @@ class Workshop extends Model
                 'text_en' => '',
                 'url' => ''
               ],
-              'to' => (auth()->user())->email
+              'to' => (auth()->user())->email,
+              'cc' => $this->organiser->email
           ],
           'sender_id' => 1,
           'workshop_id' => null,

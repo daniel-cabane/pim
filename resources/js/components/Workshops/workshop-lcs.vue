@@ -35,7 +35,7 @@
                     return {text: 'In preparation', type: 'tonal', color: 'primary'}
                     break;
                 case 'launched':
-                    return {text: 'Open|adj', type: 'elevated', color: 'success'}
+                    return {text: 'Launched', type: 'elevated', color: 'info'}
                     break;
                 case 'progress':
                     return {text: 'In progress', type: 'flat', color: 'primary'}
