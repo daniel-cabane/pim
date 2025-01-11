@@ -155,32 +155,33 @@ class UserController extends Controller
     return redirect()->intended('/');
   }
 
-  public function myHours()
+  public function myActivity()
   {
-    $user = auth()->user();
-    $terms = [];
-    $hoursDone = $user->hoursPerTerm();
-    foreach(Term::orderBy('nb')->get() as $term){
-        $weeksHoliday = 0;
-        foreach(Holiday::whereBetween('start', [$term->start_date, $term->finish_date])->get() as $holiday){
-            $holidayLength = (Carbon::parse($holiday->start))->diffInDays($holiday->finish);
-            if($holidayLength >= 5){
-                $weeksHoliday++;
-            }
-            if($holidayLength >= 10){
-                $weeksHoliday++;
-            }
-        }
-        $terms[] = [
-          'nb' => $term->nb,
-          'nbWeeks' => (Carbon::parse($term->start_date))->diffInWeeks($term->finish_date) - $weeksHoliday,
-          'hoursDone' => $hoursDone[$term->nb-1]
-        ];
-    }
-    return response()->json([
-      'terms' => $terms,
-      'hoursPerWeek' => isset($user->preferences->hoursDuePerWeek) ? floatval($user->preferences->hoursDuePerWeek) : 0
-    ]);
+    return response()->json(['activity' => auth()->user()->activity()]);
+    // $user = auth()->user();
+    // $terms = [];
+    // $hoursDone = $user->hoursPerTerm();
+    // foreach(Term::orderBy('nb')->get() as $term){
+    //     $weeksHoliday = 0;
+    //     foreach(Holiday::whereBetween('start', [$term->start_date, $term->finish_date])->get() as $holiday){
+    //         $holidayLength = (Carbon::parse($holiday->start))->diffInDays($holiday->finish);
+    //         if($holidayLength >= 5){
+    //             $weeksHoliday++;
+    //         }
+    //         if($holidayLength >= 10){
+    //             $weeksHoliday++;
+    //         }
+    //     }
+    //     $terms[] = [
+    //       'nb' => $term->nb,
+    //       'nbWeeks' => (Carbon::parse($term->start_date))->diffInWeeks($term->finish_date) - $weeksHoliday,
+    //       'hoursDone' => $hoursDone[$term->nb-1]
+    //     ];
+    // }
+    // return response()->json([
+    //   'terms' => $terms,
+    //   'hoursPerWeek' => isset($user->preferences->hoursDuePerWeek) ? floatval($user->preferences->hoursDuePerWeek) : 0
+    // ]);
   }
 
   public function setCurrentRoute(Request $request)

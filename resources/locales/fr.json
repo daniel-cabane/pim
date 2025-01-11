@@ -409,5 +409,8 @@
     "You cannot submit an answer to this survey": "Vous ne pouvez pas répondre à ce questionnaire",
     "Title format": "Format du titre",
     "Allow silent games": "Autoriser les jeux silencieux",
-    "π room schedule": "Emploi du temps salle π"
+    "π room schedule": "Emploi du temps salle π",
+    "Search title": "Chercher un titre",
+    "Current balance": "Reste courant",
+    "Total hours due": "Nb d'heures dues"
 }

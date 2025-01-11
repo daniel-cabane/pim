@@ -173,10 +173,10 @@ export const useAuthStore = defineStore({
                 this.loading = false;
             }
         },
-        async fetchMyHours() {
+        async fetchMyActivity() {
             try {
-                const res = await axios.get('/api/userinfo/hours');
-                // console.log(res.data);
+                const res = await axios.get('/api/userinfo/myActivity');
+                this.user.activity = res.data.activity
                 return res.data;
             } catch (err) {
                 addNotification({ text: err.response.data.message, type: 'error' });

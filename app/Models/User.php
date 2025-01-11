@@ -184,4 +184,50 @@ class User extends Authenticatable implements MustVerifyEmail
 
       return $hours;
     }
+
+    public function activity()
+    {
+      if(!$this->hasRole('teacher')){
+        return null;
+      }
+      $firstTerm = Term::where('nb', 1)->first();
+      $lastTerm = Term::where('nb', 3)->first();
+      $startOfWeek = (Carbon::parse($firstTerm->start_date))->addWeek(2)->startOfWeek();
+      $weeksPast = max(0, (Carbon::today())->diffInWeeks($startOfWeek));
+      $openDoorSessions = OpenDoor::where('teacher_id', $this->id)->get();
+      $workshopSessions = collect([]);
+      $hoursDone = count($openDoorSessions)*0.5;
+      foreach($this->workshops as $workshop){
+        foreach($workshop->sessions as $session){
+          $session->workshopTitle = $workshop->language == 'fr' ? $workshop->title_fr : $workshop->title_en;
+          $workshopSessions->push($session);
+          $hoursDone += round(((Carbon::createFromFormat('H:i', $session->start))->diffInMinutes(Carbon::createFromFormat('H:i', $session->finish)))/60);
+        }
+      }
+      $weeks = [];
+      $month = '';
+      while($startOfWeek->isBefore($lastTerm->finish_date)){
+        $endOfWeek = $startOfWeek->copy()->endOfWeek();
+
+        $thisWeekOpenDoorSessions = $openDoorSessions->filter(function ($item) use ($startOfWeek, $endOfWeek) {
+            return $item->date >= $startOfWeek && $item->date <= $endOfWeek;
+        });
+        $thisWeekWorkshopSessions = $workshopSessions->filter(function ($item) use ($startOfWeek, $endOfWeek) {
+            return $item->date >= $startOfWeek && $item->date <= $endOfWeek;
+        });
+
+        $newMonth = $month != $startOfWeek->format('F');
+        $month = $startOfWeek->format('F');
+        $weeks[] = [
+          'startOfWeek' => $startOfWeek->copy(),
+          'month' => $month,
+          'newMonth' => $newMonth,
+          'openDoorSessions' => $thisWeekOpenDoorSessions->values()->all(),
+          'workshopSessions' => $thisWeekWorkshopSessions->values()->all()
+        ];
+
+        $startOfWeek->addWeek();
+      }
+      return ['weeks' => $weeks, 'hoursDone' => $hoursDone, 'weeksPast' => $weeksPast];
+    }
 }

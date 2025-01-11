@@ -15,33 +15,18 @@ class HodController extends Controller
 {
     public function index()
     {
-        $workshops = [[], [], []];
+        $workshops = [];
         foreach(Workshop::orderBy('start_date', 'desc')->where('archived', 0)->get() as $workshop){
-            $workshops[$workshop->term-1][] = $workshop->format();
-        }
-
-        $terms = [];
-        foreach(Term::orderBy('nb')->get() as $term){
-            $weeksHoliday = 0;
-            foreach(Holiday::whereBetween('start', [$term->start_date, $term->finish_date])->get() as $holiday){
-                $holidayLength = (Carbon::parse($holiday->start))->diffInDays($holiday->finish);
-                if($holidayLength >= 5){
-                    $weeksHoliday++;
-                }
-                if($holidayLength >= 10){
-                    $weeksHoliday++;
-                }
-            }
-            $terms[] = ['nb' => $term->nb, 'nbWeeks' => (Carbon::parse($term->start_date))->diffInWeeks($term->finish_date) - $weeksHoliday];
+            $workshops[] = $workshop->format();
         }
 
         $teachers = [];
         foreach(User::role('teacher')->get() as $teacher){
-            $teacher->hoursDone = $teacher->hoursPerTerm();
+            $teacher->activity = $teacher->activity();
             $teachers[] = $teacher;
         }
 
-        return response()->json(['workshops' => $workshops, 'teachers' => $teachers, 'terms' => $terms]);
+        return response()->json(['workshops' => $workshops, 'teachers' => $teachers]);
     }
 
     public function teacherHours(Request $request)

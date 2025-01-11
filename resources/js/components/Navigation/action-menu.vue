@@ -80,7 +80,7 @@
                     </div>
                 </v-card>
             </v-dialog>
-            <v-dialog v-model="myHoursDialog" width="450" v-if="user.is.teacher">
+            <v-dialog v-model="myActivityDialog" width="80%" v-if="user.is.teacher">
                 <template v-slot:activator="{ props }">
                     <v-list-item v-bind="props" @click="showMyHours">
                         <template v-slot:prepend>
@@ -89,45 +89,15 @@
                         <v-list-item-title>{{ $t("My hours") }}</v-list-item-title>
                     </v-list-item>
                 </template>
-                <v-card :loading="hoursLoading">
+                <v-card :loading="activityLoading">
                     <v-card-title>
                         {{ $t("My hours") }}
-                        <span v-if="myHours.hoursPerWeek">
-                            ({{ myHours.hoursPerWeek }}h {{ $t('per week') }})
+                        <span>
+                            ({{ user.preferences.hoursDuePerWeek }}h {{ $t('per week') }})
                         </span>
                     </v-card-title>
                     <v-card-text>
-                        <div v-for="term in myHours.terms">
-                            <div class="text-h6 text-grey">
-                                {{ $t('Term') }} {{ term.nb }} ({{ term.nbWeeks }} {{ $t('weeks') }})
-                            </div>
-                            <div class="d-flex" style="gap:20px;">
-                                <div>
-                                    <div class="text-caption text-captionColor">
-                                        {{ $t('Workshop sessions') }}
-                                    </div>
-                                    <div class="d-flex justify-center text-subtitle-1">
-                                        {{ term.hoursDone.workshopSessions }}
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="text-caption text-captionColor">
-                                        {{ $t('Open doors sessions') }}
-                                    </div>
-                                    <div class="d-flex justify-center text-subtitle-1">
-                                        {{ term.hoursDone.openDoorSessions }}
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="text-caption text-captionColor font-weight-bold">
-                                        Total
-                                    </div>
-                                    <div class="d-flex justify-center text-subtitle-1 font-weight-bold">
-                                        {{ term.hoursDone.hoursDone }} / {{ myHours.hoursPerWeek*term.nbWeeks }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <teacher-activity  :teacher="user"/>
                     </v-card-text>
                     <div class="d-flex pa-2">
                         <v-spacer />
@@ -144,7 +114,6 @@
                     </div>
                 </v-card>
             </v-dialog>
-            <v-divider />
         </v-list>
     </v-menu>
 </template>
@@ -153,15 +122,13 @@
     import { useRouter } from 'vue-router';
     import { usePostStore } from '@/stores/usePostStore';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
-    // import { useThemeStore } from '@/stores/useThemeStore';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
-    import { useI18n } from 'vue-i18n';
 
     const postStore = usePostStore();
     const { createPost } = postStore;
     const router = useRouter();
-    const { fetchMyHours } = useAuthStore();
+    const { fetchMyActivity } = useAuthStore();
     const { user } = storeToRefs(useAuthStore());
 
     let newPostDialog = ref(false);
@@ -192,20 +159,6 @@
 
     const workshopStore = useWorkshopStore();
     const { createWorkshop } = workshopStore;
-    // const { themes } = storeToRefs(workshopStore);
-
-    // const themeStore = useThemeStore();
-    // const { getThemes, forWorkshop } = themeStore;
-    // getThemes();
-    // const { locale } = useI18n();
-    // const themes = forWorkshop;
-    // console.log(themes);
-    // const availableThemes = computed(() => themes.value.map(theme => {
-    //     return {
-    //         title: locale == 'en' ? theme.title_en : theme.title_fr,
-    //         value: theme.id
-    //     }
-    // }));
 
     const availableLanguages = [{ value: 'fr', title: 'Français' }, { value: 'en', title: 'English' }, { value: 'both', title: 'Les deux / Both' }];
 
@@ -242,13 +195,12 @@
         router.push('/myWorkshops');
     }
 
-    const myHoursDialog = ref(false);
-    const hoursLoading = ref(false);
-    const myHours = ref([]);
+    const myActivityDialog = ref(false);
+    const activityLoading = ref(false);
     const showMyHours =  async () => {
-        hoursLoading.value = true;
-        myHoursDialog.value = true;
-        myHours.value = await fetchMyHours();
-        hoursLoading.value = false;
+        activityLoading.value = true;
+        myActivityDialog.value = true;
+        await fetchMyActivity();
+        activityLoading.value = false;
     }
 </script>

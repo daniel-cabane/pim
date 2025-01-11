@@ -3,7 +3,6 @@
         <v-tabs v-model="tab">
             <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
             <v-tab value="teachers">{{ $t('Teachers') }}</v-tab>
-            <v-select :label="$t('Term')" :items="termOptions" variant="outlined" density="compact" class="mt-2 ml-5" max-width="250" v-model="term"/>
             <v-spacer/>
             <v-btn color="primary" :text="$t('Hours due per week')" class="mt-3" density="comfortable" @click="hoursDialog = true"/>
             <v-dialog width="400" v-model="hoursDialog">
@@ -26,38 +25,34 @@
                 </v-card>
             </v-dialog>
         </v-tabs>
-        <div class="pa-4">
+        <div class="pa-4" v-if="isReady">
             <v-window v-model="tab">
                 <v-window-item value="workshops">
+                    <v-row class="px-4 mt-2">
+                        <v-col cols="12" sm="6" md="5" lg="4">
+                            <v-btn 
+                                class="mr-2 mt-1"
+                                v-for="term in terms" 
+                                :text="term.title" 
+                                :variant="term.display ? 'elevated' : 'tonal'" 
+                                color="primary" 
+                                size="large"
+                                @click="term.display = !term.display"
+                            />
+                        </v-col>
+                        <v-col cols="12" sm="6" md="7" lg="8">
+                            <v-text-field prepend-inner-icon="mdi-magnify" variant="outlined" hide-details :label="$t('Search title')" v-model="search"/>
+                        </v-col>
+                    </v-row>
                     <div class="pa-4 d-flex flex-wrap">
-                        <workshop-card v-for="workshop in workshops[term-1]" :workshop="workshop" class="ma-2" :key="workshop.id" />
+                        <workshop-card v-for="workshop in displayWorkshops" :workshop="workshop" class="ma-2" :key="workshop.id" />
                     </div>
                 </v-window-item>
                 <v-window-item value="teachers">
-                    <v-data-table hover :headers="headers" :items="teachers"  items-per-page="-1">
-                        <template v-slot:item="{ item }">
-                            <tr>
-                                <td class="text-center">
-                                    {{ item.name }}
-                                    <span v-if="item.preferences.hoursDuePerWeek">
-                                        ({{ item.preferences.hoursDuePerWeek }}h)
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    {{ item.hoursDone[term-1].openDoorSessions }}
-                                </td>
-                                <td class="text-center">
-                                    {{ item.hoursDone[term-1].workshopSessions }}
-                                </td>
-                                <td class="text-center">
-                                    {{ item.hoursDone[term-1].hoursDone }}
-                                    <span v-if="item.preferences.hoursDuePerWeek">
-                                        / {{ item.preferences.hoursDuePerWeek*terms[term-1].nbWeeks }}
-                                    </span>
-                                </td>
-                            </tr>
-                        </template>
-                    </v-data-table>
+                    <div v-for="teacher in teachers">
+                        <teacher-activity  :teacher="teacher"/>
+                        <v-divider class="my-4"/>
+                    </div>
                 </v-window-item>
             </v-window>
         </div>
@@ -77,7 +72,7 @@
     
     const hodStore = useHodStore();
     const { hodIndex, updateTeachersHours } = hodStore;
-    const { workshops, teachers, terms, isLoading, isReady } = storeToRefs(hodStore);
+    const { workshops, teachers, isLoading, isReady } = storeToRefs(hodStore);
     hodIndex();
 
     if(user == null || (!user.is.admin && !user.is.hod)){
@@ -86,16 +81,27 @@
     }
 
     const tab = ref('workshops');
-    const term = ref(1);
 
-    const termOptions = computed(() => terms.value.map(currenTerm => ({title: `${t('Term')} ${currenTerm.nb} (${currenTerm.nbWeeks} ${t('weeks')})`, value: currenTerm.nb})));
-
-    const headers = ref([
-        { title: t('Name'), align: 'center', key: 'name' },
-        { title: t('Open doors'), align: 'center', key: 'date' },
-        { title: t('Workshop sessions'), align: 'center', key: 'start' },
-        { title: t('Hours done'), align: 'center', key: 'hours' }
-    ]);
+    const terms = ref([{title: 'T1', display: true}, {title: 'T2', display: true}, {title: 'T3', display: true}]);
+    const search = ref('');
+    const displayWorkshops = computed(() => {
+        const displayWorkshops = [];
+        workshops.value.forEach(w => {
+            const termCheck = terms.value[w.term-1].display;
+            let titleCheck = true;// search.value == '' || w.title.en.indexOf(search.value) > -1 || w.title.fr.indexOf(search.value) > -1;
+            if(search.value != ''){
+                ['fr', 'en'].forEach(lg => {
+                    if(w.title[lg] && w.title[lg].toLowerCase().indexOf(search.value.toLowerCase()) < 0){
+                        titleCheck = false;
+                    }
+                });
+            }
+            if(termCheck && titleCheck){
+                displayWorkshops.push(w);
+            }
+        });
+        return displayWorkshops;
+    });
 
     const hoursDialog = ref(false);
 </script>
