@@ -404,7 +404,7 @@ class Workshop extends Model
         $body_fr = "<p>Votre inscription à l'atelier $this->link_fr, animé par $teacherName, est <b>confirmée</b>.</p>";
         $body_fr .= "<p>La première séance aura lieu en salle $room le</p>";
         $body_fr .= "<p style='text-align: center;font-size:24px;'>$dateString_fr</p><br>";
-        $body_fr .= "<p>Cet atelier sera composé de 8 séances qui seront portées sur Pronote sous peu.<br>Votre présence à l'ensemble des séances est obligatoire. Merci de prévenir l'enseignant le plus tôt possible en cas d'impossibilité.</p>";
+        $body_fr .= "<p>Cet atelier sera composé de ".count($this->sessions)." séances qui seront portées sur Pronote sous peu.<br>Votre présence à l'ensemble des séances est obligatoire. Merci de prévenir l'enseignant le plus tôt possible en cas d'impossibilité.</p>";
         $body_en = "<p>Your enrollment in the workshop $this->link_en, led by $teacherName, is <b>confirmed</b></p>";
         $body_en .= "<p>The first session will be held in room $room on</p>";
         $body_en .= "<p style='text-align: center;font-size:24px;'>$dateString_en</p><br>";
