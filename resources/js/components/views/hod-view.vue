@@ -50,7 +50,7 @@
                 </v-window-item>
                 <v-window-item value="teachers">
                     <div v-for="teacher in teachers">
-                        <teacher-activity  :teacher="teacher"/>
+                        <teacher-activity :teacher="teacher" showName/>
                         <v-divider class="my-4"/>
                     </div>
                 </v-window-item>

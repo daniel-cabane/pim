@@ -415,5 +415,8 @@
     "Total hours due": "Nb d'heures dues",
     "All students welcome": "Tous les élèves sont les bienvenus",
     "Silent games allowed": "Jeux silencieux uniquement",
-    "Registered students only": "Uniquement les élèves inscrits"
+    "Registered students only": "Uniquement les élèves inscrits",
+    "Done": "Fait",
+    "Planned": "A venir",
+    "Due": "A faire"
 }

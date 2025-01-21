@@ -97,7 +97,7 @@
                         </span>
                     </v-card-title>
                     <v-card-text>
-                        <teacher-activity  :teacher="user"/>
+                        <teacher-activity :teacher="user" class="mt-8"/>
                     </v-card-text>
                     <div class="d-flex pa-2">
                         <v-spacer />
