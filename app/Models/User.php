@@ -192,9 +192,9 @@ class User extends Authenticatable implements MustVerifyEmail
       }
       $firstTerm = Term::where('nb', 1)->first();
       $lastTerm = Term::where('nb', 3)->first();
-      $startOfWeek = (Carbon::parse($firstTerm->start_date))->startOfWeek();
+      $startOfWeek = (Carbon::parse($firstTerm->start_date))->addWeek(2)->startOfWeek();
       $hours = ['past' => 0, 'future' => 0];
-      $openDoorSessions = OpenDoor::where('teacher_id', $this->id)->get();
+      $openDoorSessions = OpenDoor::where('teacher_id', $this->id)->orderBy('date')->get();
       foreach($openDoorSessions as $session){
         $isPast = (Carbon::parse($session->date))->isPast();
         $session->isPast = $isPast;
@@ -222,7 +222,8 @@ class User extends Authenticatable implements MustVerifyEmail
       $weeksPast = 0;
       $weeksFuture = 0;
       $month = '';
-      while($startOfWeek->isBefore($lastTerm->finish_date)){
+      $endOfYear = Carbon::parse($lastTerm->finish_date)->subWeek();
+      while($startOfWeek->isBefore($endOfYear)){
         $endOfWeek = $startOfWeek->copy()->endOfWeek()->startOfDay();
         $newMonth = $month != $startOfWeek->format('F');
         $month = $startOfWeek->format('F');
@@ -257,7 +258,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'newMonth' => $newMonth,
             'isHoliday' => false,
             'openDoorSessions' => $thisWeekOpenDoorSessions->values()->all(),
-            'workshopSessions' => $thisWeekWorkshopSessions->values()->all()
+            'workshopSessions' => $thisWeekWorkshopSessions->sortBy('date')->values()->all()
           ];
         }
 

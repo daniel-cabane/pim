@@ -128,7 +128,7 @@
         margin-right: 6px;
         position:relative;
         min-width: 20px;
-        min-height: 25px;
+        min-height: 60px;
         display: flex;
         flex-direction: column-reverse;
         justify-content: flex-start;
