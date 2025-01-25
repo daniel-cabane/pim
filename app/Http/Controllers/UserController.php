@@ -197,6 +197,6 @@ class UserController extends Controller
     logger("********** READ TAG **********");
     logger($request);
 
-    return response()->json(['text' => 'tag read']);
+    return response()->json(['text' => 'tag read :-)']);
   }
 }
