@@ -93,7 +93,7 @@ Route::group(['middleware'=>['role:admin|hod']], function(){
 *   GUESTS
 * 
 */
-// Route::post('/pobpr', [UserController::class, 'pobpr']);
+Route::post('/pobpr', [UserController::class, 'pobpr']);
 
 Route::get('/posts/published', [PostController::class, 'published']);
 Route::get('/posts/search', [PostController::class, 'search']);

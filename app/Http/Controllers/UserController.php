@@ -194,7 +194,9 @@ class UserController extends Controller
 
   public function pobpr(Request $request)
   {
-    // logger("********** READ TAG **********");
-    // logger($request);
+    logger("********** READ TAG **********");
+    logger($request);
+
+    return response()->json(['text' => 'tag read']);
   }
 }
