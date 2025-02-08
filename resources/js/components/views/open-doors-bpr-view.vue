@@ -8,6 +8,9 @@
             <div>
                 {{ tagId }}
             </div>
+            <div>
+                {{ serial }}
+            </div>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
             </v-btn>
@@ -22,6 +25,7 @@
 
     const loading = ref(false);
     const tagId = ref('');
+    const serial = ref('');
     const errorLed = ref(false);
     const error = ref('');
 
@@ -43,7 +47,8 @@
             });
 
             ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                tagId.value = parseInt(serialNumber.split(" ").reverse().join(""), 16);
+                serial.value = serialNumber;
+                tagId.value = parseInt(serialNumber.split(":").reverse().join(""), 16);
                 axios.post('/api/pobpr', { message, serialNumber, id: tagId.value });
                 leds[2] = true;
             });
