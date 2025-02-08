@@ -26,7 +26,7 @@ class PostController extends Controller
         $postIds = [];
         $preferedLanguage = isset($attrs['locale']) ? $attrs['locale'] : 'en';
         $user = auth()->user();
-        if($user && isset($user->preferences) && $user->preferences->language != 'both'){
+        if($user && isset($user->preferences) && isset($user->preferences->language) && $user->preferences->language != 'both'){
             $preferedLanguage = $user->preferences->language;
         }
         foreach(Post::where('status', 'published')->where('isTranslation', 0)->orderBy('published_at', 'desc')->skip($attrs['skip'])->take($attrs['take']*2)->get() as $post){

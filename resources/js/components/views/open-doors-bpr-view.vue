@@ -5,11 +5,8 @@
                 <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
                 <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
             </div>
-            <!-- <pre v-for="record in tagRecords">
-               {{ record }}
-            </pre> -->
             <div>
-                {{ strRecord }}
+                {{ tagId }}
             </div>
             <v-btn style="width:200px" color="primary" :loading="loading" @click="scanTag">
                 Scan
@@ -24,8 +21,7 @@
     import { ref, reactive } from "vue";
 
     const loading = ref(false);
-    // const tagRecords = ref('');
-    const strRecord = ref('');
+    const tagId = ref('');
     const errorLed = ref(false);
     const error = ref('');
 
@@ -47,7 +43,8 @@
             });
 
             ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                axios.post('/api/pobpr', { message, serialNumber, records: message.records });
+                tagId.value = parseInt(serialNumber.split(" ").reverse().join(""), 16);
+                axios.post('/api/pobpr', { message, serialNumber, id: tagId.value });
                 leds[2] = true;
             });
             loading.value = false;
