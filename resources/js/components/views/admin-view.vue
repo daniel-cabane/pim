@@ -21,11 +21,13 @@
                     <admin-posts-tabs />
                 </v-window-item>
                 <v-window-item value="users">
-                    <v-text-field label="Search user" class="mt-2" :loading="loading" variant="outlined" v-model="data"
-                        @keydown.enter="fetchUsers" />
+                    <div class="d-flex mt-2 ga-3">
+                        <v-text-field label="Search user" :loading="loading" variant="outlined" v-model="data" @keydown.enter="fetchUsers" />
+                        <admin-assign-tagnb-dialog/>
+                        <admin-add-students-dialog/>
+                    </div>
                     <div style="display:flex;flex-wrap:wrap;">
-                        <admin-user-card v-for="user in users" class="ma-2" :key="user.id" :user="user"
-                            @userNameUpdated="fetchUsers" />
+                        <admin-user-card v-for="user in users" class="ma-2" :key="user.id" :user="user" @userNameUpdated="fetchUsers" />
                     </div>
                 </v-window-item>
                 <v-window-item value="openDoors">

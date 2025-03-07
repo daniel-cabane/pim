@@ -10,7 +10,8 @@
             <v-icon icon="mdi-pencil" size="small" color="primary" @click="editDialog=true" />
         </v-card-title>
         <v-card-subtitle class="pb-3">
-            {{ user.email }}
+            {{ user.email }}<br/>
+            {{ user.two_factor_secret ? user.two_factor_secret : 'No tag' }}
         </v-card-subtitle>
         <div class="px-4 d-flex">
             <div class="mr-4">
@@ -31,7 +32,7 @@
             </v-btn>
         </div>
         <v-dialog width="350" v-model="editDialog">
-            <v-card :title="$t('Edit user')">
+            <v-card :title="$t('Edit user')" :subtitle="user.email">
                 <v-card-text>
                     <v-text-field variant="outlined" :label="$t('Name')" v-model="userName" />
                     <div v-if="user.is.teacher">
@@ -39,8 +40,10 @@
                     </div>
                     <div v-else>
                         <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
-                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']"
-                            v-model="className" />
+                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']" v-model="className"/>
+                    </div>
+                    <div>
+                        <v-text-field variant="outlined" :label="$t('Rfid tag')" v-model="userTag" />
                     </div>
                 </v-card-text>
                 <v-card-actions>
@@ -67,13 +70,14 @@
 
     const userName = ref(props.user.name);
     const userTitle = ref(props.user.preferences.title);
-    const className = ref(props.user.className);
-    const classLevel = ref(props.user.classLevel);
+    const userTag = ref(props.user.two_factor_secret);
+    const className = ref(props.user.section);
+    const classLevel = ref(props.user.level);
     const editDialog = ref(false);
     const editLoading = ref(false);
     const updateUserNameAndClass = async () => {
         editLoading.value = true;
-        const res = await patch(`/api/admin/users/${props.user.id}/name`, {name: userName.value, title: userTitle.value, section: className.value, level: classLevel.value});
+        const res = await patch(`/api/admin/users/${props.user.id}/name`, {name: userName.value, title: userTitle.value, section: className.value, level: classLevel.value, two_factor_secret: userTag.value});
         emit('userNameUpdated', res.user);
         editLoading.value = false;
         editDialog.value = false;

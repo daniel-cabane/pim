@@ -11,6 +11,7 @@ use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\HodController;
+use App\Http\Controllers\VisitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,10 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/messages', [AdminController::class, 'getMessages']);
     Route::patch('/admin/msg/{message}/status', [AdminController::class, 'updateMessageStatus']);
     Route::delete('/admin/msg/{message}', [AdminController::class, 'deleteMessage']);
+
+    Route::post('/admin/addStudents', [AdminController::class, 'addStudents']);
+    Route::post('/admin/findStudentsByTag', [AdminController::class, 'findStudentsByTag']);
+    Route::patch('/admin/users/{user}/tag', [AdminController::class, 'attributeTag']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -93,7 +98,7 @@ Route::group(['middleware'=>['role:admin|hod']], function(){
 *   GUESTS
 * 
 */
-Route::post('/pobpr', [UserController::class, 'pobpr']);
+// Route::post('/pobpr', [UserController::class, 'pobpr']);
 
 Route::get('/posts/published', [PostController::class, 'published']);
 Route::get('/posts/search', [PostController::class, 'search']);
@@ -243,3 +248,13 @@ Route::group(['middleware'=>['can:update,email']], function(){
 Route::group(['middleware'=>['can:delete,email']], function(){
     Route::delete('/emails/{email}', [EmailController::class, 'destroy']);
 });
+
+
+/*
+*
+*   OPEN DOORS (VISIT)
+* 
+*/
+
+Route::post('/opendoors/visit', [VisitController::class, 'store']);
+Route::post('/opendoors/{visit}/register', [VisitController::class, 'register']);

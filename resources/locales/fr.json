@@ -418,5 +418,15 @@
     "Registered students only": "Uniquement les élèves inscrits",
     "Done": "Fait",
     "Planned": "A venir",
-    "Due": "A faire"
+    "Due": "A faire",
+    "Rfid tag": "Badge RFID",
+    "Full name": "Prénom et nom",
+    "Skip": "Passer",
+    "Thank you for registering": "Merci pour l'enregistrement",
+    "Welcome": "Bienvenue",
+    "Enjoy your time in this room": "Passez un bon moment dans cette salle",
+    "Link tag number": "Associer des numéros de tag",
+    "Paste from clipboard": "Coller depuis le presse-papier",
+    "Add students": "Ajouter des élèves",
+    "Edit student": "Modifier un élève"
 }

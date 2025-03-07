@@ -16,6 +16,8 @@ use App\Models\Term;
 use App\Models\Survey;
 use App\Models\Message;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -68,6 +70,7 @@ class AdminController extends Controller
             'title' => 'sometimes|String|min:1|max:10',
             'level' => 'sometimes|String|min:2|max:10',
             'section' => 'sometimes|String|min:1|max:10',
+            'two_factor_secret' => 'sometimes|String|min:1|max:50',
         ]);
         
         $user->update($attrs);
@@ -604,6 +607,89 @@ class AdminController extends Controller
             'id' => $id,
             'message' => 'Message deleted'
         ]);
+    }
+
+    public function addStudents(Request $request)
+    {
+        $attrs = $request->validate([
+            'campus' => 'required|min:3|max:3',
+            'level' => 'required|min:2|max:5',
+            'section' => 'required|min:1|max:1',
+            'students' => 'required|array'
+        ]);
+
+        $nbStudentsAdded = 0;
+        $nbStudentsAlreadyRegistered = 0;
+
+        $students = [];
+        foreach($attrs['students'] as $student){
+            if(User::where('email', $student['email'])->exists()){
+                $nbStudentsAlreadyRegistered++;
+            } else {
+                $user = User::create([
+                    'name' => $student['name'],
+                    'email' => $student['email'],
+                    'level' => $attrs['level'],
+                    'section' => $attrs['section'],
+                    'password' => Hash::make(Str::password()),
+                    'preferences' => [
+                        'notifications' => 'all',
+                        'campus' => $attrs['campus'],
+                        'language' => substr($attrs['level'], 0, 1) == 'Y' ? 'en' : 'fr'
+                        ]
+                ]);
+                $nbStudentsAdded++;
+            }
+        }
+
+        return response()->json([
+            'message' => [
+                    'text' => "$nbStudentsAdded students added -- $nbStudentsAlreadyRegistered already registered",
+                    'type' => 'success'
+                ]
+            ]);
+    }
+
+    public function findStudentsByTag(Request $request)
+    {
+        $attrs = $request->validate([
+            'users' => 'required|array'
+        ]);
+
+        $users = [];
+        foreach($attrs['users'] as $user){
+            $name1 = $user['name1'];
+            $name2 = $user['name2'];
+            $possibleMatch = User::where('two_factor_secret', null)->where('name', 'like', "%$name1%")->where('name', 'like', "%$name2%")->get();
+            if(count($possibleMatch) == 0){
+                $name1 = substr($name1, 1, -1);
+                $name2 = substr($name2, 1, -1);
+                $possibleMatch = User::where('two_factor_secret', null)->where('name', 'like', "%$name1%")->where('name', 'like', "%$name2%")->get();
+            }
+            $user['possibleMatch'] = $possibleMatch;
+            $users[] = $user;
+        }
+
+        return response()->json(['users' => $users]);
+    }
+
+    public function attributeTag(User $user, Request $request)
+    {
+        $attrs = $request->validate(['tagNb' => 'required|integer']);
+
+        if($user->two_factor_secret != null){
+            return response()->json(['message' => 'This user already has a tag number'], 403);
+        }
+
+        $user->update(['two_factor_secret' => intval($attrs['tagNb'])]);
+
+        return response()->json([
+            'tagNb' => $attrs['tagNb'],
+            'message' => [
+                    'text' => 'Tag number attributed',
+                    'type' => 'success'
+                ]
+            ]);
     }
 
 }

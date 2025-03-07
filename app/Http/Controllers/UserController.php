@@ -108,46 +108,50 @@ class UserController extends Controller
       ]);
 
       $teacherEmails = [
-            'adelettrez' => ['name' => 'Antoine Delettrez', 'campus' => 'BPR', 'language' => 'both'],
-            'bbarre' => ['name' => 'Benjamin Barre', 'campus' => 'both', 'language' => 'both'],
-            'jcabrit' => ['name' => 'Jose Cabrit', 'campus' => 'BPR', 'language' => 'both'],
-            'ngouez' => ['name' => 'Nicolas Gouez', 'campus' => 'BPR', 'language' => 'both'],
-            'dcabane' => ['name' => 'Daniel Cabane', 'campus' => 'both', 'language' => 'both'],
-            'rdelpuech' => ['name' => 'Rémi Delpuech', 'campus' => 'both', 'language' => 'both'],
-            'sparis' => ['name' => 'Sébastien Paris', 'campus' => 'both', 'language' => 'both'],
-            'ghenry' => ['name' => 'Guillaume Henry', 'campus' => 'both', 'language' => 'both'],
-            'tbelmekki' => ['name' => 'Tarik Belmekki', 'campus' => 'both', 'language' => 'both'],
-            'fmarmounier' => ['name' => 'Florent Marmounier', 'campus' => 'both', 'language' => 'both'],
-            'hwright' => ['name' => 'Hannah Wright', 'campus' => 'BPR', 'language' => 'en'],
-            'mechevarria' => ['name' => 'Mikel Echevarria', 'campus' => 'BPR', 'language' => 'en'],
-            'slai' => ['name' => 'Sylvia Lai', 'campus' => 'BPR', 'language' => 'en'],
-            'jhamilton' => ['name' => 'Jonathan Hamilton', 'campus' => 'BPR', 'language' => 'en'],
-            'tmaclean' => ['name' => 'Timothy Maclean', 'campus' => 'BPR', 'language' => 'en']
-        ];
-        $emailParts = explode('@', $user->email);
+          'adelettrez' => ['name' => 'Antoine Delettrez', 'campus' => 'BPR', 'language' => 'both'],
+          'bbarre' => ['name' => 'Benjamin Barre', 'campus' => 'both', 'language' => 'both'],
+          'jcabrit' => ['name' => 'Jose Cabrit', 'campus' => 'BPR', 'language' => 'both'],
+          'ngouez' => ['name' => 'Nicolas Gouez', 'campus' => 'BPR', 'language' => 'both'],
+          'dcabane' => ['name' => 'Daniel Cabane', 'campus' => 'both', 'language' => 'both'],
+          'rdelpuech' => ['name' => 'Rémi Delpuech', 'campus' => 'both', 'language' => 'both'],
+          'sparis' => ['name' => 'Sébastien Paris', 'campus' => 'both', 'language' => 'both'],
+          'ghenry' => ['name' => 'Guillaume Henry', 'campus' => 'both', 'language' => 'both'],
+          'tbelmekki' => ['name' => 'Tarik Belmekki', 'campus' => 'both', 'language' => 'both'],
+          'fmarmounier' => ['name' => 'Florent Marmounier', 'campus' => 'both', 'language' => 'both'],
+          'hwright' => ['name' => 'Hannah Wright', 'campus' => 'BPR', 'language' => 'en'],
+          'mechevarria' => ['name' => 'Mikel Echevarria', 'campus' => 'BPR', 'language' => 'en'],
+          'slai' => ['name' => 'Sylvia Lai', 'campus' => 'BPR', 'language' => 'en'],
+          'jhamilton' => ['name' => 'Jonathan Hamilton', 'campus' => 'BPR', 'language' => 'en'],
+          'tmaclean' => ['name' => 'Timothy Maclean', 'campus' => 'BPR', 'language' => 'en']
+      ];
 
-        if($user->google_id != null && $emailParts[1] == 'g.lfis.edu.hk'){
-          if(isset($teacherEmails[$emailParts[0]])){
-            $user->assignRole('teacher');
-            $user->assignRole('publisher');
-            $user->update([
-                'name' => $teacherEmails[$emailParts[0]]['name'],
-                'preferences' => [
-                  'notifications' => 'all',
-                  'title' => 'M.',
-                  'campus' => $teacherEmails[$emailParts[0]]['campus'],
-                  'language' => $teacherEmails[$emailParts[0]]['language']
-                ]
-            ]);
-          } else if(is_numeric(substr($emailParts[0], -1))){
-            $user->assignRole('student');
-          }
+      $emailParts = explode('@', $user->email);
+      if($user->google_id != null && $emailParts[1] == 'g.lfis.edu.hk'){
+        if(isset($teacherEmails[$emailParts[0]])){
+          $user->assignRole('teacher');
+          $user->assignRole('publisher');
+          $user->update([
+              'name' => $teacherEmails[$emailParts[0]]['name'],
+              'preferences' => [
+                'notifications' => 'all',
+                'title' => 'M.',
+                'campus' => $teacherEmails[$emailParts[0]]['campus'],
+                'language' => $teacherEmails[$emailParts[0]]['language']
+              ]
+          ]);
+        } else if(is_numeric(substr($emailParts[0], -1))){
+          $user->assignRole('student');
         }
+      }
+    } else {
+      $emailParts = explode('@', $user->email);
+        if($user->google_id == null && $emailParts[1] == 'g.lfis.edu.hk'){
+        $user->update(['google_id' => $google_user->getId(), 'email_verified_at' => Carbon::now()]);
+      }
     }
 
     Auth::login($user);
 
-    logger(session('route'));
     if(session('route')){
       return redirect()->intended(session('route'));
     }

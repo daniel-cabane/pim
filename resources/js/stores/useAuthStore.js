@@ -4,7 +4,7 @@ import useNotifications from '@/composables/useNotifications';
 const { addNotification } = useNotifications();
 
 export const useAuthStore = defineStore({
-    id: 'user',
+    id: 'auth',
     state: () => ({
         user: null,
         messages: [],
