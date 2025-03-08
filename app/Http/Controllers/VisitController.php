@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Visit;
 use App\Models\User;
-use App\Models\openDoor;
+use App\Models\OpenDoor;
 
 class VisitController extends Controller
 {
