@@ -7,15 +7,9 @@
             </div>
             <v-window v-model="window" direction="vertical">
                 <v-window-item>
-                    <v-card width="450" title="Please regsiter" subtitle="Unknown card number" elevation="16">
+                    <v-card width="450" title="Please regsiter" subtitle="Unregistered card number" elevation="16">
                         <v-card-text class="pb-0">
-                            <v-text-field :label="$t('Full name')" variant="outlined" v-model="visitor.name"/>
                             <v-text-field label="Email" variant="outlined" suffix="@g.lfis.edu.hk" v-model="visitor.email"/>
-                            <div class="d-flex ga-3">
-                                <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="visitor.classLevel"/>
-                                <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D']" v-model="visitor.className"/>
-                            </div>
-                            <v-select :label="$t('Language')" variant="outlined" :items="languages" v-model="visitor.language"/>
                         </v-card-text>
                         <v-card-actions>
                             <v-btn variant="tonal" color="error" @click="window=1">
@@ -49,11 +43,6 @@
     const { visit, register } = openDoorStore;
     const { visitor, isLoading } = storeToRefs(openDoorStore);
 
-    const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
-    const languages = [
-        {value: 'fr', title: 'Français'}, {value: 'en', title: 'English'}, { value: 'both', title: 'Both'}
-    ];
-
     const window = ref(1);
 
     const leds = ref([false, false, false]);
@@ -62,37 +51,44 @@
     const scanTag = async () => {
         leds.value = [false, false, false];
         leds.value[0] = true;
-        leds.value[1] = true;
-        await visit(337713548);
-        // await visit(3772719418);
-        if(visitor.value.name){
-            window.value = 2;
-            setTimeout(() => window.value = 1, 1500)
-        } else {
-            window.value = 0;
-        }
-
-        // try {
-        //     const ndef = new NDEFReader();
-        //     leds[1] = true;
-        //     await ndef.scan();
-
-        //     ndef.addEventListener("readingerror", () => {
-        //         error.value = "Tag unreadable for some reason...";
-        //     });
-
-        //     ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        //         tagId.value = parseInt(serialNumber.split(" ").reverse().join(""), 16);
-        //         axios.post('/api/pobpr', { message, serialNumber, id: tagId.value });
-        //         leds[2] = true;
-        //     });
-        //     loading.value = false;
-        // } catch (err) {
-        //     errorLed.value = true;
-        //     console.error(err);
-        //     error.value = err;
-        //     loading.value = false;
+        // leds.value[1] = true;
+        // const device = await navigator.usb.requestDevice({ filters: [] });
+        // console.log(device);
+        // await visit(337713548);
+        // if(visitor.value.name){
+        //     window.value = 2;
+        //     setTimeout(() => window.value = 1, 2000)
+        // } else {
+        //     window.value = 0;
         // }
+
+        try {
+            const ndef = new NDEFReader();
+            leds[1] = true;
+            await ndef.scan();
+
+            ndef.addEventListener("readingerror", () => {
+                error.value = "Tag unreadable for some reason...";
+            });
+
+            ndef.addEventListener("reading", async ({ message, serialNumber }) => {
+                const tagId = parseInt(serialNumber.split(" ").reverse().join(""), 16);
+                await visit(tagId);
+                if(visitor.value.name){
+                    window.value = 2;
+                    setTimeout(() => window.value = 1, 2000)
+                } else {
+                    window.value = 0;
+                }
+                // axios.post('/api/pobpr', { message, serialNumber, id: tagId.value });
+                leds[2] = true;
+            });
+        } catch (err) {
+            errorLed.value = true;
+            console.error(err);
+            error.value = err;
+            loading.value = false;
+        }
     }
 
     const handleRegister = () => {
