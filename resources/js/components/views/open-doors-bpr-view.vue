@@ -81,7 +81,7 @@
             });
 
             ndef.addEventListener("reading", async ({ message, serialNumber }) => {
-                const tagId = parseInt(serialNumber.split(" ").reverse().join(""), 16);
+                const tagId = parseInt(serialNumber.split(":").reverse().join(""), 16);
                 tag16.value = serialNumber;
                 tag10.value = tagId;
                 await visit(tagId);
