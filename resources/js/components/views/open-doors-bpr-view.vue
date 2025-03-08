@@ -23,6 +23,12 @@
                     </v-card>
                 </v-window-item>
                 <v-window-item>
+                    <div>
+                        {{ tag16 }}
+                    </div>
+                    <div>
+                        {{ tag10 }}
+                    </div>
                     <v-btn style="width:200px" color="primary" :loading="isLoading" @click="scanTag" v-if="window==1">
                         Scan
                     </v-btn>
@@ -44,6 +50,9 @@
     const { visitor, isLoading } = storeToRefs(openDoorStore);
 
     const window = ref(1);
+
+    const tag16 = ref('');
+    const tag10 = ref('');
 
     const leds = ref([false, false, false]);
     const errorLed = ref(false);
@@ -73,6 +82,8 @@
 
             ndef.addEventListener("reading", async ({ message, serialNumber }) => {
                 const tagId = parseInt(serialNumber.split(" ").reverse().join(""), 16);
+                tag16.value = serialNumber;
+                tag10.value = tagId;
                 await visit(tagId);
                 if(visitor.value.name){
                     window.value = 2;
