@@ -69,6 +69,10 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/addStudents', [AdminController::class, 'addStudents']);
     Route::post('/admin/findStudentsByTag', [AdminController::class, 'findStudentsByTag']);
     Route::patch('/admin/users/{user}/tag', [AdminController::class, 'attributeTag']);
+
+    Route::get('/admin/visits/toReview', [VisitController::class, 'toReview']);
+    Route::get('/admin/visits/match', [VisitController::class, 'findMatch']);
+    Route::post('/admin/visits/{visit}/confirmMatch/{user}', [VisitController::class, 'confirmMatch']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -258,3 +262,10 @@ Route::group(['middleware'=>['can:delete,email']], function(){
 
 Route::post('/opendoors/visit', [VisitController::class, 'store']);
 Route::post('/opendoors/{visit}/register', [VisitController::class, 'register']);
+Route::group(['middleware'=>['role:teacher']], function(){
+    Route::get('/visits/recent', [VisitController::class, 'recent']);
+    Route::patch('/visits/{visit}/byEmail', [VisitController::class, 'updateByEmail']);
+    Route::patch('/visits/{visit}/byTagNb', [VisitController::class, 'updateByTagNb']);
+    Route::post('/visits/new', [VisitController::class, 'newVisit']);
+    Route::delete('/visits/{visit}', [VisitController::class, 'delete']);
+});

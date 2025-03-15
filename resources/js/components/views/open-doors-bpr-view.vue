@@ -7,7 +7,7 @@
             </div>
             <v-window v-model="window" direction="vertical">
                 <v-window-item>
-                    <v-card width="450" title="Please regsiter" subtitle="Unregistered card number" elevation="16">
+                    <v-card width="450" max-width="100%" title="Please regsiter" subtitle="Unregistered card number" elevation="16">
                         <v-card-text class="pb-0">
                             <v-text-field label="Email" variant="outlined" suffix="@g.lfis.edu.hk" v-model="visitor.email"/>
                         </v-card-text>
@@ -23,12 +23,6 @@
                     </v-card>
                 </v-window-item>
                 <v-window-item>
-                    <div>
-                        {{ tag16 }}
-                    </div>
-                    <div>
-                        {{ tag10 }}
-                    </div>
                     <v-btn style="width:200px" color="primary" :loading="isLoading" @click="scanTag" v-if="window==1">
                         Scan
                     </v-btn>

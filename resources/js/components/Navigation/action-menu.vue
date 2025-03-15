@@ -80,6 +80,13 @@
                     </div>
                 </v-card>
             </v-dialog>
+            <v-divider/>
+            <v-list-item @click="gotoOpenDoors" v-if="user.is.teacher">
+                <template v-slot:prepend>
+                    <v-icon icon="mdi-door-open"></v-icon>
+                </template>
+                <v-list-item-title>{{ $t("Open doors") }} (BPR)</v-list-item-title>
+            </v-list-item>
             <v-dialog v-model="myActivityDialog" width="80%" v-if="user.is.teacher">
                 <template v-slot:activator="{ props }">
                     <v-list-item v-bind="props" @click="showMyHours">
@@ -107,7 +114,7 @@
                             min-width="150"
                             :disabled="newWorkshopLoading"
                             color="error"
-                            @click="myHoursDialog = false"
+                            @click="myActivityDialog=false"
                         >
                             {{ $t('Close') }}
                         </v-btn>
@@ -193,6 +200,10 @@
 
     const gotoMyWorkshops = () => {
         router.push('/myWorkshops');
+    }
+
+    const gotoOpenDoors = () => {
+        router.push('/openDoorsBPR');
     }
 
     const myActivityDialog = ref(false);

@@ -21,10 +21,14 @@
                     <admin-posts-tabs />
                 </v-window-item>
                 <v-window-item value="users">
+                    <v-alert title="Account linked" :text="alert.text" :type="alert.type" v-if="alert" closable/>
                     <div class="d-flex mt-2 ga-3">
                         <v-text-field label="Search user" :loading="loading" variant="outlined" v-model="data" @keydown.enter="fetchUsers" />
                         <admin-assign-tagnb-dialog/>
                         <admin-add-students-dialog/>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <admin-visit-card v-for="visit in visits" :visit="visit" class="ma-2"/>
                     </div>
                     <div style="display:flex;flex-wrap:wrap;">
                         <admin-user-card v-for="user in users" class="ma-2" :key="user.id" :user="user" @userNameUpdated="fetchUsers" />
@@ -49,10 +53,18 @@
 <script setup>
     import { ref, reactive } from 'vue';
     import { useAuthStore } from '@/stores/useAuthStore';
+    import { useOpenDoorStore } from '@/stores/useOpenDoorStore';
+    import { storeToRefs } from 'pinia';
     import { useRouter } from 'vue-router';
 
     const authStore = useAuthStore();
     const { user } = authStore;
+
+    const openDoorStore = useOpenDoorStore();
+    const { getVisitsToReview, reviewVisit } = openDoorStore;
+    const { visits, alert } = storeToRefs(openDoorStore);
+
+    getVisitsToReview()
 
     if(user == null || !user.is.admin){
         const router = useRouter();

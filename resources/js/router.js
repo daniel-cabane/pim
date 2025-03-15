@@ -14,6 +14,7 @@ import Admin from "./components/views/admin-view.vue";
 import singleSurvey from "./components/views/singleSurvey-view.vue";
 import hod from "./components/views/hod-view.vue";
 import openDoorsBPR from "./components/views/open-doors-bpr-view.vue";
+import teacherOpenDoorsBPR from "./components/views/teacher-open-doors-bpr-view.vue";
 
 const routes = [
     {
@@ -90,6 +91,11 @@ const routes = [
         path: "/pobpr",
         name: "Open Doors BPR",
         component: openDoorsBPR,
+    },
+    {
+        path: "/openDoorsBPR",
+        name: "Open Doors BPR",
+        component: teacherOpenDoorsBPR,
     },
 ];
 
