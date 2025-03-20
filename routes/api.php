@@ -69,6 +69,7 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/addStudents', [AdminController::class, 'addStudents']);
     Route::post('/admin/findStudentsByTag', [AdminController::class, 'findStudentsByTag']);
     Route::patch('/admin/users/{user}/tag', [AdminController::class, 'attributeTag']);
+    Route::patch('/admin/users/massAttributeTag', [AdminController::class, 'massAttributeTag']);
 
     Route::get('/admin/visits/toReview', [VisitController::class, 'toReview']);
     Route::get('/admin/visits/match', [VisitController::class, 'findMatch']);

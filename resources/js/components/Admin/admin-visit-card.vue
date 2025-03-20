@@ -8,7 +8,8 @@
             <v-text-field density="compact" hide-details class="mb-3" label="Email" variant="outlined" v-model="email"/>
             <v-text-field density="compact" hide-details class="mb-3" :label="$t('Name')" variant="outlined" v-model="name"/>
         </div>
-        <div class="d-flex justify-end" v-if="matches.length == 0">
+        <div class="d-flex justify-space-between align-center" v-if="matches.length == 0">
+            <v-icon icon="mdi-delete" color="error" @click="deleteVisit(visit.id)"/>
             <v-btn size="x-small" color="primary" :disabled="isLoading" :text="$t('Find match')" @click="handleFindMatch({email, name})"/>
         </div>
         <div v-else>
@@ -35,7 +36,7 @@
     import { storeToRefs } from 'pinia';
 
     const openDoorStore = useOpenDoorStore();
-    const { findMatch, confirmMatch } = openDoorStore;
+    const { findMatch, confirmMatch, deleteVisit } = openDoorStore;
     const { isLoading } = storeToRefs(openDoorStore);
 
     const props = defineProps({ visit: Object });
