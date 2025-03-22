@@ -9,7 +9,8 @@ export const useHodStore = defineStore({
         isReady: false,
         workshops: [],
         teachers: [],
-        terms: []
+        terms: [],
+        missions: []
     }),
     actions: {
         async hodIndex() {
@@ -20,9 +21,30 @@ export const useHodStore = defineStore({
             this.isReady = true;
         },
         async updateTeachersHours() {
-            this.isLoading = true;
             await post(`/api/hod/teacherHours`, { teachers: this.teachers.map(t => ({ id: t.id, hours: t.preferences.hoursDuePerWeek }))});
-            this.isLoading = false;
+        },
+        async getMissions() {
+            const res = await get('/api/hod/missions');
+            console.log(res.missions);
+            this.missions = res.missions;
+        },
+        async addMission(data) {
+            const res = await post('/api/hod/mission', data);
+            if(res && res.mission){
+                this.missions.push(res.mission);
+                return true;
+            }
+            return false;
+        },
+        async deleteMission(id) {
+            const res = await del(`/api/hod/missions/${id}`);
+            this.missions = this.missions.filter(m => m.id != id);
+            return true;
+        },
+        async updateMission(mission) {
+            const res = await patch(`/api/hod/missions/${mission.id}`, mission);
+            this.missions = this.missions.filter(m => m.id == res.mission.id ? res.mission : m);
+            return true;
         }
     },
     getters: {

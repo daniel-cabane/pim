@@ -96,6 +96,10 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
 Route::group(['middleware'=>['role:admin|hod']], function(){
     Route::get('/hod/index/', [HodController::class, 'index']);
     Route::post('/hod/teacherHours/', [HodController::class, 'teacherHours']);
+    Route::get('/hod/missions/', [HodController::class, 'missionIndex']);
+    Route::post('/hod/mission/', [HodController::class, 'addMission']);
+    Route::patch('/hod/missions/{mission}', [HodController::class, 'updateMission']);
+    Route::delete('/hod/missions/{mission}', [HodController::class, 'deleteMission']);
 });
 
 /*

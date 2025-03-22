@@ -97,11 +97,13 @@
                     </v-list-item>
                 </template>
                 <v-card :loading="activityLoading">
-                    <v-card-title>
+                    <v-card-title class="d-flex">
                         {{ $t("My hours") }}
                         <span>
                             ({{ user.preferences.hoursDuePerWeek }}h {{ $t('per week') }})
                         </span>
+                        <v-spacer/>
+                        <teacher-activity-legend/>
                     </v-card-title>
                     <v-card-text>
                         <teacher-activity :teacher="user" class="mt-8"/>

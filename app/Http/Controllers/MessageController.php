@@ -17,6 +17,11 @@ class MessageController extends Controller
             'body' => $msg
         ]);
 
-        return response()->json(['message' => 'Message sent']);
+        return response()->json([
+            'message' => [
+                'text' => 'Message sent',
+                'type' => 'success'
+            ]
+        ]);
     }
 }

@@ -3,27 +3,7 @@
         <v-tabs v-model="tab">
             <v-tab value="workshops">{{ $t('Workshops') }}</v-tab>
             <v-tab value="teachers">{{ $t('Teachers') }}</v-tab>
-            <v-spacer/>
-            <v-btn color="primary" :text="$t('Hours due per week')" class="mt-3" density="comfortable" @click="hoursDialog = true"/>
-            <v-dialog width="400" v-model="hoursDialog">
-                <v-card :title="$t('Hours due per week')">
-                    <v-card-text class="d-flex flex-wrap" style="gap:0 20px;">
-                        <v-text-field 
-                            variant="outlined"
-                            style="min-width:150px;"
-                            v-for="teacher in teachers"
-                            :key="teacher.id"
-                            :label="teacher.name"
-                            v-model="teacher.preferences.hoursDuePerWeek"
-                        />
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer/>
-                        <v-btn :text="$t('Close')" variant="tonal" color="error" :disabled="isLoading" @click="hoursDialog = false;"/>
-                        <v-btn :text="$t('Confirm')" variant="flat" color="primary" :loading="isLoading" @click="updateTeachersHours"/>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+            <v-tab value="missions">Missions</v-tab>            
         </v-tabs>
         <div class="pa-4" v-if="isReady">
             <v-window v-model="tab">
@@ -49,10 +29,39 @@
                     </div>
                 </v-window-item>
                 <v-window-item value="teachers">
+                    <div class="d-flex justify-space-between mb-4">
+                        <v-dialog width="400" v-model="hoursDialog">
+                            <template v-slot:activator="{ props: activatorProps }">
+                                <v-btn color="primary" :text="$t('Hours due per week')" class="mt-3" density="comfortable" v-bind="activatorProps"/>
+                            </template>
+                            <v-card :title="$t('Hours due per week')">
+                                <v-card-text class="d-flex flex-wrap" style="gap:0 20px;">
+                                    <v-text-field 
+                                        variant="outlined"
+                                        style="min-width:150px;"
+                                        v-for="teacher in teachers"
+                                        :key="teacher.id"
+                                        :label="teacher.name"
+                                        v-model="teacher.preferences.hoursDuePerWeek"
+                                    />
+                                    
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer/>
+                                    <v-btn :text="$t('Close')" variant="tonal" color="error" :disabled="isLoading" @click="hoursDialog = false;"/>
+                                    <v-btn :text="$t('Confirm')" variant="flat" color="primary" :loading="isLoading" @click="updateTeachersHours"/>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <teacher-activity-legend/>
+                    </div>
                     <div v-for="teacher in teachers">
                         <teacher-activity :teacher="teacher" showName/>
                         <v-divider class="my-4"/>
                     </div>
+                </v-window-item>
+                <v-window-item value="missions">
+                    <missions-table/>
                 </v-window-item>
             </v-window>
         </div>
@@ -64,9 +73,6 @@
     import { useHodStore } from '@/stores/useHodStore';
     import { storeToRefs } from 'pinia';
     import { useRouter } from 'vue-router';
-    import { useI18n } from 'vue-i18n';
-
-    const { t } = useI18n();
 
     const { user } = useAuthStore();
     

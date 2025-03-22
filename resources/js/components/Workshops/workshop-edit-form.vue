@@ -53,7 +53,7 @@
                     <div style='position:relative'>
                         <div class="d-block d-sm-flex align-center" style="gap:5px;">
                             <v-select v-model="workshop.themes" :items="availableThemes" :label="$t('Themes')" multiple chips variant="outlined" />
-                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin" label="Teacher" variant="outlined" />
+                            <v-select v-model="workshop.teacherId" :items="teachersOptions" :disabled="!user.is.admin" :label="$t('Teacher')" variant="outlined" />
                         </div>
                         <div class="d-block d-sm-flex align-center" style="gap:25px;">
                             <v-select :label="$t('Levels')" variant="outlined" :items="levels" multiple chips v-model="workshop.details.levels" />

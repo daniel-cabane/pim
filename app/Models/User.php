@@ -193,7 +193,11 @@ class User extends Authenticatable implements MustVerifyEmail
       $firstTerm = Term::where('nb', 1)->first();
       $lastTerm = Term::where('nb', 3)->first();
       $startOfWeek = (Carbon::parse($firstTerm->start_date))->addWeek(2)->startOfWeek();
-      $hours = ['past' => 0, 'future' => 0];
+      $missionHours = 0;
+      foreach(Mission::where('teacher_id', $this->id)->get() as $mission){
+        $missionHours += $mission->lesson_hours + 0.5*$mission->prep_hours;
+      }
+      $hours = ['past' => 0, 'future' => 0, 'mission' => $missionHours];
       $openDoorSessions = OpenDoor::where('teacher_id', $this->id)->orderBy('date')->get();
       foreach($openDoorSessions as $session){
         $isPast = (Carbon::parse($session->date))->isPast();
