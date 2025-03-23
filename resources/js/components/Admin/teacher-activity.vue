@@ -56,8 +56,13 @@
                 <div class="nowDivider" :style="`left:${hours.ratio}%`" v-if="hours.ratio"/>
             </div>
         </div>
-        <div class="d-flex justify-center text-subheading text-captionColor">
-            {{ hours.past + hours.future + hours.mission }}/{{ hours.total }}h
+        <div class="d-flex justify-center text-captionColor text-h6">
+            <span v-if="hours.total">
+                {{ hours.past + hours.future + hours.mission }}/{{ hours.total }}h
+            </span>
+            <span v-else>
+                {{ $t('No hours due') }}
+            </span>
         </div>
     </div>
 </template>

@@ -23,7 +23,7 @@
                     <template v-slot:prepend>
                         <v-icon icon="mdi-account-supervisor-circle-outline"></v-icon>
                     </template>
-                    <v-list-item-title>HoD</v-list-item-title>
+                    <v-list-item-title>{{ $t('HoD') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="logout">
                     <template v-slot:prepend>
