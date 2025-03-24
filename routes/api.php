@@ -74,6 +74,8 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/visits/toReview', [VisitController::class, 'toReview']);
     Route::get('/admin/visits/match', [VisitController::class, 'findMatch']);
     Route::post('/admin/visits/{visit}/confirmMatch/{user}', [VisitController::class, 'confirmMatch']);
+
+    Route::get('/admin/lostStudents', [AdminController::class, 'lostStudents']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){

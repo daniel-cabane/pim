@@ -638,6 +638,7 @@ class AdminController extends Controller
                         'language' => substr($attrs['level'], 0, 1) == 'Y' ? 'en' : 'fr'
                         ]
                 ]);
+                $user->assignRole('student');
                 $nbStudentsAdded++;
             }
         }
@@ -707,6 +708,41 @@ class AdminController extends Controller
             'data' => $data,
             'message' => [
                     'text' => 'Tags attributed',
+                    'type' => 'success'
+                ]
+            ]);
+    }
+
+    public function lostStudents()
+    {
+        $users = [];
+        foreach(User::where('email', 'like', '%@g.lfis.edu.hk')->get() as $user){
+            if(!$user->hasRole('student') && !$user->hasRole('teacher')){
+                $identifier = explode("@", $user->email)[0];
+                if(is_numeric(substr($identifier, -1))){
+                    $user->assignRole('student');
+                    $users[] = $user->email;
+                }
+            }
+        }
+
+        return response()->json([
+            'users' => $users,
+            'message' => [
+                    'text' => 'Saul Goodman',
+                    'type' => 'success'
+                ]
+            ]);
+    }
+
+    public function registerStudents(Request $request)
+    {
+        $data = ($request->validate(['data' => 'required|array']))['data'];
+
+        return response()->json([
+            'data' => $data,
+            'message' => [
+                    'text' => 'Saul Goodman',
                     'type' => 'success'
                 ]
             ]);

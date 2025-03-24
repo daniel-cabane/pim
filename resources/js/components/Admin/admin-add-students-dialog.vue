@@ -43,6 +43,7 @@
                 </v-dialog>
             </v-card-text>
             <v-card-actions>
+                <v-btn icon="mdi-account-school" color="warning" @click="lostStudents"/>
                 <v-spacer/>
                 <v-btn variant="tonal" color="error" :text="$t('Close')" :disabled="isLoading" @click="isActive.value = false"/>
                 <v-btn variant="elevated" color="primary" :text="$t('Submit')" :loading="isLoading" @click="proceedAddStudents"/>
@@ -57,7 +58,7 @@
     import { storeToRefs } from 'pinia';
 
     const userStore = useUserStore();
-    const { addStudents } = userStore;
+    const { addStudents, lostStudents } = userStore;
     const { isLoading } = storeToRefs(userStore);
 
     const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
