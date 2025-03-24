@@ -719,6 +719,7 @@ class AdminController extends Controller
         foreach(User::where('email', 'like', '%@g.lfis.edu.hk')->get() as $user){
             if(!$user->hasRole('student') && !$user->hasRole('teacher')){
                 $identifier = explode("@", $user->email)[0];
+                logger($identifier);
                 if(is_numeric(substr($identifier, -1))){
                     $user->assignRole('student');
                     $users[] = $user->email;

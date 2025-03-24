@@ -110,8 +110,8 @@ export const useAuthStore = defineStore({
             this.loading = true;
             try {
                 const res = await axios.post('/api/adminmsg', { msg: msg });
-                this.loading = false;
-                addNotification({ text: res.data.message, type: 'success' });
+                addNotification({ text: res.data.message.text, type: res.data.message.type });
+                return true;
             } catch (err) {
                 addNotification({ text: err.response.data.message, type: 'error' });
                 this.loading = false;

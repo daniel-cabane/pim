@@ -69,6 +69,7 @@
                                     label="Message" v-model="messageToPim"
                                     :disabled="applyLoading || withdrawLoading" 
                                     :resize="false"
+                                    :error-messages="textAreaErrorMessage"
                                 />
                             </v-card-text>
                             <v-card-actions>
@@ -109,7 +110,7 @@
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
-    const { locale } = useI18n();
+    const { locale, t } = useI18n();
     
     const workshopStore = useWorkshopStore();
     const { getWorkshop, applyWorkshop, withdrawWorkshop } = workshopStore;
@@ -147,11 +148,17 @@
 
     const messageToPim = ref('');
     const messageSending = ref(false);
+    const textAreaErrorMessage = ref(null);
     const sendMessageToPim = async () => {
-        messageSending.value = true;
-        await msgToAdmin(`About ${workshop.value.mainTitle} : ${messageToPim.value}`);
-        messageSending.value = false;
-        messageToPim.value = '';
-        showApplication.value = false;
+        if(messageToPim.value.length == 0){
+            textAreaErrorMessage.value = t('Please enter a message')
+        } else {
+            textAreaErrorMessage.value = null;
+            messageSending.value = true;
+            const res = await msgToAdmin(`About ${workshop.value.mainTitle} : ${messageToPim.value}`);
+            messageSending.value = false;
+            messageToPim.value = '';
+            showApplication.value = false;
+        }
     }
 </script>
