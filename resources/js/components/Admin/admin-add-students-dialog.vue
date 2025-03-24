@@ -43,7 +43,7 @@
                 </v-dialog>
             </v-card-text>
             <v-card-actions>
-                <v-btn icon="mdi-account-school" color="warning" @click="lostStudents"/>
+                <!-- <v-btn icon="mdi-account-school" color="warning" @click="lostStudents"/> -->
                 <v-spacer/>
                 <v-btn variant="tonal" color="error" :text="$t('Close')" :disabled="isLoading" @click="isActive.value = false"/>
                 <v-btn variant="elevated" color="primary" :text="$t('Submit')" :loading="isLoading" @click="proceedAddStudents"/>
