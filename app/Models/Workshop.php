@@ -220,7 +220,7 @@ class Workshop extends Model
                   });
     }
 
-    public function sendApplicationEmail()
+    public function sendApplicationEmail($email)
     {
       $details = json_decode($this->details);
       $nbSessions = $details->nbSessions;
@@ -267,7 +267,7 @@ class Workshop extends Model
                 'text_en' => '',
                 'url' => ''
               ],
-              'to' => (auth()->user())->email,
+              'to' => $email,
               'cc' => $this->organiser->email
           ],
           'sender_id' => 1,

@@ -94,7 +94,7 @@ const routes = [
     },
     {
         path: "/openDoorsBPR",
-        name: "Open Doors BPR",
+        name: "Teacher Open Doors BPR",
         component: teacherOpenDoorsBPR,
     },
 ];

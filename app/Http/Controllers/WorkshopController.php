@@ -316,7 +316,8 @@ class WorkshopController extends Controller
 
         $workshop->applicants()->attach(auth()->id(), ['available' => $attrs['availability'], 'comment' => $attrs['comment']]);
 
-        $workshop->sendApplicationEmail();
+        $user = auth()->user();
+        $workshop->sendApplicationEmail($user->email);
 
         return response()->json([
             'workshop' => $workshop->format(),
@@ -496,7 +497,7 @@ class WorkshopController extends Controller
                     'id' => $student->id,
                     'name' => $student->name,
                     'email' => $student->email,
-                    'available' => false,
+                    'available' => true,
                     'confirmed' => false
                 ];
             }
@@ -517,6 +518,10 @@ class WorkshopController extends Controller
         $workshop->applicants()->detach($attrs['id']);
 
         $workshop->applicants()->attach($attrs['id'], ['available' => $attrs['available'], 'confirmed' => $attrs['confirmed'], 'comment' => '']);
+
+        $user = User::find($attrs['id']);
+        $workshop->sendApplicationEmail($user->email);
+
         return response()->json([
             'workshop' => $workshop->format(),
             'message' => [

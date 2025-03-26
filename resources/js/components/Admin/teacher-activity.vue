@@ -51,7 +51,7 @@
                         {{ $t('Future') }}
                     </span>
                 </div>
-                <div class="hoursDone" :style="`flex:${hours.total - (hours.past+hours.future)}`">
+                <div class="hoursDone" :style="`flex:${hours.total - (hours.past+hours.future+hours.mission)}`">
                 </div>
                 <div class="nowDivider" :style="`left:${hours.ratio}%`" v-if="hours.ratio"/>
             </div>
