@@ -150,6 +150,12 @@ class UserController extends Controller
       }
     }
 
+    if($user->avatar){
+      $preferences = $user->preferences;
+      $preferences->avatar = $user->avatar;
+      $user->update(['preferences' => $preferences]);
+    }
+
     Auth::login($user);
 
     if(session('route')){

@@ -466,5 +466,7 @@
     "Legend": "Légende",
     "HoD": "RDD",
     "No hours due": "Aucune heure due",
-    "Please enter a message": "Merci de saisir un message"
+    "Please enter a message": "Merci de saisir un message",
+    "Please regsiter": "Merci de vous enregistrer",
+    "Unregistered card number": "Numéro de carte inconnu"
 }
