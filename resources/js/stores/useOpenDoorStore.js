@@ -20,6 +20,7 @@ export const useOpenDoorStore = defineStore({
             const res = await post(`/api/opendoors/${this.visitor.visitId}/register`, this.visitor);
         },
         async getRecentVisits() {
+            console.log('Getting visits');
             const res = await get('/api/visits/recent');
             // console.log(res.visits);
             this.visits = res.visits;

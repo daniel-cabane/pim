@@ -150,7 +150,6 @@ class UserController extends Controller
       }
     }
 
-    logger($google_user->avatar);
     if($google_user->avatar){
       $preferences = $user->preferences;
       $preferences->avatar = $google_user->avatar;

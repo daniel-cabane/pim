@@ -29,8 +29,8 @@ class Visit extends Model
           'id' => $this->user_id,
           'email' => $this->user->email,
           'name' => $this->user->name,
-          'level' => $this->user->level,
-          'section' => $this->user->section
+          'level' => $this->user->level ? $this->user->level : '-',
+          'section' => $this->user->section ? $this->user->section : '-'
         ];
       }
       $session = null;

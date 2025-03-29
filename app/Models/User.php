@@ -122,7 +122,9 @@ class User extends Authenticatable implements MustVerifyEmail
         foreach($nameParts as $namePart){
           $name .= substr($namePart,0,1).".";
         }
-        $name .= " ($this->level$this->section)";
+        $level = $this->level ? $this->level : '-';
+        $section = $this->section ? $this->section : '-';
+        $name .= " ($level$section)";
       }
 
       return $name;

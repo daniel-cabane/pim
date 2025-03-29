@@ -4,9 +4,12 @@
             <span class="text-h5 text-grey">
                 {{ $t('π room open doors') }}
             </span>
-            <v-btn color="primary" @click="showAddDialog" :disabled="isLoading">
-                {{ $t('Add visit') }}
-            </v-btn>
+            <span>
+                <v-btn color="primary" @click="showAddDialog">
+                    {{ $t('Add visit') }}
+                </v-btn>
+                <v-btn class="ml-2" variant="flat" icon="mdi-refresh" :loading="isLoading" @click="getRecentVisits"/>
+            </span>
         </div>
         <v-data-table :items="visits" :headers="headers" :items-per-page="25" :items-per-page-options="ippo">
             <template v-slot:item="{ item }">
@@ -16,8 +19,8 @@
                     <td>{{ item.user.name ? `${item.user.name} (${item.user.level}${item.user.section})` : '--' }}</td>
                     <td>{{ item.session ? item.session.teacher.name : '--' }}</td>
                     <td>
-                        <v-icon color="primary" icon="mdi-pencil" class="mr-3" :disabled="isLoading" @click="showEditDialog(item)"/>
-                        <v-icon color="error" icon="mdi-delete" :disabled="isLoading" @click="showDeleteDialog(item)"/>
+                        <v-icon color="primary" icon="mdi-pencil" class="mr-3" @click="showEditDialog(item)"/>
+                        <v-icon color="error" icon="mdi-delete" @click="showDeleteDialog(item)"/>
                         <v-chip size="x-small" :text="$t('Edited')" class="ml-3" color="success" variant="flat" v-if="item.data && item.data.edited"/>
                     </td>
                 </tr>
@@ -88,7 +91,7 @@
     </v-container>
 </template>
 <script setup>
-    import { ref } from "vue";
+    import { ref, onMounted, onBeforeUnmount } from "vue";
     import { useOpenDoorStore } from '@/stores/useOpenDoorStore';
     import { storeToRefs } from 'pinia';
     import { useI18n } from 'vue-i18n';
@@ -100,6 +103,14 @@
     const { visits, isLoading } = storeToRefs(openDoorStore);
 
     getRecentVisits();
+    const intervalId = ref(null);
+    onMounted(() => {
+        intervalId.value = setInterval(getRecentVisits, 5000); // 5000 milliseconds = 5 seconds
+    });
+
+    onBeforeUnmount(() => {
+        clearInterval(intervalId.value);
+    });
 
     const headers = ref([
         { title: 'Date and time', key: 'dateTime', align: 'start'},
