@@ -2,12 +2,13 @@
     <v-container>
         <div class="fullscreen">
             <div style="position:absolute;top:0px;left:0px;">
-                <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
-                <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/>
+                <!-- <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
+                <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/> -->
+                <v-icon icon="mdi-circle" :color="ledColor"/>
             </div>
-            <v-window class="pa-3" v-model="window" direction="vertical">
+            <v-window class="pa-3 pt-15 mt-10" v-model="window" direction="vertical">
                 <v-window-item>
-                    <v-card class="elevation-0 mt-10" style="margin:auto" width="350" max-width="95%" :title="$t('Please regsiter')" :subtitle="$t('Unregistered card number')" elevation="16">
+                    <v-card class="elevation-0" style="margin:auto" width="350" max-width="95%" :title="$t('Please regsiter')" :subtitle="$t('Unregistered card number')" elevation="16">
                         <v-card-text class="pb-0">
                             <v-text-field label="Email" variant="outlined" suffix="@g.lfis.edu.hk" v-model="visitor.email"/>
                         </v-card-text>
@@ -23,25 +24,23 @@
                     </v-card>
                 </v-window-item>
                 <v-window-item>
-                    <div class="mt-10" v-if="leds[1]">
+                    <div v-if="reading">
                         <div class="text-h5 d-flex align-center">
                             <v-spacer/>
                             <div class="d-flex flex-column align-center" style="white-space:nowrap;">
-                                <v-icon size="x-large" icon="mdi-numeric-2-circle-outline"/>
                                 {{ $t('Scan badge behind') }}
                             </div>
-                            <div class="arrowed mb-2">
-                                <div class="arrow"/>
+                            <div class="arrowed" style="margin-left:-15px;margin-right:-10px;">
+                                <div class="arrow" :class="theme.global.name.value == 'customDark' ? '' : 'inverted'"/>
                             </div>
                         </div>
                     </div>
-                    <div class="text-h5 d-flex flex-column align-center justify-center mt-10" v-else>
-                        <v-icon size="x-large" icon="mdi-numeric-1-circle-outline"/>
+                    <div class="text-h5 d-flex flex-column align-center justify-center" v-else>
                         <div>
                             {{ $t('Press Button') }}
                         </div>
                         <div class="arrowed mb-2" style="transform: rotate(90deg);">
-                            <div class="arrow"/>
+                            <div class="arrow" :class="theme.global.name.value == 'customDark' ? '' : 'inverted'"/>
                         </div>
                         <v-btn style="width:200px" color="primary" :loading="isLoading" @click="scanTag" v-if="window==1">
                             Scan
@@ -56,21 +55,33 @@
     </v-container>
 </template>
 <script setup>
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
     import { useOpenDoorStore } from '@/stores/useOpenDoorStore';
     import { storeToRefs } from 'pinia';
+    import { useTheme } from 'vuetify';
+
+    const theme = useTheme();
 
     const openDoorStore = useOpenDoorStore();
     const { visit, register } = openDoorStore;
     const { visitor, isLoading } = storeToRefs(openDoorStore);
 
     const window = ref(1);
+    const ndef = ref(null);
+    const error = ref(null);
+    const reading = computed(() => {
+        return ndef.value != null;
+    });
+    const ledColor = computed(() => {
+        if(error.value){
+            return 'error';
+        }
+        if(reading.value){
+            return 'success';
+        }
+        return 'surface';
+    });
 
-    const tag16 = ref('');
-    const tag10 = ref('');
-
-    const leds = ref([false, false, false]);
-    const errorLed = ref(false);
 
     const scanTag = async () => {
         // leds.value = [false, false, false];
@@ -87,18 +98,15 @@
         // }
 
         try {
-            const ndef = new NDEFReader();
-            leds[1] = true;
-            await ndef.scan();
+            ndef.value = new NDEFReader();
+            await ndef.value.scan();
 
-            ndef.addEventListener("readingerror", () => {
+            ndef.value.addEventListener("readingerror", () => {
                 error.value = "Tag unreadable for some reason...";
             });
 
             ndef.addEventListener("reading", async ({ message, serialNumber }) => {
                 const tagId = parseInt(serialNumber.split(":").reverse().join(""), 16);
-                tag16.value = serialNumber;
-                tag10.value = tagId;
                 await visit(tagId);
                 if(visitor.value.name){
                     window.value = 2;
@@ -106,16 +114,14 @@
                 } else {
                     window.value = 0;
                 }
-                leds[2] = true;
             });
         } catch (err) {
-            errorLed.value = true;
+            error.value = err;
             console.error(err);
         }
     }
 
     const init = () => {
-        leds.value = [false, false, false];
         window.value = 1;
     }
 
@@ -139,7 +145,6 @@
         height: 80px; width: 80px;
     }
 
-    /* Just centering the examples */
     .arrowed div {
         position: absolute;
         top: 0; bottom: 0; left: 0; right: 0;
@@ -172,5 +177,8 @@
         border-width: 3px 3px 0 0;
         /* top - distance plus border */
         top: -13px; left: 10px;
+    }
+    .inverted {
+        filter: invert(100%);
     }
 </style>
