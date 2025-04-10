@@ -5,6 +5,7 @@
                 <!-- <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
                 <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/> -->
                 <v-icon icon="mdi-circle" :color="ledColor"/>
+                {{ error }}
             </div>
             <v-window class="pa-3 pt-15 mt-10" v-model="window" direction="vertical">
                 <v-window-item>
