@@ -106,7 +106,7 @@
                 error.value = "Tag unreadable for some reason...";
             });
 
-            ndef.addEventListener("reading", async ({ message, serialNumber }) => {
+            ndef.value.addEventListener("reading", async ({ message, serialNumber }) => {
                 const tagId = parseInt(serialNumber.split(":").reverse().join(""), 16);
                 await visit(tagId);
                 if(visitor.value.name){
