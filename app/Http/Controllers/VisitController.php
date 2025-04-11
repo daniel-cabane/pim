@@ -13,11 +13,9 @@ class VisitController extends Controller
     public function store(Request $request)
     {
         $tagNb = intval($request->validate(['tagNb' => 'required|min:4|max:255'])['tagNb']);
-        logger("\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/");
-        logger($tagNb);
         $user = User::where('two_factor_secret', $tagNb)->first();
         $currentDateTime = Carbon::now();
-        $currentSession = openDoor::whereDate('date', $currentDateTime->toDateString())
+        $currentSession = OpenDoor::whereDate('date', $currentDateTime->toDateString())
             ->where('roomNb', 'π (314 BPR)')
             ->whereTime('start', '<=', $currentDateTime->toTimeString())
             ->whereTime('finish', '>=', $currentDateTime->toTimeString())
@@ -28,7 +26,6 @@ class VisitController extends Controller
             'user_id' => $user ? $user->id : null,
             'open_door_id' => $currentSession ? $currentSession->id : null,
         ]);
-        logger($visit);
 
         return response()->json([
             'visitId' => $visit->id,
@@ -41,8 +38,6 @@ class VisitController extends Controller
         $email = $request->validate(['email' => 'required|min:2|max:255'])['email'];
         
         $visit->update(['data' => json_encode(['email' => "$email@g.lfis.edu.hk"])]);
-        logger("|||||||||||||||||||||||||||||||||||||||||||");
-        logger($visit);
 
         return response()->json(['message' => [ 'text' => 'Thank you for registering', 'type' => 'success']]);
     }
@@ -100,7 +95,7 @@ class VisitController extends Controller
             'tagNb' => 'sometimes|min:6|max:30'
         ]);
         $currentDateTime = Carbon::now();
-        $currentSession = openDoor::whereDate('date', $currentDateTime->toDateString())
+        $currentSession = OpenDoor::whereDate('date', $currentDateTime->toDateString())
             ->where('roomNb', 'π (314 BPR)')
             ->whereTime('start', '<=', $currentDateTime->toTimeString())
             ->whereTime('finish', '>=', $currentDateTime->toTimeString())
@@ -142,7 +137,6 @@ class VisitController extends Controller
 
     public function findMatch(Request $request)
     {
-        logger($request);
         $attrs = $request->validate([
             'email' => 'sometimes|max:100',
             'name' => 'sometimes|max:100'

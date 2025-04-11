@@ -18,7 +18,7 @@ class Visit extends Model
 
     public function openDoor()
     {
-      return $this->belongsTo(openDoor::class);
+      return $this->belongsTo(OpenDoor::class);
     }
 
     public function format()
