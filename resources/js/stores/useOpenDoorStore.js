@@ -20,9 +20,7 @@ export const useOpenDoorStore = defineStore({
             const res = await post(`/api/opendoors/${this.visitor.visitId}/register`, this.visitor);
         },
         async getRecentVisits() {
-            console.log('Getting visits');
             const res = await get('/api/visits/recent');
-            // console.log(res.visits);
             this.visits = res.visits;
         },
         async deleteVisit(id) {
@@ -59,5 +57,28 @@ export const useOpenDoorStore = defineStore({
         isLoading: () => {
             return isLoading.value;
         },
+        visitsBySession: (state) => {
+            const groupedVisits = state.visits.reduce((acc, visit) => {
+                if(visit.session){
+                    const key = visit.session.id;
+                    if (!acc[key]) {
+                        acc[key] = [];
+                    }
+                    acc[key].push(visit);
+                }
+                return acc;
+            }, {});
+
+            for(const key in groupedVisits) {
+                groupedVisits[key].sort((a, b) => {
+                    if (a.session.date === b.session.date) {
+                        return a.session.start.localeCompare(b.session.start);
+                    }
+                    return a.session.date.localeCompare(b.session.date);
+                });
+            }
+
+            return groupedVisits;
+        }
     }
 });

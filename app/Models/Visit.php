@@ -29,6 +29,7 @@ class Visit extends Model
           'id' => $this->user_id,
           'email' => $this->user->email,
           'name' => $this->user->name,
+          'avatar' => isset($this->user->preferences->avatar) ? $this->user->preferences->avatar : '/images/default avatar.png',
           'level' => $this->user->level ? $this->user->level : '-',
           'section' => $this->user->section ? $this->user->section : '-'
         ];
@@ -38,6 +39,7 @@ class Visit extends Model
         $teacher = $this->openDoor->teacher;
         $session = [
           'id' => $this->open_door_id,
+          'date' => $this->openDoor->date,
           'start' => $this->openDoor->start,
           'finish' => $this->openDoor->finish,
           'teacher' => [

@@ -11,21 +11,35 @@
                 <v-btn class="ml-2" variant="flat" icon="mdi-refresh" :loading="isLoading" @click="getRecentVisits"/>
             </span>
         </div>
-        <v-data-table :items="visits" :headers="headers" :items-per-page="25" :items-per-page-options="ippo">
-            <template v-slot:item="{ item }">
-                <tr>
-                    <td>{{ new Date(item.dateTime).toLocaleDateString(locale, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) }}</td>
-                    <td>{{ item.tagNb }}</td>
-                    <td>{{ item.user.name ? `${item.user.name} (${item.user.level}${item.user.section})` : '--' }}</td>
-                    <td>{{ item.session ? item.session.teacher.name : '--' }}</td>
-                    <td>
-                        <v-icon color="primary" icon="mdi-pencil" class="mr-3" @click="showEditDialog(item)"/>
-                        <v-icon color="error" icon="mdi-delete" @click="showDeleteDialog(item)"/>
-                        <v-chip size="x-small" :text="$t('Edited')" class="ml-3" color="success" variant="flat" v-if="item.data && item.data.edited"/>
-                    </td>
-                </tr>
-            </template>
-        </v-data-table>
+        <v-tabs v-model="tab" align-tabs="center" density="compact">
+            <v-tab :value="1">{{ $t('By session') }}</v-tab>
+            <v-tab :value="2">{{ $t('Chronological') }}</v-tab>
+        </v-tabs>
+        <v-tabs-window v-model="tab">
+            <v-tabs-window-item :value="1">
+                <session-visits v-for="visits in visitsBySession" :visits="visits"/>
+            </v-tabs-window-item>
+            <v-tabs-window-item :value="2">
+                <v-card flat class="pa-2">
+                    <v-text-field variant="outlined" :label="$t('Search')" v-model="search"/>
+                    <v-data-table :items="visits" :headers="headers" :items-per-page="25" :items-per-page-options="ippo" :search="search">
+                        <template v-slot:item="{ item }">
+                            <tr>
+                                <td>{{ new Date(item.dateTime).toLocaleDateString(locale, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) }}</td>
+                                <td>{{ item.tagNb }}</td>
+                                <td>{{ item.user.name ? `${item.user.name} (${item.user.level}${item.user.section})` : '--' }}</td>
+                                <td>{{ item.session ? item.session.teacher.name : '--' }}</td>
+                                <td>
+                                    <v-icon color="primary" icon="mdi-pencil" class="mr-3" @click="showEditDialog(item)"/>
+                                    <v-icon color="error" icon="mdi-delete" @click="showDeleteDialog(item)"/>
+                                    <v-chip size="x-small" :text="$t('Edited')" class="ml-3" color="success" variant="flat" v-if="item.data && item.data.edited"/>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </v-tabs-window-item>
+        </v-tabs-window>
 
         <v-dialog width="500" v-model="addDialog">
             <v-card :title="$t('Add visit')">
@@ -99,8 +113,8 @@
     const { locale } = useI18n();
 
     const openDoorStore = useOpenDoorStore();
-    const { getRecentVisits, deleteVisit, editVisitByEmail, editVisitByTagNb, newVisit } = openDoorStore;
-    const { visits, isLoading } = storeToRefs(openDoorStore);
+    const { getRecentVisits, getVisitsBySession, deleteVisit, editVisitByEmail, editVisitByTagNb, newVisit } = openDoorStore;
+    const { visits, visitsBySession, isLoading } = storeToRefs(openDoorStore);
 
     getRecentVisits();
     const intervalId = ref(null);
@@ -112,6 +126,9 @@
         clearInterval(intervalId.value);
     });
 
+    const tab = ref(1);
+
+    const search = ref('');
     const headers = ref([
         { title: 'Date and time', key: 'dateTime', align: 'start'},
         { title: 'Tag number', key: 'tagNb', align: 'start'},

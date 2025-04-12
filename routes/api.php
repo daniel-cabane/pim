@@ -271,6 +271,7 @@ Route::post('/opendoors/visit', [VisitController::class, 'store']);
 Route::post('/opendoors/{visit}/register', [VisitController::class, 'register']);
 Route::group(['middleware'=>['role:teacher']], function(){
     Route::get('/visits/recent', [VisitController::class, 'recent']);
+    // Route::get('/visits/bySession', [VisitController::class, 'bySession']);
     Route::patch('/visits/{visit}/byEmail', [VisitController::class, 'updateByEmail']);
     Route::patch('/visits/{visit}/byTagNb', [VisitController::class, 'updateByTagNb']);
     Route::post('/visits/new', [VisitController::class, 'newVisit']);

@@ -45,12 +45,19 @@ class VisitController extends Controller
     public function recent()
     {
         $visits = [];
-        foreach(Visit::orderByDesc('created_at')->take(50)->get() as $visit){
+        foreach(Visit::orderByDesc('created_at')->take(100)->get() as $visit){
             $visits[] = $visit->format();
         }
 
         return response()->json(['visits' => $visits]);
     }
+
+    // public function bySession()
+    // {
+    //     $visits = [];
+
+    //     return response()->json(['visits' => $visits]);
+    // }
 
     public function updateByEmail(Visit $visit, Request $request)
     {
