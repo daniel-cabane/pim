@@ -12,8 +12,8 @@ class VisitController extends Controller
 {
     public function store(Request $request)
     {
-        $tagNb = intval($request->validate(['tagNb' => 'required|min:4|max:255'])['tagNb']);
-        $user = User::where('two_factor_secret', $tagNb)->first();
+        $tagNb = intval($request->validate(['tagNb' => 'sometimes|max:50'])['tagNb']);
+        $user = $tagNb > 0 ? User::where('two_factor_secret', $tagNb)->first() : null;
         $currentDateTime = Carbon::now();
         $currentSession = OpenDoor::whereDate('date', $currentDateTime->toDateString())
             ->where('roomNb', 'π (314 BPR)')
@@ -35,9 +35,15 @@ class VisitController extends Controller
 
     public function register(Visit $visit, Request $request)
     {
-        $email = $request->validate(['email' => 'required|min:2|max:255'])['email'];
+        $email = $request->validate(['email' => 'required|min:2|max:255'])['email']."@g.lfis.edu.hk";
         
-        $visit->update(['data' => json_encode(['email' => "$email@g.lfis.edu.hk"])]);
+        $user = User::where('email', $email)->first();
+        if($user){
+            $visit->update(['user_id' => $user->id]);
+        } else {
+            $visit->update(['data' => json_encode(['email' => $email])]);
+        }
+
 
         return response()->json(['message' => [ 'text' => 'Thank you for registering', 'type' => 'success']]);
     }

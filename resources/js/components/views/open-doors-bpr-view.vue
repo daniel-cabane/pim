@@ -2,8 +2,6 @@
     <v-container>
         <div class="fullscreen">
             <div style="position:absolute;top:0px;left:0px;">
-                <!-- <v-icon icon="mdi-circle" v-for="led in leds" :color="led ? 'success' : 'surface'"/>
-                <v-icon icon="mdi-circle" :color="errorLed ? 'error' : 'surface'"/> -->
                 <v-icon icon="mdi-circle" :color="ledColor"/>
                 {{ error }}
             </div>
@@ -35,6 +33,9 @@
                                 <div class="arrow" :class="theme.global.name.value == 'customDark' ? '' : 'inverted'"/>
                             </div>
                         </div>
+                        <v-btn color="primary" variant="tonal" block class="mt-15" :loading="isLoading" @click="manualVisit">
+                            {{ $t('Manual registration') }}
+                        </v-btn>
                     </div>
                     <div class="text-h5 d-flex flex-column align-center justify-center" v-else>
                         <div>
@@ -99,6 +100,7 @@
         // }
 
         try {
+            // ndef.value = true;
             ndef.value = new NDEFReader();
             await ndef.value.scan();
 
@@ -122,8 +124,14 @@
         }
     }
 
+    const manualVisit = async () => {
+        await visit(0);
+        window.value = 0;
+    }
+
     const init = () => {
         window.value = 1;
+        error.value = '';
     }
 
     const handleRegister = () => {
