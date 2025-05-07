@@ -5,7 +5,7 @@
                 <v-icon icon="mdi-circle" :color="ledColor"/>
                 {{ error }}
             </div>
-            <v-window class="pa-3 pt-15 mt-10" v-model="window" direction="vertical">
+            <v-window class="pa-3 pt-15" v-model="window" direction="vertical">
                 <v-window-item>
                     <v-card class="elevation-0" style="margin:auto" width="350" max-width="95%" :title="$t('Please regsiter')" :subtitle="$t('Unregistered card number')" elevation="16">
                         <v-card-text class="pb-0">
@@ -68,6 +68,9 @@
     const { visit, register } = openDoorStore;
     const { visitor, isLoading } = storeToRefs(openDoorStore);
 
+    const tagSound = new Audio('sounds/tag registered.wav');
+    const manualSound = new Audio('sounds/manual registered.wav');
+
     const window = ref(1);
     const ndef = ref(null);
     const error = ref(null);
@@ -113,6 +116,7 @@
                 await visit(tagId);
                 if(visitor.value.name){
                     window.value = 2;
+                    tagSound.play();
                     setTimeout(init, 2000);
                 } else {
                     window.value = 0;
@@ -136,6 +140,7 @@
 
     const handleRegister = () => {
         register();
+        manualSound.play();
         init()
     }
 </script>
