@@ -5,7 +5,7 @@
                 <v-icon icon="mdi-circle" :color="ledColor"/>
                 {{ error }}
             </div>
-            <v-window class="pa-3 pt-15" v-model="window" direction="vertical">
+            <v-window class="pa-3 pt-10" v-model="window" direction="vertical">
                 <v-window-item>
                     <v-card class="elevation-0" style="margin:auto" width="350" max-width="95%" :title="$t('Please regsiter')" :subtitle="$t('Unregistered card number')" elevation="16">
                         <v-card-text class="pb-0">
@@ -13,7 +13,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-btn variant="tonal" color="error" @click="window=1">
-                                {{ $t('Skip') }}
+                                {{ $t('Cancel') }}
                             </v-btn>
                             <v-spacer/>
                             <v-btn variant="elevated" color="primary" @click="handleRegister">
@@ -27,13 +27,16 @@
                         <div class="text-h5 d-flex align-center">
                             <v-spacer/>
                             <div class="d-flex flex-column align-center" style="white-space:nowrap;">
-                                {{ $t('Scan badge behind') }}
+                                {{ $t('Scan behind') }}
                             </div>
                             <div class="arrowed" style="margin-left:-15px;margin-right:-10px;">
                                 <div class="arrow" :class="theme.global.name.value == 'customDark' ? '' : 'inverted'"/>
                             </div>
                         </div>
-                        <v-btn color="primary" variant="tonal" block class="mt-15" :loading="isLoading" @click="manualVisit">
+                        <div class="text-caption text-center text-captionColor">
+                            {{ $t('Please remove your card from the holder before scanning') }}
+                        </div>
+                        <v-btn color="primary" variant="tonal" block class="mt-10" :loading="isLoading" @click="manualVisit">
                             {{ $t('Manual registration') }}
                         </v-btn>
                     </div>
@@ -75,6 +78,7 @@
     const ndef = ref(null);
     const error = ref(null);
     const reading = computed(() => {
+        return true;
         return ndef.value != null;
     });
     const ledColor = computed(() => {

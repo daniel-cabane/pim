@@ -470,10 +470,11 @@
     "Please regsiter": "Merci de vous enregistrer",
     "Unregistered card number": "Numéro de carte inconnu",
     "Press Button": "Appuyer sur le bouton",
-    "Scan badge behind": "Scanner le badge derrière",
+    "Scan behind": "Scanner à l'arrière",
     "By session": "Par session",
     "Chronological": "Chronologique",
     "Unknown student": "Élève inconnu",
     "Search": "Recherche",
-    "Manual registration": "Enregistrement manuel"
+    "Manual registration": "Enregistrement manuel",
+    "Please remove your card from the holder before scanning": "Merci de sortir la carte du porte-carte avant de scanner"
 }
