@@ -113,13 +113,13 @@
     const { locale } = useI18n();
 
     const openDoorStore = useOpenDoorStore();
-    const { getRecentVisits, getVisitsBySession, deleteVisit, editVisitByEmail, editVisitByTagNb, newVisit } = openDoorStore;
+    const { getRecentVisits, deleteVisit, editVisitByEmail, editVisitByTagNb, newVisit } = openDoorStore;
     const { visits, visitsBySession, isLoading } = storeToRefs(openDoorStore);
 
     getRecentVisits();
     const intervalId = ref(null);
     onMounted(() => {
-        intervalId.value = setInterval(getRecentVisits, 5000); // 5000 milliseconds = 5 seconds
+        intervalId.value = setInterval(getRecentVisits, 5000);
     });
 
     onBeforeUnmount(() => {

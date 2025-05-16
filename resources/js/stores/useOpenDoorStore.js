@@ -78,7 +78,7 @@ export const useOpenDoorStore = defineStore({
                 });
             }
 
-            return groupedVisits;
+            return Object.values(groupedVisits).reverse();
         }
     }
 });

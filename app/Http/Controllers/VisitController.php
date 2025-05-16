@@ -51,7 +51,7 @@ class VisitController extends Controller
     public function recent()
     {
         $visits = [];
-        foreach(Visit::orderByDesc('created_at')->take(100)->get() as $visit){
+        foreach(Visit::latest()->take(100)->get() as $visit){
             $visits[] = $visit->format();
         }
 
