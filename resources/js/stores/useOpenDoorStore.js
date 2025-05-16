@@ -69,16 +69,25 @@ export const useOpenDoorStore = defineStore({
                 return acc;
             }, {});
 
-            for(const key in groupedVisits) {
-                groupedVisits[key].sort((a, b) => {
-                    if (a.session.date === b.session.date) {
-                        return a.session.start.localeCompare(b.session.start);
-                    }
-                    return a.session.date.localeCompare(b.session.date);
-                });
-            }
+            const visitsArray = Object.values(groupedVisits).sort((a, b) => {
+                if (a[0].session.date === b[0].session.date) {
+                    return a[0].session.start.localeCompare(b[0].session.start);
+                }
+                return a[0].session.date.localeCompare(b[0].session.date);
+            });
 
-            return Object.values(groupedVisits).reverse();
+            return visitsArray.reverse();
+
+            // for(const key in groupedVisits) {
+            //     groupedVisits[key].sort((a, b) => {
+            //         if (a.session.date === b.session.date) {
+            //             return a.session.start.localeCompare(b.session.start);
+            //         }
+            //         return a.session.date.localeCompare(b.session.date);
+            //     });
+            // }
+
+            // return Object.values(groupedVisits).reverse();
         }
     }
 });
