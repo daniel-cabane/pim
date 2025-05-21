@@ -24,19 +24,18 @@
                 </v-window-item>
                 <v-window-item>
                     <div v-if="reading">
-                        <div class="text-h5 d-flex align-center">
-                            <v-spacer/>
-                            <div class="d-flex flex-column align-center" style="white-space:nowrap;">
+                        <div class="text-h5 d-flex align-center justify-end">
+                            <div style="white-space:nowrap;">
                                 {{ $t('Scan behind') }}
                             </div>
                             <div class="arrowed" style="margin-left:-15px;margin-right:-10px;">
                                 <div class="arrow" :class="theme.global.name.value == 'customDark' ? '' : 'inverted'"/>
                             </div>
                         </div>
-                        <div class="text-caption text-center text-captionColor">
-                            {{ $t('Please remove your card from the holder before scanning') }}
+                        <div class="d-flex justify-end">
+                            <img :src="`/images/po bpr card ${locale}.png`" style="max-width:75%;"/>
                         </div>
-                        <v-btn color="primary" variant="tonal" block class="mt-10" :loading="isLoading" @click="manualVisit">
+                        <v-btn color="primary" variant="tonal" block class="mt-15" :loading="isLoading" @click="manualVisit">
                             {{ $t('Manual registration') }}
                         </v-btn>
                     </div>
@@ -64,7 +63,9 @@
     import { useOpenDoorStore } from '@/stores/useOpenDoorStore';
     import { storeToRefs } from 'pinia';
     import { useTheme } from 'vuetify';
+    import { useI18n } from 'vue-i18n';
 
+    const { locale } = useI18n();
     const theme = useTheme();
 
     const openDoorStore = useOpenDoorStore();
@@ -78,7 +79,7 @@
     const ndef = ref(null);
     const error = ref(null);
     const reading = computed(() => {
-        return true;
+        // return true;
         return ndef.value != null;
     });
     const ledColor = computed(() => {
