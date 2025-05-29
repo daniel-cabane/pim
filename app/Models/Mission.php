@@ -39,7 +39,7 @@ class Mission extends Model
         'lessonHours' => $this->lesson_hours,
         'prepHours' => $this->prep_hours,
         'date' => $this->created_at,
-        'comment' => $this->data ? $this->data->comment : null
+        'comment' => isset($this->data['comment']) ? $this->data['comment'] : null
       ];
     }
 }
