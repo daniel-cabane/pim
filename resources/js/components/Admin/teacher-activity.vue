@@ -14,7 +14,7 @@
                     <span>
                         <div style="max-width:150px;" class="text-subtitle-1 text-truncate">{{ session.workshopTitle }}</div>
                         <div class="d-flex justify-center">{{ session.roomNb }}</div>
-                        <div class="d-flex justify-center">{{ formatDate(session.date) }} - {{ session.start }}</div>
+                        <div class="d-flex justify-center">{{ formatDate(session.date) }} - {{ session.start }} ({{ session.duration }}h)</div>
                     </span>
                 </v-tooltip>
                 <v-tooltip v-for="session in week.openDoorSessions">
@@ -24,7 +24,7 @@
                     <span>
                         <div class="text-subtitle-1 d-flex justify-center">{{ $t('Open doors') }}</div>
                         <div class="d-flex justify-center">{{ session.roomNb }}</div>
-                        <div class="d-flex justify-center">{{ formatDate(session.date) }} - {{ session.start }}</div>
+                        <div class="d-flex justify-center">{{ formatDate(session.date) }} - {{ session.start }} (1h)</div>
                     </span>
                 </v-tooltip>
                 <div class="holidayBox" v-if="week.isHoliday"/>

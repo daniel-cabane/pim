@@ -52,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
           'student' => $this->hasRole('student'),
           'publisher' => $this->hasRole('publisher'),
           'teacher' => $this->hasRole('teacher'),
+          'instructor' => $this->hasRole('instructor'),
           'hod' => $this->hasRole('hod'),
           'admin' => $this->hasRole('admin')
       ];
@@ -216,10 +217,15 @@ class User extends Authenticatable implements MustVerifyEmail
           $session->workshopTitle = $workshop->language == 'fr' ? $workshop->title_fr : $workshop->title_en;
           $isPast = (Carbon::parse($session->date))->isPast();
           $session->isPast = $isPast;
+          $start = Carbon::createFromFormat('H:i', $session->start);
+          $finish = Carbon::createFromFormat('H:i', $session->finish);
+          $duration = $finish->diff($start);
+          $session->duration = round($duration->h + ($duration->i / 60));
+
           if ($isPast){
-            $hours['past']++;
+            $hours['past'] += $session->duration;
           } else {
-            $hours['future']++;
+            $hours['future'] += $session->duration;
           }
           $workshopSessions->push($session);
         }
