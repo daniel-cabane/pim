@@ -1,7 +1,7 @@
 <template>
     <v-menu close-on-content-click>
         <template v-slot:activator="{ props }">
-            <v-btn dark icon="mdi-school" v-bind="props" />
+            <v-btn dark icon="mdi-star-four-points-circle-outline" v-bind="props" />
         </template>
         <v-list>
             <v-list-item @click="gotoMyPosts" v-if="user.is.publisher">
@@ -68,8 +68,6 @@
                             variant="outlined" />
                         <v-select :label="$t('Term')" variant="outlined" validate-on="blur" :items="[1, 2, 3]"
                             v-model="workshopTerm" />
-                        <!-- <v-select v-model="workshopThemes" :items="availableThemes" label="Themes" multiple chips
-                            variant="outlined" /> -->
                     </v-card-text>
                     <div class="d-flex pa-2">
                         <v-spacer />
@@ -80,6 +78,13 @@
                     </div>
                 </v-card>
             </v-dialog>
+            <v-divider/>
+            <v-list-item @click="gotoMyCourses" v-if="user.is.teacher">
+                <template v-slot:prepend>
+                    <v-icon icon="mdi-school"></v-icon>
+                </template>
+                <v-list-item-title>{{ $t("My courses") }}</v-list-item-title>
+            </v-list-item>
             <v-divider/>
             <v-list-item @click="gotoOpenDoors" v-if="user.is.teacher">
                 <template v-slot:prepend>
@@ -206,6 +211,10 @@
 
     const gotoOpenDoors = () => {
         router.push('/openDoorsBPR');
+    }
+
+    const gotoMyCourses = () => {
+        router.push('/myCourses');
     }
 
     const myActivityDialog = ref(false);

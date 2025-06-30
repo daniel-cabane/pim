@@ -12,6 +12,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\HodController;
 use App\Http\Controllers\VisitController;
+use App\Http\Controllers\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -259,6 +260,34 @@ Route::group(['middleware'=>['can:update,email']], function(){
 Route::group(['middleware'=>['can:delete,email']], function(){
     Route::delete('/emails/{email}', [EmailController::class, 'destroy']);
 });
+
+
+/*
+*
+*   COURSES
+* 
+*/
+
+Route::group(['middleware'=>['can:view,course']], function(){
+    Route::get('/courses/{course}', [CourseController::class, 'show']);
+});
+
+Route::group(['middleware'=>['auth:sanctum']], function(){
+    Route::get('/myCourses', [CourseController::class, 'myCourses']);
+});
+
+Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Course']], function(){
+    Route::post('/courses', [CourseController::class, 'store']);
+});
+
+Route::group(['middleware'=>['can:update,course']], function(){
+    Route::patch('/courses/{course}', [CourseController::class, 'update']);
+    Route::get('/courses/{course}/searchStudent', [CourseController::class, 'searchStudent']);
+    Route::post('/courses/{course}/addStudent', [CourseController::class, 'addStudent']);
+    Route::patch('/courses/{course}/scores', [CourseController::class, 'updateScores']);
+});
+
+
 
 
 /*

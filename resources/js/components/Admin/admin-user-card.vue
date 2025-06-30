@@ -14,10 +14,11 @@
             {{ user.two_factor_secret ? user.two_factor_secret : 'No tag' }}
         </v-card-subtitle>
         <div class="px-4 d-flex">
-            <div class="mr-4">
+            <div class="mr-15">
                 <v-switch color="primary" density="compact" hide-details label="Student" v-model="student"
                     @update:modelValue="teacher = student ? false : teacher; hod = student ? false : hod" />
                 <v-switch color="primary" density="compact" hide-details label="Publisher" v-model="publisher" />
+                <v-switch color="primary" density="compact" hide-details label="Instructor" v-model="instructor"/>
             </div>
             <div>
                 <v-switch color="primary" density="compact" hide-details label="Teacher" v-model="teacher"
@@ -87,15 +88,16 @@
     const publisher = ref(props.user.is.publisher);
     const teacher = ref(props.user.is.teacher);
     const hod = ref(props.user.is.hod);
+    const instructor = ref(props.user.is.instructor);
 
     let isDirty = computed(() => {
-        return teacher.value != props.user.is.teacher || hod.value != props.user.is.hod || publisher.value != props.user.is.publisher || student.value != props.user.is.student;
+        return teacher.value != props.user.is.teacher || hod.value != props.user.is.hod || publisher.value != props.user.is.publisher || student.value != props.user.is.student || instructor.value != props.user.is.instructor;
     });
 
     let loading = ref(false);
     const submit = async () => {
         loading.value = true;
-        const res = await post(`/api/admin/users/${props.user.id}/updateRoles`, {teacher: teacher.value, hod: hod.value, publisher: publisher.value, student: student.value});
+        const res = await post(`/api/admin/users/${props.user.id}/updateRoles`, {teacher: teacher.value, hod: hod.value, publisher: publisher.value, student: student.value, instructor: instructor.value});
         loading.value = false;
     }
 

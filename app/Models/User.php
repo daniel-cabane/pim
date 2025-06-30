@@ -44,7 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // protected $with = ['surveys'];
 
-    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages'];
+    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages', 'course_list'];
 
     public function getIsAttribute()
     {
@@ -88,6 +88,11 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->belongsToMany(Survey::class)->withPivot(['data', 'submitted'])->withTimestamps();
     }
 
+    public function courses()
+    {
+      return $this->belongsToMany(Course::class)->withTimestamps();
+    }
+
     public function postsLiked()
     {
       return $this->belongsToMany(Post::class)->withTimestamps();
@@ -96,6 +101,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function emailsReceived()
     {
       return $this->belongsToMany(Email::class)->withTimestamps();
+    }
+
+    public function objectives()
+    {
+      return $this->belongsToMany(Objective::class)->withPivot('score')->withTimestamps();
     }
 
     public function scopeTeachers($query)
@@ -155,6 +165,11 @@ class User extends Authenticatable implements MustVerifyEmail
       }
 
       return $messages;
+    }
+
+    public function getCourseListAttribute()
+    {
+      return $this->courses()->pluck('id');
     }
 
     public function hoursPerTerm()

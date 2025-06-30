@@ -42,7 +42,7 @@ class WorkshopController extends Controller
     public function currentTermWorkshops()
     {
         $today = Carbon::today();
-        $currentTerm = Term::where('start_date', '<=', $today)->where('finish_date', '>=', $today)->first();
+        $currentTerm = Term::where('start_date', '<=', $today)->orderBy('start_date', 'desc')->first();
         $workshops = [
             'confirmed' => [],
             'progress' => [],

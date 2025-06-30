@@ -34,6 +34,7 @@ class AdminController extends Controller
             'student' => 'required|boolean',
             'publisher' => 'required|boolean',
             'teacher' => 'required|boolean',
+            'instructor' => 'required|boolean',
             'hod' => 'required|boolean'
         ]);
 

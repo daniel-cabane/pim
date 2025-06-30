@@ -12,6 +12,13 @@
                 <v-divider />
                 <theme-and-language-picker />
                 <v-divider />
+                <v-list-item @click="gotoMyCourses" v-if="user.course_list.length">
+                    <template v-slot:prepend>
+                        <v-icon icon="mdi-school"></v-icon>
+                    </template>
+                    <v-list-item-title>{{ $t("My courses") }}</v-list-item-title>
+                </v-list-item>
+                <v-divider />
                 <message-admin-dialog/>
                 <v-list-item @click="goToDashboard" v-if="user.is.admin">
                     <template v-slot:prepend>
@@ -96,6 +103,9 @@
     }
     const goToHod = () => {
         router.push('/hod');
+    }
+    const gotoMyCourses = () => {
+        router.push('/myCourses');
     }
 
     const initPrefsDialog = ref(true);

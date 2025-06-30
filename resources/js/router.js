@@ -15,6 +15,9 @@ import singleSurvey from "./components/views/singleSurvey-view.vue";
 import hod from "./components/views/hod-view.vue";
 import openDoorsBPR from "./components/views/open-doors-bpr-view.vue";
 import teacherOpenDoorsBPR from "./components/views/teacher-open-doors-bpr-view.vue";
+import courses from "./components/views/courses-view.vue";
+import singleCourse from "./components/views/singleCourse-view.vue";
+import editCourse from "./components/views/editCourse-view.vue";
 
 const routes = [
     {
@@ -96,6 +99,21 @@ const routes = [
         path: "/openDoorsBPR",
         name: "Teacher Open Doors BPR",
         component: teacherOpenDoorsBPR,
+    },
+    {
+        path: "/myCourses",
+        name: "My courses",
+        component: courses,
+    },
+    {
+        path: "/courses/:id",
+        name: "Course",
+        component: singleCourse,
+    },
+    {
+        path: "/courses/:id/edit",
+        name: "Edit Course",
+        component: editCourse,
     },
 ];
 
