@@ -44,7 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // protected $with = ['surveys'];
 
-    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages', 'course_list'];
+    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages'];
 
     public function getIsAttribute()
     {

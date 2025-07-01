@@ -274,6 +274,8 @@ Route::group(['middleware'=>['can:view,course']], function(){
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::get('/myCourses', [CourseController::class, 'myCourses']);
+    Route::post('/courses/join', [CourseController::class, 'join']);
+    Route::post('/courses/{course}/leave', [CourseController::class, 'leave']);
 });
 
 Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Course']], function(){
@@ -283,7 +285,8 @@ Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Course']], f
 Route::group(['middleware'=>['can:update,course']], function(){
     Route::patch('/courses/{course}', [CourseController::class, 'update']);
     Route::get('/courses/{course}/searchStudent', [CourseController::class, 'searchStudent']);
-    Route::post('/courses/{course}/addStudent', [CourseController::class, 'addStudent']);
+    Route::post('/courses/{course}/students', [CourseController::class, 'addStudent']);
+    Route::patch('/courses/{course}/students', [CourseController::class, 'removeStudent']);
     Route::patch('/courses/{course}/scores', [CourseController::class, 'updateScores']);
 });
 

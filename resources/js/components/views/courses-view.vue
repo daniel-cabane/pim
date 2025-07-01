@@ -27,13 +27,45 @@
                         </v-card>
                     </template>
                 </v-dialog>
-                <v-btn color="primary" prepend-icon="mdi-account-school" v-if="user.is.student && false">
-                    {{ $t('Join Course') }}
-                </v-btn>
+                <v-dialog max-width="500" v-model="joinDialog" v-if="user.is.student">
+                    <template v-slot:activator="{ props: activatorProps }">
+                        <v-btn color="primary" prepend-icon="mdi-account-school" :text="$t('Join Course')" v-bind="activatorProps"/>
+                    </template>
+                    <template v-slot:default="{ isActive }">
+                        <v-card :title="$t('Join Course')">
+                        <v-card-text>
+                            <v-text-field 
+                                class="mt-6"
+                                variant="outlined"
+                                label="Code"
+                                :counter="6"
+                                v-model="joinCode"
+                                style="text-transform: uppercase;"
+                                @input="joinCode = joinCode.slice(0, 6).toUpperCase()"
+                            />
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer/>
+                            <v-btn variant="tonal" color="error" :text="$t('Close')" @click="isActive.value = false"/>
+                            <v-btn 
+                                variant="flat"
+                                color="primary"
+                                :text="$t('Confirm')"
+                                @click="joinCourse(joinCode)"
+                                :disabled="joinCode.length != 6"
+                                :loading="isLoading"
+                            />
+                        </v-card-actions>
+                        </v-card>
+                    </template>
+                </v-dialog>
             </span>
         </div>
-        <div class="d-flex flex-wrap mt-4">
+        <div class="d-flex flex-wrap mt-4" v-if="courses.length">
             <course-card v-for="course in courses" :course="course"/>
+        </div>
+        <div class="text-h3 text-captionColor d-flex justify-center pa-12" v-else>
+            {{ $t('No active course') }}
         </div>
     </v-container>
 </template>
@@ -48,11 +80,13 @@
     const { user } = storeToRefs(authStore);
 
     const courseStore = useCourseStore();
-    const { createCourse, myCourses} = courseStore;
+    const { createCourse, myCourses, join } = courseStore;
     const { courses, isLoading } = storeToRefs(courseStore);
     myCourses();
 
     const createDialog = ref(false);
+    const joinDialog = ref(false);
+    const joinCode = ref('');
 
     const title_fr = ref('');
     const title_en = ref('');
@@ -64,4 +98,10 @@
         createDialog.value = false; 
     }
 
+    const joinCourse = async () => {
+        const res = await join(joinCode.value);
+        if(res){
+            joinDialog.value = false;
+        }
+    }
 </script>

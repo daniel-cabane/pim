@@ -5,13 +5,95 @@
                 <span>
                     {{ pickLg(course.title)}}
                 </span>
-                <v-dialog max-width="90%" width="450" v-model="addStudentDialog">
+                <v-dialog max-width="90%" width="450" v-model="manageStudentDialog">
                     <template v-slot:activator="{ props: activatorProps }">
-                        <v-btn variant="tonal" color="primary" :text="$t('Add student')" v-bind="activatorProps"/>
+                        <v-btn variant="tonal" color="primary" :text="$t('Student management')" v-bind="activatorProps"/>
                     </template>
 
                     <template v-slot:default="{ isActive }">
-                        <search-student-card @closeDialog="isActive.value = false"/>
+                        <v-card :title="$t('Student management')">
+                            <v-tabs v-model="manageStudentTab" align-tabs="center" density="compact">
+                                <v-tab value="code">Code</v-tab>
+                                <v-tab value="search">{{ $t('Search') }}</v-tab>
+                                <v-tab value="remove">{{ $t('Remove') }}</v-tab>
+                            </v-tabs>
+                            <v-tabs-window v-model="manageStudentTab">
+                                <v-tabs-window-item value="code">
+                                    <div class="text-h1 d-flex justify-center py-12">
+                                        {{ course.joinCode }}
+                                    </div>
+                                </v-tabs-window-item>
+                                <v-tabs-window-item value="search">
+                                    <search-student-card/>
+                                </v-tabs-window-item>
+                                <v-tabs-window-item value="remove">
+                                    <div class="pa-2">
+                                        <v-table>
+                                            <tbody>
+                                                <tr v-for="student in course.students">
+                                                    <td>{{ student.name }}</td>
+                                                    <td class="d-flex align-center ga-2 pa-8">
+                                                        <span
+                                                            :class="!removeList.includes(student.id) ? 'text-primary font-weight-bold' : 'text-captionColor'"
+                                                        >
+                                                            Keep
+                                                        </span>
+                                                        <v-switch hide-details color="error" :value="student.id" v-model="removeList"/>
+                                                        <span 
+                                                            :class="removeList.includes(student.id) ? 'text-error font-weight-bold' : 'text-captionColor'"
+                                                        >
+                                                            Remove
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </v-table>
+                                    </div>
+                                </v-tabs-window-item>
+                                <v-tabs-window-item value="confirm">
+                                    <div class="px-4 py-3">
+                                        Are you sure you want to remove these students ?
+                                    </div>
+                                    <div class="px-3 mb-3">
+                                        <v-chip
+                                            v-for="student in studentsToRemove"
+                                            color="error"
+                                            class="mr-2"
+                                            :text="student.name"
+                                        />
+                                    </div>
+                                </v-tabs-window-item>
+                            </v-tabs-window>
+                            <div class="d-flex pa-4">
+                                <v-btn color="primary" variant="tonal" size="small" icon="mdi-chevron-left" @click="manageStudentTab = 'remove'" v-if="manageStudentTab == 'confirm'"/>
+                                <v-spacer/>
+                                <v-btn 
+                                    color="primary" 
+                                    variant="tonal" 
+                                    :disabled="isLoading"
+                                    :text="$t('Close')"
+                                    @click="isActive.value = false"
+                                />
+                                <v-btn
+                                    color="error"
+                                    variant="tonal"
+                                    :disabled="removeList.length == 0"
+                                    :text="$t('Remove')"
+                                    @click="proceedRemove"
+                                    class="ml-2"
+                                    v-if="manageStudentTab == 'remove'"
+                                />
+                                <v-btn
+                                    color="error"
+                                    variant="flat"
+                                    :loading="isLoading"
+                                    :text="$t('Confirm')"
+                                    @click="confirmRemove"
+                                    class="ml-2"
+                                    v-if="manageStudentTab == 'confirm'"
+                                />
+                            </div>
+                        </v-card>
                     </template>
                 </v-dialog>
             </v-col>
@@ -95,14 +177,15 @@
     const { locale, t } = useI18n();
 
     const courseStore = useCourseStore();
-    const { updateScores } = courseStore;
+    const { updateScores, removeStudent } = courseStore;
     const { isLoading } = storeToRefs(courseStore);
 
     const props = defineProps({ course: Object });
     const emits = defineEmits(['addStudent']);
 
     const tab = ref(0);
-    const addStudentDialog = ref(false);
+    const manageStudentTab = ref('code');
+    const manageStudentDialog = ref(false);
     const pickLg = o => {
         if(o){
             if(locale.value == 'en'){
@@ -158,6 +241,16 @@
         });
         await updateScores({studentId: focusedStudent.value.id, newValues: objNewValues});
         seeStudentDialog.value = false;
+    }
+
+    const removeList = ref([]);
+    const studentsToRemove = computed(() => {
+        return props.course.students.filter(s => removeList.value.includes(s.id));
+    })
+    const proceedRemove = () => manageStudentTab.value = 'confirm';
+    const confirmRemove = async () => {
+        await removeStudent(removeList.value);
+        manageStudentDialog.value = false;
     }
 
     //////////////////////////////////////////////////////////////////

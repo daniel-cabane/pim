@@ -169,6 +169,25 @@ class CourseController extends Controller
         ]);
     }
 
+    public function removeStudent(Course $course, Request $request)
+    {
+        $attrs = $request->validate(['list' => 'required|Array']);
+
+        foreach($attrs['list'] as $id){
+            $course->students()->detach($id);
+        }
+
+        $msg = count($attrs['list']) > 1 ? 'Students removed' : 'Student removed';
+
+        return response()->json([
+            'course' => $course->format(),
+            'message' => [
+                    'text' => $msg,
+                    'type' => 'info'
+                ]
+        ]);
+    }
+
     public function updateScores(Course $course, Request $request)
     {
         $attrs = $request->validate([
@@ -201,5 +220,61 @@ class CourseController extends Controller
                     'type' => 'success'
                 ]
         ]);
+    }
+
+    public function join(Request $request)
+    {
+        $attrs = $request->validate(['code' => 'required|String|max:6|min:6']);
+
+        $course = Course::where('join_code', $attrs['code'])->first();
+        if(!$course){
+            return response()->json([
+                'message' => [
+                        'text' => 'Course not found !',
+                        'type' => 'warning'
+                    ]
+            ]);
+        }
+        
+        $user = auth()->user();
+
+        if($course->students->contains($user)) {
+            return response()->json([
+                'message' => [
+                        'text' => 'You already joined this course',
+                        'type' => 'info'
+                    ]
+            ]);
+        }
+
+        if($user->hasRole('student')){
+            $course->students()->attach($user);
+            return response()->json([
+                'course' => $course->format(),
+                'message' => [
+                        'text' => 'You joined the course !',
+                        'type' => 'success'
+                    ]
+            ]);
+        }
+
+        return response()->json([
+            'message' => [
+                    'text' => 'You cannot join this course',
+                    'type' => 'warning'
+                ]
+        ]);
+
+    }
+
+    public function leave(Course $course)
+    {
+        $course->students()->detach(auth()->user());
+            return response()->json([
+                'message' => [
+                        'text' => 'You left the course !',
+                        'type' => 'info'
+                    ]
+            ]);
     }
 }

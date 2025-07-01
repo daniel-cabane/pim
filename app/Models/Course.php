@@ -74,7 +74,7 @@ class Course extends Model
             'title' => ['fr' => $this->title_fr, 'en' => $this->title_en],
             'description' => $this->description,
             'rewards' => $this->rewards,
-            'join_code' => $this->join_code,
+            'joinCode' => $this->join_code,
             'sections' => $sections,
             'instructor' => [
                 'id' => $this->instructor->id,

@@ -504,5 +504,17 @@
     "Rewards": "Rewards",
     "Objective": "Objective",
     "Objectives": "Objectives",
-    "Add level": "Add level"
+    "Add level": "Add level",
+    "Student management": "Student management",
+    "Student removed": "Student removed",
+    "Students removed": "Students removed",
+    "No active course": "No active course",
+    "You joined the course !": "You joined the course !",
+    "Course not found !": "Course not found !",
+    "You cannot join this course": "You cannot join this course",
+    "You already joined this course": "You already joined this course",
+    "Leave course": "Leave course",
+    "Yes I want to leave this course": "Yes I want to leave this course",
+    "All my progress will be lost permanently": "All my progress will be lost permanently",
+    "You left the course !": "You left the course !"
 }

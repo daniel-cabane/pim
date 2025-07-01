@@ -28,7 +28,7 @@ export const useCourseStore = defineStore({
         async getCourse(id) {
             this.isReady = false;
             const res = await get(`/api/courses/${id}`);
-            console.log(res.course);
+            // console.log(res.course);
             this.course = res.course;
             this.isReady = true;
         },
@@ -51,13 +51,29 @@ export const useCourseStore = defineStore({
             this.students = res.students;
         },
         async addStudent(student){
-            const res = await post(`/api/courses/${this.course.id}/addStudent`, { id: student.id });
+            const res = await post(`/api/courses/${this.course.id}/students`, { id: student.id });
             this.students = this.students.filter(s => s.id != student.id);
+            this.course = res.course;
+        },
+        async removeStudent(list) {
+            const res = await patch(`/api/courses/${this.course.id}/students`, { list });
             this.course = res.course;
         },
         async updateScores(data) {
             const res = await patch(`/api/courses/${this.course.id}/scores`, data);
             this.course = res.course;
+        },
+        async join(code) {
+            const res = await post(`/api/courses/join`, { code });
+            if(res.course){
+                this.courses.push(res.course);
+                return true;
+            }
+            return false;
+        },
+        async leave() {
+            const res = await post(`/api/courses/${this.course.id}/leave`);
+            return res;
         }
     },
     getters: {

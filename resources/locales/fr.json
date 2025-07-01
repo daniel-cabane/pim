@@ -504,5 +504,17 @@
     "Rewards": "Récompenses",
     "Objective": "Objectif",
     "Objectives": "Objectifs",
-    "Add level": "Ajouter un niveau"
+    "Add level": "Ajouter un niveau",
+    "Student management": "Gestion des élèves",
+    "Student removed": "Élève retiré",
+    "Students removed": "Élèves retirés",
+    "No active course": "Aucun parcours actif",
+    "You joined the course !": "Vous avez rejoint le parcours !",
+    "Course not found !": "Aucun parcours trouvé !",
+    "You cannot join this course": "Vous ne pouvez pas rejoindre ce parcours",
+    "You already joined this course": "Vous avez déjà rejoint ce parcours",
+    "Leave course": "Quitter le parcours",
+    "Yes I want to leave this course": "Oui je veux quitter ce parcours",
+    "All my progress will be lost permanently": "Tous mes progrès seront définitivement perdus",
+    "You left the course !": "Vous avez quitté le parcours !"
 }

@@ -3,7 +3,12 @@
         <v-row>
             <v-col cols="12" class="text-h3 d-flex justify-space-between">
                 <span>
-                    {{ pickLg(course.title)}}
+                    <div>
+                        {{ pickLg(course.title)}}
+                    </div>
+                    <div class="text-caption text-captionColor">
+                        {{ course.instructor.name }}
+                    </div>
                 </span>
                 <span class="text-captionColor">
                     <div class="d-flex justify-center">
@@ -64,6 +69,34 @@
                 </v-tabs-window-item>
             </v-tabs-window>
         </v-row>
+        <div class="d-flex justify-end">
+            <v-dialog max-width="500">
+                <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn variant="tonal" color="error" :text="$t('Leave course')" v-bind="activatorProps"/>
+                </template>
+                <template v-slot:default="{ isActive }">
+                    <v-card :title="$t('Leave course')">
+                        <v-card-text>
+                            <div>
+                                {{ $t('Are you sure ?') }}
+                            </div>
+                            <div>
+                                <v-checkbox hide-details :label="$t('Yes I want to leave this course')" color="error" v-model="quitConfirm1"/>
+                                <v-checkbox hide-details :label="$t('All my progress will be lost permanently')" color="error" v-model="quitConfirm2"/>
+                            </div>
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+
+                            <v-btn variant="tonal" color="primary" :text="$t('Close')" @click="isActive.value = false"/>
+                            <v-btn variant="flat" color="error" :disabled="!quitConfirm1 || !quitConfirm2" :text="$t('Quit')" @click="emit('leave')"/>
+                        </v-card-actions>
+                    </v-card>
+                </template>
+            </v-dialog>
+            
+        </div>
     </v-container>
 </template>
 <script setup>
@@ -73,6 +106,8 @@
     const { locale } = useI18n();
 
     const props = defineProps({ course: Object });
+
+    const emit = defineEmits(['leave']);
 
     const tab = ref(0);
 
@@ -117,6 +152,9 @@
         const highest = eligible.reduce((max, lvl) => (lvl.points > max.points ? lvl : max), eligible[0]);
         return pickLg(highest.name);
     });
+
+    const quitConfirm1 = ref(false);
+    const quitConfirm2 = ref(false);
 </script>
 
 <style scoped>

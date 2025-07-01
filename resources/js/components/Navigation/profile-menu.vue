@@ -12,7 +12,7 @@
                 <v-divider />
                 <theme-and-language-picker />
                 <v-divider />
-                <v-list-item @click="gotoMyCourses" v-if="user.course_list.length">
+                <v-list-item @click="gotoMyCourses" v-if="user.is.student">
                     <template v-slot:prepend>
                         <v-icon icon="mdi-school"></v-icon>
                     </template>

@@ -1,5 +1,5 @@
 <template>
-    <v-card :title="$t('Add student')">
+    <v-card>
         <v-card-text>
             <v-text-field 
                 variant="outlined" 
@@ -33,20 +33,12 @@
                 </v-card>
             </div>
         </v-card-text>
-        <v-card-actions>
-            <v-spacer />
-            <v-btn color="error" variant="tonal" :disabled="isLoading" @click="emit('closeDialog')">
-                {{ $t('Close') }}
-            </v-btn>
-        </v-card-actions>
     </v-card>
 </template>
 <script setup>
     import { ref } from "vue";
     import { useCourseStore } from '@/stores/useCourseStore';
     import { storeToRefs } from 'pinia';
-
-    const emit = defineEmits(['closeDialog']);
 
     const CourseStore = useCourseStore();
     const { searchStudent, addStudent } = CourseStore;
