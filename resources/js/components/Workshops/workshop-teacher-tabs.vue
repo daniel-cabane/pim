@@ -18,6 +18,11 @@
             <v-row>
                 <v-col cols="12" class="pt=0">
                     <v-data-table hover :headers="headers" :items-per-page-options="[10, 15, -1]" :items="workshop.applicants" item-value="name">
+                        <template v-slot:no-data>
+                            <div class="text-center text-captionColor text-h6 py-4">
+                                {{ $t('No student enrolled') }}
+                            </div>
+                        </template>
                         <template v-slot:item="{ item }">
                             <tr>
                                 <td>{{ item.name }}</td>

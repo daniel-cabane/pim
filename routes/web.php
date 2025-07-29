@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::get('/{name}', function(){
   return view('welcome');
-})->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops|blog|surveys|hod|pobpr|openDoorsBPR|myCourses']);
+})->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops|blog|surveys|hod|pobpr|openDoorsBPR|myCourses|archivedWorkshops']);
 
 Route::get('/posts/{slug}', function () {
     return view('welcome');

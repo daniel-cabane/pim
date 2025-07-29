@@ -43,6 +43,9 @@
                 case 'finished':
                     return {text: 'Finished', type: 'tonal', color: 'grey'}
                     break;
+                case 'archived':
+                    return {text: 'Archived', type: 'tonal', color: 'black'}
+                    break;
             }
         }
         switch(props.workshop.status){
@@ -66,6 +69,9 @@
                     break;
                 case 'finished':
                     return {text: 'Finished', type: 'tonal', color: 'grey'}
+                    break;
+                case 'archived':
+                    return {text: 'Archived', type: 'tonal', color: 'black'}
                     break;
             } 
     });

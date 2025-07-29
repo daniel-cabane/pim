@@ -159,6 +159,7 @@
     "Application recorded": "Candidature enregistrée",
     "Application withdrawn": "Candidature retirée",
     "Students enrolled": "Élèves inscrits",
+    "No student enrolled": "Aucun élève inscrit",
     "Application updated": "Inscription mise à jour",
     "Applied !": "Candidature enregistrée",
     "I'm available": "Je suis disponible",
@@ -516,5 +517,15 @@
     "Leave course": "Quitter le parcours",
     "Yes I want to leave this course": "Oui je veux quitter ce parcours",
     "All my progress will be lost permanently": "Tous mes progrès seront définitivement perdus",
-    "You left the course !": "Vous avez quitté le parcours !"
+    "You left the course !": "Vous avez quitté le parcours !",
+    "New Year": "Nouvel année",
+    "Initialise new year": "Initialisation d'une nouvelle année",
+    "Archive all workshops": "Archiver tous les ateliers",
+    "Delete all open door sessions": "Supprimer toutes les portes ouvertes",
+    "Remove class from all students": "Retirer la classe de tous les élèves",
+    "Archived workshops": "Ateliers archivés",
+    "Archived": "Archivé",
+    "Duplicate": "Dupliquer",
+    "Unauthenticated.": "Merci de vous connecter",
+    "Workshop duplicated": "Atelier dupliqué"
 }

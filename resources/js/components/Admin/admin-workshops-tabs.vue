@@ -3,6 +3,7 @@
         <v-tabs v-model="tab" color="primary" direction="vertical">
             <v-tab prepend-icon="mdi-puzzle" :text="$t('Workshops')" value="workshops" />
             <v-tab prepend-icon="mdi-shape-plus" :text="$t('Themes')" value="themes"></v-tab>
+            <v-tab prepend-icon="mdi-archive" :text="$t('Archived')" value="archived"></v-tab>
         </v-tabs>
 
         <v-tabs-window style="flex:1" v-model="tab">
@@ -37,6 +38,9 @@
                 <div class="pa-4 d-flex flex-wrap">
                     <admin-theme-card v-for="theme in themes" :theme="theme" :isLoading="isLoading" class="ma-2" @updateTheme="updateTheme" @deleteTheme="deleteTheme"/>
                 </div>
+            </v-tabs-window-item>
+            <v-tabs-window-item value="archived">
+                <admin-archived-workshops/>
             </v-tabs-window-item>
         </v-tabs-window>
     </v-card>

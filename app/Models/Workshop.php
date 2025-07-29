@@ -111,7 +111,10 @@ class Workshop extends Model
       return [
         'id' => $this->id,
         'mainTitle' => $this->language == 'fr' ? $this->title_fr : $this->title_en,
-        'title' => ['fr' => $this->title_fr, 'en' => $this->title_en],
+        'title' => [
+          'fr' => $this->archived ? substr($this->title_fr, 11) : $this->title_fr,
+          'en' => $this->archived ? substr($this->title_en, 11) : $this->title_en,
+        ],
         'description' => json_decode($this->description),
         'language' => $this->language,
         'term' => $this->term,
@@ -196,16 +199,16 @@ class Workshop extends Model
           'archived' => true
         ]);
       } 
-      $this->applicants()->sync([]);
-      foreach($this->emails as $email){
-        $email->delete();
-      }
-      foreach($this->sessions as $session){
-        $session->delete();
-      }
-      foreach($this->surveys as $survey){
-        $survey->delete();
-      }
+      // $this->applicants()->sync([]);
+      // foreach($this->emails as $email){
+      //   $email->delete();
+      // }
+      // foreach($this->sessions as $session){
+      //   $session->delete();
+      // }
+      // foreach($this->surveys as $survey){
+      //   $survey->delete();
+      // }
     }
 
     public function scopeUpcoming($query) // FIX THIS <========================================================

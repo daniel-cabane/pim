@@ -41,6 +41,8 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::get('/admin/workshops/{workshop}/prepare', [AdminController::class, 'prepareWorkshop']);
     Route::post('/admin/workshops/{workshop}/launch', [AdminController::class, 'launchWorkshop']);
 
+    Route::get('/admin/teachers/{user}/archivedWorkshops/', [AdminController::class, 'archivedWorkshops']);
+
     Route::post('/admin/holiday/', [AdminController::class, 'createHoliday']);
     Route::patch('/admin/holidays/{holiday}', [AdminController::class, 'updateHoliday']);
     Route::delete('/admin/holidays/{holiday}', [AdminController::class, 'deleteHoliday']);
@@ -77,6 +79,8 @@ Route::group(['middleware'=>['role:admin']], function(){
     Route::post('/admin/visits/{visit}/confirmMatch/{user}', [VisitController::class, 'confirmMatch']);
 
     // Route::get('/admin/lostStudents', [AdminController::class, 'lostStudents']);
+
+    Route::post('/admin/newYear', [AdminController::class, 'newYear']);
 });
 
 Route::group(['middleware'=>['auth:sanctum']], function(){
@@ -181,6 +185,8 @@ Route::group(['middleware'=>['auth:sanctum', 'can:delete,post']], function(){
 Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Workshop']], function(){
     Route::post('/workshops', [WorkshopController::class, 'store']);
     Route::get('/myWorkshops', [WorkshopController::class, 'myWorkshops']);
+
+    Route::get('/archivedWorkshops', [WorkshopController::class, 'archivedWorkshops']);
 });
 
 Route::group(['middleware'=>['can:view,workshop']], function(){
@@ -196,6 +202,8 @@ Route::group(['middleware'=>['can:update,workshop']], function(){
     Route::delete('/workshops/{workshop}/poster/{language}', [WorkshopController::class, 'deletePoster']);
     Route::delete('/workshops/{workshop}/archive', [WorkshopController::class, 'archive']);
     Route::delete('/workshops/{workshop}', [WorkshopController::class, 'destroy']);
+
+    Route::post('/workshops/{workshop}/duplicate', [WorkshopController::class, 'duplicate']);
 
     Route::patch('/workshops/{workshop}/applicants/{user}', [WorkshopController::class, 'editApplicant']);
     Route::delete('/workshops/{workshop}/applicants/{user}', [WorkshopController::class, 'removeApplicant']);

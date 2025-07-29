@@ -11,6 +11,7 @@ export const useWorkshopStore = defineStore({
         currentTerm: 1,
         myWorkshops: [],
         workshop: {},
+        archivedWorkshops: [],
         students: [],
         isReady: false,
         // isLoading: false,
@@ -169,6 +170,33 @@ export const useWorkshopStore = defineStore({
                 this.workshop = res.workshop;
             }
         },
+        async getArchivedWorkshops() {
+            this.isReady = false;
+            const res = await get(`/api/archivedWorkshops`, true);
+            this.workshops = res.workshops;
+            console.log(res.workshops)
+            this.isReady = true;
+        },
+        async duplicateWorkshop(id){
+            const res = await post(`/api/workshops/${id}/duplicate`);
+            if(res.success){
+                return res.workshopId;
+            }
+            return false;
+        },
+        async deleteWorkshop(id){
+            const res = await del(`/api/workshops/${id}`);
+            if (res.success) {
+                this.workshops = this.workshops.filter(w => w.id != id);
+                this.archivedWorkshops = this.archivedWorkshops.filter(w => w.id != id);
+            }
+            return res.success;
+        },
+        async getTeacherArchive(id){
+            this.archivedWorkshops = [];
+            const res = await get(`/api/admin/teachers/${id}/archivedWorkshops`, true);
+            this.archivedWorkshops = res.workshops;
+        }
         // async updateTheme(theme){
         //     //this.isLoading = true;
         //     const res = await patch(`/api/admin/themes/${theme.id}`, theme);

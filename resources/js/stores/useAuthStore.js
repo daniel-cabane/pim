@@ -122,7 +122,6 @@ export const useAuthStore = defineStore({
             try {
                 const res = await axios.get('/api/admin/messages');
                 this.messages = res.data.messages;
-                console.log(this.messages);
                 this.loading = false;
             } catch (err) {
                 addNotification({ text: err.response.data.message, type: 'error' });

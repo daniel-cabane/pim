@@ -750,4 +750,62 @@ class AdminController extends Controller
             ]);
     }
 
+    public function newYear(Request $request)
+    {
+        $password = ($request->validate(['password' => 'required|max:50']))['password'];
+
+        if($password == env('NEW_YEAR_PASSWORD')){
+            logger('gogo');
+
+            foreach(User::all() as $user){
+                $user->update([
+                    'level' => null,
+                    'section' => null
+                ]);
+            }
+            foreach(Workshop::where('archived', 0)->get() as $workshop){
+                // logger("$workshop->title_fr $workshop->title_en");
+                $workshop->archive();
+            }
+            foreach(OpenDoor::all() as $openDoor){
+                $openDoor->delete();
+            }
+            foreach(Holiday::all() as $holiday){
+                $holiday->delete();
+            }
+            foreach(Term::all() as $term){
+                $term->delete();
+            }
+
+
+            return response()->json([
+            'success' => true,
+            'message' => [
+                    'text' => 'Saul Gone',
+                    'type' => 'success'
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => [
+                    'text' => 'Unauthorized',
+                    'type' => 'error'
+                ]
+            ]);
+    }
+
+    public function archivedWorkshops(User $user)
+    {
+        $workshops = [];
+        foreach($user->archivedWorkshops as $workshop){
+            $workshops[] = $workshop->format();
+        }
+
+        return response()->json([
+            'workshops' => $workshops
+        ]);
+    }
+
 }

@@ -18,6 +18,7 @@ import teacherOpenDoorsBPR from "./components/views/teacher-open-doors-bpr-view.
 import courses from "./components/views/courses-view.vue";
 import singleCourse from "./components/views/singleCourse-view.vue";
 import editCourse from "./components/views/editCourse-view.vue";
+import archivedWorkshops from "./components/views/archivedWorkshops-view.vue";
 
 const routes = [
     {
@@ -114,6 +115,11 @@ const routes = [
         path: "/courses/:id/edit",
         name: "Edit Course",
         component: editCourse,
+    },
+    {
+        path: "/archivedWorkshops",
+        name: "Archived Workshops",
+        component: archivedWorkshops,
     },
 ];
 

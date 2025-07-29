@@ -53,7 +53,7 @@
             <v-dialog width="500" v-model="deleteHolidayDialog">
                 <v-card :title="$t('Delete holiday')">
                     <v-card-text>
-                        {{ t('Are you sure you want to delete') }} <b>{{ focusedHoliday.name }}</b> ?
+                        {{ $t('Are you sure you want to delete') }} <b>{{ focusedHoliday.name }}</b> ?
                     </v-card-text>
                     <div style="display:flex;justify-content:flex-end;" class="pa-3">
                         <v-btn variant="tonal" class="mr-3" color="primary" :disabled="isLoading"

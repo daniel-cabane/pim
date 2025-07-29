@@ -8,6 +8,7 @@
             <v-tab value="openDoors">{{ $t('Open doors') }}</v-tab>
             <v-tab value="holidays">{{ $t('Holidays') }}</v-tab>
             <v-tab value="messages">Messages</v-tab>
+            <v-tab value="newYear">{{ $t('New Year') }}</v-tab>
         </v-tabs>
         <div class="pa-4">
             <v-window v-model="tab">
@@ -45,6 +46,9 @@
                 </v-window-item>
                 <v-window-item value="messages">
                     <admin-messages-center />
+                </v-window-item>
+                <v-window-item value="newYear">
+                    <admin-new-year />
                 </v-window-item>
             </v-window>
         </div>

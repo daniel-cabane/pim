@@ -295,6 +295,7 @@ class WorkshopController extends Controller
         if($workshop->archived){
             $workshop->deletePoster();
             return response()->json([
+                'success' => true,
                 'workshop' => $workshop->delete(),
                 'message' => [
                     'text' => 'Workshop deleted',
@@ -567,6 +568,46 @@ class WorkshopController extends Controller
             'email' => $email,
             'message' => [
                     'text' => 'Email created',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function archivedWorkshops()
+    {
+        $workshops = [];
+        foreach(auth()->user()->archivedWorkshops as $workshop){
+            $workshops[] = $workshop->format();
+        }
+
+        return response()->json([
+            'workshops' => $workshops
+        ]);
+    }
+
+    public function duplicate(Workshop $workshop)
+    {
+        $currentTerm = Term::where('start_date', '<=', Carbon::today())->orderBy('start_date', 'desc')->first();
+        $duplicate = Workshop::create([
+            'title_fr' => substr($workshop->title_fr, 11),
+            'title_en' => substr($workshop->title_en, 11),
+            'description' => $workshop->description,
+            'language' => $workshop->language,
+            'term' => $currentTerm ? $currentTerm->nb : 1,
+            'campus' => $workshop->campus,
+            'details' => $workshop->details,
+            'organiser_id' => $workshop->organiser_id
+        ]);
+
+        foreach($workshop->themes as $theme){
+            $duplicate->themes()->attach($theme);
+        }
+
+        return response()->json([
+            'success' => true,
+            'workshopId' => $duplicate->id,
+            'message' => [
+                    'text' => 'Workshop duplicated',
                     'type' => 'success'
                 ]
         ]);

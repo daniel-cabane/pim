@@ -159,6 +159,7 @@
     "Application recorded": "Application recorded",
     "Application withdrawn": "Application withdrawn",
     "Students enrolled": "Students enrolled",
+    "No student enrolled": "No student enrolled",
     "Application updated": "Application updated",
     "Applied !": "Applied !",
     "I'm available": "I'm available",
@@ -516,5 +517,15 @@
     "Leave course": "Leave course",
     "Yes I want to leave this course": "Yes I want to leave this course",
     "All my progress will be lost permanently": "All my progress will be lost permanently",
-    "You left the course !": "You left the course !"
+    "You left the course !": "You left the course !",
+    "New Year": "New Year",
+    "Initialise new year": "Initialise new year",
+    "Archive all workshops": "Archive all workshops",
+    "Delete all open door sessions": "Delete all open door sessions",
+    "Remove class from all students": "Remove class from all students",
+    "Archived workshops": "Archived workshops",
+    "Archived": "Archived",
+    "Duplicate": "Duplicate",
+    "Unauthenticated.": "Unauthenticated.",
+    "Workshop duplicated": "Workshop duplicated"
 }
