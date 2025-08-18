@@ -753,6 +753,8 @@ class AdminController extends Controller
     public function newYear(Request $request)
     {
         $password = ($request->validate(['password' => 'required|max:50']))['password'];
+        logger($password);
+        logger(env('NEW_YEAR_PASSWORD'));
 
         if($password == env('NEW_YEAR_PASSWORD')){
             logger('gogo');
@@ -764,7 +766,6 @@ class AdminController extends Controller
                 ]);
             }
             foreach(Workshop::where('archived', 0)->get() as $workshop){
-                // logger("$workshop->title_fr $workshop->title_en");
                 $workshop->archive();
             }
             foreach(OpenDoor::all() as $openDoor){
