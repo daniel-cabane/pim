@@ -753,8 +753,8 @@ class AdminController extends Controller
     public function newYear(Request $request)
     {
         $password = ($request->validate(['password' => 'required|max:50']))['password'];
-        logger($password);
-        logger(env('NEW_YEAR_PASSWORD'));
+        logger('sent : '.$password);
+        logger('saved : '.env('NEW_YEAR_PASSWORD'));
 
         if($password == env('NEW_YEAR_PASSWORD')){
             logger('gogo');
