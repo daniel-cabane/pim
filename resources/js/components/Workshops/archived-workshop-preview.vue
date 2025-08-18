@@ -1,8 +1,6 @@
 <template>
     <v-card :title="workshop.language == 'fr' ? workshop.title.fr : workshop.title.en" :subtitle="formatStartingDate(workshop.startDate)">
-        <v-card-text>
-            {{ workshop.language == 'fr' ? workshop.description.fr : workshop.description.en }}
-        </v-card-text>
+        <v-card-text v-html="workshop.language == 'fr' ? workshop.description.fr : workshop.description.en"/>
         <v-card-actions>
             <v-spacer/>
             <v-btn color="error" icon="mdi-delete" @click="emit('delete', workshop)"/>
