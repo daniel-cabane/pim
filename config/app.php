@@ -5,6 +5,8 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
+    'nyp' => env('NEW_YEAR_PASSWORD', 'nyp'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

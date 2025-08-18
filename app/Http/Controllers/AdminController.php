@@ -754,9 +754,9 @@ class AdminController extends Controller
     {
         $password = ($request->validate(['password' => 'required|max:50']))['password'];
         logger('sent : '.$password);
-        logger('saved : '.env('NEW_YEAR_PASSWORD'));
+        logger('saved : '.config('app.nyp'));
 
-        if($password == env('NEW_YEAR_PASSWORD')){
+        if($password == config('app.nyp')){
             logger('gogo');
 
             foreach(User::all() as $user){
