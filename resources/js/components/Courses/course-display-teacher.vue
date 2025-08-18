@@ -111,6 +111,7 @@
                     :value="index"
                 />
                 <v-tab text="Bonus" class="font-weight-bold" value="bonus"/>
+                <v-tab text="Recap" class="font-weight-bold" value="recap"/>
             </v-tabs>
             <v-data-table :headers="headers" :items="students" :search="search" v-if="tab != 'bonus'">
                 <template v-slot:top>
@@ -144,7 +145,7 @@
                     <v-btn size="small" variant="flat" icon="mdi-eye" @click="seeStudent(item)"/>
                 </template>
             </v-data-table>
-            <v-card title="Bonuses will come here" color="surface" flat v-else/>
+            <bonus-card-teacher :course="course" v-else/>
         </div>
         <v-dialog v-model="seeStudentDialog" width="400">
             <v-card :title="$t('Student progress')">
@@ -201,6 +202,15 @@
             { title: t('Name'), key: 'name', align: 'start' },
             { title: t('Class'), key: 'className' },
         ];
+        if(tab.value == 'recap'){
+            props.course.sections.forEach((s, index) => {
+                console.log(s)
+                headers.push({
+                     title: pickLg(s.title), key: index, align: 'center'
+                });
+            });
+            return [...headers, { title: 'Bonus', key: 'bonus', align: 'center' }, { title: 'Total', key: 'total', align: 'center' }];
+        }
         if(props.course.sections[tab.value] && props.course.sections[tab.value].objectives){
             props.course.sections[tab.value].objectives.forEach((o, index) => {
                 headers.push({
@@ -208,7 +218,7 @@
                 });
             });
         }
-        return [...headers, { title: 'Actions', key: 'actions', sortable: false }];
+        return [...headers, { title: 'Action', key: 'actions', sortable: false }];
     });
     const students = computed(() => {
         const students = [];

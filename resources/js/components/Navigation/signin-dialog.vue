@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="380" @keydown.enter="submit">
     <template v-slot:activator="{ props }">
-      <v-btn variant="outlined" icon="mdi-account" class="d-md-none" v-bind="props" v-if="isWindowXs" />
+      <v-btn variant="outlined" icon="mdi-account" v-bind="props" v-if="isWindowSmall" />
       <v-btn variant="outlined" append-icon="mdi-account" v-bind="props" v-else>
         {{ $t("Sign in") }} / {{ $t("Register") }}
       </v-btn>
@@ -135,7 +135,7 @@
   }
 
   const { name } = useDisplay();
-  const isWindowXs = computed(() => name.value == 'xs');
+  const isWindowSmall = computed(() => name.value == 'xs' || name.value == 'sm');
 
   const localEnv = computed(() => window.Laravel.env == 'local');
 </script>

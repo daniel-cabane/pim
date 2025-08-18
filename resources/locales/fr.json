@@ -527,5 +527,10 @@
     "Archived": "Archivé",
     "Duplicate": "Dupliquer",
     "Unauthenticated.": "Merci de vous connecter",
-    "Workshop duplicated": "Atelier dupliqué"
+    "Workshop duplicated": "Atelier dupliqué",
+    "Add bonus": "Ajouter un bonus",
+    "Bonus added": "Bonus ajouté",
+    "Bonus updated": "Bonus modifié",
+    "Yes I want to delete this bonus": "Oui je veux supprimer ce bonus",
+    "Bonus deleted": "Bonus supprimé"
 }

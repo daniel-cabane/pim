@@ -296,6 +296,10 @@ Route::group(['middleware'=>['can:update,course']], function(){
     Route::post('/courses/{course}/students', [CourseController::class, 'addStudent']);
     Route::patch('/courses/{course}/students', [CourseController::class, 'removeStudent']);
     Route::patch('/courses/{course}/scores', [CourseController::class, 'updateScores']);
+
+    Route::post('/courses/{course}/students/{user}/bonus', [CourseController::class, 'addBonus']);
+    Route::patch('/courses/{course}/bonus/{bonus}', [CourseController::class, 'editBonus']);
+    Route::delete('/courses/{course}/bonus/{bonus}', [CourseController::class, 'deleteBonus']);
 });
 
 

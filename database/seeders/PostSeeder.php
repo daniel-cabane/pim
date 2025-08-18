@@ -36,6 +36,7 @@ class PostSeeder extends Seeder
                 'images' => json_encode(['cover' => ['url' => '/images/post default cover.png', 'titleColor' => '#000000'], 'post' => []]),
                 'post' => $post,
                 'status' => $status,
+                'stats' => ['reads' => 0],
                 'published_at' => $status == 'published' ? $faker->dateTimeBetween('2023-01-01', '2024-06-31'): null
             ]);
         }

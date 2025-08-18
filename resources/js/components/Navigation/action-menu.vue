@@ -78,13 +78,13 @@
                     </div>
                 </v-card>
             </v-dialog>
-            <v-divider/>
+            <!-- <v-divider/>
             <v-list-item @click="gotoMyCourses" v-if="user.is.teacher">
                 <template v-slot:prepend>
                     <v-icon icon="mdi-school"></v-icon>
                 </template>
                 <v-list-item-title>{{ $t("My courses") }}</v-list-item-title>
-            </v-list-item>
+            </v-list-item> -->
             <v-divider/>
             <v-list-item @click="gotoOpenDoors" v-if="user.is.teacher">
                 <template v-slot:prepend>

@@ -111,7 +111,7 @@
     const initPrefsDialog = ref(true);
     const initData = ref({init: true});
     const forceOpen = computed(() => {
-        return !user.value.preferences || !user.value.preferences.language || !user.value.preferences.campus || !user.value.level || !user.value.section;
+        return !user.value.preferences || !user.value.preferences.language || !user.value.preferences.campus || (!user.value.level && user.value.is.student) || (!user.value.section && user.value.is.student);
     });
 
     const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];

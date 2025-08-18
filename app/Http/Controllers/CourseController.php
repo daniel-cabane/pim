@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Objective;
 use App\Models\User;
+use App\Models\Bonus;
 
 class CourseController extends Controller
 {
@@ -276,5 +277,60 @@ class CourseController extends Controller
                         'type' => 'info'
                     ]
             ]);
+    }
+
+    public function addBonus(Course $course, User $user, Request $request)
+    {
+        $attrs = $request->validate([
+            'description' => 'required|max:100',
+            'score' => 'required|max:100'
+        ]);
+
+        Bonus::create([
+            'user_id' => $user->id,
+            'course_id' => $course->id,
+            'description' => $attrs['description'],
+            'score' => intval($attrs['score']),
+            'instructor_id' => auth()->id()
+        ]);
+
+        return response()->json([
+            'course' => $course->format(),
+            'message' => [
+                    'text' => 'Bonus added',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function editBonus(Course $course, Bonus $bonus, Request $request)
+    {
+        $attrs = $request->validate([
+            'description' => 'required|max:100',
+            'score' => 'required|max:100'
+        ]);
+
+        $bonus->update($attrs);
+
+        return response()->json([
+            'course' => $course->format(),
+            'message' => [
+                    'text' => 'Bonus updated',
+                    'type' => 'success'
+                ]
+        ]);
+    }
+
+    public function deleteBonus(Course $course, Bonus $bonus)
+    {
+        $bonus->delete();
+
+        return response()->json([
+            'course' => $course->format(),
+            'message' => [
+                    'text' => 'Bonus deleted',
+                    'type' => 'success'
+                ]
+        ]);
     }
 }

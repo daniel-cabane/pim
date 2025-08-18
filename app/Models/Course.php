@@ -32,11 +32,20 @@ class Course extends Model
         return $this->hasMany(Objective::class);
     }
 
+    public function bonuses()
+    {
+        return $this->hasMany(Bonus::class);
+    }
+
     public function format()
     {
         $students = [];
+        $bonuses = [];
         $user = auth()->user();
         if($user->is['teacher']){
+            foreach($this->bonuses as $bonus){
+                $bonuses[] = $bonus->format();
+            }
             foreach($this->students as $student){
                 $objectives = [];
                 foreach($student->objectives()->where('course_id', $this->id)->get() as $objective){
@@ -52,6 +61,10 @@ class Course extends Model
                     'className' => $student['class_name'],
                     'objectives' => $objectives
                 ];
+            }
+        } else {
+            foreach($this->bonuses()->where('user_id', $user->id)->get() as $bonus){
+                $bonuses[] = $bonus->format();
             }
         }
         $sections = [];
@@ -80,7 +93,8 @@ class Course extends Model
                 'id' => $this->instructor->id,
                 'name' => $this->instructor->formalName
             ],
-            'students' => $students
+            'students' => $students,
+            'bonuses' => $bonuses
         ];
     }
 }

@@ -527,5 +527,10 @@
     "Archived": "Archived",
     "Duplicate": "Duplicate",
     "Unauthenticated.": "Unauthenticated.",
-    "Workshop duplicated": "Workshop duplicated"
+    "Workshop duplicated": "Workshop duplicated",
+    "Add bonus": "Add bonus",
+    "Bonus added": "Bonus added",
+    "Bonus updated": "Bonus updated",
+    "Yes I want to delete this bonus": "Yes I want to delete this bonus",
+    "Bonus deleted": "Bonus deleted"
 }

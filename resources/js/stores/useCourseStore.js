@@ -74,6 +74,31 @@ export const useCourseStore = defineStore({
         async leave() {
             const res = await post(`/api/courses/${this.course.id}/leave`);
             return res;
+        },
+        async addBonus(data) {
+            const res = await post(`/api/courses/${this.course.id}/students/${data.studentId}/bonus`, data);
+            if (res.course) {
+                this.course = res.course;
+                return true;
+            }
+            return false;
+        },
+        async editBonus(data){
+            const res = await patch(`/api/courses/${this.course.id}/bonus/${data.id}`, data);
+            if (res.course) {
+                this.course = res.course;
+                return true;
+            }
+            return false;
+        },
+        async deleteBonus(id) {
+            console.log(id);
+            const res = await del(`/api/courses/${this.course.id}/bonus/${id}`);
+            if (res.course) {
+                this.course = res.course;
+                return true;
+            }
+            return false;
         }
     },
     getters: {
