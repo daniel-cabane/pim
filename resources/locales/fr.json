@@ -532,5 +532,17 @@
     "Bonus added": "Bonus ajouté",
     "Bonus updated": "Bonus modifié",
     "Yes I want to delete this bonus": "Oui je veux supprimer ce bonus",
-    "Bonus deleted": "Bonus supprimé"
+    "Bonus deleted": "Bonus supprimé",
+    "ressources": "ressources",
+    "Historic": "Historique",
+    "Keep": "Garder" ,
+    "Change": "Changer",
+    "Pick a door": "Choisir une porte",
+    "Keep the same door ?": "Garder la même porte ?",
+    "Reset": "Remettre à zéro",
+    "Door": "Porte",
+    "Reset doors": "Refermer les portes",
+    "Autoplay": "Mode automatique",
+    "Play the game automatically multiple times": "Jouer automatiquement plusieurs fois",
+    "Tutorial": "Tutoriel"
 }

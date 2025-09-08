@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::get('/{name}', function(){
   return view('welcome');
-})->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops|blog|surveys|hod|pobpr|openDoorsBPR|myCourses|archivedWorkshops']);
+})->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops|blog|surveys|hod|pobpr|openDoorsBPR|myCourses|archivedWorkshops|ressources']);
 
 Route::get('/posts/{slug}', function () {
     return view('welcome');
@@ -55,6 +55,10 @@ Route::get('/calendar/pi', function () {
 });
 
 Route::get('/courses/{id}', function () {
+    return view('welcome');
+});
+
+Route::get('/ressources/{slug}', function () {
     return view('welcome');
 });
 

@@ -532,5 +532,17 @@
     "Bonus added": "Bonus added",
     "Bonus updated": "Bonus updated",
     "Yes I want to delete this bonus": "Yes I want to delete this bonus",
-    "Bonus deleted": "Bonus deleted"
+    "Bonus deleted": "Bonus deleted",
+    "ressources": "ressources",
+    "Historic": "Historic",
+    "Keep": "Keep" ,
+    "Change": "Change",
+    "Pick a door": "Pick a door",
+    "Keep the same door ?": "Keep the same door ?",
+    "Reset": "Reset",
+    "Door": "Door",
+    "Reset doors": "Reset doors",
+    "Autoplay": "Autoplay",
+    "Play the game automatically multiple times": "Play the game automatically multiple times",
+    "Tutorial": "Tutorial"
 }

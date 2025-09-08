@@ -19,6 +19,8 @@ import courses from "./components/views/courses-view.vue";
 import singleCourse from "./components/views/singleCourse-view.vue";
 import editCourse from "./components/views/editCourse-view.vue";
 import archivedWorkshops from "./components/views/archivedWorkshops-view.vue";
+import ressources from "./components/views/ressources-view.vue";
+import singleRessource from "./components/views/singleRessource-view.vue";
 
 const routes = [
     {
@@ -120,6 +122,16 @@ const routes = [
         path: "/archivedWorkshops",
         name: "Archived Workshops",
         component: archivedWorkshops,
+    },
+    {
+        path: "/ressources",
+        name: "Ressources",
+        component: ressources,
+    },
+    {
+        path: "/ressources/:slug",
+        name: "Ressource",
+        component: singleRessource,
     },
 ];
 

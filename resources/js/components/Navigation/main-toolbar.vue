@@ -1,33 +1,15 @@
 <template>
   <v-app-bar color="grey">
-    <div class="ml-4 d-none d-sm-flex">
+    <div class="ml-4 d-flex">
+      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" v-if="isWindowSm"/>
       <v-img max-width='80px' min-width='80px' src="/images/pim logo.png" contain />
     </div>
     <v-spacer />
     <div>
-      <v-tabs centered :mandatory="false" v-model="navigationTab" v-if="isWindowXs">
-        <v-tab value="tab-1" to="/">
-          <v-icon size="x-large">mdi-home</v-icon>
-        </v-tab>
-        <v-tab value="tab-2" to="/workshops">
-          <v-icon size="x-large">mdi-puzzle</v-icon>
-        </v-tab>
-        <v-tab value="tab-3" to="/calendar">
-          <v-icon size="x-large">mdi-calendar</v-icon>
-        </v-tab>
-      </v-tabs>
-      <v-tabs centered stacked v-model="navigationTab" exact :mandatory="false" v-else>
-        <v-tab value="tab-1" to="/">
-          <v-icon>mdi-home</v-icon>
-          {{ $t('home') }}
-        </v-tab>
-        <v-tab value="tab-2" to="/workshops">
-          <v-icon>mdi-puzzle</v-icon>
-          {{ $t('workshops') }}
-        </v-tab>
-        <v-tab value="tab-3" to="/calendar">
-          <v-icon>mdi-calendar</v-icon>
-          {{ $t('calendar') }}
+      <v-tabs centered stacked v-model="navigationTab" exact :mandatory="false" v-if="!isWindowSm">
+        <v-tab v-for="(link, index) in links" :to="link.url" :value="`tab-${index}`">
+          <v-icon :icon="link.icon"/>
+          {{ $t(link.name) }}
         </v-tab>
       </v-tabs>
     </div>
@@ -53,6 +35,16 @@
       </div>
     </template>
   </v-app-bar>
+  <v-navigation-drawer v-model="drawer" temporary>
+      <v-list>
+        <v-list-item height="75" v-for="link in links" :to="link.url">
+          <template v-slot:prepend>
+            <v-icon :icon="link.icon"></v-icon>
+          </template>
+          <v-list-item-title>{{ ucFirst($t(link.name)) }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+  </v-navigation-drawer>
 </template>
 <script setup>
   import { ref, computed, watch } from 'vue';
@@ -69,7 +61,6 @@
   const { defineUser } = authStore;
 
   const themeStore = useThemeStore();
-  // const { themes } = storeToRefs(authStore);
   const { getThemes } = themeStore;
   getThemes();
   
@@ -79,7 +70,15 @@
   }
 
   const { name } = useDisplay();
-  const isWindowXs = computed(() => name.value == 'xs');
+  const isWindowSm = computed(() => ['xs', 'sm'].includes(name.value));
+
+  const links = [
+    { name: 'home', icon: 'mdi-home', url: '/' },
+    { name: 'workshops', icon: 'mdi-puzzle', url: '/workshops' },
+    { name: 'calendar', icon: 'mdi-calendar', url: '/calendar' },
+    // { name: 'ressources', icon: 'mdi-folder-star-outline', url: '/ressources' },
+  ];
+  const ucFirst = str => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
 
   const route = useRoute();
   watch(() => route.name, (newVal, oldVal) => {
@@ -93,9 +92,14 @@
       case 'Calendar':
         navigationTab.value = 'tab-3';
       break;
+      case 'Ressources':
+        navigationTab.value = 'tab-4';
+      break;
       default:
         navigationTab.value = null;
       break;
     }
-  })
+  });
+
+  const drawer = ref(false);
 </script>

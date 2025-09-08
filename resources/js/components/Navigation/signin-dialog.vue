@@ -3,16 +3,10 @@
     <template v-slot:activator="{ props }">
       <v-btn variant="outlined" icon="mdi-account" v-bind="props" v-if="isWindowSmall" />
       <v-btn variant="outlined" append-icon="mdi-account" v-bind="props" v-else>
-        {{ $t("Sign in") }} / {{ $t("Register") }}
+        {{ $t("Sign in") }}
       </v-btn>
     </template>
     <v-card class="pa-4">
-      <!-- <div class="text-center">
-        <a href="/auth/google">
-          <v-img max-width='90%' min-width='90%' style="margin-left:5%;cursor:pointer;"
-            src="/images/google signin.png" />
-        </a>
-      </div> -->
       <google-button/>
       <div class="py-3 text-caption text-captionColor text-center">
         <span v-if="locale == 'en'">
