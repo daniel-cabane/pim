@@ -8,7 +8,7 @@
             <v-card-text>
                 <div class="d-flex ga-3">
                     <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
-                    <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']" v-model="className"/>
+                    <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E', 'F']" v-model="className"/>
                     <v-select :label="$t('Campus')" variant="outlined" :items="['BPR', 'TKO']" v-model="campus" />
                 </div>
                 <v-btn color="primary" block append-icon="mdi-content-paste" :text="$t('Paste from clipboard')" @click="pasteStudents"/>
@@ -69,7 +69,7 @@
     const mainDialog = ref(false);
     const classLevel = ref(null);
     const className = ref(null);
-    const campus = ref('bpr');
+    const campus = ref('BPR');
 
     const students = ref([]);
     const editDialog = ref(false);

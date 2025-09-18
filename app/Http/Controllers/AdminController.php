@@ -71,7 +71,7 @@ class AdminController extends Controller
             'title' => 'sometimes|String|min:1|max:10',
             'level' => 'sometimes|String|min:2|max:10',
             'section' => 'sometimes|String|min:1|max:10',
-            'two_factor_secret' => 'sometimes|String|min:1|max:50',
+            'two_factor_secret' => 'sometimes|String|min:1|max:50|nullable',
         ]);
         
         $user->update($attrs);
