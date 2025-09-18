@@ -620,16 +620,24 @@ class AdminController extends Controller
         ]);
 
         $nbStudentsAdded = 0;
-        $nbStudentsAlreadyRegistered = 0;
+        $nbStudentsUpdated = 0;
 
         $students = [];
         foreach($attrs['students'] as $student){
-            if(User::where('email', $student['email'])->exists()){
-                $nbStudentsAlreadyRegistered++;
+            $ref = User::where('email', $student['email'])->first();
+            if($ref){
+                $nbStudentsUpdated++;
+                $ref->update([
+                    'name' => $student['name'],
+                    'two_factor_secret' => $student['cardNb'],
+                    'level' => $attrs['level'],
+                    'section' => $attrs['section'],
+                ]);
             } else {
                 $user = User::create([
                     'name' => $student['name'],
                     'email' => $student['email'],
+                    'two_factor_secret' => $student['cardNb'],
                     'level' => $attrs['level'],
                     'section' => $attrs['section'],
                     'password' => Hash::make(Str::password()),
@@ -646,7 +654,7 @@ class AdminController extends Controller
 
         return response()->json([
             'message' => [
-                    'text' => "$nbStudentsAdded students added -- $nbStudentsAlreadyRegistered already registered",
+                    'text' => "$nbStudentsAdded students added -- $nbStudentsUpdated updated",
                     'type' => 'success'
                 ]
             ]);

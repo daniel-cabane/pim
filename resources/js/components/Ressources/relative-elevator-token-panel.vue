@@ -2,8 +2,8 @@
     <v-container>
         <v-row>
             <v-card color='surface' width='100%' height='400px' class='pa-2 mb-2'>
-                <span class='number-display' :class="theme.name.value == 'customDark' ? 'inset-text-dark' : 'inset-text-light'" :style='["lg", "xl"].includes(name) ? "font-size:200px" : "font-size:150px"'>
-                    {{ value }}
+                <span class='number-display' :class="theme.name.value == 'customDark' ? 'inset-text-dark' : 'inset-text-light'" :style='["xl"].includes(name) ? "font-size:200px" : "font-size:150px"'>
+                    {{ value > 0 ? `+${value}` : value }}
                 </span>
                 <v-avatar v-for="token in tokenList" :color="token ? 'white' : 'black'" class='ma-1 elevation-4'>
                     <v-icon size="large" :icon="token ? 'mdi-plus' : 'mdi-minus'"/>
@@ -19,14 +19,14 @@
                 class="mb-2"
                 @click="emit('addWhite', index)"
                 :disabled='tokenList.length >= 20 || locked'
-                text="Jeton"
+                :text="$t('Token')"
                 :append-icon="theme.name.value == 'customDark' ? 'mdi-plus-circle' : 'mdi-plus-circle-outline'"
             />
             <v-btn 
                 class="mb-2"
                 @click="emit('addBlack', index)"
                 :disabled='tokenList.length >= 20 || locked'
-                text="Jeton"
+                :text="$t('Token')"
                 :append-icon="theme.name.value == 'customDark' ? 'mdi-minus-circle-outline' : 'mdi-minus-circle'"
             />
             <v-btn 
@@ -36,7 +36,7 @@
                 variant='outlined' 
                 :disabled='locked'
                 append-icon="mdi-close-octagon-outline"
-                text="clear"
+                :text="$t('Clear')"
             />
         </v-row>
     </v-container>
@@ -46,7 +46,7 @@
     import { useDisplay, useTheme } from 'vuetify';
         
     const theme = useTheme();
-    console.log(theme.name.value);
+    // console.log(theme.name.value);
     const { name } = useDisplay();
 
     const props = defineProps({ index: Number, tokenList: Array, locked: Boolean });

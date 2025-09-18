@@ -544,5 +544,15 @@
     "Reset doors": "Refermer les portes",
     "Autoplay": "Mode automatique",
     "Play the game automatically multiple times": "Jouer automatiquement plusieurs fois",
-    "Tutorial": "Tutoriel"
+    "Tutorial": "Tutoriel",
+    "Your screen is not wide enough": "Votre écran n'est pas assez large pour afficher cette application correctement",
+    "Token": "Jeton",
+    "Clear": "Vider",
+    "Calculate": "Effectuer",
+    "Challenge 1 - Addition": "Défi 1 - Addition",
+    "Challenge 2 - Incomplete Addition": "Défi 2 - Addition incomplète",
+    "Challenge 3 - Subtraction": "Défi 1 - Soustraction",
+    "Challenge 4 - Incomplete Subtraction": "Défi 2 - Soustraction incomplète",
+    "Start challenge": "Lancer le défi",
+    "Select a challenge": "Sélectionner un défi"
 }

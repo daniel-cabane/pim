@@ -544,5 +544,15 @@
     "Reset doors": "Reset doors",
     "Autoplay": "Autoplay",
     "Play the game automatically multiple times": "Play the game automatically multiple times",
-    "Tutorial": "Tutorial"
+    "Tutorial": "Tutorial",
+    "Your screen is not wide enough": "Your screen is not wide enough",
+    "Token": "Token",
+    "Clear": "Clear",
+    "Calculate": "Calculate",
+    "Challenge 1 - Addition": "Challenge 1 - Addition",
+    "Challenge 2 - Incomplete Addition": "Challenge 2 - Incomplete Addition",
+    "Challenge 3 - Subtraction": "Challenge 3 - Subtraction",
+    "Challenge 4 - Incomplete Subtraction": "Challenge 4 - Incomplete Subtraction",
+    "Start challenge": "Start challenge",
+    "Select a challenge": "Select a challenge"
 }

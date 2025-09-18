@@ -9,7 +9,7 @@
                 <div class="d-flex ga-3">
                     <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
                     <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E']" v-model="className"/>
-                    <v-select :label="$t('Campus')" variant="outlined" :items="['bpr', 'tko']" v-model="campus" />
+                    <v-select :label="$t('Campus')" variant="outlined" :items="['BPR', 'TKO']" v-model="campus" />
                 </div>
                 <v-btn color="primary" block append-icon="mdi-content-paste" :text="$t('Paste from clipboard')" @click="pasteStudents"/>
                 <div>
@@ -63,7 +63,7 @@
 
     const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
     const headers = [
-        { title: 'Name', value: 'name' }, { title: 'Email', value: 'email' }, { title: 'Actions', key:'actions', sortable: false }
+        { title: 'Name', value: 'name' }, { title: 'Email', value: 'email' }, { title: 'Card Nb', value: 'cardNb' }, { title: 'Actions', key:'actions', sortable: false }
     ]
 
     const mainDialog = ref(false);
@@ -88,7 +88,8 @@
                 return {
                     id,
                     name: (row[1].split(" "))[0].replace(/,/g, '')+' '+row[0],
-                    email: row[4].replace(/\r$/, '')
+                    email: row[2].replace(/\r$/, ''),
+                    cardNb: row[3]
                 };
             });
 

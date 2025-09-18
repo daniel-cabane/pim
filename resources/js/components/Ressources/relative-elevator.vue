@@ -1,13 +1,13 @@
 <template>
     <v-container @keydown.enter='submitAnswer'>
         <v-alert class="mb-8" type="error" v-if='["xs", "sm"].includes(name)'>
-            Votre écran n'est pas assez large pour afficher cette application correctement
+            {{ $t('Your screen is not wide enough') }}
         </v-alert>
-        <v-snackbar v-model="snackbar" top :color='snackColor'>
+        <v-snackbar v-model="snackbar" top :color='snackColor' class="text-h3">
             {{ snackText }}
             <template v-slot:action="{ attrs }">
             <v-btn :color="snackColor" text v-bind="attrs" @click="snackbar = false">
-                Close
+                {{ $t('Close') }}
             </v-btn>
             </template>
         </v-snackbar>
@@ -51,7 +51,7 @@
                     </v-col>
                 </v-row>
                 <v-btn block color='primary' x-large class='mt-4' @click='moveLift' :disabled='challengeActive'>
-                    Effectuer
+                    {{ $t('Calculate') }}
                 </v-btn>
                 </v-col>
                 <v-col cols='1'></v-col>
@@ -77,18 +77,21 @@
             </v-col>
         </v-row>
         <v-row class='mt-4'>
-            <v-select v-model='challengeNb' :items="challenges" class='mx-2' label="Sélectionner un défi" :disabled='challengeActive' variant='outlined'></v-select>
+            <v-select 
+                v-model='challengeNb' 
+                :items="challenges"
+                class='mx-2' 
+                :label="$t('Select a challenge')"
+                :disabled='challengeActive'
+                variant='outlined'
+            />
             <div style='display:flex' v-if='challengeActive'>
-            <v-text-field type='number' v-model='challengeResult' label='Résultat' autofocus outlined v-if='challengeNb%2 == 1'/>
-            <v-btn class="mx-2" fab dark color="success" @click='submitAnswer'>
-                <v-icon dark>done</v-icon>
-            </v-btn>
-            <v-btn class="mx-2" fab dark color="error" @click='endChallenge'>
-                <v-icon dark>clear</v-icon>
-            </v-btn>
+                <v-text-field type='number' variant="outlined" v-model='challengeResult' label='Résultat' autofocus outlined v-if='challengeNb%2 == 1'/>
+                <v-btn class="mx-2" icon="mdi-check" color="success" @click='submitAnswer'/>
+                <v-btn class="mx-2" icon="mdi-close" color="error" @click='endChallenge'/>
             </div>
-            <v-btn style='width:215px' size='x-large' class='mx-2' color='primary' @click='startChallenge' :disabled="!challengeNb" v-else>
-            Lancer le défi
+            <v-btn style='width:215px;margin-top:2px;' size='x-large' class='mx-2' color='primary' @click='startChallenge' :disabled="!challengeNb" v-else>
+                {{ $t('Start challenge') }}
             </v-btn>
         </v-row>
         <v-row class='headline mb-4'>
@@ -99,20 +102,22 @@
     </v-container>
 </template>
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref } from 'vue';
     import { useDisplay, useTheme } from 'vuetify';
+    import { useI18n } from 'vue-i18n';
+
+    const { t } = useI18n();
     
     const theme = useTheme();
-    console.log(theme.name.value)
     const { name } = useDisplay();
 
     const operation = ref(true);
     const result = ref(0);
     const challenges = ref([
-        { title: 'Défi 1 - Addition', value: 1 },
-        { title: 'Défi 2 - Addition incomplète', value: 2 },
-        { title: 'Défi 3 - Soustraction', value: 3 },
-        { title: 'Défi 4 - Soustraction incomplète', value: 4 },
+        { title: t('Challenge 1 - Addition'), value: 1 },
+        { title: t('Challenge 2 - Incomplete Addition'), value: 2 },
+        { title: t('Challenge 3 - Subtraction'), value: 3 },
+        { title: t('Challenge 4 - Incomplete Subtraction'), value: 4 },
     ]);
     const challengeNb = ref(null);
     const challengeResult = ref('');
@@ -154,27 +159,36 @@
     }
     };
 
+    const randomTokens = () => {
+        const tokenValue = Math.random() < 0.5;
+        const nbTokens = Math.floor(Math.random() * 16);
+        return new Array(nbTokens).fill(tokenValue);
+    }
+
     const startChallenge = () => {
     if (challengeNb.value > 0) {
         document.getElementById("lift").style.transform = 'translateY(0px)';
         if (result.value !== 0) {
-        const count = setInterval(() => {
-            result.value += Math.sign(-result.value);
-            if (result.value === 0) clearInterval(count);
-        }, 500 / Math.abs(-result.value));
+            const count = setInterval(() => {
+                result.value += Math.sign(-result.value);
+                if (result.value === 0) clearInterval(count);
+            }, 500 / Math.abs(-result.value));
         }
         challengeResult.value = '';
-        // eventBus.$emit('startChallenge', challengeNb.value);
         operation.value = challengeNb.value <= 2;
         challengeActive.value = true;
 
         switch (challengeNb.value % 2) {
-        case 0:
-            expectedResult.value = Math.sign(Math.random() - 0.5) * Math.floor(Math.random() * 15);
-            challengeText.value = `Complète l'opération pour arriver à l'étage <span class='display-1 font-weight-bold'>${expectedResult.value}</span>`;
-            break;
-        case 1:
-            challengeText.value = "Effectue l'opération";
+            case 0:
+                tokens.value = [randomTokens(), []];
+                PanelLocked.value = [true, false];
+                expectedResult.value = Math.sign(Math.random() - 0.5) * Math.floor(Math.random() * 15);
+                challengeText.value = `Complète l'opération pour arriver à l'étage <span class='display-1 font-weight-bold'>${expectedResult.value}</span>`;
+                break;
+            case 1:
+                tokens.value = [randomTokens(), randomTokens()];
+                PanelLocked.value = [true, true];
+                challengeText.value = "Effectue l'opération";
             break;
         }
     }
@@ -182,19 +196,21 @@
 
     const submitAnswer = () => {
     if (challengeActive.value) {
-        const resultA = operation.value ? parseInt(terms.value[0]) + parseInt(terms.value[1]) : parseInt(terms.value[0]) - parseInt(terms.value[1]);
+        const res0 = tokens.value[0].reduce((accum, num) => accum + (num ? 1 : -1), 0);
+        const res1 = tokens.value[1].reduce((accum, num) => accum + (num ? 1 : -1), 0);
+        const resultA = operation.value ? res0 + res1 : res0 - res1;
         const resultB = challengeNb.value % 2 === 0 ? expectedResult.value : challengeResult.value;
 
-        if (resultA === resultB) {
-        snackColor.value = 'success';
-        snackText.value = 'Exact !';
-        snackbar.value = true;
-        endChallenge();
+        if (resultA == resultB) {
+            snackColor.value = 'success';
+            snackText.value = 'Exact !';
+            snackbar.value = true;
+            endChallenge();
         } else {
-        challengeResult.value = '';
-        snackColor.value = 'error';
-        snackText.value = 'Non, essaie encore';
-        snackbar.value = true;
+            challengeResult.value = '';
+            snackColor.value = 'error';
+            snackText.value = 'Non, essaie encore';
+            snackbar.value = true;
         }
     }
     };
@@ -203,7 +219,7 @@
         moveLift();
         challengeActive.value = false;
         challengeText.value = '';
-        // eventBus.$emit('endChallenge', {});
+        PanelLocked.value = [false, false];
     };
 </script>
 <style scoped>
