@@ -552,7 +552,7 @@ class Workshop extends Model
                     'text_en' => '',
                     'url' => ''
             ],
-            'to' => $this->campus == 'BPR' ? 'ogazeau@g.lfis.edu.hk' : 'cchartrain@g.lfis.edu.hk'
+            'to' => $this->campus == 'BPR' ? 'eblanctores@g.lfis.edu.hk' : 'cchartrain@g.lfis.edu.hk'
         ],
         'sender_id' => 1,
         'admin' => 1,

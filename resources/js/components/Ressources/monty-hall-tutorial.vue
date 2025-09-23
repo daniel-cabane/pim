@@ -164,7 +164,7 @@
                         <v-btn :input-value="active" icon @click="toggle">
                             <v-icon 
                                 :icon="n == onboarding+1 ? 'mdi-record-circle-outline' : 'mdi-record'"
-                                :color="n == onboarding+1 ? 'white' : 'captionColor'"
+                                :color="n == onboarding+1 ? 'black' : 'captionColor'"
                             />
                         </v-btn>
                     </v-item>

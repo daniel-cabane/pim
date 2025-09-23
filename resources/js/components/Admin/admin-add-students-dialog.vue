@@ -118,7 +118,7 @@
             students.value = [];
             classLevel.value = null;
             className.value = null;
-            campus.value = 'bpr';
+            campus.value = 'BPR';
             mainDialog.value = false;
         }
     }

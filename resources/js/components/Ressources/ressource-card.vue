@@ -6,8 +6,13 @@
         </v-card-title>
         <v-card-text>
             <div v-html="ressource.description[locale]"/>
-            <div class="mt-4">
-                <v-chip v-for="theme in ressource.themes" :text="theme[locale]" class="mr-2" color="secondary" variant="flat"/>
+            <div class="mt-4 d-flex flew-wrap ga-2">
+                <v-chip 
+                    v-for="theme in ressource.themes"
+                    :text="theme[locale]"
+                    color="secondary"
+                    variant="flat"
+                />
             </div>
         </v-card-text>
     </v-card>

@@ -174,7 +174,7 @@ class PostController extends Controller
 
     public function updateCoverImage(Request $request, Post $post)
     {
-        $file = $request->validate(['file' => 'required|file|image|max:256|dimensions:max_width=1920,max_height=1080'])['file'];
+        $file = $request->validate(['file' => 'required|file|image|max:512|dimensions:max_width=1920,max_height=1080'])['file'];
 
         $filename = $post->id.'-'.time().'-'.$file->getClientOriginalName();
         $file->storeAs('public/images/posts', $filename);

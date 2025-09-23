@@ -28,13 +28,29 @@
             },
             slug: 'relative-elevator',
             description: {
-                en: '',
-                fr: '',
+                en: 'This app uses an elevator powered by black and white tokens to help students understand the concept of adding and subtracting relative numbers.<br/>Various challenges are available to put this understanding to practice.',
+                fr: 'Cette application utilise un ascenseur alimenté par des jetons noirs et blancs pour aider les élèves à comprendre le concept de l\'addition et de la soustraction de nombres relatifs.<br/>Divers défis sont disponibles pour mettre cette compréhension en pratique.',
             },
             themes: [
                 { en: 'Relative numbers', fr: 'Nombres relatifs' },
                 { en: 'Visualisation', fr: 'Visualisation' }
             ]
-        }
+        },
+        { 
+            title: {
+                en: 'The biased dice',
+                fr: 'Les dés truqués',
+            }, 
+            slug: 'biased-dice',
+            description: {
+                en: 'Throw dice a large number of time and try to find out if they are balanced or biased. With this application, you can illustrate the law of large numbers and discuss mathematical tools such as confidence intervals (eg Bienaymé–Chebyshev inequality)',
+                fr: "Lancez des dés un grand nombre de fois et essayez de déterminer s'ils sont équilibrés ou biaisés. Avec cette application, vous pouvez illustrer la loi des grands nombres et discuter des outils mathématiques tels que les intervalles de confiance (par exemple, l'inégalité de Bienaymé–Tchebychev).",
+            },
+            themes: [
+                { en: 'Probabilities', fr: 'Probabilités' },
+                { en: 'Confidence interval', fr: 'Intervalle de confiance' },
+                { en: 'Simulation', fr: 'Simulation' }
+            ]
+        },
     ];
 </script>

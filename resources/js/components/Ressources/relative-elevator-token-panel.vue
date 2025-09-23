@@ -19,15 +19,13 @@
                 class="mb-2"
                 @click="emit('addWhite', index)"
                 :disabled='tokenList.length >= 20 || locked'
-                :text="$t('Token')"
-                :append-icon="theme.name.value == 'customDark' ? 'mdi-plus-circle' : 'mdi-plus-circle-outline'"
+                :icon="theme.name.value == 'customDark' ? 'mdi-plus-circle' : 'mdi-plus-circle-outline'"
             />
             <v-btn 
                 class="mb-2"
                 @click="emit('addBlack', index)"
                 :disabled='tokenList.length >= 20 || locked'
-                :text="$t('Token')"
-                :append-icon="theme.name.value == 'customDark' ? 'mdi-minus-circle-outline' : 'mdi-minus-circle'"
+                :icon="theme.name.value == 'customDark' ? 'mdi-minus-circle-outline' : 'mdi-minus-circle'"
             />
             <v-btn 
                 class="mb-2"
@@ -35,8 +33,7 @@
                 color='error' 
                 variant='outlined' 
                 :disabled='locked'
-                append-icon="mdi-close-octagon-outline"
-                :text="$t('Clear')"
+                icon="mdi-close-octagon-outline"
             />
         </v-row>
     </v-container>

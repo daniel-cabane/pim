@@ -94,26 +94,29 @@
                 {{ $t('Start challenge') }}
             </v-btn>
         </v-row>
-        <v-row class='headline mb-4'>
-            <v-spacer></v-spacer>
-            <span v-html='challengeText'></span>
-            <v-spacer></v-spacer>
+        <v-row class='headline mb-4 d-flex flex-column align-center' v-if='challengeActive'>
+            <div class="text-h5 text-captionColor">
+                {{ $t(challengeText) }}
+            </div>
+            <div class="text-h1" v-if="challengeNb%2==0">
+                {{ expectedResult }}
+            </div>
         </v-row>
     </v-container>
 </template>
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { useDisplay, useTheme } from 'vuetify';
     import { useI18n } from 'vue-i18n';
 
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
     
     const theme = useTheme();
     const { name } = useDisplay();
 
     const operation = ref(true);
     const result = ref(0);
-    const challenges = ref([
+    const challenges = computed(() => [
         { title: t('Challenge 1 - Addition'), value: 1 },
         { title: t('Challenge 2 - Incomplete Addition'), value: 2 },
         { title: t('Challenge 3 - Subtraction'), value: 3 },
@@ -183,12 +186,12 @@
                 tokens.value = [randomTokens(), []];
                 PanelLocked.value = [true, false];
                 expectedResult.value = Math.sign(Math.random() - 0.5) * Math.floor(Math.random() * 15);
-                challengeText.value = `Complète l'opération pour arriver à l'étage <span class='display-1 font-weight-bold'>${expectedResult.value}</span>`;
+                challengeText.value = 'Complete the operation to get to floor';
                 break;
             case 1:
                 tokens.value = [randomTokens(), randomTokens()];
                 PanelLocked.value = [true, true];
-                challengeText.value = "Effectue l'opération";
+                challengeText.value = 'Calculate';
             break;
         }
     }

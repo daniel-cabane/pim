@@ -76,7 +76,7 @@
     { name: 'home', icon: 'mdi-home', url: '/' },
     { name: 'workshops', icon: 'mdi-puzzle', url: '/workshops' },
     { name: 'calendar', icon: 'mdi-calendar', url: '/calendar' },
-    // { name: 'ressources', icon: 'mdi-folder-star-outline', url: '/ressources' },
+    { name: 'ressources', icon: 'mdi-folder-star-outline', url: '/ressources' },
   ];
   const ucFirst = str => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
 
