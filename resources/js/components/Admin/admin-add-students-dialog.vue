@@ -61,7 +61,7 @@
     const { addStudents, lostStudents } = userStore;
     const { isLoading } = storeToRefs(userStore);
 
-    const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12'];
+    const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12', 'Y13'];
     const headers = [
         { title: 'Name', value: 'name' }, { title: 'Email', value: 'email' }, { title: 'Card Nb', value: 'cardNb' }, { title: 'Actions', key:'actions', sortable: false }
     ]
