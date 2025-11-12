@@ -30,4 +30,9 @@ export default defineConfig({
             vue: 'vue/dist/vue.esm-bundler.js',
         },
     },
+     server: {
+		headers: {
+        	'Access-Control-Allow-Origin': '*',
+        },
+    },
 });
