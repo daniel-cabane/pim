@@ -49,6 +49,7 @@ export const usePostStore = defineStore({
             const res = await get(`/api/posts/${slug}?query=Laravel&read=${read ? 1 :0}`, true);
             this.post = res.post;
             this.isReady = true;
+            // console.log(`https://pim.fis.edu.hk${this.post?.cover?.url}`)
             return res.post;
         },
         async adminGetposts() {
