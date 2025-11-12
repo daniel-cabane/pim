@@ -35,7 +35,6 @@ export const usePostStore = defineStore({
         },
         async getPublishedPosts(locale = null, skip = 0, take = 6) {
             this.isReady = false;
-            // this.posts = [];
             const res = await get(`/api/posts/published?query=Laravel&skip=${skip}&take=${take}&locale=${locale}`, true);
             this.posts = res.posts;
             this.totalNbPosts = res.total;
