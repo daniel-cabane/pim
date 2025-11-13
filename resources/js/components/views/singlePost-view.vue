@@ -25,6 +25,6 @@
         description: computed(() => post?.value.description),
         ogTitle: computed(() => post?.value.title),
         ogDescription: computed(() => post?.value.description),
-        ogImage: computed(() => post ? `https://pim.fis.edu.hk${post?.value.cover?.url.replace('/storage', '')}` : null )
+        ogImage: computed(() => post ? `https://pim.fis.edu.hk${post?.value.cover?.url}` : null )
     });
 </script>
