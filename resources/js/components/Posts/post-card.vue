@@ -4,6 +4,9 @@
         <div class="mt-2">
             {{ post.description }}
         </div>
+        <div class="text-caption text-captionColor d-flex justify-center mt-4" v-if="post.published_at">
+            {{ $t('Published on') }} {{ post.published_at_formated }} - {{ post.stats.reads }} {{ $t('reads') }}
+        </div>
         <v-btn 
             size="small"
             color="primary"

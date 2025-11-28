@@ -62,7 +62,7 @@ class PostController extends Controller
     {
         $user = auth()->user();
         $posts = [];
-        foreach($user->posts()->where('author_id', $user->id)->get() as $post){
+        foreach($user->posts()->where('author_id', $user->id)->orderByDesc('published_at')->get() as $post){
             $posts[] = $post->format();
         }
         return response()->json([

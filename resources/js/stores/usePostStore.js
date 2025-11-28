@@ -31,6 +31,7 @@ export const usePostStore = defineStore({
             this.isReady = false;
             const res = await get('/api/myPosts', true);
             this.myPosts = res.posts;
+            console.log(res.posts);
             this.isReady = true;
         },
         async getPublishedPosts(locale = null, skip = 0, take = 6) {
