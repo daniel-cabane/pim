@@ -11,7 +11,7 @@
             </div>
             <workshop-lcs :workshop="workshop" />
         </div>
-        <v-card-text class="threelines" v-html="description" />
+        <v-card-text class="threelines mb-3" v-html="description" />
         <div class="px-4">
             <div>
                 <div class="text-caption text-captionColor">
@@ -77,7 +77,7 @@
         line-clamp: 3;
         -webkit-line-clamp: 3;
         white-space: pre-wrap;
-        min-height: 60px;
-        max-height: 60px;
+        min-height: 75px;
+        max-height: 75px;
     }
 </style>
