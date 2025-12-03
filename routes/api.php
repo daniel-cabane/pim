@@ -116,6 +116,7 @@ Route::group(['middleware'=>['role:admin|hod']], function(){
 */
 // Route::post('/pobpr', [UserController::class, 'pobpr']);
 
+Route::get('/blog', [PostController::class, 'blog']);
 Route::get('/posts/published', [PostController::class, 'published']);
 Route::get('/posts/search', [PostController::class, 'search']);
 Route::get('/themes', [PostController::class, 'themes']);

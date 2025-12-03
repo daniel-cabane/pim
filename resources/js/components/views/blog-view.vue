@@ -1,14 +1,27 @@
 <template>
     <v-container>
-        <v-text-field variant="outlined" hide-details class="elevation-5" v-model="title" label="Search by title"
-            clearable @click:clear="searching=false;getPublishedPosts(0, 12)" @keyup="typing" />
-        <div class="d-flex flex-wrap justify-space-around mt-2" v-if="isReady">
-            <post-home-card class="ma-2" v-for="post in posts" :key="post.id" :post="post" />
+        <v-text-field 
+            variant="outlined" 
+            hide-details
+            class="elevation-5"
+            v-model="title"
+            label="Search by title"
+            clearable
+        />
+        <div class="d-flex flex-wrap justify-space-around mt-2 ga-2" v-if="isReady">
+            <post-home-card
+                v-for="post in displayedPosts"
+                :key="post.id"
+                :post="post" 
+            />
         </div>
-        <div v-if="!searching">
-            <v-pagination v-model="page" :length="paginationLength"
-                @update:modelValue="getPublishedPosts((page - 1) * 12, 12)" />
-        </div>
+        <!-- <div>
+            <v-pagination 
+                v-model="page"
+                :length="paginationLength"
+                @update:modelValue="logme"
+            />
+        </div> -->
     </v-container>
 </template>
 <script setup>
@@ -20,26 +33,26 @@
     const { locale } = useI18n();
 
     const postStore = usePostStore();
-    const { getPublishedPosts, searchPosts } = postStore;
-    const { posts, totalNbPosts, isReady } = storeToRefs(postStore);
-    getPublishedPosts(locale.value, 0, 12);
+    const { getBlog } = postStore;
+    const { posts, isReady } = storeToRefs(postStore);
+    getBlog(locale.value);
     
-    const paginationLength = computed(() => Math.ceil(totalNbPosts.value / 12));
+    // const paginationLength = computed(() => Math.ceil(totalNbPosts.value / 12));
     const page = ref(1);
 
     const title = ref('');
-    const searching = ref(false);
-    let typingTimer;
-    const typing = () => {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-            if(title.value.length == 0){
-                searching.value = false;
-                getPublishedPosts(0, 12);
-            } else {
-                searching.value = true;
-                searchPosts(title.value);
-            }
-        }, 1000);
-    }
+    // const logme = () => console.log(page);
+
+    const displayedPosts = computed(() => {
+        const q = title.value?.trim().toLowerCase();
+        if (!q) return posts.value;
+        return posts.value.filter(p => {
+            // handle title as string or localized object
+            let text = '';
+            if (!p) return false;
+            if (typeof p.title === 'string') text = p.title;
+            else if (p.title && typeof p.title === 'object') text = p.title[locale.value] ?? Object.values(p.title)[0] ?? '';
+            return text.toString().toLowerCase().includes(q);
+        });
+    });
 </script>

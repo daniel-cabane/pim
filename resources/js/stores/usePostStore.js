@@ -34,6 +34,14 @@ export const usePostStore = defineStore({
             console.log(res.posts);
             this.isReady = true;
         },
+        async getBlog(locale = null)
+        {
+            this.isReady = false;
+            const res = await get(`/api/blog?query=Laravel&locale=${locale}`, true);
+            this.posts = res.posts;
+            console.log(res.posts);
+            this.isReady = true;
+        },
         async getPublishedPosts(locale = null, skip = 0, take = 6) {
             this.isReady = false;
             const res = await get(`/api/posts/published?query=Laravel&skip=${skip}&take=${take}&locale=${locale}`, true);

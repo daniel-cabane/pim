@@ -13,6 +13,30 @@ use Illuminate\Validation\Rule;
 class PostController extends Controller
 {
     /**
+     * Get the whole blog
+     */
+    public function blog(Request $request)
+    {
+        $attrs = $request->validate(['locale' => 'sometimes|max:5|nullable']);
+        $posts = [];
+        $postIds = [];
+        $preferedLanguage = isset($attrs['locale']) ? $attrs['locale'] : 'en';
+        foreach(Post::where('status', 'published')->where('isTranslation', 0)->orderBy('published_at', 'desc')->get() as $post){
+            if($preferedLanguage && $post->language != $preferedLanguage && $post->translation_id && $post->translation->status == 'published'){
+                $post = $post->translation;
+            }
+            if(!in_array($post->id, $postIds)){
+                $posts[] = $post->forBlog();
+                $postIds[] = $post->id;
+            }
+        }
+
+        return response()->json([
+            'posts' => $posts, 'total' => count($posts)
+        ]);
+    }
+
+    /**
      * Display all the recent posts
      */
     public function published(Request $request)
