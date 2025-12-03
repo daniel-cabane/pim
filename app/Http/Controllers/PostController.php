@@ -78,7 +78,7 @@ class PostController extends Controller
         $attrs = $request->validate([
             'title' => 'required|min:5|max:50',
             'language'  => 'required|min:2|max:2',
-            'description' => 'required|min:10|max:255',
+            'description' => 'required|min:10|max:225',
         ]);
 
         $post = Post::create([
@@ -120,7 +120,7 @@ class PostController extends Controller
     {
         $attrs = $request->validate([
             'title' => 'required|min:8|max:150',
-            'description' => 'required|min:5|max:255',
+            'description' => 'required|min:5|max:225',
             'language' => 'required|min:2|max:2',
             'post' => 'required|max:50000',
             'cover' => 'required|max:5000',

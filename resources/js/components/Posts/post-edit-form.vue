@@ -6,7 +6,8 @@
                     <div style="min-width:350px;flex:1;">
                         <v-text-field 
                             :rules="[rules.required, rules.minLengthTitle]" 
-                            max="100" 
+                            max="50" 
+                            counter="50"
                             v-model="post.title"
                             :label="$t('Title')" 
                             variant="outlined"

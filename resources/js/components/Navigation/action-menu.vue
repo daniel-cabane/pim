@@ -22,13 +22,25 @@
                 <v-card>
                     <v-card-title>{{ $t("New post") }}</v-card-title>
                     <v-card-text>
-                        <v-text-field :rules="[rules.required, rules.minLengthTitle]" v-model="newPost.title"
-                            :label="$t('Title')" variant="outlined" validate-on="blur" />
+                        <v-text-field 
+                            :rules="[rules.required, rules.minLengthTitle]" 
+                            v-model="newPost.title"
+                            :label="$t('Title')"
+                            variant="outlined"
+                            validate-on="blur"
+                            counter="50"
+                        />
                         <v-select v-model="newPost.language"
                             :items="[{title: 'Français', value: 'fr'}, {title: 'English', value: 'en'}]"
                             :label="$t('Language') " variant="outlined" />
-                        <v-textarea :rules="[rules.required, rules.minLengthDescription]" v-model="newPost.description"
-                            :label="$t('Description')" variant="outlined" validate-on="blur" />
+                        <v-textarea
+                            :rules="[rules.required, rules.minLengthDescription]"
+                            v-model="newPost.description"
+                            :label="$t('Description')"
+                            variant="outlined"
+                            validate-on="blur" 
+                            counter="225"
+                        />
                     </v-card-text>
                     <div class="d-flex pa-2">
                         <v-spacer />

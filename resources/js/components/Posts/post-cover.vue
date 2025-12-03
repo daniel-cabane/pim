@@ -1,13 +1,13 @@
 <template>
     <div>
-        <v-img class="align-end text-white" aspect-ratio="16/9" max-height="197" min-height="197" cover :src="post.cover.url">
-            <v-card-title 
-                class="pimSubtitleFont pb-0 pt-6"
-                style="font-weight:bold;font-size:24px;line-height:1.2;"
+        <v-img class="align-end" aspect-ratio="16/9" max-height="197" min-height="197" cover :src="post.cover.url">
+            <div 
+                class="pimSubtitleFont px-4 pt-6"
+                style="font-weight:bold;font-size:24px;line-height:1.2;max-height:82px;"
                 :style="`color:${fontColor};background: linear-gradient(to top, ${backgroundColor}, transparent);`"
             >
                 {{ post.title }}
-            </v-card-title>
+            </div>
         </v-img>
     </div>
 </template>
