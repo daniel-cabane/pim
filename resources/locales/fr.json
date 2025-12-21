@@ -579,5 +579,7 @@
     "Average": "Moyenne",
     "roll": "lancer",
     "Content": "Contenu",
-    "reads": "lectures"
+    "reads": "lectures",
+    "Cumulative": "Cumulatif",
+    "Annual total": "Total annuel"
 }

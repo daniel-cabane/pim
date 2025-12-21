@@ -579,5 +579,7 @@
     "Average": "Average",
     "roll": "roll",
     "Content": "Content",
-    "reads": "reads"
+    "reads": "reads",
+    "Cumulative": "Cumulative",
+    "Annual total": "Annual total"
 }

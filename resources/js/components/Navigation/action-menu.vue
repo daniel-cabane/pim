@@ -116,7 +116,7 @@
                 <v-card :loading="activityLoading">
                     <v-card-title class="d-flex">
                         {{ $t("My hours") }}
-                        <span>
+                        <span class="ml-1">
                             ({{ user.preferences.hoursDuePerWeek }}h {{ $t('per week') }})
                         </span>
                         <v-spacer/>

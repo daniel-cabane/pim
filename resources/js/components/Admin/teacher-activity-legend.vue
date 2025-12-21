@@ -5,7 +5,7 @@
             <v-card-text>
                 <div class="d-flex align-center mb-3" v-for="legend in legends">
                     <div class="sessionBox" :style="`background-color:${legend.color};`"/>
-                    <span class="ml-2" style="line-height: 100%;">
+                    <span class="ml-2" style="line-height: 100%;white-space: break-spaces;">
                         {{ $t(legend.text) }}
                     </span>
                 </div>

@@ -1,9 +1,10 @@
 <template>
     <div v-if="teacher.activity">
-        <div class="text-h5 text-grey mb-4" v-if="showName">
+        <div class="text-h5 text-grey mb-4 d-flex align-center" v-if="showName">
             <span>
                 {{ teacher.name }} <span v-if="teacher.preferences.hoursDuePerWeek">({{ teacher.preferences.hoursDuePerWeek }}h)</span>
             </span>
+            <v-btn class="ml-3" flat icon="mdi-list-box-outline" @click="showTeacherActivityList(teacher)"/>
         </div>
         <div class="d-flex mb-5">
             <div v-for="week in teacher.activity.weeks" class="weekBox">
@@ -64,13 +65,59 @@
                 {{ $t('No hours due') }}
             </span>
         </div>
+        <v-dialog v-model="activityListDialog" width="650" scrollable>
+            <v-card prepend-icon="mdi-list-box-outline" :title="`${focusedTeacher.name} - ${$t('Details')}`">
+                <v-card-subtitle class="d-flex text-h6 justify-space-around mb-2">
+                    <div>
+                        <div v-if="teacher.preferences.hoursDuePerWeek">
+                            {{ teacher.preferences.hoursDuePerWeek }}h {{ $t('per week') }}
+                        </div>
+                        <div v-else>
+                            {{ $t('No hours due') }}
+                        </div>
+                    </div>
+                    <div>
+                        <div v-if="hours.total">
+                            {{ $t('Annual total') }} {{ hours.past + hours.future + hours.mission }}/{{ hours.total }}h
+                        </div>
+                        <div v-else>
+                            {{ $t('No hours due') }}
+                        </div>
+                    </div>
+                </v-card-subtitle>
+                <v-card-text>
+                    <v-data-table :items-per-page="-1" :items="focusedTeacher.activityItems" :headers="headers">
+                        <template v-slot:item="{ item }">
+                <tr>
+                    <td>{{ formatDateDDMMYY(item.date) }}</td>
+                    <td>{{ item.start }}</td>
+                    <td>
+                        <v-tooltip :text="item.typeDetails.text" location="top">
+                            <template v-slot:activator="{ props }">
+                                <v-chip variant="flat" :color="item.typeDetails.color" v-bind="props">
+                                    <span class="text-white">{{ $t(item.typeDetails.title) }}</span>
+                                </v-chip>
+                            </template>
+                        </v-tooltip>
+                    </td>
+                    <td>{{ item.cumulative }}h</td>
+                </tr>
+            </template>
+                    </v-data-table>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn color="primary" variant="tonal" :text="$t('Close')" @click="activityListDialog = false"/>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script setup>
-    import { computed } from "vue";
+    import { computed, ref } from "vue";
     import { useI18n } from 'vue-i18n';
 
-    const { locale } = useI18n();
+    const { locale, t } = useI18n();
 
     const props = defineProps({ teacher: Object, showName: Boolean });
 
@@ -117,6 +164,62 @@
         const formattedDate = date.toLocaleDateString(locale.value, { weekday: 'short', day: '2-digit', month: '2-digit' });
 
         return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    }
+
+    const formatDateDDMMYY = dateString => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear()).slice(-2);
+        const dayOfWeek = date.toLocaleDateString(locale, { weekday: 'short' });
+        return `${dayOfWeek}. ${day}-${month}-${year}`;
+    }
+
+    const headers = computed(() => [
+        { title: 'Date', value: 'date' },
+        { title: t('Time'), value: 'start' },
+        { title: t('Type'), value: 'type' },
+        { title: t('Cumulative'), value: 'cumulative' },
+    ]);
+    const activityListDialog = ref(false);
+    const focusedTeacher = ref(null);
+    const showTeacherActivityList = teacher => {
+        focusedTeacher.value = teacher;
+        if(!focusedTeacher.value.activityItems){
+            let items = [];
+            focusedTeacher.value.activity.weeks.forEach(w => {
+                let weekItems = [];
+                w.openDoorSessions.forEach(s => weekItems.push(s));
+                w.workshopSessions.forEach(s => weekItems.push(s));
+                weekItems = weekItems.sort((a, b) => {
+                    if (a.date !== b.date) {
+                        return new Date(a.date) - new Date(b.date);
+                    }
+                    return a.start.localeCompare(b.start);
+                });
+                items = items.concat(weekItems);
+            });
+            let cumulative = 0;
+            focusedTeacher.value.activityItems = items.map(i => {
+                cumulative += i.type == 'Open doors' ? 0.5 : 1;
+                let typeDetails;
+                if(i.type == 'Open doors'){
+                    typeDetails = {
+                        title: 'Open doors',
+                        text: `${i.campus} - ${i.roomNb}`,
+                        color: i.isPast ? colors.openDoors.past : colors.openDoors.future
+                    }
+                } else {
+                    typeDetails = {
+                        title: 'Workshop',
+                        text: i.workshopTitle,
+                        color: i.isPast ? colors.workshops.past : colors.workshops.future
+                    }
+                }
+                return { ...i, cumulative, typeDetails };
+            });
+        }
+        activityListDialog.value = true;
     }
 </script>
 <style scoped>

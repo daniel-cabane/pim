@@ -18,6 +18,7 @@ export const useHodStore = defineStore({
             const res = await get(`/api/hod/index`, true);
             this.workshops = res.workshops;
             this.teachers = res.teachers;
+            console.log(res.teachers);
             this.isReady = true;
         },
         async updateTeachersHours() {
