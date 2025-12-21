@@ -210,10 +210,17 @@ class User extends Authenticatable implements MustVerifyEmail
       }
       $firstTerm = Term::where('nb', 1)->first();
       $lastTerm = Term::where('nb', 3)->first();
-      $startOfWeek = (Carbon::parse($firstTerm->start_date))->addWeek(2)->startOfWeek();
+      $startOfWeek = (Carbon::parse($firstTerm->start_date))->startOfWeek();
       $missionHours = 0;
+      $missions = [];
       foreach(Mission::where('teacher_id', $this->id)->get() as $mission){
         $missionHours += $mission->lesson_hours + 0.5*$mission->prep_hours;
+        $missions[] = [
+          'id' => $mission->id,
+          'title' => $mission->title,
+          'lessonHours' => $mission->lesson_hours,
+          'prepHours' => $mission->prep_hours
+        ];
       }
       $hours = ['past' => 0, 'future' => 0, 'mission' => $missionHours];
       $openDoorSessions = OpenDoor::where('teacher_id', $this->id)->orderBy('date')->get();
@@ -249,7 +256,7 @@ class User extends Authenticatable implements MustVerifyEmail
       $weeksPast = 0;
       $weeksFuture = 0;
       $month = '';
-      $endOfYear = Carbon::parse($lastTerm->finish_date)->subWeek();
+      $endOfYear = Carbon::parse($lastTerm->finish_date);
       while($startOfWeek->isBefore($endOfYear)){
         $endOfWeek = $startOfWeek->copy()->endOfWeek()->startOfDay();
         $newMonth = $month != $startOfWeek->format('F');
@@ -291,6 +298,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $startOfWeek->addWeek();
       }
-      return ['weeks' => $weeks, 'hours' => $hours, 'nbWeeks' => ['past' => $weeksPast, 'future' => $weeksFuture]];
+      return [
+        'weeks' => $weeks,
+        'hours' => $hours,
+        'missions' => $missions,
+        'nbWeeks' => [
+          'past' => $weeksPast,
+          'future' => $weeksFuture
+        ]
+      ];
     }
 }

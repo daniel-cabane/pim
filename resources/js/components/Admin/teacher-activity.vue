@@ -86,23 +86,53 @@
                     </div>
                 </v-card-subtitle>
                 <v-card-text>
+                    <div class="text-caption text-captionColor">
+                        Missions
+                    </div>
+                    <div>
+                        <!-- <div v-for="mission in focusedTeacher.activity.missions" >
+                            <v-divider/>
+                            <div class="d-flex justify-space-around align-center pa-2">
+                                <span>
+                                    {{ mission.title }}
+                                </span>
+                                <v-chip color="black" variant="flat" text="mission" label/>
+                                <span>
+                                    {{ mission.lessonHours + mission.prepHours*0.5 }}h
+                                </span>
+                            </div>
+                            <v-divider/>
+                        </div> -->
+                        <v-table>
+                            <tbody>
+                                <tr v-for="mission in focusedTeacher.activity.missions">
+                                    <td class="text-h6">{{ mission.title }}</td>
+                                    <td><v-chip color="black" variant="flat" text="mission" label/></td>
+                                    <td>{{ mission.lessonHours + mission.prepHours*0.5 }}h</td>
+                                </tr>
+                            </tbody>
+                        </v-table>
+                    </div>
+                    <div class="text-caption text-captionColor mt-5">
+                        {{ $t('Open doors') }} & {{ $t('workshops') }}
+                    </div>
                     <v-data-table :items-per-page="-1" :items="focusedTeacher.activityItems" :headers="headers">
                         <template v-slot:item="{ item }">
-                <tr>
-                    <td>{{ formatDateDDMMYY(item.date) }}</td>
-                    <td>{{ item.start }}</td>
-                    <td>
-                        <v-tooltip :text="item.typeDetails.text" location="top">
-                            <template v-slot:activator="{ props }">
-                                <v-chip variant="flat" :color="item.typeDetails.color" v-bind="props">
-                                    <span class="text-white">{{ $t(item.typeDetails.title) }}</span>
-                                </v-chip>
-                            </template>
-                        </v-tooltip>
-                    </td>
-                    <td>{{ item.cumulative }}h</td>
-                </tr>
-            </template>
+                            <tr>
+                                <td>{{ formatDateDDMMYY(item.date) }}</td>
+                                <td>{{ item.start }}</td>
+                                <td>
+                                    <v-tooltip :text="item.typeDetails.text" location="top">
+                                        <template v-slot:activator="{ props }">
+                                            <v-chip variant="flat" :color="item.typeDetails.color" v-bind="props">
+                                                <span class="text-white">{{ $t(item.typeDetails.title) }}</span>
+                                            </v-chip>
+                                        </template>
+                                    </v-tooltip>
+                                </td>
+                                <td>{{ item.cumulative }}h</td>
+                            </tr>
+                        </template>
                     </v-data-table>
                 </v-card-text>
                 <v-card-actions>
@@ -200,6 +230,9 @@
                 items = items.concat(weekItems);
             });
             let cumulative = 0;
+            focusedTeacher.value.activity.missions.forEach(m => {
+                cumulative += m.lessonHours + 0.5*m.prepHours;
+            });
             focusedTeacher.value.activityItems = items.map(i => {
                 cumulative += i.type == 'Open doors' ? 0.5 : 1;
                 let typeDetails;
