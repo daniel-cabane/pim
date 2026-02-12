@@ -14,7 +14,7 @@
                         </v-btn>
                     </div>
                     <div class="d-flex flex-wrap justify-space-around">
-                        <post-home-card class="my-2" v-for="post in posts" :key="post.id" :post="post" />
+                        <post-home-card class="my-2" v-for="post in posts" :key="post.id" :post="post" @seeSerie="seeSerie"/>
                     </div>
                     <div class="d-flex justify-end">
                         <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog"
@@ -61,7 +61,7 @@
                 </v-btn>
             </div>
             <div class="d-flex flex-wrap justify-space-around" v-if="isReady">
-                <post-home-card class="my-2" v-for="post in posts" :key="post.id" :post="post" />
+                <post-home-card class="my-2" v-for="post in posts" :key="post.id" :post="post" @seeSerie="seeSerie"/>
             </div>
             <div class="d-flex justify-end">
                 <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/blog"
@@ -121,6 +121,10 @@
     const tab = ref('posts');
 
     const theme = useTheme();
+
+    const seeSerie = serie => {
+        console.log(serie);
+    }
 </script>
 <style scoped>
     .neumorphismCard {

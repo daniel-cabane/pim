@@ -68,6 +68,11 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->hasMany(Post::class, 'author_id');
     }
 
+    public function series()
+    {
+      return $this->hasMany(Serie::class, 'author_id');
+    }
+
     public function workshops()
     {
       return $this->hasMany(Workshop::class, 'organiser_id')->where('archived', 0);

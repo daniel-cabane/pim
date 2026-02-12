@@ -90,19 +90,6 @@
                         Missions
                     </div>
                     <div>
-                        <!-- <div v-for="mission in focusedTeacher.activity.missions" >
-                            <v-divider/>
-                            <div class="d-flex justify-space-around align-center pa-2">
-                                <span>
-                                    {{ mission.title }}
-                                </span>
-                                <v-chip color="black" variant="flat" text="mission" label/>
-                                <span>
-                                    {{ mission.lessonHours + mission.prepHours*0.5 }}h
-                                </span>
-                            </div>
-                            <v-divider/>
-                        </div> -->
                         <v-table>
                             <tbody>
                                 <tr v-for="mission in focusedTeacher.activity.missions">
@@ -234,7 +221,8 @@
                 cumulative += m.lessonHours + 0.5*m.prepHours;
             });
             focusedTeacher.value.activityItems = items.map(i => {
-                cumulative += i.type == 'Open doors' ? 0.5 : 1;
+                console.log(i);
+                cumulative += i.type == 'Open doors' ? 0.5 : i.duration;
                 let typeDetails;
                 if(i.type == 'Open doors'){
                     typeDetails = {
@@ -245,7 +233,7 @@
                 } else {
                     typeDetails = {
                         title: 'Workshop',
-                        text: i.workshopTitle,
+                        text: `${i.workshopTitle} (${i.duration}h)`,
                         color: i.isPast ? colors.workshops.past : colors.workshops.future
                     }
                 }

@@ -1,5 +1,5 @@
 <template>
-    <v-card width="350" :to="`/posts/${props.post.slug}`">
+    <v-card width="350" :to="`/posts/${props.post.slug}`" :ripple="false">
         <post-cover :post="post"/>
 
         <v-card-subtitle class="pt-1 d-flex justify-space-between align-center">
@@ -14,19 +14,8 @@
                 <v-img :src="`/images/flag ${post.language}.png`" :width="25" class="ml-2 " />
             </span>
         </v-card-subtitle>
-
-        <!-- <v-card-text class="py-2">
-            <div>
-                {{ post.description }}
-            </div>
-            <div class="mt-2">
-                <v-chip size="small" label class="mr-2 mb-1" color="fis" v-for="theme in post.themeTitles">
-                    #{{ theme }}
-                </v-chip>
-            </div>
-        </v-card-text> -->
-        <v-card-text class="py-2 card-text-grid" style="height:154px;">
-            <div class="description">
+        <v-card-text class="py-2 card-text-grid" >
+            <div class="description" style="height:84px;">
                 {{ post.description }}
             </div>
             <div class="chips">
@@ -41,8 +30,10 @@
                     #{{ theme }}
                 </v-chip>
             </div>
+            <div>
+                <series-display :series="post.seriesDetails"/>
+            </div>
         </v-card-text>
-
     </v-card>
 </template>
 <script setup>

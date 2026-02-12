@@ -21,9 +21,9 @@
                      <template v-slot:default="{ isActive }">
                          <v-card :title="$t(`I'm interested`)">
                             <v-card-text v-if="!user">
-                                <div>
+                                <v-alert color="error" class="text-center">
                                     {{ $t('You need to be signed in to express interest') }}
-                                </div>
+                                </v-alert>
                                 <div class="text-center">
                                     <google-button />
                                 </div>
@@ -84,7 +84,7 @@
                                 <v-spacer/>
                                 <v-btn color="error" :text="$t('Close')" :disabled="applyLoading || messageSending || withdrawLoading" @click="isActive.value = false"/>
                                 <v-btn color="primary" variant="elevated" :text="$t('Update')" :loading="applyLoading" @click="handleApply" v-if="workshop.application && workshop.application.submitted"/>
-                                <v-btn color="primary" variant="elevated" style="width:100px" :text="$t('Send')" :loading="messageSending" @click="sendMessageToPim" v-else-if="!workshop.joinable"/>
+                                <v-btn color="primary" variant="elevated" style="width:100px" :text="$t('Send')" :loading="messageSending" @click="sendMessageToPim" v-else-if="!workshop.joinable && user"/>
                                 <v-btn color="primary" variant="elevated" :text="$t('Submit')" :loading="applyLoading" @click="handleApply" v-else-if="user"/>
                             </v-card-actions>
                          </v-card>

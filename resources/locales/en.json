@@ -581,5 +581,8 @@
     "Content": "Content",
     "reads": "reads",
     "Cumulative": "Cumulative",
-    "Annual total": "Annual total"
+    "Annual total": "Annual total",
+    "Series": "Series",
+    "New series": "New series",
+    "Color": "Color"
 }

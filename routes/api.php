@@ -161,6 +161,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware'=>['auth:sanctum', 'can:create,App\Models\Post']], function(){
     Route::get('/myPosts', [PostController::class, 'myPosts']);
     Route::post('/posts', [PostController::class, 'store']);
+
+    Route::post('/series', [PostController::class, 'newSerie']);
+    Route::patch('/series/{serie}', [PostController::class, 'updateSerie']);
 });
 
 Route::group(['middleware'=>['auth:sanctum', 'can:update,post']], function(){

@@ -38,6 +38,11 @@ class Post extends Model
       return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    public function series()
+    {
+      return $this->belongsToMany(Serie::class)->withPivot('order')->withTimestamps();
+    }
+
     public function format()
     {
         $author = $this->author;
@@ -51,6 +56,8 @@ class Post extends Model
                 $themeTitles[] = $theme->title_en;
             }
         }
+        $seriesDetails = $this->series()->get()->map->format();
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -62,6 +69,8 @@ class Post extends Model
             'stats' => $this->stats,
             'cover' => (json_decode($this->images))->cover,
             'themes' => $this->themes()->pluck('themes.id'),
+            'series' => $this->series()->pluck('series.id'),
+            'seriesDetails' => $seriesDetails,
             'themeTitles' => $themeTitles,
             'translationId' => $this->translation_id,
             'published_at' => $this->published_at,

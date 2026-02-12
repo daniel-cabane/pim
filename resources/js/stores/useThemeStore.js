@@ -8,6 +8,7 @@ export const useThemeStore = defineStore({
     state: () => ({
         themes: [],
         theme: {},
+        series: [],
         isReady: false,
         // isLoading: false
     }),
@@ -15,6 +16,7 @@ export const useThemeStore = defineStore({
         async getThemes() {
             const res = await get('/api/themes');
             this.themes = res.themes;
+            this.series = res.series;
         },
         async getThemesAdmin() {
             const res = await get('/api/admin/themes');
@@ -52,6 +54,22 @@ export const useThemeStore = defineStore({
                 this.themes = this.themes.filter(t => t.id != res.id);
             }
             //this.isLoading = false;
+        },
+        async createSerie(data){
+            if(data.title.length >= 5 && data.color != null){
+                this.isReady = false;
+                const res = await post('/api/series', data);
+                this.series = res.series;
+                this.isReady = true;
+            }
+        },
+        async updateSerie(data){
+            if(data.title.length >= 5 && data.color != null){
+                this.isReady = false;
+                const res = await patch(`/api/series/${data.id}`, data);
+                this.series = res.series;
+                this.isReady = true;
+            }
         }
     },
     getters: {

@@ -61,13 +61,27 @@
                 :disabled="!post.editable" 
                 class="mb-2"
             />
-            <v-select 
-                v-model="post.themes"
-                :items="availableThemes"
-                :label="$t('Themes')"
-                multiple chips
-                variant="outlined"
-            />
+            <div class="d-flex ga-2 align-center mb-4">
+                <v-select 
+                    v-model="post.themes"
+                    :items="availableThemes"
+                    :label="$t('Themes')"
+                    multiple chips
+                    hide-details
+                    variant="outlined"
+                    style="max-width:50%;"
+                />
+                <v-select 
+                    v-model="post.series"
+                    :items="seriesItems"
+                    :label="$t('Series')"
+                    multiple chips
+                    hide-details
+                    variant="outlined"
+                    style="max-width:50%;"
+                />
+                <series-dialog :series="series"/>
+            </div>
         </div>
         <div style="width:350px">
             <v-file-input 
@@ -133,7 +147,8 @@
     const { uploadPostImage, updateCoverImage } = postStore;
     const { imageLoading } = storeToRefs(postStore);
 
-    const { forPost } = storeToRefs(useThemeStore());
+    
+    const { forPost, series } = storeToRefs(useThemeStore());
 
     // getThemes();
     const { locale } = useI18n();
@@ -143,6 +158,7 @@
             value: theme.id
         }
     }));
+    const seriesItems = computed(() => series.value.map(s => ({title: s.title, value: s.id})));
     
     const rules = {
         required: value => !!value || 'Required.',

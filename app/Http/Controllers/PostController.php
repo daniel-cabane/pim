@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 use App\Models\Theme;
+use App\Models\Serie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -148,7 +150,8 @@ class PostController extends Controller
             'language' => 'required|min:2|max:2',
             'post' => 'required|max:50000',
             'cover' => 'required|max:5000',
-            'themes' => 'sometimes|Array'
+            'themes' => 'sometimes|Array',
+            'series' => 'sometimes|Array'
         ]);
 
         $images = json_decode($post->images);
@@ -163,6 +166,26 @@ class PostController extends Controller
         ]);
 
         $post->themes()->sync($attrs['themes']);
+
+        // Handle series association: attach new series (at end) and detach removed ones
+        $newSeries = isset($attrs['series']) && is_array($attrs['series']) ? $attrs['series'] : [];
+
+        $currentSeries = $post->series()->pluck('id')->toArray();
+
+        // Attach to series where the post isn't already present, setting pivot.order to max+1
+        foreach ($newSeries as $serieId) {
+            if (!in_array($serieId, $currentSeries)) {
+                $max = DB::table('post_serie')->where('serie_id', $serieId)->max('order');
+                $nextOrder = is_null($max) ? 1 : $max + 1;
+                $post->series()->attach($serieId, ['order' => $nextOrder]);
+            }
+        }
+
+        // Detach from previous series that are not in the new list
+        $toDetach = array_diff($currentSeries, $newSeries);
+        if (!empty($toDetach)) {
+            $post->series()->detach($toDetach);
+        }
 
         return response()->json([
             'post' => $post->format(),
@@ -309,11 +332,58 @@ class PostController extends Controller
 
     public function themes()
     {
-        return response()->json(['themes' => Theme::all()]);
+        $series = [];
+
+        if(auth()->check()){
+            $series = auth()->user()->series()->get()->map(function($serie) {
+                return $serie->format();
+            });
+        }
+
+        return response()->json(['themes' => Theme::all(), 'series' => $series]);
     }
 
     public function theme(Theme $theme)
     {
         return response()->json(['theme' => $theme]);
+    }
+
+    public function newSerie(Request $request)
+    {
+        $attrs = $request->validate([
+            'title' => 'required|min:5|max:150',
+            'color' => 'required|regex:/^#[0-9A-Fa-f]{6}$/'
+            ]);
+
+        Serie::create([
+            'author_id' => auth()->id(),
+            'title' => $attrs['title'],
+            'options' => ['color' => $attrs['color']]
+        ]);
+
+        $series = auth()->user()->series()->get()->map(function($serie) {
+            return $serie->format();
+        });
+
+        return response()->json(['series' => $series]);
+    }
+
+    public function updateSerie(Serie $serie, Request $request)
+    {
+        $attrs = $request->validate([
+            'title' => 'required|min:5|max:150',
+            'color' => 'required|regex:/^#[0-9A-Fa-f]{6}$/'
+            ]);
+
+        $serie->update([
+            'title' => $attrs['title'],
+            'options' => ['color' => $attrs['color']]
+        ]);
+
+        $series = auth()->user()->series()->get()->map(function($serie) {
+            return $serie->format();
+        });
+
+        return response()->json(['series' => $series]);
     }
 }
