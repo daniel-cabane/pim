@@ -9,10 +9,8 @@ export const usePostStore = defineStore({
         posts: [],
         myPosts: [],
         post: {},
-        // themes: [],
         totalNbPosts: 0,
         isReady: false,
-        // isLoading: false,
         statusLoading: false,
         imageLoading: false
     }),
@@ -39,7 +37,6 @@ export const usePostStore = defineStore({
             this.isReady = false;
             const res = await get(`/api/blog?query=Laravel&locale=${locale}`, true);
             this.posts = res.posts;
-            console.log(res.posts);
             this.isReady = true;
         },
         async getPublishedPosts(locale = null, skip = 0, take = 6) {
@@ -58,7 +55,6 @@ export const usePostStore = defineStore({
             const res = await get(`/api/posts/${slug}?query=Laravel&read=${read ? 1 :0}`, true);
             this.post = res.post;
             this.isReady = true;
-            // console.log(`https://pim.fis.edu.hk${this.post?.cover?.url}`)
             return res.post;
         },
         async adminGetposts() {
@@ -79,11 +75,9 @@ export const usePostStore = defineStore({
             return await post(`/api/posts/${this.post.slug}/image`, formData);
         },
         async updatePost() {
-            // this.isLoading = true;
             const res = await patch(`/api/posts/${this.post.slug}`, this.post, false);
             this.post = res.post;
             window.history.replaceState({}, '', `/posts/${res.post.slug}/edit`);
-            // this.isLoading = false;
             return res.post;
         },
         async updatePostStatus(status) {
@@ -97,23 +91,14 @@ export const usePostStore = defineStore({
             return res;
         },
         async createTranslation(title){
-            // this.isLoading = true;
             const res = await post(`/api/posts/${this.post.slug}/translation`, { title });
             this.post.translationId = res.post.id;
-            // this.isLoading = false;
-            // return res.post;
         },
         async findTranslation(){
-            // this.isLoading = true;
             const res = await get(`/api/posts/${this.post.slug}/translation`);
             this.post = res.post;
-            // this.isLoading = false;
             return res.post;
         }
-        // async getThemes() {
-        //     const res = await get('/api/posts/themes');
-        //     this.themes = res.themes;
-        // },
     },
     getters: {
         isLoading: () => {

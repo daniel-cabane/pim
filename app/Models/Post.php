@@ -56,7 +56,7 @@ class Post extends Model
                 $themeTitles[] = $theme->title_en;
             }
         }
-        $seriesDetails = $this->series()->get()->map->format();
+        // $seriesDetails = $this->series()->get()->map->format();
 
         return [
             'id' => $this->id,
@@ -70,7 +70,7 @@ class Post extends Model
             'cover' => (json_decode($this->images))->cover,
             'themes' => $this->themes()->pluck('themes.id'),
             'series' => $this->series()->pluck('series.id'),
-            'seriesDetails' => $seriesDetails,
+            'seriesDetails' => $this->series()->get()->map->format(),
             'themeTitles' => $themeTitles,
             'translationId' => $this->translation_id,
             'published_at' => $this->published_at,
@@ -108,6 +108,8 @@ class Post extends Model
             'language' => $this->language,
             'cover' => (json_decode($this->images))->cover,
             'themes' => $this->themes()->pluck('themes.id'),
+            'series' => $this->series()->pluck('series.id'),
+            'seriesDetails' => $this->series()->get()->map->format(),
             'themeTitles' => $themeTitles,
             'translationId' => $this->translation_id,
             'published_at' => $this->published_at,

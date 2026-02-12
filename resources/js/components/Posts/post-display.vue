@@ -1,6 +1,6 @@
 <template>
     <v-card width="100%" class="pa-3">
-        <div class="d-flex justify-space-between">
+        <div class="d-flex flex-column-reverse flex-md-row justify-space-between">
             <div>
                 <div class="pimSubtitleFont font-weight-bold" style="font-size:48px;line-height:60px;">
                     {{ post.title }}
@@ -16,16 +16,19 @@
                         #{{ theme }}
                     </v-chip>
                 </div>
+                <series-display :series="post.seriesDetails"/>
             </div>
-            <div style="min-width:250px;max-width:250px;">
-                <v-img class="align-end text-white" min-width="250" max-width="250" aspect-ratio="16/9" cover :src="post.cover.url" />
-                <div class="d-flex justify-end mt-1" style="white-space:nowrap;" v-if="post.published_at">
-                    <span class="text-caption">
-                        {{ $t('Published on') }} {{ post.published_at_formated }}
-                    </span>
-                    <span class="text-caption font-italic ml-1" v-if="post.edited">
-                        ({{ $t('Edited on') }} {{ post.updated_at_formated }})
-                    </span>
+            <div class="d-flex align-start justify-end">
+                <div>
+                    <v-img min-width="350" max-width="350" aspect-ratio="16/9" contain :src="post.cover.url" />
+                    <div class="d-flex justify-end mt-1" style="white-space:nowrap;" v-if="post.published_at">
+                        <span class="text-caption">
+                            {{ $t('Published on') }} {{ post.published_at_formated }}
+                        </span>
+                        <!-- <span class="text-caption font-italic ml-1" v-if="post.edited">
+                            ({{ $t('Edited on') }} {{ post.updated_at_formated }})
+                        </span> -->
+                    </div>
                 </div>
             </div>
         </div>

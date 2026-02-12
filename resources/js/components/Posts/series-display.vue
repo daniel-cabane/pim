@@ -24,21 +24,22 @@
                             class="pa-2 my-2" 
                             style="width:100%;" 
                             v-for="post in focusedSerie.posts"
-                            :color="focusedSerie.color" 
-                            variant="tonal"
+                            color="surface" 
                             :to="`/posts/${post.slug}`"
                         >
-                            {{ post.title }}
+                            <v-icon icon="mdi-post" class="mr-2"/>
+                            <span class="mt-3 pimSubtitleFont font-weight-bold">
+                                {{ post.title }}
+                            </span>
                         </v-card>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer/>
                         <v-btn
-                            color="primary"
                             variant="tonal"
                             :text="$t('Close')"
                             @click="isActive.value = false"
-                        ></v-btn>
+                        />
                     </v-card-actions>
                     </v-card>
                 </v-card>

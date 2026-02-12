@@ -15,13 +15,6 @@
                 :post="post" 
             />
         </div>
-        <!-- <div>
-            <v-pagination 
-                v-model="page"
-                :length="paginationLength"
-                @update:modelValue="logme"
-            />
-        </div> -->
     </v-container>
 </template>
 <script setup>
@@ -36,18 +29,15 @@
     const { getBlog } = postStore;
     const { posts, isReady } = storeToRefs(postStore);
     getBlog(locale.value);
-    
-    // const paginationLength = computed(() => Math.ceil(totalNbPosts.value / 12));
+
     const page = ref(1);
 
     const title = ref('');
-    // const logme = () => console.log(page);
 
     const displayedPosts = computed(() => {
         const q = title.value?.trim().toLowerCase();
         if (!q) return posts.value;
         return posts.value.filter(p => {
-            // handle title as string or localized object
             let text = '';
             if (!p) return false;
             if (typeof p.title === 'string') text = p.title;
