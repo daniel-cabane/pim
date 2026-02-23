@@ -3,11 +3,11 @@
         <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
                 <div
-                    v-for="(serie, index) in series"
+                    v-for="(serie, index) in adaptedSeries"
                     :key="index"
                     class="serie-item"
                     :class="{ open: openSerieIndex === index }"
-                    :style="{ '--serie-color': serie.color, '--serie-color-rgb': hexToRgb(serie.color) }"
+                    :style="{ '--serie-color': serie.adaptedColor, '--serie-color-rgb': hexToRgb(serie.adaptedColor) }"
                     @click.stop.prevent="openSerieIndex = index"
                 >
                     <span v-if="openSerieIndex === index" class="serie-title" @click.prevent="focusedSerie = serie" v-bind="activatorProps">
@@ -18,7 +18,7 @@
 
             <template v-slot:default="{ isActive }">
                 <v-card>
-                    <v-card :title="focusedSerie.title" :color="focusedSerie.color" variant="tonal">
+                    <v-card :title="focusedSerie.title" :color="focusedSerie.adaptedColor" variant="tonal">
                     <v-card-text>
                         <v-card 
                             class="pa-2 my-2" 
@@ -45,20 +45,30 @@
                 </v-card>
             </template>
         </v-dialog>
-        
     </div>
 </template>
 <script setup>
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
+    import { useTheme } from "vuetify";
+    import { getAdaptiveSerieColor, hexToRgb as hexToRgbObject } from "@/utils/colorUtils.js";
 
     const props = defineProps({ series: Array });
-
+    
+    const theme = useTheme();
     const openSerieIndex = ref(0);
     const focusedSerie = ref(null);
     
+    // Compute adapted colors based on current theme
+    const adaptedSeries = computed(() => {
+        return props.series.map(serie => ({
+            ...serie,
+            adaptedColor: getAdaptiveSerieColor(serie.color, theme.global.name.value === 'customDark')
+        }));
+    });
+    
     const hexToRgb = (hex) => {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0';
+        const rgb = hexToRgbObject(hex);
+        return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
     };
 </script>
 <style scoped>

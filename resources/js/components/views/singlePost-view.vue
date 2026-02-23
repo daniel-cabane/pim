@@ -23,7 +23,7 @@
     import { usePostStore } from '@/stores/usePostStore';
     import { storeToRefs } from 'pinia';
     import { useSeoMeta } from '@unhead/vue'
-    import { computed } from 'vue';
+    import { computed, watch } from 'vue';
 
     const route = useRoute();
     const postStore = usePostStore();
@@ -31,6 +31,13 @@
     const { post, isReady, similarPosts } = storeToRefs(postStore)
 
     getPost(route.params.slug, true);
+
+    watch(
+      () => route.params.slug,
+      (newSlug) => {
+        getPost(newSlug, true);
+      }
+    );
 
     useSeoMeta({
         title: computed(() => post?.value.title),
