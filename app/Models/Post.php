@@ -134,4 +134,97 @@ class Post extends Model
             $this->update(['stats' => $stats]);
         }
     }
+
+    public function similar($nb = 5)
+    {
+        // collect posts in order of priority
+        $results = collect();
+        $excluded = [$this->id];
+
+        // 1. posts from the same series
+        $serieIds = $this->series()->pluck('series.id')->toArray();
+        if (!empty($serieIds)) {
+            $seriePosts = Post::whereHas('series', function($q) use ($serieIds) {
+                    $q->whereIn('series.id', $serieIds);
+                })
+                ->where('status', 'published')
+                ->where('isTranslation', 0)
+                ->whereNotIn('id', $excluded)
+                ->orderBy('published_at', 'desc')
+                ->take($nb)
+                ->get();
+
+            foreach ($seriePosts as $p) {
+                $results->push($p);
+                $excluded[] = $p->id;
+            }
+        }
+
+        // 2. posts sharing themes (tags)
+        if ($results->count() < $nb) {
+            $themeIds = $this->themes()->pluck('themes.id')->toArray();
+            if (!empty($themeIds)) {
+                $themePosts = Post::whereHas('themes', function($q) use ($themeIds) {
+                        $q->whereIn('themes.id', $themeIds);
+                    })
+                    ->where('status', 'published')
+                    ->where('isTranslation', 0)
+                    ->whereNotIn('id', $excluded)
+                    ->orderBy('published_at', 'desc')
+                    ->take($nb - $results->count())
+                    ->get();
+
+                foreach ($themePosts as $p) {
+                    $results->push($p);
+                    $excluded[] = $p->id;
+                }
+            }
+        }
+
+        // 3. fill with most recent published posts if still short
+        if ($results->count() < $nb) {
+            $recent = Post::where('status', 'published')
+                ->where('isTranslation', 0)
+                ->whereNotIn('id', $excluded)
+                ->orderBy('published_at', 'desc')
+                ->take($nb - $results->count())
+                ->get();
+            foreach ($recent as $p) {
+                $results->push($p);
+            }
+        }
+
+        // trim to requested limit and map to minimal structure
+        return $results->take($nb)->map(function ($p) {
+            $themeTitles = [];
+            foreach ($p->themes as $theme) {
+                if ($p->language == 'fr') {
+                    $themeTitles[] = $theme->title_fr;
+                } else {
+                    $themeTitles[] = $theme->title_en;
+                }
+            }
+            $publishDate = Carbon::create($p->published_at);
+
+            return [
+                'id' => $p->id,
+                'title' => $p->title,
+                'slug' => $p->slug,
+                'description' => $p->description,
+                'status' => $p->status,
+                'cover' => (json_decode($p->images))->cover,
+                'themeTitles' => $themeTitles,
+                'author' => [
+                    'id' => optional($p->author)->id,
+                    'name' => optional($p->author)->formal_name
+                ],
+                'language' => $p->language,
+                'series' => $p->series()->pluck('series.id'),
+                'seriesDetails' => $p->series()->get()->map->format(),
+                'published_at' => $p->published_at,
+                'published_at_formated' => $p->published_at ? $publishDate->format('d/m/Y') : null,
+                'stats' => $p->stats ?? (object)['reads' => 0]
+            ];
+        });
+    }
 }

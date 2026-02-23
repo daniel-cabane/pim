@@ -134,8 +134,13 @@ class PostController extends Controller
         if($read && $post->status == 'published'){
             $post->inscreaseReadCounter();
         }
+
+        // include similar posts (default limit 5)
+        $similar = $post->similar();
+
         return response()->json([
-            'post' => $post->format()
+            'post' => $post->format(),
+            'similar' => $similar
         ]);
     }
 

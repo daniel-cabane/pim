@@ -9,6 +9,7 @@ export const usePostStore = defineStore({
         posts: [],
         myPosts: [],
         post: {},
+        similarPosts: [],
         totalNbPosts: 0,
         isReady: false,
         statusLoading: false,
@@ -54,6 +55,7 @@ export const usePostStore = defineStore({
             this.isReady = false;
             const res = await get(`/api/posts/${slug}?query=Laravel&read=${read ? 1 :0}`, true);
             this.post = res.post;
+            this.similarPosts = res.similar || [];
             this.isReady = true;
             return res.post;
         },

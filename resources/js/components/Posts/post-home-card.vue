@@ -1,5 +1,5 @@
 <template>
-    <v-card width="350" :to="`/posts/${props.post.slug}`" :ripple="false">
+    <v-card width="350" min-width="350" :to="`/posts/${props.post.slug}`" :ripple="false">
         <post-cover :post="post"/>
 
         <v-card-subtitle class="pt-1 d-flex justify-space-between align-center">
