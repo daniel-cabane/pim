@@ -7,13 +7,18 @@
             <div>
                 <post-display :post="post" v-if="isReady" />
             </div>
-            <div class="d-flex flex-wrap flex-row flex-md-column justify-center ga-4" v-if="isReady && similarPosts.length">
-                <post-home-card
-                    v-for="s in similarPosts"
-                    :key="s.id"
-                    :post="s"
-                    class="mb-4"
-                />
+            <div>
+                <div class="pimTitleFont text-captionColor" style="font-size:32px;">
+                    {{ $t('Similar posts') }}
+                </div>
+                <div class="d-flex flex-wrap flex-row flex-md-column justify-center justify-md-start ga-4" v-if="isReady && similarPosts.length">
+                    <post-home-card
+                        v-for="s in similarPosts"
+                        :key="s.id"
+                        :post="s"
+                        class="mb-4"
+                    />
+                </div>
             </div>
         </div>
     </v-container>

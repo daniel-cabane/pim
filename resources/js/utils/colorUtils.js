@@ -83,7 +83,7 @@ export function getAdaptiveSerieColor(serieColor, isDarkTheme) {
     
     // Dark theme + dark color = lighten it significantly
     if (isDarkTheme && !isBright) {
-        return adjustColorBrightness(serieColor, 40); // Lighten by 70%
+        return adjustColorBrightness(serieColor, 60); // Lighten by 60%
     }
     
     // Dark theme + bright color = keep it bright (already good)
