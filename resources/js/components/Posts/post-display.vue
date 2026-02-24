@@ -46,6 +46,10 @@
                                 .split('<ol').join('<ol class="pl-5"');
 </script>
 <style>
+    .postWrapper {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
     .postWrapper img {
         max-width: 100%;
         height: auto;

@@ -164,12 +164,19 @@ class Post extends Model
         if ($results->count() < $nb) {
             $themeIds = $this->themes()->pluck('themes.id')->toArray();
             if (!empty($themeIds)) {
+                // fetch posts that share at least one theme, but order them by
+                // the number of common themes (desc) so that posts with 3
+                // tags in common come before those with 2, then 1.
                 $themePosts = Post::whereHas('themes', function($q) use ($themeIds) {
                         $q->whereIn('themes.id', $themeIds);
                     })
                     ->where('status', 'published')
                     ->where('isTranslation', 0)
                     ->whereNotIn('id', $excluded)
+                    ->withCount(['themes as common_themes_count' => function($q) use ($themeIds) {
+                        $q->whereIn('themes.id', $themeIds);
+                    }])
+                    ->orderByDesc('common_themes_count')
                     ->orderBy('published_at', 'desc')
                     ->take($nb - $results->count())
                     ->get();
