@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SpaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,58 +15,61 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/{name}', function(){
-  return view('welcome');
-})->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops|blog|surveys|hod|pobpr|openDoorsBPR|myCourses|archivedWorkshops|ressources']);
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/posts/{slug}', function () {
-    return view('welcome');
-});
+// Route::get('/{name}', function(){
+//   return view('welcome');
+// })->where(['name' => 'home|workshops|calendar|myPosts|admin|myWorkshops|blog|surveys|hod|pobpr|openDoorsBPR|myCourses|archivedWorkshops|ressources']);
 
-Route::get('/posts/{slug}/edit', function () {
-    return view('welcome');
-});
+// Route::get('/posts/{slug}', function () {
+//     return view('welcome');
+// });
 
-Route::get('/workshops/{id}', function () {
-    return view('welcome');
-});
+// Route::get('/posts/{slug}/edit', function () {
+//     return view('welcome');
+// });
 
-Route::get('/workshops/{id}/edit', function () {
-    return view('welcome');
-});
+// Route::get('/workshops/{id}', function () {
+//     return view('welcome');
+// });
 
-Route::get('/surveys/{id}', function () {
-    return view('welcome');
-});
+// Route::get('/workshops/{id}/edit', function () {
+//     return view('welcome');
+// });
 
-Route::get('/courses/{id}', function () {
-    return view('welcome');
-});
+// Route::get('/surveys/{id}', function () {
+//     return view('welcome');
+// });
 
-Route::get('/courses/{id}/edit', function () {
-    return view('welcome');
-});
+// Route::get('/courses/{id}', function () {
+//     return view('welcome');
+// });
 
-Route::get('/calendar/pi', function () {
-    return view('welcome');
-});
+// Route::get('/courses/{id}/edit', function () {
+//     return view('welcome');
+// });
 
-Route::get('/courses/{id}', function () {
-    return view('welcome');
-});
+// Route::get('/calendar/pi', function () {
+//     return view('welcome');
+// });
 
-Route::get('/ressources/{slug}', function () {
-    return view('welcome');
-});
+// Route::get('/courses/{id}', function () {
+//     return view('welcome');
+// });
 
-Route::get('/auth/reset-password', function () {
-    return view('password-reset');
-})->name('password.reset');
+// Route::get('/ressources/{slug}', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/auth/reset-password', function () {
+//     return view('password-reset');
+// })->name('password.reset');
 
 Route::get('/auth/google', [UserController::class, 'googleSigninRedirect']);
 Route::get('/auth/google/callback', [UserController::class, 'googleSigninCallback']);
+
+Route::fallback([SpaController::class, 'index']);
 
