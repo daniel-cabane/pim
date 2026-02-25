@@ -22,7 +22,7 @@ class SpaController extends Controller
             $post = Post::where('slug', $slug)->first();
 
             if ($post) {
-                $seo['title'] = $post->title;
+                $seo['title'] = "$post->title - PIM Blog";
                 $seo['description'] = $post->description;
                 $seo['image'] = (json_decode($post->images))->cover;
             }

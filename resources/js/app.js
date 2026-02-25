@@ -7,7 +7,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { createHead } from '@unhead/vue/client'
+// import { createHead } from '@unhead/vue/client'
 
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css';
@@ -130,4 +130,5 @@ Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, 
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
-app.use(vuetify).use(router).use(i18n).use(createPinia()).use(createHead()).mount('#app');
+app.use(vuetify).use(router).use(i18n).use(createPinia()).mount('#app');
+// app.use(vuetify).use(router).use(i18n).use(createPinia()).use(createHead()).mount('#app');

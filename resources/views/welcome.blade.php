@@ -4,6 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <title>{{ $seo['title'] }}</title>
+        <meta name="description" content="{{ $seo['description'] }}">
+        
+        <meta property="og:title" content="{{ $seo['title'] }}">
+        <meta property="og:description" content="{{ $seo['description'] }}">
+        <meta property="og:image" content="{{ $seo['image'] }}">
+
         <style>
             /* @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap'); */
             @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');

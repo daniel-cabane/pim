@@ -27,7 +27,7 @@
     import { useRoute } from 'vue-router';
     import { usePostStore } from '@/stores/usePostStore';
     import { storeToRefs } from 'pinia';
-    import { useSeoMeta } from '@unhead/vue'
+    // import { useSeoMeta } from '@unhead/vue'
     import { computed, watch } from 'vue';
 
     const route = useRoute();
@@ -44,11 +44,11 @@
       }
     );
 
-    useSeoMeta({
-        title: computed(() => post?.value.title),
-        description: computed(() => post?.value.description),
-        ogTitle: computed(() => post?.value.title),
-        ogDescription: computed(() => post?.value.description),
-        ogImage: computed(() => post ? `https://pim.fis.edu.hk${post?.value.cover?.url}` : null )
-    });
+    // useSeoMeta({
+    //     title: computed(() => post?.value.title),
+    //     description: computed(() => post?.value.description),
+    //     ogTitle: computed(() => post?.value.title),
+    //     ogDescription: computed(() => post?.value.description),
+    //     ogImage: computed(() => post ? `https://pim.fis.edu.hk${post?.value.cover?.url}` : null )
+    // });
 </script>
