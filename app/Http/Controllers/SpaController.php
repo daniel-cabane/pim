@@ -24,7 +24,14 @@ class SpaController extends Controller
             if ($post) {
                 $seo['title'] = "$post->title - PIM Blog";
                 $seo['description'] = $post->description;
-                $seo['image'] = (json_decode($post->images))->cover;
+
+                // only decode JSON if images isn't already an object
+                $images = $post->images;
+                if (is_string($images)) {
+                    $images = json_decode($images);
+                }
+
+                $seo['image'] = $images->cover->url ?? null;
             }
         }
 
