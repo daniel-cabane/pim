@@ -31,7 +31,13 @@ class SpaController extends Controller
                     $images = json_decode($images);
                 }
 
-                $seo['image'] = $images->cover->url ?? null;
+                // convert any storage path into a public URL
+                if (!empty($images->cover->url)) {
+                    // use Storage facade to respect disks and url configuration
+                    $seo['image'] = asset($images->cover->url);
+                } else {
+                    $seo['image'] = null;
+                }
             }
         }
 
