@@ -1,5 +1,8 @@
 <template>
-    <div class="eventBox">
+    <div class="eventBox" :style="{ 
+        width: `calc(${100 / collisionCount}% - 0.5px)`, 
+        left: `calc(${(collisionIndex * 100) / collisionCount}%)` 
+    }">
         <v-card class="pa-1" style="color:white;cursor: pointer;" :color="event.color"
             :style="`top:${event.startMinute}px;min-height:${event.height}px;max-height:${event.height}px;`">
             <div class="font-weight-bold" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
@@ -14,13 +17,16 @@
 </template>
 <script setup>
     const emit = defineEmits(['hideMe']);
-    const props = defineProps({ event: Object, showInfo: Boolean });
+    const props = defineProps({ 
+        event: Object, 
+        showInfo: Boolean,
+        collisionCount: { type: Number, default: 1 },
+        collisionIndex: { type: Number, default: 0 }
+    });
 </script>
 <style scoped>
     .eventBox {
         position: absolute;
-        left: 2px;
-        right: 3%;
-        padding: 1px 5px;
+        padding: 0px 0px;
     }
 </style>

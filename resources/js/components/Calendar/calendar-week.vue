@@ -30,6 +30,7 @@
             <div v-for="hour in day.hours" :key="hour.nb" :class="hour.nb == 19 ? 'lastDayHourBox' : 'dayHourBox'"
                 style="position: relative;">
                 <event-block v-for="event in hour.events" :key="event.id" :event="event" :showInfo="focusedId == event.id"
+                    :collisionCount="event.collisionCount" :collisionIndex="event.collisionIndex"
                     @click.stop="updateFocusedId(event.id)" @hideMe="resetFocusedId"/>
             </div>
         </div>
@@ -72,6 +73,25 @@
                         dayEvents.push(e);
                     }
                 });
+                
+                // Group events by start time (minute precision)
+                const eventsByStartTime = {};
+                dayEvents.forEach(event => {
+                    const timeKey = `${event.startHour}:${event.startMinute}`;
+                    if (!eventsByStartTime[timeKey]) {
+                        eventsByStartTime[timeKey] = [];
+                    }
+                    eventsByStartTime[timeKey].push(event);
+                });
+                
+                // Add collision info to each event
+                dayEvents.forEach(event => {
+                    const timeKey = `${event.startHour}:${event.startMinute}`;
+                    const group = eventsByStartTime[timeKey];
+                    event.collisionCount = group.length;
+                    event.collisionIndex = group.indexOf(event);
+                });
+                
                 hours.push({
                     nb: i,
                     events: dayEvents
