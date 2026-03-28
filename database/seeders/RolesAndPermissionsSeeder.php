@@ -42,14 +42,15 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Themes seeder
         $themes = [
-            ['title_en' => 'mathematics', 'title_fr' => 'mathématiques'],
-            ['title_en' => 'advanced', 'title_fr' => 'approfondissement'],
-            ['title_en' => 'computer science', 'title_fr' => 'informatique'],
-            ['title_en' => 'creativity', 'title_fr' => 'créativité'],
-            ['title_en' => 'culture', 'title_fr' => 'culture'],
-            ['title_en' => 'games', 'title_fr' => 'jeux'],
-            ['title_en' => 'strategy', 'title_fr' => 'stratégie'],
-            ['title_en' => 'Professional development', 'title_fr' => 'Formation professionnelle']
+            ['title_en' => 'mathematics', 'title_fr' => 'mathématiques', 'forWorkshop' => true, 'forPost' => true],
+            ['title_en' => 'advanced', 'title_fr' => 'approfondissement', 'forWorkshop' => true, 'forPost' => false],
+            ['title_en' => 'computer science', 'title_fr' => 'informatique', 'forWorkshop' => true, 'forPost' => true],
+            ['title_en' => 'creativity', 'title_fr' => 'créativité', 'forWorkshop' => true, 'forPost' => true],
+            ['title_en' => 'culture', 'title_fr' => 'culture', 'forWorkshop' => true, 'forPost' => true],
+            ['title_en' => 'history', 'title_fr' => 'histoire', 'forWorkshop' => true, 'forPost' => true],
+            ['title_en' => 'games', 'title_fr' => 'jeux', 'forWorkshop' => true, 'forPost' => true],
+            ['title_en' => 'strategy', 'title_fr' => 'stratégie', 'forWorkshop' => true, 'forPost' => false],
+            ['title_en' => 'professional development', 'title_fr' => 'formation professionnelle', 'forWorkshop' => true, 'forPost' => false]
         ];
         foreach($themes as $theme) {
             Theme::create($theme);

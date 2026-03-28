@@ -15,7 +15,7 @@
             </span>
         </v-card-subtitle>
         <v-card-text class="py-2 card-text-grid" >
-            <div class="description" style="height:84px;">
+            <div class="description" style="height:100px;">
                 {{ post.description }}
             </div>
             <div class="chips">
