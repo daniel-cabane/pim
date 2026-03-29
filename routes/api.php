@@ -13,6 +13,9 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\HodController;
 use App\Http\Controllers\VisitController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Api\TournamentController;
+use App\Http\Controllers\Api\RoundController;
+use App\Http\Controllers\Api\GameController;
 
 /*
 |--------------------------------------------------------------------------
@@ -324,4 +327,48 @@ Route::group(['middleware'=>['role:teacher']], function(){
     Route::patch('/visits/{visit}/byTagNb', [VisitController::class, 'updateByTagNb']);
     Route::post('/visits/new', [VisitController::class, 'newVisit']);
     Route::delete('/visits/{visit}', [VisitController::class, 'delete']);
+});
+
+/*
+*
+*   TOURNAMENTS
+* 
+*/
+
+// Public tournament routes - viewable by guests
+Route::get('tournaments', [TournamentController::class, 'index']);
+Route::get('tournaments/{tournament:slug}', [TournamentController::class, 'show']);
+Route::get('tournaments/{tournament:slug}/standings', [TournamentController::class, 'standings']);
+Route::get('tournaments/{tournament:slug}/rounds', [TournamentController::class, 'getRounds']);
+Route::get('rounds/{round}', [RoundController::class, 'show']);
+Route::get('rounds/{round}/games', [RoundController::class, 'getGames']);
+Route::get('games/{game}', [GameController::class, 'show']);
+
+// Protected tournament routes - require authentication
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('tournaments', [TournamentController::class, 'store']);
+    Route::patch('tournaments/{tournament:slug}', [TournamentController::class, 'update']);
+    Route::delete('tournaments/{tournament:slug}', [TournamentController::class, 'destroy']);
+    Route::post('tournaments/{tournament:slug}/join', [TournamentController::class, 'join']);
+    Route::post('tournaments/{tournament:slug}/leave', [TournamentController::class, 'leave']);
+    Route::post('tournaments/{tournament:slug}/start', [TournamentController::class, 'start']);
+    Route::post('tournaments/{tournament:slug}/next-round', [TournamentController::class, 'createNextRound']);
+    
+    // Organiser management routes
+    Route::get('tournaments/{tournament:slug}/search-users', [TournamentController::class, 'searchUsers']);
+    Route::post('tournaments/{tournament:slug}/organisers', [TournamentController::class, 'addOrganiser']);
+    Route::get('tournaments/{tournament:slug}/organisers', [TournamentController::class, 'getOrganisers']);
+    Route::delete('tournaments/{tournament:slug}/organisers/{user}', [TournamentController::class, 'removeOrganiser']);
+    
+    // Player management routes
+    Route::get('tournaments/{tournament:slug}/search-players', [TournamentController::class, 'searchPlayers']);
+    Route::post('tournaments/{tournament:slug}/players', [TournamentController::class, 'addPlayer']);
+    Route::patch('tournaments/{tournament:slug}/players/{user}/rating', [TournamentController::class, 'editPlayerRating']);
+    Route::delete('tournaments/{tournament:slug}/players/{user}', [TournamentController::class, 'removePlayer']);
+    Route::patch('tournaments/{tournament:slug}/players/{user}', [TournamentController::class, 'banPlayer']);
+    
+    Route::post('rounds/{round}/start', [RoundController::class, 'startRound']);
+    Route::post('rounds/{round}/complete', [RoundController::class, 'completeRound']);
+    Route::post('games/{game}/start', [GameController::class, 'startGame']);
+    Route::post('games/{game}/result', [GameController::class, 'recordResult']);
 });

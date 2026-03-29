@@ -44,7 +44,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // protected $with = ['surveys'];
 
-    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages'];
+    protected $appends = ['is', 'open_surveys', 'class_name', 'unread_messages', 'my_tournaments'];
+
+
+    public function getMyTournamentsAttribute()
+    {
+      return [
+        'player' => $this->tournaments,
+        'organiser' => collect($this->tournamentCreated)->merge($this->tournamentsOrganized),
+      ];
+    }
 
     public function getIsAttribute()
     {
@@ -81,6 +90,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function archivedWorkshops()
     {
       return $this->hasMany(Workshop::class, 'organiser_id')->where('archived', 1);
+    }
+
+    public function tournaments()
+    {
+      return $this->belongsToMany(Tournament::class, 'tournament_player')->withTimestamps();
+    }
+
+    public function tournamentsOrganized()
+    {
+      return $this->belongsToMany(Tournament::class, 'tournament_organiser')->withTimestamps();
+    }
+
+    public function tournamentCreated()
+    {
+      return $this->hasMany(Tournament::class, 'created_by');
     }
 
     public function enrollements()

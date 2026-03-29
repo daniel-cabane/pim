@@ -19,7 +19,7 @@
       <div style="white-space:nowrap;display:flex;align-items:center;" v-if="user">
         <messages-dialog :messages="user.unread_messages" class="mr-2" v-if="user.unread_messages.length"/>
         <survey-menu :surveys="user.open_surveys" class="mr-2" v-if="user.open_surveys.length"/>
-        <action-menu v-if="user.is.teacher || user.is.publisher" />
+        <action-menu v-if="user.is.teacher || user.is.publisher || user.my_tournaments.player.length || user.my_tournaments.organiser.length" />
         <profile-menu />
       </div>
       <div style="white-space:nowrap;display:flex;align-items:center;" v-else>

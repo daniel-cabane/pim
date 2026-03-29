@@ -12,13 +12,13 @@
                 <v-divider />
                 <theme-and-language-picker />
                 <v-divider />
-                <v-list-item @click="gotoMyCourses" v-if="user.is.student">
-                    <template v-slot:prepend>
+                <!-- <v-list-item @click="gotoMyCourses" v-if="user.is.student">
+                    <template v-slot:prepend>n
                         <v-icon icon="mdi-school"></v-icon>
                     </template>
                     <v-list-item-title>{{ $t("My courses") }}</v-list-item-title>
                 </v-list-item>
-                <v-divider />
+                <v-divider /> -->
                 <message-admin-dialog/>
                 <v-list-item @click="goToDashboard" v-if="user.is.admin">
                     <template v-slot:prepend>
@@ -115,4 +115,8 @@
     });
 
     const levels = ['6e', '5e', '4e', '3e', '2nde', '1re', 'Term', 'Y7', 'Y8', 'Y9', 'Y10', 'Y11', 'Y12', 'Y13'];
+
+    const gotoTournaments = () => {
+        router.push('/tournaments');
+    }
 </script>

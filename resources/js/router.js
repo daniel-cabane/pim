@@ -21,6 +21,9 @@ import editCourse from "./components/views/editCourse-view.vue";
 import archivedWorkshops from "./components/views/archivedWorkshops-view.vue";
 import ressources from "./components/views/ressources-view.vue";
 import singleRessource from "./components/views/singleRessource-view.vue";
+import tournaments from "./components/views/tournaments-view.vue";
+import singleTournament from "./components/views/singleTournament-view.vue";
+import adminTournament from "./components/views/adminTournament-view.vue";
 
 const routes = [
     {
@@ -132,6 +135,21 @@ const routes = [
         path: "/ressources/:slug",
         name: "Ressource",
         component: singleRessource,
+    },
+    {
+        path: "/tournaments",
+        name: "Tournaments",
+        component: tournaments,
+    },
+    {
+        path: "/tournaments/:slug",
+        name: "Tournament",
+        component: singleTournament,
+    },
+    {
+        path: "/tournaments/:slug/admin",
+        name: "Tournament admin",
+        component: adminTournament,
     },
 ];
 

@@ -98,6 +98,58 @@
                 <v-list-item-title>{{ $t("My courses") }}</v-list-item-title>
             </v-list-item> -->
             <v-divider/>
+            <v-list-item @click="gotoTournaments" v-if="user.my_tournaments.player.length || user.my_tournaments.organiser.length">
+                <template v-slot:prepend>
+                    <v-icon icon="mdi-checkerboard"></v-icon>
+                </template>
+                <v-list-item-title>{{ $t("My tournaments") }}</v-list-item-title>
+            </v-list-item>
+            <v-dialog v-model="newTournamentDialog" width="450" v-if="user.is.admin">
+                <template v-slot:activator="{ props }">
+                    <v-list-item v-bind="props">
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-checkerboard-plus"></v-icon>
+                        </template>
+                        <v-list-item-title>{{ $t("New tournament") }}</v-list-item-title>
+                    </v-list-item>
+                </template>
+                <v-card>
+                    <v-card-title>{{ $t("New tournament") }}</v-card-title>
+                    <v-card-text>
+                        <v-text-field 
+                            :rules="[rules.required, rules.minLengthTitle]" 
+                            v-model="newTournament.name"
+                            :label="$t('Tournament name')"
+                            variant="outlined"
+                            validate-on="blur"
+                            counter="100"
+                        />
+                        <v-select v-model="newTournament.format"
+                            :items="[
+                                {title: 'Swiss', value: 'swiss'}, 
+                                {title: 'Round Robin', value: 'round_robin'}, 
+                                {title: 'Knockout', value: 'knockout'}
+                            ]"
+                            :label="$t('Format')" 
+                            variant="outlined" 
+                        />
+                        <v-textarea
+                            v-model="newTournament.description"
+                            :label="$t('Description')"
+                            variant="outlined"
+                            counter="500"
+                        />
+                    </v-card-text>
+                    <div class="d-flex pa-2">
+                        <v-spacer />
+                        <v-btn variant="text" class="mr-2" min-width="150" :disabled="newTournamentLoading" color="error"
+                            @click="newTournamentDialog = false">{{ $t('Close') }}</v-btn>
+                        <v-btn color="success" min-width="150" :loading="newTournamentLoading" @click="submitNewTournament">{{
+                            $t('Create') }}</v-btn>
+                    </div>
+                </v-card>
+            </v-dialog>
+            <v-divider/>
             <v-list-item @click="gotoOpenDoors" v-if="user.is.teacher">
                 <template v-slot:prepend>
                     <v-icon icon="mdi-door-open"></v-icon>
@@ -148,6 +200,7 @@
     import { useRouter } from 'vue-router';
     import { usePostStore } from '@/stores/usePostStore';
     import { useWorkshopStore } from '@/stores/useWorkshopStore';
+    import { useTournamentStore } from '@/stores/useTournamentStore';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { storeToRefs } from 'pinia';
 
@@ -169,6 +222,9 @@
     const gotoMyPosts = () => {
         router.push('/myPosts');
     }
+    const gotoTournaments = () => {
+        router.push('/tournaments');
+    }
 
     let newPostLoading = ref(false);
     const submitNewPost = async () => {
@@ -185,6 +241,9 @@
 
     const workshopStore = useWorkshopStore();
     const { createWorkshop } = workshopStore;
+
+    const tournamentStore = useTournamentStore();
+    const { createTournament } = tournamentStore;
 
     const availableLanguages = [{ value: 'fr', title: 'Français' }, { value: 'en', title: 'English' }, { value: 'both', title: 'Les deux / Both' }];
 
@@ -225,9 +284,9 @@
         router.push('/openDoorsBPR');
     }
 
-    const gotoMyCourses = () => {
-        router.push('/myCourses');
-    }
+    // const gotoMyCourses = () => {
+    //     router.push('/myCourses');
+    // }
 
     const myActivityDialog = ref(false);
     const activityLoading = ref(false);
@@ -236,5 +295,31 @@
         myActivityDialog.value = true;
         await fetchMyActivity();
         activityLoading.value = false;
+    }
+
+    let newTournamentDialog = ref(false);
+    const newTournament = reactive({name: '', description: '', format: 'swiss'});
+    let newTournamentLoading = ref(false);
+
+    const submitNewTournament = async () => {
+        if(newTournament.name.length >= 5) {
+            newTournamentLoading.value = true;
+            try {
+                const tournament = await createTournament({
+                    name: newTournament.name,
+                    description: newTournament.description,
+                    format: newTournament.format
+                });
+                newTournament.name = '';
+                newTournament.description = '';
+                newTournament.format = 'swiss';
+                newTournamentLoading.value = false;
+                newTournamentDialog.value = false;
+                router.push(`/tournaments/${tournament.slug}`);
+            } catch (error) {
+                console.error('Error creating tournament:', error);
+                newTournamentLoading.value = false;
+            }
+        }
     }
 </script>
