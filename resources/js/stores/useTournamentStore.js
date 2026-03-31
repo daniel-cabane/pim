@@ -27,6 +27,7 @@ export const useTournamentStore = defineStore({
             const res = await get(`/api/tournaments/${slug}`);
             this.tournament = res;
             this.isReady = true;
+            // console.log(this.tournament);
             return res;
         },
         async updateTournament(slug, data) {
@@ -40,17 +41,17 @@ export const useTournamentStore = defineStore({
         },
         async joinTournament(slug, data = {}) {
             const res = await post(`/api/tournaments/${slug}/join`, data);
-            this.tournament = res;
+            this.tournament = res.tournament;
             return res;
         },
         async leaveTournament(slug) {
             const res = await post(`/api/tournaments/${slug}/leave`, {});
-            this.tournament = res;
+            this.tournament = res.tournament;
             return res;
         },
         async startTournament(slug) {
             const res = await post(`/api/tournaments/${slug}/start`, {});
-            this.tournament = res;
+            this.tournament = res.tournament;
             return res;
         },
         async getTournamentStandings(slug) {
@@ -63,6 +64,9 @@ export const useTournamentStore = defineStore({
         },
         async createNextRound(slug) {
             const res = await post(`/api/tournaments/${slug}/next-round`, {});
+            if (res.tournament) {
+                this.tournament = res.tournament;
+            }
             return res;
         },
         async searchUsers(slug, query) {
@@ -105,6 +109,39 @@ export const useTournamentStore = defineStore({
         },
         async editPlayerRating(player) {
             const res = await patch(`/api/tournaments/${this.tournament.slug}/players/${player.id}/rating`, {rating: player.pivot.rating});
+            if(res.tournament){
+                this.tournament = res.tournament;
+            }
+            return res;
+        },
+        async reportGameResult(gameId, result) {
+            const res = await post(`/api/games/${gameId}/result`, { result });
+            if (res.game && this.tournament?.rounds) {
+                for (const round of this.tournament.rounds) {
+                    const idx = round.games?.findIndex(g => g.id === res.game.id);
+                    if (idx !== undefined && idx >= 0) {
+                        round.games.splice(idx, 1, res.game);
+                        break;
+                    }
+                }
+            }
+            return res;
+        },
+        async setGameResult(gameId, result1, result2) {
+            const res = await post(`/api/games/${gameId}/set-result`, { result1, result2 });
+            if (res.game && this.tournament?.rounds) {
+                for (const round of this.tournament.rounds) {
+                    const idx = round.games?.findIndex(g => g.id === res.game.id);
+                    if (idx !== undefined && idx >= 0) {
+                        round.games.splice(idx, 1, res.game);
+                        break;
+                    }
+                }
+            }
+            return res;
+        },
+        async updateTournamentStatus(slug, status) {
+            const res = await patch(`/api/tournaments/${slug}/status`, { status });
             if(res.tournament){
                 this.tournament = res.tournament;
             }

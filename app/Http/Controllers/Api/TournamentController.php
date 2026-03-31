@@ -22,7 +22,8 @@ class TournamentController extends Controller
 
     public function show(Tournament $tournament): JsonResponse
     {
-        $tournament->load(['rounds.games', 'players', 'creator', 'organisers']);
+        $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+        $tournament->isOrganiser(auth()->user());
         return response()->json($tournament);
     }
 
@@ -63,7 +64,8 @@ class TournamentController extends Controller
                 'text' => 'Tournament updated',
                 'type' => 'success'
             ],
-            'tournament' => $tournament]);
+            'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+        ]);
     }
 
     public function destroy(Tournament $tournament): JsonResponse
@@ -89,7 +91,7 @@ class TournamentController extends Controller
         }
 
         $validated = $request->validate([
-            'rating' => 'required|integer|min:1000|max:2800',
+            'rating' => 'required|integer|min:200|max:2800',
         ]);
 
         $tournament->players()->attach(auth()->id(), [
@@ -105,9 +107,10 @@ class TournamentController extends Controller
 
         return response()->json([
             'message' => [
-                'text' => 'Joined tournament successfully',
+                'text' => 'Joined tournament',
                 'type' => 'success'
-            ]
+            ],
+            'tournament' => $tournament
         ]);
     }
 
@@ -118,9 +121,10 @@ class TournamentController extends Controller
 
         return response()->json([
             'message' => [
-                'text' => 'Left tournament successfully',
+                'text' => 'Left tournament',
                 'type' => 'success'
-            ]
+            ],
+            'tournament' => $tournament
         ]);
     }
 
@@ -136,9 +140,10 @@ class TournamentController extends Controller
         return response()->json([
             'tournament' => $tournament->fresh(),
             'message' => [
-                'text' => 'Tournament started successfully',
+                'text' => 'Tournament started',
                 'type' => 'success'
-            ]
+            ],
+            'tournament' => $tournament
         ]);
     }
 
@@ -168,10 +173,18 @@ class TournamentController extends Controller
             ], 422);
         }
 
+        $tournament->recalculateStandings();
+
         $engine = new SwissPairingEngine($tournament);
         $round = $engine->createRound();
 
-        return response()->json($round, 201);
+        $tournament->increment('rounds_count');
+        $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+
+        return response()->json([
+            'tournament' => $tournament,
+            'message' => ['text' => 'Round ' . $round->round_number . ' created', 'type' => 'success'],
+        ], 201);
     }
 
     public function searchUsers(Request $request, Tournament $tournament): JsonResponse
@@ -208,7 +221,8 @@ class TournamentController extends Controller
                 'message' => [
                     'text' => 'User is already an organiser',
                     'type' => 'error'
-                ]
+                ],
+                'tournament' => $tournament
             ]);
         }
 
@@ -216,7 +230,7 @@ class TournamentController extends Controller
 
         return response()->json([
             'message' => [
-                'text' => 'Organiser added successfully',
+                'text' => 'Organiser added',
                 'type' => 'success'
             ]
         ], 201);
@@ -240,7 +254,7 @@ class TournamentController extends Controller
 
         return response()->json([
             'message' => [
-                'text' => 'Organiser removed successfully',
+                'text' => 'Organiser removed',
                 'type' => 'success'
             ]
         ]);
@@ -295,7 +309,8 @@ class TournamentController extends Controller
                 'message' => [
                     'text' => 'User is already a player',
                     'type' => 'error'
-                ]
+                ],
+                'tournament' => $tournament
             ]);
         }
 
@@ -312,7 +327,7 @@ class TournamentController extends Controller
 
         return response()->json([
             'message' => [
-                'text' => 'Player added successfully',
+                'text' => 'Player added',
                 'type' => 'success'
             ],
             'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
@@ -338,7 +353,7 @@ class TournamentController extends Controller
 
         return response()->json([
             'message' => [
-                'text' => 'Player removed successfully',
+                'text' => 'Player removed',
                 'type' => 'success'
             ],
             'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
@@ -352,6 +367,7 @@ class TournamentController extends Controller
         $validated = $request->validate([
             'banned' => 'required|boolean',
         ]);
+        
 
         // Check if player exists
         if (!$tournament->players()->where('user_id', $user->id)->exists()) {
@@ -367,12 +383,17 @@ class TournamentController extends Controller
         $tournament->players()->updateExistingPivot($user->id, [
             'banned' => $validated['banned'],
         ]);
+        if($validated['banned']){
+            $tournament->decrement('players_count');
+        } else {
+            $tournament->increment('players_count');
+        }
 
         $status = $validated['banned'] ? 'banned' : 'unbanned';
 
         return response()->json([
             'message' => [
-                'text' => "Player {$status} successfully",
+                'text' => "Player {$status}",
                 'type' => 'success'
             ],
             'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
@@ -408,6 +429,63 @@ class TournamentController extends Controller
                 'type' => 'success'
             ],
             'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+        ]);
+    }
+
+    public function updateStatus(Request $request, Tournament $tournament): JsonResponse
+    {
+        $this->authorize('update', $tournament);
+
+        $validated = $request->validate([
+            'status' => 'required|in:draft,preparation,ongoing,completed',
+        ]);
+
+        $newStatus = $validated['status'];
+        $currentStatus = $tournament->status;
+
+        $allowedTransitions = [
+            'draft' => ['preparation'],
+            'preparation' => ['draft', 'ongoing'],
+            'ongoing' => ['completed'],
+        ];
+
+        if (!isset($allowedTransitions[$currentStatus]) || !in_array($newStatus, $allowedTransitions[$currentStatus])) {
+            return response()->json([
+                'message' => [
+                    'text' => "Cannot change status from {$currentStatus} to {$newStatus}",
+                    'type' => 'error'
+                ]
+            ], 422);
+        }
+
+        if ($newStatus === 'ongoing') {
+            if ($tournament->players_count < 2) {
+                return response()->json([
+                    'message' => [
+                        'text' => 'At least 2 players are required to start the tournament',
+                        'type' => 'error'
+                    ]
+                ], 422);
+            }
+
+            $tournament->update(['status' => 'ongoing', 'started_at' => now()]);
+
+            $engine = new SwissPairingEngine($tournament);
+            $engine->createRound();
+
+            $tournament->increment('rounds_count');
+        } elseif ($newStatus === 'completed') {
+            $tournament->update(['status' => 'completed', 'ended_at' => now()]);
+        } else {
+            $tournament->update(['status' => $newStatus]);
+        }
+
+        return response()->json([
+            'message' => [
+                'text' => 'Tournament status updated',
+                'type' => 'success'
+            ],
+            'tournament' => $tournament->fresh()->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers'])
         ]);
     }
 }

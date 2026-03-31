@@ -131,7 +131,7 @@ export const useEventStore = defineStore({
         },
         async getUpcomingEvents() {
             const res = await get(`/api/events/upcoming`,true);
-            this.events = res.events;
+            this.events = res;
         },
         async getPiRoomEvents() {
             this.isReady = false;

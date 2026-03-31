@@ -106,15 +106,78 @@ class Tournament extends Model
                 'tournament_player.score as points',
                 'tournament_player.wins',
                 'tournament_player.draws',
-                'tournament_player.losses'
+                'tournament_player.losses',
+                'tournament_player.rating'
             )
             ->orderBy('tournament_player.score', 'DESC')
             ->orderBy('tournament_player.wins', 'DESC')
+            ->orderBy('tournament_player.rating', 'ASC')
             ->get();
     }
 
-    public function isOrganiser(User $user): bool
+    public function recalculateStandings(): void
     {
-        return $this->organisers()->where('user_id', $user->id)->exists();
+        // Reset all player stats to zero
+        $this->players()->newPivotQuery()->update([
+            'score' => 0,
+            'wins' => 0,
+            'draws' => 0,
+            'losses' => 0,
+        ]);
+
+        // Recalculate from all completed games
+        $games = $this->games()->where('status', Game::STATUS_COMPLETED)->get();
+
+        foreach ($games as $game) {
+            if ($game->result1 === 'win') {
+                $this->players()->syncWithoutDetaching([
+                    $game->player1_id => [
+                        'wins' => DB::raw('wins + 1'),
+                        'score' => DB::raw('score + 1'),
+                    ]
+                ]);
+                if ($game->player2_id) {
+                    $this->players()->syncWithoutDetaching([
+                        $game->player2_id => [
+                            'losses' => DB::raw('losses + 1'),
+                        ]
+                    ]);
+                }
+            } elseif ($game->result1 === 'loss') {
+                $this->players()->syncWithoutDetaching([
+                    $game->player1_id => [
+                        'losses' => DB::raw('losses + 1'),
+                    ]
+                ]);
+                if ($game->player2_id) {
+                    $this->players()->syncWithoutDetaching([
+                        $game->player2_id => [
+                            'wins' => DB::raw('wins + 1'),
+                            'score' => DB::raw('score + 1'),
+                        ]
+                    ]);
+                }
+            } elseif ($game->result1 === 'draw') {
+                $this->players()->syncWithoutDetaching([
+                    $game->player1_id => [
+                        'draws' => DB::raw('draws + 1'),
+                        'score' => DB::raw('score + 0.5'),
+                    ]
+                ]);
+                if ($game->player2_id) {
+                    $this->players()->syncWithoutDetaching([
+                        $game->player2_id => [
+                            'draws' => DB::raw('draws + 1'),
+                            'score' => DB::raw('score + 0.5'),
+                        ]
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function isOrganiser(User $user = null): bool
+    {
+        return $user ? $this->organisers()->where('user_id', $user->id)->exists() : false;
     }
 }

@@ -2,17 +2,14 @@
     <v-card>
         <v-card-text>
             <!-- Tournament Settings Section -->
-            <div class="mb-6">
-                <div class="text-h6 text-captionColor mb-4">Tournament Settings</div>
-                
+            <div class="mb-6">                
                 <v-form @submit.prevent="saveTournamentSettings">
                     <v-row>
                         <v-col cols="12" md="6" class="pb-0">
                             <v-text-field
                                 v-model="tournamentName"
-                                label="Tournament Name"
+                                :label="$t('Name')"
                                 variant="outlined"
-                                dense
                                 :loading="savingSettings"
                                 @blur="saveTournamentSettings"
                             />
@@ -20,12 +17,11 @@
                         <v-col cols="12" md="6" class="pb-0">
                             <v-select
                                 v-model="pairingSystem"
-                                label="Pairing System"
+                                :label="$t('Pairing system')"
                                 :items="pairingOptions"
                                 item-title="label"
                                 item-value="value"
                                 variant="outlined"
-                                dense
                                 :loading="savingSettings"
                                 @update:model-value="saveTournamentSettings"
                             />
@@ -38,7 +34,6 @@
                                 v-model="tournamentDescription"
                                 label="Description"
                                 variant="outlined"
-                                dense
                                 rows="3"
                                 :loading="savingSettings"
                                 @blur="saveTournamentSettings"
@@ -48,7 +43,9 @@
                 </v-form>
             </div>
 
-            <div class="text-h6 text-captionColor mb-3">Manage Organisers</div>
+            <div class="text-h6 text-captionColor mb-3">
+                {{ $t('Organisers') }}
+            </div>
             
             <!-- Search and Add Organiser -->
             <div class="mb-8">
@@ -61,7 +58,7 @@
                             :items="searchResults"
                             item-title="name"
                             item-value="id"
-                            placeholder="Search by name or email (min 3 characters)"
+                            :placeholder="$t('Search by name or email')"
                             :loading="searchingUsers"
                             no-filter
                             clearable
@@ -86,7 +83,7 @@
                             class="w-100"
                         >
                             <v-icon left>mdi-plus</v-icon>
-                            Add Organiser
+                            {{ $t('Add organiser') }}
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -164,10 +161,13 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { useRouter } from 'vue-router';
     import { useTournamentStore } from '@/stores/useTournamentStore';
     import useAPI from '@/composables/useAPI';
+    import { useI18n } from 'vue-i18n';
+
+    const { t } = useI18n();
 
     const router = useRouter();
     const props = defineProps({
@@ -191,11 +191,11 @@
     const initialName = ref('');
     const initialDescription = ref('');
     const initialFormat = ref('');
-    const pairingOptions = [
-        { label: 'Swiss', value: 'swiss' },
-        { label: 'Round Robin', value: 'round_robin' },
-        { label: 'Knockout', value: 'knockout' }
-    ];
+    const pairingOptions = computed( () => [
+        { label: t('Swiss'), value: 'swiss' },
+        { label: t('Round Robin'), value: 'round_robin' },
+        { label: t('Knockout'), value: 'knockout' }
+    ]);
     const savingSettings = ref(false);
 
     // Organisers Management
@@ -236,7 +236,7 @@
             initialDescription.value = tournamentDescription.value;
             initialFormat.value = pairingSystem.value;
             
-            history.replaceState(null, null, `/tournaments/${props.tournament.slug}/admin`);
+            history.replaceState(history.state, null, `/tournaments/${props.tournament.slug}/admin`);
         } catch (error) {
             console.error('Error saving tournament settings:', error);
         } finally {

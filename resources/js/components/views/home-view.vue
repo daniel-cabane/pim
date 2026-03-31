@@ -83,10 +83,11 @@
                     {{ $t('More') }}
                 </v-btn>
             </div>
-            <workshop-card v-for="workshop in events" :workshop="workshop" class="my-2" :key="workshop.id" />
+            <tournament-card :tournament="tournament" v-for="tournament in events.tournaments" class="my-2"/>
+            <workshop-card v-for="workshop in eventStore.workshops" :workshop="workshop" class="my-2" :key="workshop.id" />
             <div class="d-flex justify-end">
                 <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops"
-                    v-if="events.length > 2">
+                    v-if="events.count > 2">
                     {{ $t('More') }}
                 </v-btn>
             </div>

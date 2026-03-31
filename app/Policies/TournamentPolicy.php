@@ -22,7 +22,7 @@ class TournamentPolicy
 
     public function create(User $user): bool
     {
-        return auth()->check(); // Must be authenticated
+        return $user->hasRole('admin');
     }
 
     public function update(User $user, Tournament $tournament): bool
@@ -40,7 +40,7 @@ class TournamentPolicy
 
     public function start(User $user, Tournament $tournament): bool
     {
-        return ($user->id === $tournament->created_by || $user->hasRole('admin'))
+        return ($user->id === $tournament->isOrganiser($user) || $user->hasRole('admin'))
                && $tournament->canBeStarted();
     }
 

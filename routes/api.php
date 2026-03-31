@@ -348,6 +348,7 @@ Route::get('games/{game}', [GameController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('tournaments', [TournamentController::class, 'store']);
     Route::patch('tournaments/{tournament:slug}', [TournamentController::class, 'update']);
+    Route::patch('tournaments/{tournament:slug}/status', [TournamentController::class, 'updateStatus']);
     Route::delete('tournaments/{tournament:slug}', [TournamentController::class, 'destroy']);
     Route::post('tournaments/{tournament:slug}/join', [TournamentController::class, 'join']);
     Route::post('tournaments/{tournament:slug}/leave', [TournamentController::class, 'leave']);
@@ -371,4 +372,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('rounds/{round}/complete', [RoundController::class, 'completeRound']);
     Route::post('games/{game}/start', [GameController::class, 'startGame']);
     Route::post('games/{game}/result', [GameController::class, 'recordResult']);
+    Route::post('games/{game}/set-result', [GameController::class, 'setResult']);
 });

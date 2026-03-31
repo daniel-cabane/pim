@@ -1,14 +1,13 @@
 <template>
     <v-card>
-        <v-card-title class="d-flex justify-space-between align-center">
-            <span>Tournament Players</span>
+        <v-card-title class="d-flex justify-end align-center">
             <v-btn
                 color="primary"
                 size="small"
                 append-icon="mdi-plus"
                 @click="showAddPlayerDialog = true"
             >
-                Add Player
+                {{ $t('Add Player') }}
             </v-btn>
         </v-card-title>
 
@@ -20,9 +19,16 @@
             class="elevation-0"
             no-data-text="No players yet"
         >
+            <template v-slot:item.name="{ item }">
+                <div>
+                    <div>{{ item.name }}</div>
+                    <div class="text-caption text-captionColor">{{ item.email }}</div>
+                </div>
+            </template>
+
             <template v-slot:item.wdl="{ item }">
                 <span :class="item.pivot?.banned ? 'text-error font-weight-bold' : ''">
-                    {{ item.pivot?.banned ? 'BANNED' : `${item.pivot?.wins || 0}-${item.pivot?.draws || 0}-${item.pivot?.losses || 0 }` }}
+                    {{ item.pivot?.banned ? $t('BANNED') : `${item.pivot?.wins || 0}-${item.pivot?.draws || 0}-${item.pivot?.losses || 0 }` }}
                 </span>
             </template>
 
@@ -60,7 +66,7 @@
     <!-- Add Player Dialog -->
     <v-dialog v-model="showAddPlayerDialog" max-width="500">
         <v-card>
-            <v-card-title>Add Player</v-card-title>
+            <v-card-title>{{ $t('Add Player') }}</v-card-title>
             <v-card-text>
                 <v-autocomplete
                     v-model="selectedPlayer"
@@ -69,7 +75,7 @@
                     item-title="name"
                     item-value="id"
                     :loading="searchingPlayers"
-                    label="Search player (min 3 characters)"
+                    :label="$t('Search by name or email')"
                     no-filter
                     clearable
                     hide-details="auto"
@@ -169,6 +175,9 @@
     import { ref, computed, onMounted } from 'vue';
     import { useTournamentStore } from '@/stores/useTournamentStore';
     import useAPI from '@/composables/useAPI';
+    import { useI18n } from 'vue-i18n';
+
+    const { t } = useI18n();
 
     const props = defineProps({
         tournament: {
@@ -180,18 +189,17 @@
             required: false
         }
     });
-    console.log(props.tournament);
 
     const tournamentStore = useTournamentStore();
     const { get: apiGet } = useAPI();
 
-    const headers = [
-        { title: 'Player', key: 'name' },
-        { title: 'Rating', key: 'pivot.rating', align: 'center' },
+    const headers = computed( () => [
+        { title: t('Player'), key: 'name' },
+        { title: t('Rating'), key: 'pivot.rating', align: 'center' },
         { title: 'Points', key: 'pivot.score', align: 'center' },
-        { title: 'W-D-L', key: 'wdl', align: 'center', sortable: false },
+        { title: t('W-D-L'), key: 'wdl', align: 'center', sortable: false },
         { title: 'Actions', key: 'actions', align: 'center', sortable: false, width: '100px' }
-    ];
+    ]);
 
     const players = ref([]);
     const loadingPlayers = ref(false);

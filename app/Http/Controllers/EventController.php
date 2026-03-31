@@ -9,6 +9,7 @@ use App\Models\OpenDoor;
 use App\Models\Session;
 use App\Models\Term;
 use App\Models\Workshop;
+use App\Models\Tournament;
 
 class EventController extends Controller
 {
@@ -24,7 +25,12 @@ class EventController extends Controller
         foreach(Workshop::where('archived', 0)->whereIn('status', ['confirmed', 'launched'])->whereIn('campus', $campus)->orderBy('start_date')->take(6)->get() as $workshop){
             $workshops[] = $workshop->format();
         }
-        return response()->json(['events' => $workshops]);
+        $tournaments = Tournament::whereIn('status', ['preparation', 'ongoing'])->latest()->take(3)->get();
+        return response()->json([
+            'count' => count($tournaments) + count($workshops),
+            'tournaments' => $tournaments,
+            'workshops' => $workshops
+        ]);
     }
 
 

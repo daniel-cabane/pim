@@ -4,19 +4,24 @@
             <v-row class="mb-6">
                 <v-col cols="12">
                     <v-btn :to="`/tournaments/${tournament.slug}`" variant="tonal" color="primary" prepend-icon="mdi-arrow-left">
-                        Back to Tournament
+                        {{ $t('Back to Tournament') }}
                     </v-btn>
                 </v-col>
             </v-row>
-
-            <h1 class="text-h3 font-weight-bold mb-2">Manage Tournament: {{ tournament.name }}</h1>
+            <div class="d-flex justify-space-between align-center">
+                <div class="pimSubtitleFont" style="font-size: 56px;">
+                    {{ tournament.name }}
+                </div>
+                <v-chip size="x-large" :text="$t('Management')" label color="secondary"/>
+            </div>
+            <!-- <h1 class="text-h3 font-weight-bold mb-2">Manage Tournament: {{ tournament.name }}</h1> -->
 
             <!-- Admin Actions Tabs -->
             <v-tabs v-model="activeTab" class="mt-6">
-                <v-tab value="overview">Overview</v-tab>
+                <v-tab value="overview">{{ $t('Overview') }}</v-tab>
                 <v-tab value="rounds">Rounds</v-tab>
-                <v-tab value="players">Players</v-tab>
-                <v-tab value="settings">Settings</v-tab>
+                <v-tab value="players">{{ $t('Players') }}</v-tab>
+                <v-tab value="settings">{{ $t('Settings') }}</v-tab>
             </v-tabs>
 
             <v-window v-model="activeTab" class="mt-4">
@@ -78,7 +83,7 @@
         if (!authStore.user || !tournament.value) return false;
         
         // Check if user is the creator
-        if (tournament.value.created_by === authStore.user.id) return true;
+        if (tournament.value.created_by === authStore.user.id || tournament.value.organisers.some(u => u.id == authStore.user.id)) return true;
         
         return false;
     });

@@ -21,7 +21,7 @@
             </div>
             <div>
                 <div class="text-center">
-                    <v-icon size="40" color="warning" class="mb-2">mdi-play-circle</v-icon>
+                    <v-icon size="40" color="warning" class="mb-2">mdi-table</v-icon>
                     <div class="text-h6 font-weight-bold">{{ tournament.rounds_count }}</div>
                     <div class="text-captionColor text-caption mb-1">{{ $t('Rounds')}} </div>
                 </div>
@@ -36,7 +36,7 @@
             <div>
                 <div class="text-center">
                     <v-icon size="40" color="info" class="mb-2">mdi-tournament</v-icon>
-                    <div class="text-h6 font-weight-bold text-capitalize">{{ $t(tournament.format) }}</div>
+                    <div class="text-h6 font-weight-bold text-capitalize">{{ $t(pairingSystem) }}</div>
                     <div class="text-captionColor text-caption mb-1">{{ $t('Pairing')}} </div>
                 </div>
             </div>
@@ -57,6 +57,10 @@
 
     const totalGames = computed(() => {
         return props.tournament?.rounds?.reduce((sum, round) => sum + (round.games?.length || 0), 0) || 0;
+    });
+
+    const pairingSystem = computed(() => {
+        return props.tournament.format == 'round_robin' ? 'Round robin' : props.tournament.format
     });
 </script>
 

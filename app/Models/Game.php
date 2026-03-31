@@ -18,7 +18,8 @@ class Game extends Model
         'round_id',
         'player1_id',
         'player2_id',
-        'result',
+        'result1',
+        'result2',
         'status',
         'notes',
         'started_at',
@@ -30,11 +31,10 @@ class Game extends Model
         'ended_at' => 'datetime',
     ];
 
-    const RESULT_DRAW = 'draw';
-    const RESULT_PLAYER1_WIN = 'player1_win';
-    const RESULT_PLAYER2_WIN = 'player2_win';
+    protected $appends = ['computed_status'];
+
     const STATUS_PENDING = 'pending';
-    const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_CONFLICTED = 'conflicted';
     const STATUS_COMPLETED = 'completed';
 
     public function tournament()
@@ -57,61 +57,58 @@ class Game extends Model
         return $this->belongsTo(User::class, 'player2_id');
     }
 
-    public function recordResult(string $result): void
+    public function getComputedStatusAttribute(): string
     {
-        $this->result = $result;
-        $this->status = self::STATUS_COMPLETED;
-        $this->ended_at = now();
-        $this->save();
-        
-        $this->updatePlayerScores();
+        if ($this->result1 === null || $this->result2 === null) {
+            return self::STATUS_PENDING;
+        }
+
+        if ($this->resultsAreCoherent()) {
+            return self::STATUS_COMPLETED;
+        }
+
+        return self::STATUS_CONFLICTED;
     }
 
-    private function updatePlayerScores(): void
+    public function resultsAreCoherent(): bool
     {
-        $tournament = $this->tournament;
-        
-        if ($this->result === self::RESULT_PLAYER1_WIN) {
-            $tournament->players()->syncWithoutDetaching([
-                $this->player1_id => [
-                    'wins' => DB::raw('wins + 1'),
-                    'score' => DB::raw('score + 1'),
-                ]
-            ]);
-            if ($this->player2_id) {
-                $tournament->players()->syncWithoutDetaching([
-                    $this->player2_id => [
-                        'losses' => DB::raw('losses + 1'),
-                    ]
-                ]);
-            }
-        } elseif ($this->result === self::RESULT_PLAYER2_WIN) {
-            $tournament->players()->syncWithoutDetaching([
-                $this->player2_id => [
-                    'wins' => DB::raw('wins + 1'),
-                    'score' => DB::raw('score + 1'),
-                ]
-            ]);
-            $tournament->players()->syncWithoutDetaching([
-                $this->player1_id => [
-                    'losses' => DB::raw('losses + 1'),
-                ]
-            ]);
-        } elseif ($this->result === self::RESULT_DRAW) {
-            $tournament->players()->syncWithoutDetaching([
-                $this->player1_id => [
-                    'draws' => DB::raw('draws + 1'),
-                    'score' => DB::raw('score + 0.5'),
-                ]
-            ]);
-            if ($this->player2_id) {
-                $tournament->players()->syncWithoutDetaching([
-                    $this->player2_id => [
-                        'draws' => DB::raw('draws + 1'),
-                        'score' => DB::raw('score + 0.5'),
-                    ]
-                ]);
-            }
+        if ($this->result1 === null || $this->result2 === null) {
+            return false;
         }
+
+        // Coherent: player1 says win & player2 says loss, or vice versa, or both say draw
+        return ($this->result1 === 'win' && $this->result2 === 'loss')
+            || ($this->result1 === 'loss' && $this->result2 === 'win')
+            || ($this->result1 === 'draw' && $this->result2 === 'draw');
+    }
+
+    public function reportResult(int $playerId, string $result): void
+    {
+        if ($playerId === $this->player1_id) {
+            $this->result1 = $result;
+        } elseif ($playerId === $this->player2_id) {
+            $this->result2 = $result;
+        }
+
+        $this->status = $this->getComputedStatusAttribute();
+
+        if ($this->status === self::STATUS_COMPLETED) {
+            $this->ended_at = now();
+        }
+
+        $this->save();
+    }
+
+    public function setResultByOrganiser(string $result1, string $result2): void
+    {
+        $this->result1 = $result1;
+        $this->result2 = $result2;
+        $this->status = $this->getComputedStatusAttribute();
+
+        if ($this->status === self::STATUS_COMPLETED) {
+            $this->ended_at = now();
+        }
+
+        $this->save();
     }
 }

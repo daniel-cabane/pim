@@ -62,7 +62,7 @@
     });
     const poster = computed(() => {
         return props.posters[props.language] ? props.posters[props.language] : null;
-        return props.details[`poster_${props.language}`] ? props.details[`poster_${props.language}`] : null;
+        // return props.details[`poster_${props.language}`] ? props.details[`poster_${props.language}`] : null;
     });
 
     const emit = defineEmits(['pickPoster', 'deletePoster']);
