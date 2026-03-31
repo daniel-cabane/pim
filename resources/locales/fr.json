@@ -684,5 +684,9 @@
     "Set game result": "Set game result",
     "This will generate pairings for round": "Cette action génère l'appareillement pour le round",
     "Are you sure?": "Êtes-vous sûr ?",
-    "No rounds yet": "Aucun rounds pour l'instant"
+    "No rounds yet": "Aucun rounds pour l'instant",
+    "New round created": "Nouveau round créé",
+    "knockout": "knockout",
+    "Tournament completed": "Tournoi terminé",
+    "Tournament completed — champion decided": "Tournoi terminé — Le champion a été nommé"
 }

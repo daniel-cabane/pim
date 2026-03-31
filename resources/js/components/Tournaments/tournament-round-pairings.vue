@@ -128,14 +128,25 @@
     const editResult1 = ref(null);
     const editResult2 = ref(null);
 
-    const resultItems = computed(() => [
-        { label: t('Win'), value: 'win' },
-        { label: t('Loss'), value: 'loss' },
-        { label: t('Draw'), value: 'draw' },
-    ]);
+    const isKnockout = computed(() => props.tournament?.format === 'knockout');
+
+    const resultItems = computed(() => {
+        const items = [
+            { label: t('Win'), value: 'win' },
+            { label: t('Loss'), value: 'loss' },
+        ];
+        if (!isKnockout.value) {
+            items.push({ label: t('Draw'), value: 'draw' });
+        }
+        return items;
+    });
 
     const currentRound = computed(() => {
         if (!props.tournament?.rounds?.length) return null;
+        if (props.tournament.format === 'round_robin') {
+            const sorted = [...props.tournament.rounds].sort((a, b) => a.round_number - b.round_number);
+            return sorted.find(r => !r.games?.every(g => g.status === 'completed')) || sorted[sorted.length - 1];
+        }
         return [...props.tournament.rounds].sort((a, b) => b.round_number - a.round_number)[0];
     });
 

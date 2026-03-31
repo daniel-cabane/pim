@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Tournament;
 use App\Models\User;
+use App\Services\KnockoutPairingEngine;
+use App\Services\RoundRobinPairingEngine;
 use App\Services\SwissPairingEngine;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -134,16 +136,26 @@ class TournamentController extends Controller
 
         $tournament->update(['status' => 'ongoing', 'started_at' => now()]);
 
-        $engine = new SwissPairingEngine($tournament);
-        $engine->createRound();
+        if ($tournament->format === 'round_robin') {
+            $engine = new RoundRobinPairingEngine($tournament);
+            $roundsCreated = $engine->createAllRounds();
+            $tournament->increment('rounds_count', $roundsCreated);
+        } elseif ($tournament->format === 'knockout') {
+            $engine = new KnockoutPairingEngine($tournament);
+            $engine->createFirstRound();
+            $tournament->increment('rounds_count');
+        } else {
+            $engine = new SwissPairingEngine($tournament);
+            $engine->createRound();
+            $tournament->increment('rounds_count');
+        }
 
         return response()->json([
-            'tournament' => $tournament->fresh(),
+            'tournament' => $tournament->fresh()->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']),
             'message' => [
                 'text' => 'Tournament started',
                 'type' => 'success'
             ],
-            'tournament' => $tournament
         ]);
     }
 
@@ -173,17 +185,41 @@ class TournamentController extends Controller
             ], 422);
         }
 
+        if ($tournament->format === 'round_robin') {
+            return response()->json([
+                'message' => [
+                    'text' => 'All rounds are pre-generated for Round Robin tournaments',
+                    'type' => 'error'
+                ]
+            ], 422);
+        }
+
         $tournament->recalculateStandings();
 
-        $engine = new SwissPairingEngine($tournament);
-        $round = $engine->createRound();
+        if ($tournament->format === 'knockout') {
+            $engine = new KnockoutPairingEngine($tournament);
+            $round = $engine->createNextRound();
+
+            if ($round === null) {
+                $tournament->update(['status' => 'completed', 'ended_at' => now()]);
+                $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+
+                return response()->json([
+                    'tournament' => $tournament,
+                    'message' => ['text' => 'Tournament completed — champion decided', 'type' => 'success'],
+                ]);
+            }
+        } else {
+            $engine = new SwissPairingEngine($tournament);
+            $round = $engine->createRound();
+        }
 
         $tournament->increment('rounds_count');
         $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
 
         return response()->json([
             'tournament' => $tournament,
-            'message' => ['text' => 'Round ' . $round->round_number . ' created', 'type' => 'success'],
+            'message' => ['text' => 'New round created', 'type' => 'success'],
         ], 201);
     }
 
@@ -470,10 +506,19 @@ class TournamentController extends Controller
 
             $tournament->update(['status' => 'ongoing', 'started_at' => now()]);
 
-            $engine = new SwissPairingEngine($tournament);
-            $engine->createRound();
-
-            $tournament->increment('rounds_count');
+            if ($tournament->format === 'round_robin') {
+                $engine = new RoundRobinPairingEngine($tournament);
+                $roundsCreated = $engine->createAllRounds();
+                $tournament->increment('rounds_count', $roundsCreated);
+            } elseif ($tournament->format === 'knockout') {
+                $engine = new KnockoutPairingEngine($tournament);
+                $engine->createFirstRound();
+                $tournament->increment('rounds_count');
+            } else {
+                $engine = new SwissPairingEngine($tournament);
+                $engine->createRound();
+                $tournament->increment('rounds_count');
+            }
         } elseif ($newStatus === 'completed') {
             $tournament->update(['status' => 'completed', 'ended_at' => now()]);
         } else {

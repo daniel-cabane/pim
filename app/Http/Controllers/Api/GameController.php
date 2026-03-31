@@ -50,6 +50,12 @@ class GameController extends Controller
             ], 422);
         }
 
+        if ($validated['result'] === 'draw' && $game->tournament->format === 'knockout') {
+            return response()->json([
+                'message' => ['text' => 'Draws are not allowed in knockout tournaments', 'type' => 'error']
+            ], 422);
+        }
+
         $game->reportResult($userId, $validated['result']);
 
         return response()->json([
@@ -66,6 +72,12 @@ class GameController extends Controller
             'result1' => 'required|in:win,loss,draw',
             'result2' => 'required|in:win,loss,draw',
         ]);
+
+        if (($validated['result1'] === 'draw' || $validated['result2'] === 'draw') && $game->tournament->format === 'knockout') {
+            return response()->json([
+                'message' => ['text' => 'Draws are not allowed in knockout tournaments', 'type' => 'error']
+            ], 422);
+        }
 
         $game->setResultByOrganiser($validated['result1'], $validated['result2']);
 

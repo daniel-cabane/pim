@@ -87,6 +87,10 @@
 
     const currentRound = computed(() => {
         if (!props.tournament?.rounds?.length) return null;
+        if (props.tournament.format === 'round_robin') {
+            const sorted = [...props.tournament.rounds].sort((a, b) => a.round_number - b.round_number);
+            return sorted.find(r => !r.games?.every(g => g.status === 'completed')) || sorted[sorted.length - 1];
+        }
         return [...props.tournament.rounds].sort((a, b) => b.round_number - a.round_number)[0];
     });
 
@@ -109,12 +113,19 @@
         return currentGame.value.player1?.name || t('Unknown');
     });
 
-    const resultOptions = computed(() => [
-        { label: t('pending'), value: null },
-        { label: t('Win'), value: 'win' },
-        { label: t('Loss'), value: 'loss' },
-        { label: t('Draw'), value: 'draw' },
-    ]);
+    const isKnockout = computed(() => props.tournament?.format === 'knockout');
+
+    const resultOptions = computed(() => {
+        const options = [
+            { label: t('pending'), value: null },
+            { label: t('Win'), value: 'win' },
+            { label: t('Loss'), value: 'loss' },
+        ];
+        if (!isKnockout.value) {
+            options.push({ label: t('Draw'), value: 'draw' });
+        }
+        return options;
+    });
 
     const statusColor = computed(() => {
         const map = { 'pending': 'warning', 'conflicted': 'error', 'completed': 'success' };

@@ -93,9 +93,9 @@
             </v-card-text>
         </v-card>
 
-        <!-- Next round button -->
+        <!-- Next round button (hidden for round robin) -->
         <v-btn
-            v-if="tournament.status === 'ongoing'"
+            v-if="tournament.status === 'ongoing' && tournament.format !== 'round_robin'"
             block
             size="large"
             color="primary"
@@ -106,7 +106,7 @@
         >
             {{ $t('Start next round') }}
         </v-btn>
-        <v-alert v-if="tournament.status === 'ongoing' && !canStartNextRound && sortedRounds.length > 0" 
+        <v-alert v-if="tournament.status === 'ongoing' && tournament.format !== 'round_robin' && !canStartNextRound && sortedRounds.length > 0" 
             type="info" variant="tonal" density="compact" class="mt-2"
         >
             {{ $t('All games in the current round must be completed before starting a new round') }}
@@ -139,15 +139,15 @@
                         <div class="font-weight-medium text-truncate" style="width: 33%; text-align: right;">{{ editingGame.player2?.name }}</div>
                     </div>
                     <v-btn-toggle v-model="selectedResultOption" mandatory color="primary" class="d-flex" style="width: 100%;">
-                        <v-btn value="white_wins" style="width: 33.33%;" stacked>
+                        <v-btn value="white_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
                             <span class="font-weight-bold">1 - 0</span>
                             <div class="text-caption">{{ $t('White wins') }}</div>
                         </v-btn>
-                        <v-btn value="draw" style="width: 33.34%;" stacked>
+                        <v-btn v-if="!isKnockout" value="draw" style="width: 33.34%;" stacked>
                             <span class="font-weight-bold">½ - ½</span>
                             <div class="text-caption">{{ $t('Draw') }}</div>
                         </v-btn>
-                        <v-btn value="black_wins" style="width: 33.33%;" stacked>
+                        <v-btn value="black_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
                             <span class="font-weight-bold">0 - 1</span>
                             <div class="text-caption">{{ $t('Black wins') }}</div>
                         </v-btn>
@@ -180,13 +180,23 @@
     const editingGame = ref(null);
     const selectedResultOption = ref(null);
 
+    const isRoundRobin = computed(() => props.tournament?.format === 'round_robin');
+    const isKnockout = computed(() => props.tournament?.format === 'knockout');
+
     const sortedRounds = computed(() => {
         if (!props.tournament?.rounds?.length) return [];
+        if (isRoundRobin.value) {
+            return [...props.tournament.rounds].sort((a, b) => a.round_number - b.round_number);
+        }
         return [...props.tournament.rounds].sort((a, b) => b.round_number - a.round_number);
     });
 
     const currentRound = computed(() => {
         if (!sortedRounds.value.length) return null;
+        if (isRoundRobin.value) {
+            // First unfinished round
+            return sortedRounds.value.find(r => !allGamesCompleted(r)) || null;
+        }
         return sortedRounds.value[0];
     });
 

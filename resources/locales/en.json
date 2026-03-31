@@ -684,5 +684,9 @@
     "Set game result": "Set game result",
     "This will generate pairings for round": "This will generate pairings for round",
     "Are you sure?": "Are you sure?",
-    "No rounds yet": "No rounds yet"
+    "No rounds yet": "No rounds yet",
+    "New round created": "New round created",
+    "knockout": "knockout",
+    "Tournament completed": "Tournament completed",
+    "Tournament completed — champion decided": "Tournament completed — champion decided"
 }
