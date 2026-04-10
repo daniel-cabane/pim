@@ -33,12 +33,12 @@
                         </v-btn>
                     </div>
                     <div class="d-flex flex-wrap justify-space-around">
-                        <workshop-card v-for="workshop in events" :workshop="workshop" class="my-2"
-                            :key="workshop.id" />
+                        <tournament-card :tournament="tournament" v-for="tournament in events.tournaments" class="my-2"/>
+                        <workshop-card v-for="workshop in events.workshops" :workshop="workshop" class="my-2" :key="workshop.id" />
                     </div>
                     <div class="d-flex justify-end">
                         <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops"
-                            v-if="events.length > 2">
+                            v-if="events.count > 2">
                             {{ $t('More') }}
                         </v-btn>
                     </div>
@@ -77,14 +77,14 @@
         >
             <div class="d-flex align-start justify-space-between px-1">
                 <div style="width:100%;font-size:36px;" class="pimTitleFont font-weight-thin text-captionColor">
-                    {{ $t('Workshops') }}
+                    {{ $t('Activities') }}
                 </div>
                 <v-btn variant="text" size='large' class="mt-2 ml-2" append-icon="mdi-open-in-new" to="/workshops">
                     {{ $t('More') }}
                 </v-btn>
             </div>
             <tournament-card :tournament="tournament" v-for="tournament in events.tournaments" class="my-2"/>
-            <workshop-card v-for="workshop in eventStore.workshops" :workshop="workshop" class="my-2" :key="workshop.id" />
+            <workshop-card v-for="workshop in events.workshops" :workshop="workshop" class="my-2" :key="workshop.id" />
             <div class="d-flex justify-end">
                 <v-btn variant="text" size='large' class="mt-2" append-icon="mdi-open-in-new" to="/workshops"
                     v-if="events.count > 2">
