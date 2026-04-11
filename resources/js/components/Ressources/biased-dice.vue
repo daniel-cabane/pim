@@ -116,7 +116,7 @@
         </div>
         <div v-if='dice.length && bias!=0'>
           <div class='text-center text-h4' v-if='revealed' v-html="gameRecap"/>
-          <v-btn color='success' x-large style='width:100%' @click='revealBias' variant="outlined" v-else>Reveal</v-btn>
+          <v-btn color='success' x-large style='width:100%' @click='revealBias' variant="outlined" v-else>{{ $t('Reveal') }}</v-btn>
         </div>
       </v-col>
       <v-col cols="12" md="3" v-if='started'>

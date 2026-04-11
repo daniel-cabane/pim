@@ -1,5 +1,24 @@
 <template>
     <div>
+        <!-- Next round button (hidden for round robin) -->
+        <v-btn
+            v-if="tournament.status === 'ongoing' && tournament.format !== 'round_robin'"
+            block
+            size="large"
+            color="primary"
+            class="mt-4"
+            prepend-icon="mdi-plus"
+            :disabled="!canStartNextRound || tournamentStore.isLoading"
+            @click="nextRoundDialog = true"
+        >
+            {{ $t('Start next round') }}
+        </v-btn>
+        <v-alert v-if="tournament.status === 'ongoing' && tournament.format !== 'round_robin' && !canStartNextRound && sortedRounds.length > 0" 
+            type="info" variant="tonal" density="compact" class="my-2"
+        >
+            {{ $t('All games in the current round must be completed before starting a new round') }}
+        </v-alert>
+
         <!-- Rounds list -->
         <v-card v-if="sortedRounds.length > 0" v-for="round in sortedRounds" :key="round.id" 
             class="mb-4" 
@@ -92,25 +111,6 @@
                 <p class="text-captionColor">{{ $t('No rounds yet') }}</p>
             </v-card-text>
         </v-card>
-
-        <!-- Next round button (hidden for round robin) -->
-        <v-btn
-            v-if="tournament.status === 'ongoing' && tournament.format !== 'round_robin'"
-            block
-            size="large"
-            color="primary"
-            class="mt-4"
-            prepend-icon="mdi-plus"
-            :disabled="!canStartNextRound || tournamentStore.isLoading"
-            @click="nextRoundDialog = true"
-        >
-            {{ $t('Start next round') }}
-        </v-btn>
-        <v-alert v-if="tournament.status === 'ongoing' && tournament.format !== 'round_robin' && !canStartNextRound && sortedRounds.length > 0" 
-            type="info" variant="tonal" density="compact" class="mt-2"
-        >
-            {{ $t('All games in the current round must be completed before starting a new round') }}
-        </v-alert>
 
         <!-- Confirmation dialog -->
         <v-dialog v-model="nextRoundDialog" max-width="450">

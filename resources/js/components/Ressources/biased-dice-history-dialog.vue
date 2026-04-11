@@ -6,7 +6,7 @@
             size="large"
             style='width:200px'
             variant="outlined"
-            text="Show history"
+            :text="$t('Show history')"
             v-bind="activatorProps"
         />
       </template>

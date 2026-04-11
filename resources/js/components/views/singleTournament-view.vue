@@ -36,8 +36,11 @@
                 :organizer="organizer"
             />
         </div>
+        <div v-else-if="isLoading" class="text-center py-16">
+            <v-progress-circular indeterminate :size="55"/>
+        </div>
         <div v-else class="text-center py-16">
-            <v-icon size="64" color="error" class="mb-4">mdi-alert-circle</v-icon>
+            <v-icon size="64" color="captionColor" class="mb-4">mdi-alert-circle</v-icon>
             <p class="text-h6">Tournament not found</p>
         </div>
     </v-container>
