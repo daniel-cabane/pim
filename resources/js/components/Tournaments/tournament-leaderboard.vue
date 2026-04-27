@@ -48,7 +48,7 @@
                         </td>
                         <td class="d-flex align-center">
                             <span class="font-weight-bold">
-                                {{ player.name }}
+                                {{ playerName(player) }}
                             </span>
                             <span v-if="isCurrentUserPlayer(player.id)" class="text-caption text-primary ml-2">
                                 (You)
@@ -80,6 +80,10 @@
     const authStore = useAuthStore();
 
     const props = defineProps({ standings: Array });
+
+    const playerName = (player) => {
+        return player?.formal_name || player?.name || '-';
+    };
 
     const isCurrentUserPlayer = (playerId) => {
         return authStore.user && authStore.user.id === playerId;

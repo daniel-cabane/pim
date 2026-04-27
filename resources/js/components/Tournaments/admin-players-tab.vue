@@ -21,7 +21,7 @@
         >
             <template v-slot:item.name="{ item }">
                 <div>
-                    <div>{{ item.name }}</div>
+                    <div>{{ displayName(item) }}</div>
                     <div class="text-caption text-captionColor">{{ item.email }}</div>
                 </div>
             </template>
@@ -72,7 +72,7 @@
                     v-model="selectedPlayer"
                     v-model:search="playerSearchQuery"
                     :items="playerSearchResults"
-                    item-title="name"
+                    item-title="formal_name"
                     item-value="id"
                     :loading="searchingPlayers"
                     :label="$t('Search by name or email')"
@@ -117,7 +117,7 @@
         <v-card>
             <v-card-title>Remove Player</v-card-title>
             <v-card-text>
-                Are you sure you want to remove <strong>{{ playerToRemove?.name }}</strong> from the tournament?
+                Are you sure you want to remove <strong>{{ displayName(playerToRemove) }}</strong> from the tournament?
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -142,7 +142,7 @@
 
     <v-dialog v-model="editRatingDialog" max-width="400">
         <v-card>
-            <v-card-title>Edit {{ focusedPlayer.name }}'s rating</v-card-title>
+            <v-card-title>Edit {{ displayName(focusedPlayer) }}'s rating</v-card-title>
             <v-card-text>
                 <v-text-field
                     v-model="focusedPlayer.pivot.rating"
@@ -192,6 +192,10 @@
 
     const tournamentStore = useTournamentStore();
     const { get: apiGet } = useAPI();
+
+    const displayName = (player) => {
+        return player?.formal_name || player?.name || '';
+    };
 
     const headers = computed( () => [
         { title: t('Player'), key: 'name' },

@@ -13,6 +13,30 @@ use Illuminate\Http\JsonResponse;
 
 class TournamentController extends Controller
 {
+    protected function loadTournamentRelations(Tournament $tournament): Tournament
+    {
+        $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+
+        $tournament->players->each(function (User $player) {
+            $player->append('formal_name');
+        });
+
+        $tournament->creator?->append('formal_name');
+
+        $tournament->organisers->each(function (User $organiser) {
+            $organiser->append('formal_name');
+        });
+
+        $tournament->rounds->each(function ($round) {
+            $round->games->each(function ($game) {
+                $game->player1?->append('formal_name');
+                $game->player2?->append('formal_name');
+            });
+        });
+
+        return $tournament;
+    }
+
     public function index(): JsonResponse
     {
         $tournaments = Tournament::with(['rounds', 'players'])
@@ -24,7 +48,7 @@ class TournamentController extends Controller
 
     public function show(Tournament $tournament): JsonResponse
     {
-        $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+        $this->loadTournamentRelations($tournament);
         $tournament->isOrganiser(auth()->user());
         return response()->json($tournament);
     }
@@ -66,7 +90,7 @@ class TournamentController extends Controller
                 'text' => 'Tournament updated',
                 'type' => 'success'
             ],
-            'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+            'tournament' => $this->loadTournamentRelations($tournament)
         ]);
     }
 
@@ -112,7 +136,7 @@ class TournamentController extends Controller
                 'text' => 'Joined tournament',
                 'type' => 'success'
             ],
-            'tournament' => $tournament
+            'tournament' => $this->loadTournamentRelations($tournament->fresh())
         ]);
     }
 
@@ -126,7 +150,7 @@ class TournamentController extends Controller
                 'text' => 'Left tournament',
                 'type' => 'success'
             ],
-            'tournament' => $tournament
+            'tournament' => $this->loadTournamentRelations($tournament->fresh())
         ]);
     }
 
@@ -151,7 +175,7 @@ class TournamentController extends Controller
         }
 
         return response()->json([
-            'tournament' => $tournament->fresh()->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']),
+            'tournament' => $this->loadTournamentRelations($tournament->fresh()),
             'message' => [
                 'text' => 'Tournament started',
                 'type' => 'success'
@@ -202,7 +226,7 @@ class TournamentController extends Controller
 
             if ($round === null) {
                 $tournament->update(['status' => 'completed', 'ended_at' => now()]);
-                $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+                $this->loadTournamentRelations($tournament);
 
                 return response()->json([
                     'tournament' => $tournament,
@@ -215,7 +239,7 @@ class TournamentController extends Controller
         }
 
         $tournament->increment('rounds_count');
-        $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
+        $this->loadTournamentRelations($tournament);
 
         return response()->json([
             'tournament' => $tournament,
@@ -234,11 +258,17 @@ class TournamentController extends Controller
         $query = $validated['query'];
         
         // Search users by name or email
-        $users = User::where('name', 'like', "%{$query}%")
-            ->orWhere('email', 'like', "%{$query}%")
-            ->select('id', 'name', 'email')
+        $users = User::where(function ($builder) use ($query) {
+                $builder->where('name', 'like', "%{$query}%")
+                    ->orWhere('email', 'like', "%{$query}%");
+            })
+            ->select('id', 'name', 'email', 'preferences', 'level', 'section')
             ->limit(10)
             ->get();
+
+        $users->each(function (User $user) {
+            $user->append('formal_name');
+        });
 
         return response()->json($users);
     }
@@ -301,8 +331,12 @@ class TournamentController extends Controller
         $this->authorize('update', $tournament);
 
         $organisers = $tournament->organisers()
-            ->select('users.id', 'users.name', 'users.email')
+            ->select('users.id', 'users.name', 'users.email', 'users.preferences', 'users.level', 'users.section')
             ->get();
+
+        $organisers->each(function (User $organiser) {
+            $organiser->append('formal_name');
+        });
 
         return response()->json($organisers);
     }
@@ -321,12 +355,18 @@ class TournamentController extends Controller
         $existingPlayerIds = $tournament->players()->pluck('users.id')->toArray();
         
         // Search users by name or email, excluding already added players
-        $users = User::where('name', 'like', "%{$query}%")
-            ->orWhere('email', 'like', "%{$query}%")
+        $users = User::where(function ($builder) use ($query) {
+                $builder->where('name', 'like', "%{$query}%")
+                    ->orWhere('email', 'like', "%{$query}%");
+            })
             ->whereNotIn('id', $existingPlayerIds)
-            ->select('id', 'name', 'email')
+            ->select('id', 'name', 'email', 'preferences', 'level', 'section')
             ->limit(10)
             ->get();
+
+        $users->each(function (User $user) {
+            $user->append('formal_name');
+        });
 
         return response()->json($users);
     }
@@ -366,7 +406,7 @@ class TournamentController extends Controller
                 'text' => 'Player added',
                 'type' => 'success'
             ],
-            'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+            'tournament' => $this->loadTournamentRelations($tournament)
         ], 201);
     }
 
@@ -392,7 +432,7 @@ class TournamentController extends Controller
                 'text' => 'Player removed',
                 'type' => 'success'
             ],
-            'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+            'tournament' => $this->loadTournamentRelations($tournament)
         ]);
     }
 
@@ -432,7 +472,7 @@ class TournamentController extends Controller
                 'text' => "Player {$status}",
                 'type' => 'success'
             ],
-            'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+            'tournament' => $this->loadTournamentRelations($tournament)
         ]);
     }
 
@@ -464,7 +504,7 @@ class TournamentController extends Controller
                 'text' => "Player's rating updated",
                 'type' => 'success'
             ],
-            'tournament' => $tournament->load(['rounds.games', 'players', 'creator', 'organisers'])
+            'tournament' => $this->loadTournamentRelations($tournament)
         ]);
     }
 
@@ -530,7 +570,7 @@ class TournamentController extends Controller
                 'text' => 'Tournament status updated',
                 'type' => 'success'
             ],
-            'tournament' => $tournament->fresh()->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers'])
+            'tournament' => $this->loadTournamentRelations($tournament->fresh())
         ]);
     }
 }

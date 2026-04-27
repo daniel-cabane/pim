@@ -10,7 +10,7 @@
                     <v-avatar :color="isPlayer1 ? 'white' : 'black'" size="48" class="mb-2 elevation-2">
                         <v-icon color="grey">mdi-account</v-icon>
                     </v-avatar>
-                    <div class="text-h6 font-weight-bold">{{ authStore.user?.name }}</div>
+                    <div class="text-h6 font-weight-bold">{{ currentPlayerName }}</div>
                     <div class="text-caption text-captionColor">{{ isPlayer1 ? $t('White') : $t('Black') }}</div>
                 </v-col>
                 <v-col cols="12" sm="4" class="text-center">
@@ -105,12 +105,24 @@
         return currentGame.value?.player1_id === authStore.user?.id;
     });
 
+    const currentPlayer = computed(() => {
+        return props.tournament?.players?.find(player => player.id === authStore.user?.id) || authStore.user || null;
+    });
+
+    const playerName = (player, fallback = '') => {
+        return player?.formal_name || player?.name || fallback;
+    };
+
+    const currentPlayerName = computed(() => {
+        return playerName(currentPlayer.value);
+    });
+
     const opponentName = computed(() => {
         if (!currentGame.value) return '';
         if (isPlayer1.value) {
-            return currentGame.value.player2?.name || t('Bye');
+            return playerName(currentGame.value.player2, t('Bye'));
         }
-        return currentGame.value.player1?.name || t('Unknown');
+        return playerName(currentGame.value.player1, t('Unknown'));
     });
 
     const isKnockout = computed(() => props.tournament?.format === 'knockout');

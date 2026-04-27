@@ -96,23 +96,25 @@ class Tournament extends Model
 
     public function getStandings()
     {
-        return DB::table('users')
-            ->join('tournament_player', 'users.id', '=', 'tournament_player.user_id')
-            ->where('tournament_player.tournament_id', $this->id)
-            ->where('tournament_player.banned', false)
-            ->select(
-                'users.id',
-                'users.name',
-                'tournament_player.score as points',
-                'tournament_player.wins',
-                'tournament_player.draws',
-                'tournament_player.losses',
-                'tournament_player.rating'
-            )
-            ->orderBy('tournament_player.score', 'DESC')
-            ->orderBy('tournament_player.wins', 'DESC')
-            ->orderBy('tournament_player.rating', 'ASC')
-            ->get();
+        return $this->players()
+            ->wherePivot('banned', false)
+            ->orderByPivot('score', 'DESC')
+            ->orderByPivot('wins', 'DESC')
+            ->orderByPivot('rating', 'ASC')
+            ->get()
+            ->map(function (User $player) {
+                return (object) [
+                    'id' => $player->id,
+                    'name' => $player->name,
+                    'formal_name' => $player->formal_name,
+                    'points' => $player->pivot->score,
+                    'wins' => $player->pivot->wins,
+                    'draws' => $player->pivot->draws,
+                    'losses' => $player->pivot->losses,
+                    'rating' => $player->pivot->rating,
+                ];
+            })
+            ->values();
     }
 
     public function recalculateStandings(): void

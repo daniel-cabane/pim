@@ -9,9 +9,19 @@ use Illuminate\Http\JsonResponse;
 
 class GameController extends Controller
 {
-    public function show(Game $game): JsonResponse
+    protected function loadGameRelations(Game $game): Game
     {
         $game->load(['player1', 'player2', 'round', 'tournament']);
+
+        $game->player1?->append('formal_name');
+        $game->player2?->append('formal_name');
+
+        return $game;
+    }
+
+    public function show(Game $game): JsonResponse
+    {
+        $this->loadGameRelations($game);
         return response()->json($game);
     }
 
@@ -60,7 +70,7 @@ class GameController extends Controller
 
         return response()->json([
             'message' => ['text' => 'Result reported', 'type' => 'success'],
-            'game' => $game->fresh()->load(['player1', 'player2']),
+            'game' => $this->loadGameRelations($game->fresh()),
         ]);
     }
 
@@ -83,7 +93,7 @@ class GameController extends Controller
 
         return response()->json([
             'message' => ['text' => 'Result set', 'type' => 'success'],
-            'game' => $game->fresh()->load(['player1', 'player2']),
+            'game' => $this->loadGameRelations($game->fresh()),
         ]);
     }
 

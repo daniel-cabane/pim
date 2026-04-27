@@ -22,7 +22,7 @@
                         <td class="text-center">{{ index + 1 }}</td>
                         <td class="text-left">
                             <span :class="{ 'font-weight-bold': game.result1 === 'win' && game.status === 'completed' }">
-                                {{ game.player1?.name || '-' }}
+                                {{ playerName(game.player1) || '-' }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -36,7 +36,7 @@
                         </td>
                         <td class="text-right">
                             <span v-if="game.player2" :class="{ 'font-weight-bold': game.result2 === 'win' && game.status === 'completed' }">
-                                {{ game.player2.name }}
+                                {{ playerName(game.player2) }}
                             </span>
                             <v-chip v-else size="small" label color="captionColor">{{ $t('Bye') }}</v-chip>
                         </td>
@@ -70,7 +70,7 @@
                                 :items="resultItems"
                                 item-title="label"
                                 item-value="value"
-                                :label="editingGame?.player1?.name"
+                                :label="playerName(editingGame?.player1) || '-'"
                                 variant="outlined"
                                 density="comfortable"
                                 hide-details
@@ -82,7 +82,7 @@
                                 :items="resultItems"
                                 item-title="label"
                                 item-value="value"
-                                :label="editingGame?.player2?.name || $t('Bye')"
+                                :label="playerName(editingGame?.player2) || $t('Bye')"
                                 variant="outlined"
                                 density="comfortable"
                                 hide-details
@@ -177,6 +177,10 @@
     const gameStatusIcon = (game) => {
         const map = { 'pending': 'mdi-clock-outline', 'conflicted': 'mdi-alert-circle', 'completed': 'mdi-check-circle' };
         return map[game.status] || 'mdi-clock-outline';
+    };
+
+    const playerName = (player) => {
+        return player?.formal_name || player?.name || null;
     };
 
     const openSetResult = (game) => {

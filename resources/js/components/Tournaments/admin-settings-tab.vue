@@ -56,7 +56,7 @@
                             v-model="selectedOrganiser"
                             v-model:search="searchQuery"
                             :items="searchResults"
-                            item-title="name"
+                            item-title="formal_name"
                             item-value="id"
                             :placeholder="$t('Search by name or email')"
                             :loading="searchingUsers"
@@ -102,10 +102,10 @@
                         <v-card-text>
                             <div class="d-flex align-center gap-3">
                                 <v-avatar color="primary" size="40" class="mr-4">
-                                    <span class="text-white text-subtitle-2 font-weight-bold">{{ organiser.name.charAt(0) }}</span>
+                                    <span class="text-white text-subtitle-2 font-weight-bold">{{ displayName(organiser).charAt(0) }}</span>
                                 </v-avatar>
                                 <div class="flex-grow-1">
-                                    <p class="mb-0 font-weight-bold">{{ organiser.name }}</p>
+                                    <p class="mb-0 font-weight-bold">{{ displayName(organiser) }}</p>
                                     <p class="mb-0 text-caption text-captionColor">{{ organiser.email }}</p>
                                 </div>
                                 <div v-if="organiser.id !== tournamentCreatedBy" class="flex-shrink-0">
@@ -136,7 +136,7 @@
         <v-card>
             <v-card-title class="text-h6">Remove Organiser</v-card-title>
             <v-card-text>
-                Are you sure you want to remove <strong>{{ organiserToDelete?.name }}</strong> as an organiser?
+                Are you sure you want to remove <strong>{{ displayName(organiserToDelete) }}</strong> as an organiser?
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -183,6 +183,10 @@
 
     const tournamentStore = useTournamentStore();
     const { get: apiGet } = useAPI();
+
+    const displayName = (user) => {
+        return user?.formal_name || user?.name || '';
+    };
 
     // Tournament Settings
     const tournamentName = ref('');

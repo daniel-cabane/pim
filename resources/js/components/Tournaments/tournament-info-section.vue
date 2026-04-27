@@ -9,7 +9,7 @@
                 <v-col cols="12" sm="6">
                     <div class="mb-4">
                         <label class="text-captionColor text-caption">{{ $t('Organizer') }}</label>
-                        <p class="text-body1 font-weight-bold">{{ organizer?.name || 'Unknown' }}</p>
+                        <p class="text-body1 font-weight-bold">{{ organizer?.formal_name || organizer?.name || 'Unknown' }}</p>
                     </div>
                 </v-col>
                 <v-col cols="12" sm="6">

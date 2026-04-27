@@ -61,7 +61,7 @@
                         <tr v-for="(game, gIdx) in round.games" :key="game.id">
                             <td class="text-captionColor">{{ gIdx + 1 }}</td>
                             <td>
-                                <span class="font-weight-medium" v-if="game.player1">{{ game.player1.name }}</span>
+                                <span class="font-weight-medium" v-if="game.player1">{{ displayName(game.player1) }}</span>
                                 <span class="font-weight-bold text-captionColor" v-else>- {{  $t('Bye') }} -</span>
                             </td>
                             <td class="text-center">
@@ -83,7 +83,7 @@
                                 <span v-else class="font-weight-bold">1 - 0</span>
                             </td>
                             <td class="text-right">
-                                <span class="font-weight-medium" v-if="game.player2">{{ game.player2.name }}</span>
+                                <span class="font-weight-medium" v-if="game.player2">{{ displayName(game.player2) }}</span>
                                 <span class="font-weight-bold text-captionColor" v-else>- {{  $t('Bye') }} -</span>
                             </td>
                             <td class="text-center">
@@ -134,9 +134,9 @@
             <v-card :title="$t('Set game result')">
                 <v-card-text v-if="editingGame">
                     <div class="d-flex align-center mb-4">
-                        <div class="font-weight-medium text-truncate" style="width: 33%; text-align: left;">{{ editingGame.player1?.name }}</div>
+                        <div class="font-weight-medium text-truncate" style="width: 33%; text-align: left;">{{ displayName(editingGame.player1) }}</div>
                         <div class="text-caption text-captionColor" style="width: 34%; text-align: center;">vs</div>
-                        <div class="font-weight-medium text-truncate" style="width: 33%; text-align: right;">{{ editingGame.player2?.name }}</div>
+                        <div class="font-weight-medium text-truncate" style="width: 33%; text-align: right;">{{ displayName(editingGame.player2) }}</div>
                     </div>
                     <v-btn-toggle v-model="selectedResultOption" mandatory color="primary" class="d-flex" style="width: 100%;">
                         <v-btn value="white_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
@@ -254,6 +254,10 @@
     const gameStatusIcon = (status) => {
         const map = { pending: 'mdi-clock-outline', conflicted: 'mdi-alert-circle', completed: 'mdi-check-circle' };
         return map[status] || 'mdi-clock-outline';
+    };
+
+    const displayName = (player) => {
+        return player?.formal_name || player?.name || '';
     };
 
     const createNextRound = async () => {
