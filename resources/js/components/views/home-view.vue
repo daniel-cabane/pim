@@ -2,7 +2,7 @@
     <v-container v-if="isWindowSmall">
         <v-tabs v-model="tab" color="primary" class="mb-2">
             <v-tab :text="$t('Recent posts')" value="posts"></v-tab>
-            <v-tab :text="$t('Workshops') " value="workshops"></v-tab>
+            <v-tab :text="$t('Activities') " value="workshops"></v-tab>
         </v-tabs>
         <v-tabs-window v-model="tab">
             <v-tabs-window-item value="posts">

@@ -691,5 +691,14 @@
     "Tournament completed — champion decided": "Tournament completed — champion decided",
     "Activities": "Activities",
     "Reveal": "Reveal",
-    "Show history": "Show history"
+    "Show history": "Show history",
+    "Game of Life": "Game of Life",
+    "Stop": "Stop",
+    "Speed": "Speed",
+    "Zoom": "Zoom",
+    "Generation": "Generation",
+    "Clear board": "Clear board",
+    "Are you sure you want to clear the board?": "Are you sure you want to clear the board?",
+    "Next step": "Next step",
+    "Previous step": "Previous step"
 }

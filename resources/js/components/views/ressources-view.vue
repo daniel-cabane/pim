@@ -13,7 +13,7 @@
             slug: 'monty-hall',
             description: {
                 en : '3 doors, 2 goats, 1 car. The famous Monty Hall game and its seemingly paradoxical conclusion. This simulation allows you to play the game. To go further, the "autoplay" function allows you to play hundreds or even thousands of game in a row while keeping track of the results. Perfect for illustrating the link between frenquency and probability',
-                fr: '3 portes, 2 chèvres, 1 voiture. Le célèbre jeu de Monty Hall et sa conclusion apparemment paradoxale. Cette simulation vous permet de jouer au jeu. Pour aller plus loin, la fonction « autoplay » vous permet de jouer des centaines, voire des milliers de parties d\'affilée tout en suivant les résultats. Parfait pour illustrer le lien entre fréquence et probabilité.'
+                fr: '3 portes, 2 chèvres, 1 voiture. Le célèbre jeu de Monty Hall et sa conclusion apparemment paradoxale. Cette simulation vous permet de jouer au jeu. Pour aller plus loin, la fonction « autoplay » vous permet de jouer des centaines, voire des milliers de parties d\'affilée tout en suivant les résultats.'
             },
             themes: [
                 { en: 'Probabilities', fr: 'Probabilités' },
@@ -50,6 +50,22 @@
                 { en: 'Probabilities', fr: 'Probabilités' },
                 { en: 'Confidence interval', fr: 'Intervalle de confiance' },
                 { en: 'Simulation', fr: 'Simulation' }
+            ]
+        },
+        {
+            title: {
+                en: "Game of Life",
+                fr: "Jeu de la vie",
+            },
+            slug: 'game-of-life',
+            description: {
+                en: "Conway's Game of Life is a cellular automaton where simple rules applied to a two-dimensional grid produce extraordinarily complex and beautiful patterns. Draw your initial configuration and watch life evolve.",
+                fr: "Le Jeu de la vie de Conway est un automate cellulaire où des règles simples appliquées à une grille bidimensionnelle produisent des structures d'une complexité et d'une beauté extraordinaires. Dessinez votre configuration initiale et regardez la vie évoluer.",
+            },
+            themes: [
+                { en: 'Cellular automata', fr: 'Automates cellulaires' },
+                { en: 'Simulation', fr: 'Simulation' },
+                { en: 'Emergence', fr: 'Émergence' },
             ]
         },
     ];

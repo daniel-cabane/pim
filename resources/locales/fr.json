@@ -691,5 +691,14 @@
     "Tournament completed — champion decided": "Tournoi terminé — Le champion a été nommé",
     "Activities": "Activités",
     "Reveal": "Dévoiler",
-    "Show history": "Historique"
+    "Show history": "Historique",
+    "Game of Life": "Jeu de la vie",
+    "Stop": "Arrêter",
+    "Speed": "Vitesse",
+    "Zoom": "Zoom",
+    "Generation": "Génération",
+    "Clear board": "Vider le plateau",
+    "Are you sure you want to clear the board?": "Êtes-vous sûr de vouloir vider le plateau ?",
+    "Next step": "Étape suivante",
+    "Previous step": "Étape précédente"
 }
