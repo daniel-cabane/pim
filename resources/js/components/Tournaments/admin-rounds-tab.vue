@@ -6,7 +6,7 @@
             block
             size="large"
             color="primary"
-            class="mt-4"
+            class="mb-4"
             prepend-icon="mdi-plus"
             :disabled="!canStartNextRound || tournamentStore.isLoading"
             @click="nextRoundDialog = true"

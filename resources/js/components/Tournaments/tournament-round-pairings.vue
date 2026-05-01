@@ -45,7 +45,6 @@
                         </td>
                         <td v-if="isOrganizer" class="text-center">
                             <v-btn
-                                v-if="game.status !== 'completed'"
                                 icon
                                 size="x-small"
                                 variant="text"
@@ -62,33 +61,26 @@
 
         <v-dialog v-model="setResultDialog" max-width="450">
             <v-card :title="$t('Set result')">
-                <v-card-text class="mt-2">
-                    <v-row>
-                        <v-col cols="6">
-                            <v-select
-                                v-model="editResult1"
-                                :items="resultItems"
-                                item-title="label"
-                                item-value="value"
-                                :label="playerName(editingGame?.player1) || '-'"
-                                variant="outlined"
-                                density="comfortable"
-                                hide-details
-                            />
-                        </v-col>
-                        <v-col cols="6">
-                            <v-select
-                                v-model="editResult2"
-                                :items="resultItems"
-                                item-title="label"
-                                item-value="value"
-                                :label="playerName(editingGame?.player2) || $t('Bye')"
-                                variant="outlined"
-                                density="comfortable"
-                                hide-details
-                            />
-                        </v-col>
-                    </v-row>
+                <v-card-text v-if="editingGame" class="mt-2">
+                    <div class="d-flex align-center mb-4">
+                        <div class="font-weight-medium text-truncate" style="width: 33%; text-align: left;">{{ playerName(editingGame.player1) || '-' }}</div>
+                        <div class="text-caption text-captionColor" style="width: 34%; text-align: center;">vs</div>
+                        <div class="font-weight-medium text-truncate" style="width: 33%; text-align: right;">{{ playerName(editingGame.player2) || $t('Bye') }}</div>
+                    </div>
+                    <v-btn-toggle v-model="selectedResultOption" mandatory color="primary" class="d-flex" style="width: 100%;">
+                        <v-btn value="white_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
+                            <span class="font-weight-bold">1 - 0</span>
+                            <div class="text-caption">{{ $t('White wins') }}</div>
+                        </v-btn>
+                        <v-btn v-if="!isKnockout" value="draw" style="width: 33.34%;" stacked>
+                            <span class="font-weight-bold">½ - ½</span>
+                            <div class="text-caption">{{ $t('Draw') }}</div>
+                        </v-btn>
+                        <v-btn value="black_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
+                            <span class="font-weight-bold">0 - 1</span>
+                            <div class="text-caption">{{ $t('Black wins') }}</div>
+                        </v-btn>
+                    </v-btn-toggle>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -97,7 +89,7 @@
                         color="primary" 
                         variant="flat"
                         :loading="tournamentStore.isLoading" 
-                        :disabled="!editResult1 || !editResult2"
+                        :disabled="!selectedResultOption"
                         @click="submitSetResult"
                     >
                         {{ $t('Confirm') }}
@@ -110,10 +102,8 @@
 
 <script setup>
     import { ref, computed } from 'vue';
-    import { useI18n } from 'vue-i18n';
     import { useTournamentStore } from '@/stores/useTournamentStore';
 
-    const { t } = useI18n();
     const tournamentStore = useTournamentStore();
 
     const props = defineProps({
@@ -125,21 +115,9 @@
 
     const setResultDialog = ref(false);
     const editingGame = ref(null);
-    const editResult1 = ref(null);
-    const editResult2 = ref(null);
+    const selectedResultOption = ref(null);
 
     const isKnockout = computed(() => props.tournament?.format === 'knockout');
-
-    const resultItems = computed(() => {
-        const items = [
-            { label: t('Win'), value: 'win' },
-            { label: t('Loss'), value: 'loss' },
-        ];
-        if (!isKnockout.value) {
-            items.push({ label: t('Draw'), value: 'draw' });
-        }
-        return items;
-    });
 
     const currentRound = computed(() => {
         if (!props.tournament?.rounds?.length) return null;
@@ -185,13 +163,22 @@
 
     const openSetResult = (game) => {
         editingGame.value = game;
-        editResult1.value = game.result1;
-        editResult2.value = game.result2;
+        if (game.result1 === 'win') selectedResultOption.value = 'white_wins';
+        else if (game.result1 === 'loss') selectedResultOption.value = 'black_wins';
+        else if (game.result1 === 'draw') selectedResultOption.value = 'draw';
+        else selectedResultOption.value = null;
         setResultDialog.value = true;
     };
 
+    const resultMap = {
+        white_wins: { result1: 'win', result2: 'loss' },
+        black_wins: { result1: 'loss', result2: 'win' },
+        draw: { result1: 'draw', result2: 'draw' },
+    };
+
     const submitSetResult = async () => {
-        await tournamentStore.setGameResult(editingGame.value.id, editResult1.value, editResult2.value);
+        const { result1, result2 } = resultMap[selectedResultOption.value];
+        await tournamentStore.setGameResult(editingGame.value.id, result1, result2);
         setResultDialog.value = false;
         emit('resultSet');
     };
