@@ -25,7 +25,7 @@ class EventController extends Controller
         foreach(Workshop::where('archived', 0)->whereIn('status', ['confirmed', 'launched'])->whereIn('campus', $campus)->orderBy('start_date')->take(6)->get() as $workshop){
             $workshops[] = $workshop->format();
         }
-        $tournaments = Tournament::whereIn('status', ['preparation', 'ongoing'])->latest()->take(3)->get();
+        $tournaments = Tournament::with(['rounds.games'])->whereIn('status', ['preparation', 'ongoing'])->latest()->take(3)->get();
         return response()->json([
             'count' => count($tournaments) + count($workshops),
             'tournaments' => $tournaments,

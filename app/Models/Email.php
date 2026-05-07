@@ -12,7 +12,7 @@ class Email extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['subject_fr', 'subject_en', 'language', 'data', 'sender_id', 'workshop_id', 'admin', 'checked', 'sent', 'schedule'];
+    protected $fillable = ['subject_fr', 'subject_en', 'language', 'data', 'sender_id', 'workshop_id', 'tournament_id', 'admin', 'checked', 'sent', 'schedule'];
 
     protected $casts = ['data' => 'object'];
 
@@ -31,6 +31,11 @@ class Email extends Model
     public function workshop()
     {
       return $this->belongsTo(Workshop::class);
+    }
+
+    public function tournament()
+    {
+      return $this->belongsTo(Tournament::class);
     }
 
     public function surveys()
@@ -66,6 +71,16 @@ class Email extends Model
         Mail::to($to)->cc($cc)->bcc($bcc)->send(new WorkshopCommunication($this));
         $data = $this->data;
         $data->sentTo = $sentTo;
+        $this->update(['sent' => 1, 'schedule' => now(), 'data' => $data]);
+      } elseif($this->tournament_id) {
+        $players = $this->tournament->players()->get();
+        $bcc = 'pim@g.lfis.edu.hk';
+        $to = $players->pluck('email')->toArray();
+        if (!empty($to)) {
+            Mail::to($to)->bcc($bcc)->send(new WorkshopCommunication($this));
+        }
+        $data = $this->data;
+        $data->sentTo = $players->pluck('id')->toArray();
         $this->update(['sent' => 1, 'schedule' => now(), 'data' => $data]);
       } elseif(isset($this->data->to)) {
           $bcc = 'pim@g.lfis.edu.hk';

@@ -158,7 +158,7 @@
     };
 
     const playerName = (player) => {
-        return player?.formal_name || player?.name || null;
+        return player?.formal_name || null;
     };
 
     const openSetResult = (game) => {

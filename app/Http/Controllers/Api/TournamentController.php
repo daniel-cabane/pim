@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Email;
 use App\Models\Tournament;
 use App\Models\User;
 use App\Services\KnockoutPairingEngine;
@@ -572,5 +573,50 @@ class TournamentController extends Controller
             ],
             'tournament' => $this->loadTournamentRelations($tournament->fresh())
         ]);
+    }
+
+    public function getEmails(Tournament $tournament): JsonResponse
+    {
+        $this->authorize('update', $tournament);
+
+        $emails = $tournament->emails()->get();
+
+        return response()->json(['emails' => $emails]);
+    }
+
+    public function addEmail(Request $request, Tournament $tournament): JsonResponse
+    {
+        $this->authorize('update', $tournament);
+
+        $subject = ($request->validate(['subject' => 'required|string|min:3|max:100']))['subject'];
+
+        $email = Email::create([
+            'subject_fr' => $subject,
+            'subject_en' => $subject,
+            'language' => 'en',
+            'data' => [
+                'body_fr' => 'Saisir un message...',
+                'body_en' => 'Type your message',
+                'closing_fr' => 'Cordialement',
+                'closing_en' => 'Best regards',
+                'actionButton' => [
+                    'value' => 'none',
+                    'text_fr' => '',
+                    'text_en' => '',
+                    'url' => ''
+                ]
+            ],
+            'sender_id' => auth()->id(),
+            'tournament_id' => $tournament->id,
+            'schedule' => null
+        ]);
+
+        return response()->json([
+            'email' => $email,
+            'message' => [
+                'text' => 'Email created',
+                'type' => 'success'
+            ]
+        ], 201);
     }
 }

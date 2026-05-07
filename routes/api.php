@@ -367,6 +367,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('tournaments/{tournament:slug}/players/{user}/rating', [TournamentController::class, 'editPlayerRating']);
     Route::delete('tournaments/{tournament:slug}/players/{user}', [TournamentController::class, 'removePlayer']);
     Route::patch('tournaments/{tournament:slug}/players/{user}', [TournamentController::class, 'banPlayer']);
+
+    // Email management routes
+    Route::get('tournaments/{tournament:slug}/emails', [TournamentController::class, 'getEmails']);
+    Route::post('tournaments/{tournament:slug}/emails', [TournamentController::class, 'addEmail']);
     
     Route::post('rounds/{round}/start', [RoundController::class, 'startRound']);
     Route::post('rounds/{round}/complete', [RoundController::class, 'completeRound']);

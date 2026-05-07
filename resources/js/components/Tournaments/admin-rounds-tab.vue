@@ -257,7 +257,7 @@
     };
 
     const displayName = (player) => {
-        return player?.formal_name || player?.name || '';
+        return player?.name || '';
     };
 
     const createNextRound = async () => {

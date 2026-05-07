@@ -61,6 +61,16 @@ export const useEmailStore = defineStore({
             console.log(this.workshop);
             this.emails.push(res.email);
             //this.isLoading = false;
+        },
+        async getTournamentEmails(slug) {
+            this.isReady = false;
+            const res = await get(`/api/tournaments/${slug}/emails`);
+            this.emails = res.emails;
+            this.isReady = true;
+        },
+        async addTournamentEmail(slug, subject) {
+            const res = await post(`/api/tournaments/${slug}/emails`, { subject });
+            this.emails.push(res.email);
         }
     },
     getters: {

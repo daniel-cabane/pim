@@ -82,7 +82,7 @@
     const props = defineProps({ standings: Array });
 
     const playerName = (player) => {
-        return player?.formal_name || player?.name || '-';
+        return player?.formal_name || '-';
     };
 
     const isCurrentUserPlayer = (playerId) => {

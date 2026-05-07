@@ -110,7 +110,7 @@
     });
 
     const playerName = (player, fallback = '') => {
-        return player?.formal_name || player?.name || fallback;
+        return player?.formal_name || fallback;
     };
 
     const currentPlayerName = computed(() => {

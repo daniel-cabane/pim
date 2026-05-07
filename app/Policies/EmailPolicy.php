@@ -21,7 +21,18 @@ class EmailPolicy
      */
     public function view(User $user, Email $email): bool
     {
-        return $email->sender_id == $user->id || $email->workshop->organiser_id == $user->id || $user->hasRole('admin');
+        if ($email->sender_id == $user->id || $user->hasRole('admin')) {
+            return true;
+        }
+        if ($email->workshop_id && $email->workshop?->organiser_id == $user->id) {
+            return true;
+        }
+        if ($email->tournament_id) {
+            $email->loadMissing('tournament.organisers');
+            return $email->tournament?->organisers->contains($user->id)
+                || $email->tournament?->created_by == $user->id;
+        }
+        return false;
     }
 
     /**

@@ -194,7 +194,7 @@
     const { get: apiGet } = useAPI();
 
     const displayName = (player) => {
-        return player?.formal_name || player?.name || '';
+        return player?.name || '';
     };
 
     const headers = computed( () => [

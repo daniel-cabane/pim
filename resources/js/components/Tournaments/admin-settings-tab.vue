@@ -185,7 +185,7 @@
     const { get: apiGet } = useAPI();
 
     const displayName = (user) => {
-        return user?.formal_name || user?.name || '';
+        return user?.name || '';
     };
 
     // Tournament Settings

@@ -19,7 +19,9 @@ class GamePolicy
     {
         // Organizer or tournament creator can start game
         $tournament = $game->tournament;
-        return $user->id === $tournament->created_by || $user->hasRole('admin');
+        return $user->id === $tournament->created_by
+            || $tournament->isOrganiser($user)
+            || $user->hasRole('admin');
     }
 
     public function recordResult(User $user, Game $game): bool
@@ -28,7 +30,9 @@ class GamePolicy
         $tournament = $game->tournament;
         
         $isPlayer = $user->id === $game->player1_id || $user->id === $game->player2_id;
-        $isOrganizer = $user->id === $tournament->created_by || $user->hasRole('admin');
+        $isOrganizer = $user->id === $tournament->created_by
+            || $tournament->isOrganiser($user)
+            || $user->hasRole('admin');
         
         return $isPlayer || $isOrganizer;
     }

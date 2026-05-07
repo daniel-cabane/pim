@@ -21,6 +21,7 @@
                 <v-tab value="overview">{{ $t('Overview') }}</v-tab>
                 <v-tab value="rounds">Rounds</v-tab>
                 <v-tab value="players">{{ $t('Players') }}</v-tab>
+                <v-tab value="emails">Emails</v-tab>
                 <v-tab value="settings">{{ $t('Settings') }}</v-tab>
             </v-tabs>
 
@@ -38,6 +39,11 @@
                 <!-- Players Tab -->
                 <v-window-item value="players">
                     <AdminPlayersTab :tournament="tournament" />
+                </v-window-item>
+
+                <!-- Emails Tab -->
+                <v-window-item value="emails">
+                    <AdminEmailsTab :tournament="tournament" />
                 </v-window-item>
 
                 <!-- Settings Tab -->
@@ -69,6 +75,7 @@
     import AdminOverviewTab from '@/components/Tournaments/admin-overview-tab.vue';
     import AdminRoundsTab from '@/components/Tournaments/admin-rounds-tab.vue';
     import AdminPlayersTab from '@/components/Tournaments/admin-players-tab.vue';
+    import AdminEmailsTab from '@/components/Tournaments/admin-emails-tab.vue';
     import AdminSettingsTab from '@/components/Tournaments/admin-settings-tab.vue';
 
     const route = useRoute();
