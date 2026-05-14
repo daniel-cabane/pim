@@ -67,7 +67,7 @@
                         <div class="text-caption text-captionColor" style="width: 34%; text-align: center;">vs</div>
                         <div class="font-weight-medium text-truncate" style="width: 33%; text-align: right;">{{ playerName(editingGame.player2) || $t('Bye') }}</div>
                     </div>
-                    <v-btn-toggle v-model="selectedResultOption" mandatory color="primary" class="d-flex" style="width: 100%;">
+                    <v-btn-toggle v-model="selectedResultOption" color="primary" class="d-flex" style="width: 100%;">
                         <v-btn value="white_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
                             <span class="font-weight-bold">1 - 0</span>
                             <div class="text-caption">{{ $t('White wins') }}</div>
@@ -81,10 +81,20 @@
                             <div class="text-caption">{{ $t('Black wins') }}</div>
                         </v-btn>
                     </v-btn-toggle>
+                    <v-btn
+                        v-if="!isKnockout"
+                        block
+                        class="mt-3"
+                        :variant="selectedResultOption === 'cancelled' ? 'flat' : 'outlined'"
+                        color="error"
+                        @click="selectedResultOption = selectedResultOption === 'cancelled' ? null : 'cancelled'"
+                    >
+                        {{ $t('Cancel game') }}
+                    </v-btn>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
-                    <v-btn variant="tonal" color="error" @click="setResultDialog = false">{{ $t('Cancel') }}</v-btn>
+                    <v-btn variant="tonal" color="error" @click="setResultDialog = false">{{ $t('Close') }}</v-btn>
                     <v-btn 
                         color="primary" 
                         variant="flat"
@@ -123,12 +133,13 @@
         if (!props.tournament?.rounds?.length) return null;
         if (props.tournament.format === 'round_robin') {
             const sorted = [...props.tournament.rounds].sort((a, b) => a.round_number - b.round_number);
-            return sorted.find(r => !r.games?.every(g => g.status === 'completed')) || sorted[sorted.length - 1];
+            return sorted.find(r => !r.games?.every(g => g.status === 'completed' || g.status === 'cancelled')) || sorted[sorted.length - 1];
         }
         return [...props.tournament.rounds].sort((a, b) => b.round_number - a.round_number)[0];
     });
 
     const resultLabel = (game) => {
+        if (game.status === 'cancelled') return '✕ - ✕';
         if (game.status === 'completed') {
             if (game.result1 === 'win') return '1 - 0';
             if (game.result1 === 'loss') return '0 - 1';
@@ -139,6 +150,7 @@
     };
 
     const resultColor = (game) => {
+        if (game.status === 'cancelled') return 'default';
         if (game.status === 'completed') {
             if (game.result1 === 'draw') return 'info';
             return 'success';
@@ -148,12 +160,12 @@
     };
 
     const gameStatusColor = (game) => {
-        const map = { 'pending': 'warning', 'conflicted': 'error', 'completed': 'success' };
+        const map = { 'pending': 'warning', 'conflicted': 'error', 'completed': 'success', 'cancelled': 'default' };
         return map[game.status] || 'warning';
     };
 
     const gameStatusIcon = (game) => {
-        const map = { 'pending': 'mdi-clock-outline', 'conflicted': 'mdi-alert-circle', 'completed': 'mdi-check-circle' };
+        const map = { 'pending': 'mdi-clock-outline', 'conflicted': 'mdi-alert-circle', 'completed': 'mdi-check-circle', 'cancelled': 'mdi-cancel' };
         return map[game.status] || 'mdi-clock-outline';
     };
 
@@ -163,7 +175,8 @@
 
     const openSetResult = (game) => {
         editingGame.value = game;
-        if (game.result1 === 'win') selectedResultOption.value = 'white_wins';
+        if (game.status === 'cancelled') selectedResultOption.value = 'cancelled';
+        else if (game.result1 === 'win') selectedResultOption.value = 'white_wins';
         else if (game.result1 === 'loss') selectedResultOption.value = 'black_wins';
         else if (game.result1 === 'draw') selectedResultOption.value = 'draw';
         else selectedResultOption.value = null;
@@ -174,6 +187,7 @@
         white_wins: { result1: 'win', result2: 'loss' },
         black_wins: { result1: 'loss', result2: 'win' },
         draw: { result1: 'draw', result2: 'draw' },
+        cancelled: { result1: 'loss', result2: 'loss' },
     };
 
     const submitSetResult = async () => {

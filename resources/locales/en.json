@@ -670,6 +670,8 @@
     "This will end the tournament. This action cannot be undone": "This will end the tournament. This action cannot be undone",
     "Results conflict": "Results conflict",
     "conflicted": "conflicted",
+    "cancelled": "cancelled",
+    "Cancelled": "Cancelled",
     "Set result": "Set result",
     "Result reported": "Result reported",
     "Result set": "Result set",
@@ -706,5 +708,6 @@
     "Tournament name": "Tournament name",
     "Format": "Format",
     "No emails yet": "No emails yet",
-    "Emails": "Emails"
+    "Emails": "Emails",
+    "Cancel game": "Cancel game"
 }

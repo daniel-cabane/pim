@@ -69,10 +69,10 @@
                                     v-if="game.player2_id"
                                     variant="text" 
                                     size="small"
-                                    :color="game.status === 'completed' ? 'default' : 'primary'"
+                                    :color="(game.status === 'completed' || game.status === 'cancelled') ? 'default' : 'primary'"
                                     @click="openResultDialog(game)"
                                 >
-                                    <span v-if="game.status === 'completed'" class="font-weight-bold">
+                                    <span v-if="game.status === 'completed' || game.status === 'cancelled'" class="font-weight-bold">
                                         {{ resultDisplay(game) }}
                                     </span>
                                     <span v-else>
@@ -138,7 +138,7 @@
                         <div class="text-caption text-captionColor" style="width: 34%; text-align: center;">vs</div>
                         <div class="font-weight-medium text-truncate" style="width: 33%; text-align: right;">{{ displayName(editingGame.player2) }}</div>
                     </div>
-                    <v-btn-toggle v-model="selectedResultOption" mandatory color="primary" class="d-flex" style="width: 100%;">
+                    <v-btn-toggle v-model="selectedResultOption" color="primary" class="d-flex" style="width: 100%;">
                         <v-btn value="white_wins" :style="{ width: isKnockout ? '50%' : '33.33%' }" stacked>
                             <span class="font-weight-bold">1 - 0</span>
                             <div class="text-caption">{{ $t('White wins') }}</div>
@@ -152,10 +152,20 @@
                             <div class="text-caption">{{ $t('Black wins') }}</div>
                         </v-btn>
                     </v-btn-toggle>
+                    <v-btn
+                        v-if="!isKnockout"
+                        block
+                        class="mt-3"
+                        :variant="selectedResultOption === 'cancelled' ? 'flat' : 'outlined'"
+                        color="error"
+                        @click="selectedResultOption = selectedResultOption === 'cancelled' ? null : 'cancelled'"
+                    >
+                        {{ $t('Cancel game') }}
+                    </v-btn>
                 </v-card-text>
                 <v-card-actions class="pa-4">
                     <v-spacer />
-                    <v-btn variant="tonal" color="error" @click="resultDialog = false">{{ $t('Cancel') }}</v-btn>
+                    <v-btn variant="tonal" color="error" @click="resultDialog = false">{{ $t('Close') }}</v-btn>
                     <v-btn color="primary" variant="flat" :loading="tournamentStore.isLoading" :disabled="!selectedResultOption" @click="submitGameResult">
                         {{ $t('Confirm') }}
                     </v-btn>
@@ -204,13 +214,15 @@
         return props.tournament.status === 'ongoing' && currentRound.value?.id === round.id && !allGamesCompleted(round);
     };
 
+    const isGameDone = (g) => g.status === 'completed' || g.status === 'cancelled';
+
     const completedGames = (round) => {
-        return round.games?.filter(g => g.status === 'completed').length || 0;
+        return round.games?.filter(isGameDone).length || 0;
     };
 
     const allGamesCompleted = (round) => {
         if (!round.games?.length) return false;
-        return round.games.every(g => g.status === 'completed');
+        return round.games.every(isGameDone);
     };
 
     const roundProgress = (round) => {
@@ -240,6 +252,7 @@
     };
 
     const resultDisplay = (game) => {
+        if (game.status === 'cancelled') return '✕ - ✕';
         if (game.result1 === 'win') return '1 - 0';
         if (game.result1 === 'loss') return '0 - 1';
         if (game.result1 === 'draw') return '½ - ½';
@@ -247,12 +260,12 @@
     };
 
     const gameStatusColor = (status) => {
-        const map = { pending: 'warning', conflicted: 'error', completed: 'success' };
+        const map = { pending: 'warning', conflicted: 'error', completed: 'success', cancelled: 'default' };
         return map[status] || 'captionColor';
     };
 
     const gameStatusIcon = (status) => {
-        const map = { pending: 'mdi-clock-outline', conflicted: 'mdi-alert-circle', completed: 'mdi-check-circle' };
+        const map = { pending: 'mdi-clock-outline', conflicted: 'mdi-alert-circle', completed: 'mdi-check-circle', cancelled: 'mdi-cancel' };
         return map[status] || 'mdi-clock-outline';
     };
 
@@ -267,7 +280,8 @@
 
     const openResultDialog = (game) => {
         editingGame.value = game;
-        if (game.status === 'completed') {
+        if (game.status === 'cancelled') selectedResultOption.value = 'cancelled';
+        else if (game.status === 'completed') {
             if (game.result1 === 'win') selectedResultOption.value = 'white_wins';
             else if (game.result1 === 'loss') selectedResultOption.value = 'black_wins';
             else if (game.result1 === 'draw') selectedResultOption.value = 'draw';
@@ -282,6 +296,7 @@
             white_wins: { result1: 'win', result2: 'loss' },
             black_wins: { result1: 'loss', result2: 'win' },
             draw: { result1: 'draw', result2: 'draw' },
+            cancelled: { result1: 'loss', result2: 'loss' },
         };
         const { result1, result2 } = resultMap[selectedResultOption.value];
         await tournamentStore.setGameResult(editingGame.value.id, result1, result2);

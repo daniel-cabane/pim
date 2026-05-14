@@ -36,6 +36,7 @@ class Game extends Model
     const STATUS_PENDING = 'pending';
     const STATUS_CONFLICTED = 'conflicted';
     const STATUS_COMPLETED = 'completed';
+    const STATUS_CANCELLED = 'cancelled';
 
     public function tournament()
     {
@@ -61,6 +62,10 @@ class Game extends Model
     {
         if ($this->result1 === null || $this->result2 === null) {
             return self::STATUS_PENDING;
+        }
+
+        if ($this->result1 === 'loss' && $this->result2 === 'loss') {
+            return self::STATUS_CANCELLED;
         }
 
         if ($this->resultsAreCoherent()) {
@@ -105,7 +110,7 @@ class Game extends Model
         $this->result2 = $result2;
         $this->status = $this->getComputedStatusAttribute();
 
-        if ($this->status === self::STATUS_COMPLETED) {
+        if ($this->status === self::STATUS_COMPLETED || $this->status === self::STATUS_CANCELLED) {
             $this->ended_at = now();
         }
 

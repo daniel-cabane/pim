@@ -671,6 +671,8 @@
     "This will end the tournament. This action cannot be undone": "Cette action met fin au tournoi. Elle ne peut pas être annulée",
     "Results conflict": "Résultats contradictoires",
     "conflicted": "en conflit",
+    "cancelled": "annulée",
+    "Cancelled": "Annulée",
     "Set result": "Fixer le résultat",
     "Result reported": "Résultat enregistré",
     "Result set": "Résultat fixé",
@@ -706,5 +708,6 @@
     "Tournament name": "Nom du tournoi",
     "Format": "Format",
     "No emails yet": "Aucun email pour l'instant",
-    "Emails": "Emails"
+    "Emails": "Emails",
+    "Cancel game": "Annuler la partie"
 }

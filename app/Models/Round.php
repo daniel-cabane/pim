@@ -41,6 +41,6 @@ class Round extends Model
 
     public function allGamesCompleted(): bool
     {
-        return $this->games()->where('status', '!=', 'completed')->count() === 0;
+        return $this->games()->whereNotIn('status', ['completed', 'cancelled'])->count() === 0;
     }
 }
