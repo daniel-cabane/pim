@@ -11,7 +11,48 @@
                     <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', 'E', 'F']" v-model="className"/>
                     <v-select :label="$t('Campus')" variant="outlined" :items="['BPR', 'TKO']" v-model="campus" />
                 </div>
-                <v-btn color="primary" block append-icon="mdi-content-paste" :text="$t('Paste from clipboard')" @click="pasteStudents"/>
+                <div class="d-flex ga-2 align-center">
+                    <v-btn 
+                        color="primary"
+                        style="flex: 1;"
+                        append-icon="mdi-content-paste"
+                        :text="$t('Paste from clipboard')" 
+                        @click="pasteStudents"
+                    />
+                    <v-btn icon="mdi-help" color="primary" size="small" variant="tonal" @click="showHelp = !showHelp"/>
+                </div>
+                <div v-if="showHelp" class="w-100 mt-2">
+                    <div class="text-body-2 text-medium-emphasis mb-2">
+                        {{ $t('Copy four columns from a spreadsheet, with no header row') }}
+                    </div>
+                    <v-table density="compact">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">C<br><span class="text-medium-emphasis font-weight-regular">{{ $t('Last name') }}</span></th>
+                                <th class="text-center">B<br><span class="text-medium-emphasis font-weight-regular">{{ $t('First name') }}</span></th>
+                                <th class="text-center">D<br><span class="text-medium-emphasis font-weight-regular">{{ $t('Email') }}</span></th>
+                                <th class="text-center">A<br><span class="text-medium-emphasis font-weight-regular">{{ $t('Tag Number') }}</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-medium-emphasis text-center">1</td>
+                                <td class="text-center">Dupont</td>
+                                <td class="text-center">Marie</td>
+                                <td class="text-center">marie15389@g.lfis.edu.hk</td>
+                                <td class="text-center">12345</td>
+                            </tr>
+                            <tr>
+                                <td class="text-medium-emphasis text-center">2</td>
+                                <td class="text-center">Martin</td>
+                                <td class="text-center">Jean</td>
+                                <td class="text-center">jean28734@g.lfis.edu.hk</td>
+                                <td class="text-center">67890</td>
+                            </tr>
+                        </tbody>
+                    </v-table>
+                </div>
                 <div>
                     <v-data-table :headers="headers" :items="students">
                         <template v-slot:item.actions="{ item }">
@@ -67,6 +108,7 @@
     ]
 
     const mainDialog = ref(false);
+    const showHelp = ref(false);
     const classLevel = ref(null);
     const className = ref(null);
     const campus = ref('BPR');

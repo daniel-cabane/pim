@@ -6,17 +6,59 @@
         <template v-slot:default="{ isActive }">
             <v-card :title="$t('Link tag number')">
             <v-card-text>
-                <v-btn 
-                    color="primary" block 
-                    append-icon="mdi-content-paste" 
-                    :loading="isLoading" 
-                    :text="$t('Paste from clipboard')" 
-                    @click="pasteTags" 
-                    v-if="users.length == 0"
-                />
+                <div class="d-flex flex-wrap ga-2 align-center" v-if="users.length == 0">
+                    <v-btn 
+                        color="primary" 
+                        style="flex: 1;"
+                        append-icon="mdi-content-paste" 
+                        :loading="isLoading" 
+                        :text="$t('Paste from clipboard')" 
+                        @click="pasteTags" 
+                    />
+                    <v-btn icon="mdi-help" color="primary" size="small" variant="tonal" @click="showHelp = !showHelp"/>
+                    <div v-if="showHelp" class="w-100 mt-2">
+                        <div class="text-body-2 text-medium-emphasis mb-2">
+                            {{ $t('Copy four columns from a spreadsheet, with no header row') }}
+                        </div>
+                        <v-table density="compact">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-center">C<br><span class="text-medium-emphasis font-weight-regular">{{ $t('Last name') }}</span></th>
+                                    <th class="text-center">B<br><span class="text-medium-emphasis font-weight-regular">{{ $t('First name') }}</span></th>
+                                    <th class="text-center">D<br><span class="text-medium-emphasis font-weight-regular">{{ $t('Email') }}</span></th>
+                                    <th class="text-center">A<br><span class="text-medium-emphasis font-weight-regular">{{ $t('Tag Number') }}</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-medium-emphasis text-center">1</td>
+                                    <td class="text-center">Dupont</td>
+                                    <td class="text-center">Marie</td>
+                                    <td class="text-center">marie15389@g.lfis.edu.hk</td>
+                                    <td class="text-center">12345</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-medium-emphasis text-center">2</td>
+                                    <td class="text-center">Martin</td>
+                                    <td class="text-center">Jean</td>
+                                    <td class="text-center">jean28734@g.lfis.edu.hk</td>
+                                    <td class="text-center">67890</td>
+                                </tr>
+                            </tbody>
+                        </v-table>
+                    </div>
+                </div>
                 <div class="d-flex flex-wrap ga-3">
                     <v-card width="100%" v-for="user in users" :title="`${user.name2} ${user.name1}`" :subtitle="user.tag_number">
-                        <v-card-text>
+                        <template #append>
+                            <v-chip v-if="!user.possibleMatch.length" color="warning" variant="flat">
+                                <span class="text-white">
+                                    {{ $t('No match found') }}
+                                </span>
+                            </v-chip>
+                        </template>
+                        <v-card-text v-if="user.possibleMatch.length">
                             <v-table hover>
                                 <tbody>
                                     <tr v-for="match in user.possibleMatch">
@@ -56,9 +98,11 @@
     const { isLoading, users } = storeToRefs(userStore);
 
     const mainDialog = ref(false);
+    const showHelp = ref(false);
 
     const closeDialog = () => {
         mainDialog.value = false;
+        showHelp.value = false;
         clearUsers();
     }
 
@@ -70,9 +114,10 @@
 
         const rowsArray = rows.map(row => {
             return {
-                name1: row[1].split(' ')[0].replace(/,+$/, ''),
-                name2: row[2].replace(/\r$/, '').split(' ')[0].replace(/,+$/, ''),
-                tag_number: row[0]
+                name1: row[0].split(' ')[0].replace(/,+$/, ''),
+                name2: row[1].replace(/\r$/, '').split(' ')[0].replace(/,+$/, ''),
+                email: row[2].split('@')[0],
+                tag_number: row[3]
             };
         });
 
