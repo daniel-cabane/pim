@@ -116,7 +116,7 @@
             return {
                 name1: row[0].split(' ')[0].replace(/,+$/, ''),
                 name2: row[1].replace(/\r$/, '').split(' ')[0].replace(/,+$/, ''),
-                email: row[2].split('@')[0],
+                email: row[2],
                 tag_number: row[3]
             };
         });
