@@ -372,16 +372,20 @@ class AdminController extends Controller
 
         $count = 0;
         while($currentDate->lte($endDate)){
-            $count++;
-            OpenDoor::create([
-                'teacher_id' => $attrs['teacher_id'],
-                'type' => $attrs['type'],
-                'date' => $currentDate,
-                'start' => $attrs['start'],
-                'finish' => $attrs['finish'],
-                'roomNb' => $attrs['roomNb'],
-                'campus' => $attrs['campus']
-            ]);
+            $date = $currentDate->toDateString();
+            $isHoliday = Holiday::where('start', '<=', $date)->where('finish', '>=', $date)->exists();
+            if(!$isHoliday){
+                $count++;
+                OpenDoor::create([
+                    'teacher_id' => $attrs['teacher_id'],
+                    'type' => $attrs['type'],
+                    'date' => $date,
+                    'start' => $attrs['start'],
+                    'finish' => $attrs['finish'],
+                    'roomNb' => $attrs['roomNb'],
+                    'campus' => $attrs['campus']
+                ]);
+            }
             $currentDate->addWeek();
         }
 
