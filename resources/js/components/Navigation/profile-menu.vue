@@ -56,7 +56,7 @@
                     </div>
                     <div style="display:flex;gap:15px;" v-if="user.is.student">
                         <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="initData.classLevel" />
-                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', '1', '2', '3']" v-model="initData.className" />
+                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D','E', '1', '2', '3']" v-model="initData.className" />
                     </div>
                     <div class="d-flex">
                         <div style="flex:1">

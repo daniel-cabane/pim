@@ -41,7 +41,7 @@
                     </div>
                     <div v-else>
                         <v-select :label="$t('Class level')" variant="outlined" :items="levels" v-model="classLevel" />
-                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D', '1', '2', '3']" v-model="className"/>
+                        <v-select :label="$t('Class name')" variant="outlined" :items="['A', 'B', 'C', 'D','E', '1', '2', '3']" v-model="className"/>
                     </div>
                     <div>
                         <v-text-field variant="outlined" :label="$t('Rfid tag')" v-model="userTag" />
