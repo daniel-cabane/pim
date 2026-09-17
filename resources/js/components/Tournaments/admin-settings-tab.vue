@@ -29,6 +29,43 @@
                     </v-row>
                     
                     <v-row>
+                        <v-col cols="12" md="4" class="pb-0">
+                            <v-text-field
+                                v-model="timeTitle"
+                                :label="$t('Time control')"
+                                variant="outlined"
+                                maxlength="25"
+                                counter="25"
+                                :loading="savingSettings"
+                                @blur="saveTournamentSettings"
+                            />
+                        </v-col>
+                        <v-col cols="12" md="4" class="pb-0">
+                            <v-text-field
+                                v-model="timeSubtitle"
+                                :label="$t('Category')"
+                                variant="outlined"
+                                maxlength="25"
+                                counter="25"
+                                :loading="savingSettings"
+                                @blur="saveTournamentSettings"
+                            />
+                        </v-col>
+                        <v-col cols="12" md="4" class="pb-0">
+                            <v-text-field
+                                v-model.number="nbRounds"
+                                :label="$t('Number of rounds')"
+                                type="number"
+                                min="1"
+                                max="99"
+                                variant="outlined"
+                                :loading="savingSettings"
+                                @blur="saveTournamentSettings"
+                            />
+                        </v-col>
+                    </v-row>
+                    
+                    <v-row>
                         <v-col cols="12">
                             <v-textarea
                                 v-model="tournamentDescription"
@@ -189,12 +226,23 @@
     };
 
     // Tournament Settings
+    const DEFAULT_PREFERENCES = {
+        time: { title: '5min', subtitle: 'Blitz' },
+        nbRounds: 6,
+    };
+
     const tournamentName = ref('');
     const tournamentDescription = ref('');
     const pairingSystem = ref('');
+    const timeTitle = ref('');
+    const timeSubtitle = ref('');
+    const nbRounds = ref(DEFAULT_PREFERENCES.nbRounds);
     const initialName = ref('');
     const initialDescription = ref('');
     const initialFormat = ref('');
+    const initialTimeTitle = ref('');
+    const initialTimeSubtitle = ref('');
+    const initialNbRounds = ref(DEFAULT_PREFERENCES.nbRounds);
     const pairingOptions = computed( () => [
         { label: t('Swiss'), value: 'swiss' },
         { label: t('Round Robin'), value: 'round_robin' },
@@ -223,9 +271,15 @@
         const hasChanges = 
             tournamentName.value !== initialName.value ||
             tournamentDescription.value !== initialDescription.value ||
-            pairingSystem.value !== initialFormat.value;
+            pairingSystem.value !== initialFormat.value ||
+            timeTitle.value !== initialTimeTitle.value ||
+            timeSubtitle.value !== initialTimeSubtitle.value ||
+            Number(nbRounds.value) !== Number(initialNbRounds.value);
         
         if (!hasChanges) return;
+
+        const parsedNbRounds = Number(nbRounds.value);
+        if (!Number.isInteger(parsedNbRounds) || parsedNbRounds < 1) return;
         
         savingSettings.value = true;
         try {
@@ -233,12 +287,22 @@
                 name: tournamentName.value,
                 description: tournamentDescription.value,
                 format: pairingSystem.value,
+                preferences: {
+                    time: {
+                        title: timeTitle.value,
+                        subtitle: timeSubtitle.value,
+                    },
+                    nbRounds: parsedNbRounds,
+                },
             });
             
             // Update initial values after successful save
             initialName.value = tournamentName.value;
             initialDescription.value = tournamentDescription.value;
             initialFormat.value = pairingSystem.value;
+            initialTimeTitle.value = timeTitle.value;
+            initialTimeSubtitle.value = timeSubtitle.value;
+            initialNbRounds.value = parsedNbRounds;
             
             history.replaceState(history.state, null, `/tournaments/${props.tournament.slug}/admin`);
         } catch (error) {
@@ -323,11 +387,17 @@
         tournamentName.value = props.tournament?.name || '';
         tournamentDescription.value = props.tournament?.description || '';
         pairingSystem.value = props.tournament?.format || '';
+        timeTitle.value = props.tournament?.preferences?.time?.title || DEFAULT_PREFERENCES.time.title;
+        timeSubtitle.value = props.tournament?.preferences?.time?.subtitle || DEFAULT_PREFERENCES.time.subtitle;
+        nbRounds.value = props.tournament?.preferences?.nbRounds ?? DEFAULT_PREFERENCES.nbRounds;
         
         // Set initial values for change detection
         initialName.value = tournamentName.value;
         initialDescription.value = tournamentDescription.value;
         initialFormat.value = pairingSystem.value;
+        initialTimeTitle.value = timeTitle.value;
+        initialTimeSubtitle.value = timeSubtitle.value;
+        initialNbRounds.value = nbRounds.value;
         
         loadOrganisers();
     });

@@ -670,13 +670,13 @@ class AdminController extends Controller
         foreach($attrs['users'] as $user){
             $name1 = $user['name1'];
             $name2 = $user['name2'];
-            $possibleMatch = User::where('email', $user['email'])->get();
+            $possibleMatch = $user['email'] ? User::where('email', $user['email'])->get() : [];
             if(count($possibleMatch) == 0){
                 $possibleMatch = User::where('name', 'like', "%$name1%")->where('name', 'like', "%$name2%")->get();
                 while(count($possibleMatch) == 0 && strlen($name1) > 0 && strlen($name2) > 0 && (strlen($name1) > 3 || strlen($name2) > 3)){
                     $name1 = substr($name1, 1, -1);
                     $name2 = substr($name2, 1, -1);
-                    $possibleMatch = User::where('two_factor_secret', null)->where('name', 'like', "%$name1%")->where('name', 'like', "%$name2%")->get();
+                    $possibleMatch = User::where('two_factor_secret', null)->where('name', 'like', "%$name1%")->where('name', 'like', "%$name2%")->limit(3)->get();
                 }
             }
             $user['possibleMatch'] = $possibleMatch;

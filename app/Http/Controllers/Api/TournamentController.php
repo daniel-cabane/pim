@@ -82,7 +82,27 @@ class TournamentController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'format' => 'required|in:swiss,round_robin,knockout',
+            'preferences' => 'sometimes|array',
+            'preferences.time' => 'sometimes|array',
+            'preferences.time.title' => 'sometimes|nullable|string|max:25',
+            'preferences.time.subtitle' => 'sometimes|nullable|string|max:25',
+            'preferences.nbRounds' => 'sometimes|integer|min:1|max:99',
         ]);
+
+        if (isset($validated['preferences'])) {
+            $current = json_decode(json_encode($tournament->preferences ?? Tournament::DEFAULT_PREFERENCES), true) ?: Tournament::DEFAULT_PREFERENCES;
+            $incoming = $validated['preferences'];
+
+            $validated['preferences'] = [
+                'time' => [
+                    'title' => $incoming['time']['title'] ?? data_get($current, 'time.title', Tournament::DEFAULT_PREFERENCES['time']['title']),
+                    'subtitle' => $incoming['time']['subtitle'] ?? data_get($current, 'time.subtitle', Tournament::DEFAULT_PREFERENCES['time']['subtitle']),
+                ],
+                'nbRounds' => isset($incoming['nbRounds'])
+                    ? (int) $incoming['nbRounds']
+                    : (int) data_get($current, 'nbRounds', Tournament::DEFAULT_PREFERENCES['nbRounds']),
+            ];
+        }
 
         $tournament->update($validated);
 

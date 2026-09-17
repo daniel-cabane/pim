@@ -12,6 +12,14 @@ class Tournament extends Model
 {
     use HasFactory;
 
+    public const DEFAULT_PREFERENCES = [
+        'time' => [
+            'title' => '5min',
+            'subtitle' => 'Blitz',
+        ],
+        'nbRounds' => 6,
+    ];
+
     protected $fillable = [
         'name',
         'slug',
@@ -23,11 +31,17 @@ class Tournament extends Model
         'started_at',
         'ended_at',
         'created_by',
+        'preferences',
+    ];
+
+    protected $attributes = [
+        'preferences' => '{"time":{"title":"5min","subtitle":"Blitz"},"nbRounds":6}',
     ];
 
     protected $casts = [
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
+        'preferences' => 'object',
     ];
 
     public function getRouteKeyName(){
@@ -39,6 +53,9 @@ class Tournament extends Model
         static::creating(function ($tournament) {
             if (empty($tournament->slug)) {
                 $tournament->slug = static::generateUniqueSlug($tournament->name);
+            }
+            if ($tournament->preferences === null) {
+                $tournament->preferences = static::DEFAULT_PREFERENCES;
             }
         });
 
