@@ -6,15 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Email;
 use App\Models\Tournament;
 use App\Models\User;
+use App\Models\Round;
 use App\Services\KnockoutPairingEngine;
 use App\Services\RoundRobinPairingEngine;
 use App\Services\SwissPairingEngine;
+use App\Services\SwissRoundRepair;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class TournamentController extends Controller
 {
-    protected function loadTournamentRelations(Tournament $tournament): Tournament
+    public function loadTournamentRelations(Tournament $tournament): Tournament
     {
         $tournament->load(['rounds.games.player1', 'rounds.games.player2', 'players', 'creator', 'organisers']);
 
@@ -402,33 +406,76 @@ class TournamentController extends Controller
 
         // Check if user is already a player
         if ($tournament->players()->where('user_id', $validated['user_id'])->exists()) {
-            return response()->json([
-                'message' => [
-                    'text' => 'User is already a player',
-                    'type' => 'error'
-                ],
-                'tournament' => $tournament
-            ]);
+            return $this->alreadyPlayerResponse($tournament);
         }
 
-        // Add player with default stats
-        $tournament->players()->attach($validated['user_id'], [
-            'score' => 0,
-            'wins' => 0,
-            'draws' => 0,
-            'losses' => 0,
-            'banned' => false,
-        ]);
-
-        $tournament->increment('players_count');
+        try {
+            $createdBye = false;
+            DB::transaction(function () use ($tournament, $validated, &$createdBye) {
+                $tournament->players()->attach($validated['user_id'], [
+                    'score' => 0,
+                    'wins' => 0,
+                    'draws' => 0,
+                    'losses' => 0,
+                    'banned' => false,
+                ]);
+                $tournament->increment('players_count');
+                $createdBye = app(SwissRoundRepair::class)->giveBye($tournament, (int) $validated['user_id']);
+            });
+        } catch (QueryException $e) {
+            if (($e->errorInfo[0] ?? null) === '23000') {
+                return $this->alreadyPlayerResponse($tournament);
+            }
+            throw $e;
+        }
 
         return response()->json([
             'message' => [
-                'text' => 'Player added',
+                'text' => $createdBye ? 'Player added to the current round as a bye' : 'Player added',
                 'type' => 'success'
             ],
             'tournament' => $this->loadTournamentRelations($tournament)
         ], 201);
+    }
+
+    public function pairByes(Request $request, Tournament $tournament, Round $round): JsonResponse
+    {
+        $this->authorize('update', $tournament);
+
+        $validated = $request->validate([
+            'player_a_id' => 'required|integer|exists:users,id',
+            'player_b_id' => 'required|integer|exists:users,id',
+        ]);
+
+        try {
+            app(SwissRoundRepair::class)->pairByes(
+                $tournament,
+                $round,
+                (int) $validated['player_a_id'],
+                (int) $validated['player_b_id']
+            );
+        } catch (\DomainException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return response()->json([
+            'message' => [
+                'text' => 'Game created',
+                'type' => 'success'
+            ],
+            'tournament' => $this->loadTournamentRelations($tournament)
+        ]);
+    }
+
+    private function alreadyPlayerResponse(Tournament $tournament): JsonResponse
+    {
+        return response()->json([
+            'message' => [
+                'text' => 'User is already a player',
+                'type' => 'error'
+            ],
+            'tournament' => $tournament
+        ]);
     }
 
     public function removePlayer(Tournament $tournament, User $user): JsonResponse
@@ -445,8 +492,11 @@ class TournamentController extends Controller
             ], 404);
         }
 
-        $tournament->players()->detach($user->id);
-        $tournament->decrement('players_count');
+        DB::transaction(function () use ($tournament, $user) {
+            app(SwissRoundRepair::class)->deleteLatestByes($tournament, $user->id);
+            $tournament->players()->detach($user->id);
+            $tournament->decrement('players_count');
+        });
 
         return response()->json([
             'message' => [

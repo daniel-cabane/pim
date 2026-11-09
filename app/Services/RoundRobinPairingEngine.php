@@ -61,18 +61,7 @@ class RoundRobinPairingEngine
                 $p2 = $bottomRow[$i];
 
                 if ($p1 === null || $p2 === null) {
-                    // Bye game
-                    $realPlayer = $p1 ?? $p2;
-                    Game::create([
-                        'tournament_id' => $this->tournament->id,
-                        'round_id' => $round->id,
-                        'player1_id' => $realPlayer,
-                        'player2_id' => null,
-                        'result1' => 'win',
-                        'result2' => 'loss',
-                        'status' => 'completed',
-                        'ended_at' => now(),
-                    ]);
+                    Game::createBye($this->tournament->id, $round->id, $p1 ?? $p2);
                 } else {
                     Game::create([
                         'tournament_id' => $this->tournament->id,

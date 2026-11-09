@@ -27,7 +27,6 @@ export const useTournamentStore = defineStore({
             const res = await get(`/api/tournaments/${slug}`);
             this.tournament = res;
             this.isReady = true;
-            // console.log(this.tournament);
             return res;
         },
         async updateTournament(slug, data) {
@@ -89,7 +88,6 @@ export const useTournamentStore = defineStore({
             const res = await post(`/api/tournaments/${slug}/players`, { user_id: userId });
             if(res.tournament){
                 this.tournament = res.tournament;
-                console.log(res.tournament);
             }
             return res;
         },
@@ -117,6 +115,52 @@ export const useTournamentStore = defineStore({
         async reportGameResult(gameId, result) {
             const res = await post(`/api/games/${gameId}/result`, { result });
             if (res.game && this.tournament?.rounds) {
+                for (const round of this.tournament.rounds) {
+                    const idx = round.games?.findIndex(g => g.id === res.game.id);
+                    if (idx !== undefined && idx >= 0) {
+                        round.games.splice(idx, 1, res.game);
+                        break;
+                    }
+                }
+            }
+            return res;
+        },
+        async breakGame(gameId, player1Outcome, player2Outcome) {
+            const res = await post(`/api/games/${gameId}/break`, {
+                player1_outcome: player1Outcome,
+                player2_outcome: player2Outcome,
+            });
+            if (res?.tournament) {
+                this.tournament = res.tournament;
+            }
+            return res;
+        },
+        async setUnpairedKind(gameId, kind) {
+            const res = await post(`/api/games/${gameId}/unpaired`, { kind });
+            if (res?.game && this.tournament?.rounds) {
+                for (const round of this.tournament.rounds) {
+                    const idx = round.games?.findIndex(g => g.id === res.game.id);
+                    if (idx !== undefined && idx >= 0) {
+                        round.games.splice(idx, 1, res.game);
+                        break;
+                    }
+                }
+            }
+            return res;
+        },
+        async pairByes(slug, roundId, playerAId, playerBId) {
+            const res = await post(`/api/tournaments/${slug}/rounds/${roundId}/pair-byes`, {
+                player_a_id: playerAId,
+                player_b_id: playerBId,
+            });
+            if (res?.tournament) {
+                this.tournament = res.tournament;
+            }
+            return res;
+        },
+        async resetGame(gameId) {
+            const res = await post(`/api/games/${gameId}/reset`, {});
+            if (res?.game && this.tournament?.rounds) {
                 for (const round of this.tournament.rounds) {
                     const idx = round.games?.findIndex(g => g.id === res.game.id);
                     if (idx !== undefined && idx >= 0) {

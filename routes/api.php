@@ -364,6 +364,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Player management routes
     Route::get('tournaments/{tournament:slug}/search-players', [TournamentController::class, 'searchPlayers']);
     Route::post('tournaments/{tournament:slug}/players', [TournamentController::class, 'addPlayer']);
+    Route::post('tournaments/{tournament:slug}/rounds/{round}/pair-byes', [TournamentController::class, 'pairByes']);
     Route::patch('tournaments/{tournament:slug}/players/{user}/rating', [TournamentController::class, 'editPlayerRating']);
     Route::delete('tournaments/{tournament:slug}/players/{user}', [TournamentController::class, 'removePlayer']);
     Route::patch('tournaments/{tournament:slug}/players/{user}', [TournamentController::class, 'banPlayer']);
@@ -374,7 +375,10 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('rounds/{round}/start', [RoundController::class, 'startRound']);
     Route::post('rounds/{round}/complete', [RoundController::class, 'completeRound']);
+    Route::post('games/{game}/break', [GameController::class, 'breakGame']);
+    Route::post('games/{game}/unpaired', [GameController::class, 'setUnpairedKind']);
     Route::post('games/{game}/start', [GameController::class, 'startGame']);
     Route::post('games/{game}/result', [GameController::class, 'recordResult']);
     Route::post('games/{game}/set-result', [GameController::class, 'setResult']);
+    Route::post('games/{game}/reset', [GameController::class, 'resetGame']);
 });

@@ -80,29 +80,9 @@ class KnockoutPairingEngine
             }
 
             if ($p2 === null) {
-                // Seed 1 gets a bye
-                Game::create([
-                    'tournament_id' => $this->tournament->id,
-                    'round_id' => $round->id,
-                    'player1_id' => $p1->id,
-                    'player2_id' => null,
-                    'result1' => 'win',
-                    'result2' => 'loss',
-                    'status' => 'completed',
-                    'ended_at' => now(),
-                ]);
+                Game::createBye($this->tournament->id, $round->id, $p1->id);
             } elseif ($p1 === null) {
-                // Seed 2 gets a bye
-                Game::create([
-                    'tournament_id' => $this->tournament->id,
-                    'round_id' => $round->id,
-                    'player1_id' => $p2->id,
-                    'player2_id' => null,
-                    'result1' => 'win',
-                    'result2' => 'loss',
-                    'status' => 'completed',
-                    'ended_at' => now(),
-                ]);
+                Game::createBye($this->tournament->id, $round->id, $p2->id);
             } else {
                 Game::create([
                     'tournament_id' => $this->tournament->id,
@@ -178,16 +158,7 @@ class KnockoutPairingEngine
 
         // Odd winner count (shouldn't happen in a proper bracket)
         if (count($winners) % 2 === 1) {
-            Game::create([
-                'tournament_id' => $this->tournament->id,
-                'round_id' => $round->id,
-                'player1_id' => $winners[count($winners) - 1],
-                'player2_id' => null,
-                'result1' => 'win',
-                'result2' => 'loss',
-                'status' => 'completed',
-                'ended_at' => now(),
-            ]);
+            Game::createBye($this->tournament->id, $round->id, $winners[count($winners) - 1]);
         }
 
         return $round;

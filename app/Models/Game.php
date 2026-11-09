@@ -37,6 +37,7 @@ class Game extends Model
     const STATUS_CONFLICTED = 'conflicted';
     const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
+    const STATUS_ABSENT = 'absent';
 
     public function tournament()
     {
@@ -60,6 +61,10 @@ class Game extends Model
 
     public function getComputedStatusAttribute(): string
     {
+        if ($this->status === self::STATUS_ABSENT) {
+            return self::STATUS_ABSENT;
+        }
+
         if ($this->result1 === null || $this->result2 === null) {
             return self::STATUS_PENDING;
         }
@@ -104,6 +109,34 @@ class Game extends Model
         $this->save();
     }
 
+    public static function createBye(int $tournamentId, int $roundId, int $playerId): self
+    {
+        return self::create([
+            'tournament_id' => $tournamentId,
+            'round_id' => $roundId,
+            'player1_id' => $playerId,
+            'player2_id' => null,
+            'result1' => 'win',
+            'result2' => 'loss',
+            'status' => self::STATUS_COMPLETED,
+            'ended_at' => now(),
+        ]);
+    }
+
+    public static function createAbsent(int $tournamentId, int $roundId, int $playerId): self
+    {
+        return self::create([
+            'tournament_id' => $tournamentId,
+            'round_id' => $roundId,
+            'player1_id' => $playerId,
+            'player2_id' => null,
+            'result1' => null,
+            'result2' => null,
+            'status' => self::STATUS_ABSENT,
+            'ended_at' => now(),
+        ]);
+    }
+
     public function setResultByOrganiser(string $result1, string $result2): void
     {
         $this->result1 = $result1;
@@ -114,6 +147,15 @@ class Game extends Model
             $this->ended_at = now();
         }
 
+        $this->save();
+    }
+
+    public function resetToPending(): void
+    {
+        $this->result1 = null;
+        $this->result2 = null;
+        $this->status = self::STATUS_PENDING;
+        $this->ended_at = null;
         $this->save();
     }
 }

@@ -72,7 +72,7 @@
                     v-model="selectedPlayer"
                     v-model:search="playerSearchQuery"
                     :items="playerSearchResults"
-                    item-title="formal_name"
+                    :item-title="displayName"
                     item-value="id"
                     :loading="searchingPlayers"
                     :label="$t('Search by name or email')"
@@ -194,7 +194,9 @@
     const { get: apiGet } = useAPI();
 
     const displayName = (player) => {
-        return player?.name || '';
+        const name = player?.name || '';
+        const className = player?.class_name || `${player?.level || ''}${player?.section || ''}`;
+        return className ? `${name} (${className})` : name;
     };
 
     const headers = computed( () => [
@@ -238,7 +240,7 @@
         playerSearchTimeout = setTimeout(async () => {
             searchingPlayers.value = true;
             try {
-                const results = await apiGet(`/api/tournaments/${props.tournament.slug}/search-users?query=${encodeURIComponent(query)}`);
+                const results = await apiGet(`/api/tournaments/${props.tournament.slug}/search-players?query=${encodeURIComponent(query)}`);
                 playerSearchResults.value = results;
             } catch (error) {
                 console.error('Error searching players:', error);

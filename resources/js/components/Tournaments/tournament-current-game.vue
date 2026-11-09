@@ -4,7 +4,13 @@
             <v-icon left color="white" class="mr-2">mdi-chess-king</v-icon>
             <span class="text-white">{{ $t('Your current game') }}</span>
         </v-card-title>
-        <v-card-text class="pt-4">
+        <v-card-text v-if="isAbsent" class="pt-6 pb-6 text-center">
+            <div class="text-h6">{{ $t('You are absent this round') }}</div>
+        </v-card-text>
+        <v-card-text v-else-if="isBye" class="pt-6 pb-6 text-center">
+            <div class="text-h6">{{ $t('You have a bye this round') }}</div>
+        </v-card-text>
+        <v-card-text v-else class="pt-4">
             <v-row align="center" justify="center">
                 <v-col cols="12" sm="2" class="text-center">
                     <v-avatar :color="isPlayer1 ? 'white' : 'black'" size="48" class="mb-2 elevation-2">
@@ -70,6 +76,7 @@
     import { useI18n } from 'vue-i18n';
     import { useAuthStore } from '@/stores/useAuthStore';
     import { useTournamentStore } from '@/stores/useTournamentStore';
+    import { isAbsent as gameIsAbsent, isBye as gameIsBye } from '@/composables/useSwissRepair';
 
     const { t } = useI18n();
     const authStore = useAuthStore();
@@ -100,6 +107,9 @@
             g.player1_id === authStore.user?.id || g.player2_id === authStore.user?.id
         );
     });
+
+    const isBye = computed(() => gameIsBye(currentGame.value));
+    const isAbsent = computed(() => gameIsAbsent(currentGame.value));
 
     const isPlayer1 = computed(() => {
         return currentGame.value?.player1_id === authStore.user?.id;

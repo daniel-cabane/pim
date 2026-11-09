@@ -183,6 +183,7 @@ class SwissPairingEngine
     {
         $byePlayers = $this->tournament->games()
             ->whereNull('player2_id')
+            ->where('status', '!=', Game::STATUS_ABSENT)
             ->pluck('player1_id')
             ->toArray();
 
@@ -217,17 +218,7 @@ class SwissPairingEngine
         if ($players->count() % 2 === 1) {
             $byePlayer = $this->getByePlayer($players);
 
-            // Create bye game
-            Game::create([
-                'tournament_id' => $this->tournament->id,
-                'round_id' => $round->id,
-                'player1_id' => $byePlayer->id,
-                'player2_id' => null,
-                'result1' => 'win',
-                'result2' => 'loss',
-                'status' => 'completed',
-                'ended_at' => now(),
-            ]);
+            Game::createBye($this->tournament->id, $round->id, $byePlayer->id);
 
             // Remove bye player from standings before pairing
             $this->standings = $this->standings->filter(fn($p) => $p->id !== $byePlayer->id)->values();
