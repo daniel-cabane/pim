@@ -68,5 +68,21 @@
                 { en: 'Emergence', fr: 'Émergence' },
             ]
         },
+        {
+            title: {
+                en: 'The botanical garden',
+                fr: 'Le jardin botanique',
+            },
+            slug: 'jardin-botanique',
+            description: {
+                en: 'Two players compete to plant a 3×3 botanical garden. Align three plants, or gather all three sizes in one parcel, to win. Play on one screen, or write a JavaScript program and set it against another.',
+                fr: "Deux joueurs s'affrontent pour planter un jardin botanique de neuf parcelles. Gagnez en alignant trois plantes, ou en réunissant les trois tailles dans une même parcelle. Jouez à deux sur le même écran, ou programmez une IA en JavaScript.",
+            },
+            themes: [
+                { en: 'Algorithms', fr: 'Algorithmes' },
+                { en: 'Strategy', fr: 'Stratégie' },
+                { en: 'Programming', fr: 'Programmation' },
+            ],
+        },
     ];
 </script>
