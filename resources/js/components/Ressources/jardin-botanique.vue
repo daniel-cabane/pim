@@ -149,7 +149,6 @@
                     />
                 </v-col>
                 <v-col cols="12" md="4">
-                    <div class="text-subtitle-1 mb-2">{{ $t('Move log') }}</div>
                     <div ref="logEl" class="move-log">
                         <div v-for="seat in seats" :key="seat" class="log-column">
                             <div class="log-title" :style="{ color: seatColor[seat] }">{{ playerName(seat) }}</div>
